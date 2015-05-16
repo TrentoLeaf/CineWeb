@@ -1,5 +1,6 @@
 package tk.trentoleaf.cineweb.db;
 
+import org.joda.time.DateTime;
 import org.postgresql.util.PSQLException;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.model.Role;
@@ -8,8 +9,8 @@ import tk.trentoleaf.cineweb.model.User;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.Date;
 import java.util.logging.Logger;
 
 public class DB {
@@ -68,7 +69,15 @@ public class DB {
 
         for (User u : getUsers()) {
             System.out.println(u.toString());
+            try {
+                String code = requestResetPassword(u.getId());
+                System.out.println("TRUE: " + authenticate("teo@teo.com", "pippo"));
+                System.out.println("TRUE reset : " + checkPasswordReset(u.getId(), code));
+            } catch (UserNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+        System.out.println("FALSE reset: " + checkPasswordReset(1, "9cc5b936ba9640d787c00a31357f9bd259a1d9dab98d499f893eae788787a9db"));
     }
 
     // close the connection
@@ -135,9 +144,9 @@ public class DB {
         Statement stm = connection.createStatement();
         try {
             stm.execute("CREATE TABLE IF NOT EXISTS resets (" +
-                    "code CHAR(60) PRIMARY KEY," +
+                    "code CHAR(64) PRIMARY KEY," +
                     "uid INTEGER REFERENCES users(uid) ON DELETE CASCADE," +
-                    "exipiration TIMESTAMP DEFAULT (now() + (15 * INTERVAL '1 minute')));");
+                    "exipiration TIMESTAMP NOT NULL);");
         } finally {
             if (stm != null) {
                 stm.close();
@@ -184,6 +193,8 @@ public class DB {
         return ok;
     }
 
+    // TODO: public?
+    // or better to force use either a code or the old password?
     // change password
     public void changePassword(String email, String newPassword) throws SQLException, UserNotFoundException {
         final String query = "UPDATE users SET pass = crypt(?, gen_salt('bf')) WHERE email = ?";
@@ -244,6 +255,82 @@ public class DB {
             }
         }
         return users;
+    }
+
+    // exists user
+    private boolean existsUser(int userID) throws SQLException {
+        final String query = "SELECT COUNT(uid) FROM users WHERE uid = ?;";
+        PreparedStatement stm = connection.prepareStatement(query);
+        boolean exists;
+        try {
+            stm.setInt(1, userID);
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+            exists = (rs.getInt(1) == 1);
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return exists;
+    }
+
+    // request a password recovery
+    public String requestResetPassword(int userID) throws UserNotFoundException, SQLException {
+        return requestResetPassword(userID, 15);
+    }
+
+    // request a password recovery
+    public String requestResetPassword(int userID, int expireInMinutes) throws UserNotFoundException, SQLException {
+
+        // check for userID
+        if (!existsUser(userID)) {
+            throw new UserNotFoundException();
+        }
+
+        // request password reset
+        final int maxAttempts = 10;
+        for (int i = 0; i < maxAttempts; i++) {
+            try {
+                final String code = (UUID.randomUUID().toString() + UUID.randomUUID().toString()).replace("-", "");
+                PreparedStatement stm = connection.prepareStatement("INSERT INTO resets (code, uid, exipiration) VALUES (?, ?, ?);");
+                try {
+                    stm.setString(1, code);
+                    stm.setInt(2, userID);
+                    stm.setTimestamp(3, new Timestamp(DateTime.now().plusMinutes(expireInMinutes).toDate().getTime()));
+                    stm.execute();
+                } finally {
+                    if (stm != null) {
+                        stm.close();
+                    }
+                }
+                return code;
+            } catch (PSQLException e) {
+                logger.warning("Cannot create a password recovery code for user uid: " + userID + " -> " + e.toString());
+            }
+        }
+        throw new RuntimeException("Cannot create a password recovery code for this user: " + userID);
+    }
+
+    // check password reset
+    public boolean checkPasswordReset(int userID, String code) throws SQLException {
+        final String query = "SELECT exipiration FROM resets WHERE code = ? AND uid = ?;";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setString(1, code);
+            stm.setInt(2, userID);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                Timestamp expire = rs.getTimestamp("exipiration");
+                return expire.after(new Date());
+            } else {
+                return false;
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
     }
 
 }
