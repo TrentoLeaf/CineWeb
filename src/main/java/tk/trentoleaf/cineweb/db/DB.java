@@ -1,12 +1,14 @@
 package tk.trentoleaf.cineweb.db;
 
 import org.postgresql.util.PSQLException;
+import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -48,15 +50,25 @@ public class DB {
         try {
             createUser(new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni"));
             createUser(new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz"));
+            createUser(new User(Role.CLIENT, "aaa.com", "aaa", "aaa", "bbb"));
+        } catch (Exception e) {
+            //
+        }
+        try {
+            changePassword("teo@teo.com", "pippo");
         } catch (Exception e) {
             //
         }
 
         // TODO: remove
-        System.out.println("TRUE: " + authenticate("teo@teo.com", "teo"));
+        System.out.println("FALSE: " + authenticate("teo@teo.com", "teo"));
+        System.out.println("TRUE: " + authenticate("teo@teo.com", "pippo"));
         System.out.println("FALSE: " + authenticate("davide@pippo.com", "teo"));
-        System.out.println("FALSE: " + authenticate("teo@teo.com", "teosafd"));
         System.out.println("FALSE: " + authenticate("sdfsd", "teosafd"));
+
+        for (User u : getUsers()) {
+            System.out.println(u.toString());
+        }
     }
 
     // close the connection
@@ -100,35 +112,35 @@ public class DB {
 
     // create table user
     private void createTableUsers() throws SQLException {
-        Statement users = connection.createStatement();
+        Statement stm = connection.createStatement();
         try {
-            users.execute("CREATE TABLE IF NOT EXISTS users (" +
+            stm.execute("CREATE TABLE IF NOT EXISTS users (" +
                     "uid SERIAL PRIMARY KEY," +
                     "roleid CHAR(8) REFERENCES roles(roleid)," +
                     "email VARCHAR(256) UNIQUE NOT NULL," +
                     "pass CHAR(60) NOT NULL," +
                     "first_name VARCHAR(100)," +
                     "second_name VARCHAR(100)," +
-                    "credit MONEY DEFAULT 0);");
-            users.execute("CREATE INDEX ON users (email);");
+                    "credit DOUBLE PRECISION DEFAULT 0);");
+            stm.execute("CREATE INDEX ON users (email);");
         } finally {
-            if (users != null) {
-                users.close();
+            if (stm != null) {
+                stm.close();
             }
         }
     }
 
     // create table password resets
     private void createTablePasswordResets() throws SQLException {
-        Statement resets = connection.createStatement();
+        Statement stm = connection.createStatement();
         try {
-            resets.execute("CREATE TABLE IF NOT EXISTS resets (" +
+            stm.execute("CREATE TABLE IF NOT EXISTS resets (" +
                     "code CHAR(60) PRIMARY KEY," +
-                    "uid INTEGER REFERENCES users(uid)," +
-                    "exipiration TIMESTAMP);");
+                    "uid INTEGER REFERENCES users(uid) ON DELETE CASCADE," +
+                    "exipiration TIMESTAMP DEFAULT (now() + (15 * INTERVAL '1 minute')));");
         } finally {
-            if (resets != null) {
-                resets.close();
+            if (stm != null) {
+                stm.close();
             }
         }
     }
@@ -156,19 +168,82 @@ public class DB {
     public boolean authenticate(String email, String password) throws SQLException {
         final String query = "SELECT COUNT(email) FROM users " +
                 "WHERE email = ? AND pass = crypt(?, pass);";
-        PreparedStatement select = connection.prepareStatement(query);
+        PreparedStatement stm = connection.prepareStatement(query);
         boolean ok;
         try {
-            select.setString(1, email);
-            select.setString(2, password);
-            ResultSet rs = select.executeQuery();
+            stm.setString(1, email);
+            stm.setString(2, password);
+            ResultSet rs = stm.executeQuery();
             rs.next();
             ok = (rs.getInt(1) == 1);
         } finally {
-            if (select != null) {
-                select.close();
+            if (stm != null) {
+                stm.close();
             }
         }
         return ok;
     }
+
+    // change password
+    public void changePassword(String email, String newPassword) throws SQLException, UserNotFoundException {
+        final String query = "UPDATE users SET pass = crypt(?, gen_salt('bf')) WHERE email = ?";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setString(1, newPassword);
+            stm.setString(2, email);
+            int rows = stm.executeUpdate();
+            if (rows != 1) {
+                throw new UserNotFoundException();
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // TODO: update user?
+
+    // delete an user
+    // NB: cascade
+    public void deleteUser(int id) throws SQLException, UserNotFoundException {
+        final String query = "DELETE FROM users WHERE uid = ?";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setInt(1, id);
+            int rows = stm.executeUpdate();
+            if (rows != 1) {
+                throw new UserNotFoundException();
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // list of users
+    public List<User> getUsers() throws SQLException {
+        List<User> users = new ArrayList<>();
+        Statement stm = connection.createStatement();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT uid, roleid, email, first_name, second_name, credit FROM users;");
+            while (rs.next()) {
+                User u = new User();
+                u.setId(rs.getInt("uid"));
+                u.setRole(Role.fromID(rs.getString("roleid")));
+                u.setEmail(rs.getString("email"));
+                u.setFirstName(rs.getString("first_name"));
+                u.setSecondName(rs.getString("second_name"));
+                u.setCredit(rs.getDouble("credit"));
+                users.add(u);
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return users;
+    }
+
 }

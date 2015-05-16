@@ -10,7 +10,10 @@ public class User implements Serializable {
     private transient String password;      // transient = non viene serializzato
     private String firstName;
     private String secondName;
-    private float credit;
+    private double credit;
+
+    public User() {
+    }
 
     public User(Role role, String email, String password, String firstName, String secondName) {
         this.role = role;
@@ -68,11 +71,11 @@ public class User implements Serializable {
         this.secondName = secondName;
     }
 
-    public float getCredit() {
+    public double getCredit() {
         return credit;
     }
 
-    public void setCredit(float credit) {
+    public void setCredit(double credit) {
         this.credit = credit;
     }
 
@@ -82,7 +85,6 @@ public class User implements Serializable {
                 "id=" + id +
                 ", role=" + role +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
                 ", credit=" + credit +

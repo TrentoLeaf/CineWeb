@@ -1,7 +1,9 @@
 package tk.trentoleaf.cineweb.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public enum Role {
 
@@ -30,4 +32,17 @@ public enum Role {
         roles.add(CLIENT);
         return roles;
     }
+
+    private static final Map<String, Role> map;
+    static {
+        map = new HashMap<>();
+        for(Role r : Role.values()) {
+            map.put(r.roleID, r);
+        }
+    }
+
+    public static Role fromID(String id) {
+        return map.get(id);
+    }
+
 }
