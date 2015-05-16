@@ -42,6 +42,9 @@ public class DB {
         // saves the connection object
         connection = getConnection();
 
+        // use module crypt
+        prepareCrypto();
+
         // initialize the database
         createTableRoles();
         createTableUsers();
@@ -83,6 +86,18 @@ public class DB {
     // close the connection
     public void close() throws SQLException {
         connection.close();
+    }
+
+    // make sure the extension crypto is loaded
+    private void prepareCrypto() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
     }
 
     // create table roles & insert roles (if not exists)
