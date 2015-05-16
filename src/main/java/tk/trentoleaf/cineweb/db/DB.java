@@ -42,47 +42,46 @@ public class DB {
         // saves the connection object
         connection = getConnection();
 
-        // initialize the database
-        createTableRoles();
-        createTableUsers();
-        createTablePasswordResets();
-
-        // test
-        try {
-            createUser(new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni"));
-            createUser(new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz"));
-            createUser(new User(Role.CLIENT, "aaa.com", "aaa", "aaa", "bbb"));
-        } catch (Exception e) {
-            //
-        }
-        try {
-            changePassword("teo@teo.com", "pippo");
-        } catch (Exception e) {
-            //
-        }
-
-        // TODO: remove
-        System.out.println("FALSE: " + authenticate("teo@teo.com", "teo"));
-        System.out.println("TRUE: " + authenticate("teo@teo.com", "pippo"));
-        System.out.println("FALSE: " + authenticate("davide@pippo.com", "teo"));
-        System.out.println("FALSE: " + authenticate("sdfsd", "teosafd"));
-
-        for (User u : getUsers()) {
-            System.out.println(u.toString());
-            try {
-                String code = requestResetPassword(u.getId());
-                System.out.println("TRUE: " + authenticate("teo@teo.com", "pippo"));
-                System.out.println("TRUE reset : " + checkPasswordReset(u.getId(), code));
-            } catch (UserNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        System.out.println("FALSE reset: " + checkPasswordReset(1, "9cc5b936ba9640d787c00a31357f9bd259a1d9dab98d499f893eae788787a9db"));
+        // initialize the DB
+        init();
     }
 
     // close the connection
     public void close() throws SQLException {
         connection.close();
+    }
+
+    // initialize the DB
+    public void init() throws SQLException {
+
+        // use module crypt
+        prepareCrypto();
+
+        // initialize the database
+        createTableRoles();
+        createTableUsers();
+        createTablePasswordResets();
+    }
+
+    // destroy the db
+    public void reset() throws SQLException {
+
+        // drop tables
+        dropTablePasswordResets();
+        dropTableUsers();
+        dropTableRoles();
+    }
+
+    // make sure the extension crypto is loaded
+    private void prepareCrypto() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
     }
 
     // create table roles & insert roles (if not exists)
@@ -119,6 +118,18 @@ public class DB {
         }
     }
 
+    // drop table roles
+    private void dropTableRoles() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("DROP TABLE IF EXISTS roles;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
     // create table user
     private void createTableUsers() throws SQLException {
         Statement stm = connection.createStatement();
@@ -139,6 +150,18 @@ public class DB {
         }
     }
 
+    // drop table users
+    private void dropTableUsers() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("DROP TABLE IF EXISTS users;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
     // create table password resets
     private void createTablePasswordResets() throws SQLException {
         Statement stm = connection.createStatement();
@@ -147,6 +170,18 @@ public class DB {
                     "code CHAR(64) PRIMARY KEY," +
                     "uid INTEGER REFERENCES users(uid) ON DELETE CASCADE," +
                     "exipiration TIMESTAMP NOT NULL);");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // drop table password resets
+    private void dropTablePasswordResets() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("DROP TABLE IF EXISTS resets;");
         } finally {
             if (stm != null) {
                 stm.close();
