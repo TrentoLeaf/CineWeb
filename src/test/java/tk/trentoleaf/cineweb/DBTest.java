@@ -5,7 +5,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.db.DB;
-import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
 import tk.trentoleaf.cineweb.model.Role;
@@ -16,9 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DBTest {
 
@@ -57,7 +54,35 @@ public class DBTest {
 
         // current users
         final List<User> current = db.getUsers();
+
+        // test
         assertEquals(2, current.size());
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test
+    public void deleteUser() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+
+        // save users
+        db.createUser(u1);
+        db.createUser(u2);
+
+        // delete user 1
+        db.deleteUser(u1.getId());
+
+        // expected users
+        final List<User> expected = new ArrayList<>();
+        expected.add(u2);
+
+        // current users
+        final List<User> current = db.getUsers();
+
+        // test
+        assertEquals(1, current.size());
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
@@ -112,8 +137,12 @@ public class DBTest {
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         db.createUser(u1);
 
-        // reset password
+        // get code
         String code = db.requestResetPassword(u1.getId());
+        assertTrue(db.checkPasswordReset(u1.getId(), code));
+        assertTrue(db.checkPasswordReset(u1.getEmail(), code));
+
+        // reset password
         db.changePasswordWithCode("teo@teo.com", code, "pippo");
 
         // check
@@ -128,8 +157,13 @@ public class DBTest {
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         db.createUser(u1);
 
+        // random code
+        String code = "random_code";
+        assertFalse(db.checkPasswordReset(u1.getId(), code));
+        assertFalse(db.checkPasswordReset(u1.getEmail(), code));
+
         // change password
-        db.changePasswordWithCode("teo@teo.com", "random_code", "new_password");
+        db.changePasswordWithCode("teo@teo.com", code, "new_password");
     }
 
 }
