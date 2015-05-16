@@ -5,16 +5,15 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     private int id;
+    private Role role;
     private String email;
-    private String password;
+    private transient String password;      // transient = non viene serializzato
     private String firstName;
     private String secondName;
     private float credit;
 
-    public User() {
-    }
-
-    public User(String email, String password, String firstName, String secondName) {
+    public User(Role role, String email, String password, String firstName, String secondName) {
+        this.role = role;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -27,6 +26,14 @@ public class User implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getEmail() {
@@ -73,6 +80,7 @@ public class User implements Serializable {
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", role=" + role +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
