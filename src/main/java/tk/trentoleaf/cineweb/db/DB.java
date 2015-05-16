@@ -3,6 +3,8 @@ package tk.trentoleaf.cineweb.db;
 import org.joda.time.DateTime;
 import org.postgresql.util.PSQLException;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
+import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 
@@ -169,7 +171,7 @@ public class DB {
             stm.execute("CREATE TABLE IF NOT EXISTS resets (" +
                     "code CHAR(64) PRIMARY KEY," +
                     "uid INTEGER REFERENCES users(uid) ON DELETE CASCADE," +
-                    "exipiration TIMESTAMP NOT NULL);");
+                    "expiration TIMESTAMP NOT NULL);");
         } finally {
             if (stm != null) {
                 stm.close();
@@ -192,7 +194,7 @@ public class DB {
     // create user
     public void createUser(User user) throws SQLException {
         final String query = "INSERT INTO users (uid, roleid, email, pass, first_name, second_name)" +
-                "VALUES (DEFAULT, ?, ?, crypt(?, gen_salt('bf')), ?, ?)";
+                "VALUES (DEFAULT, ?, ?, crypt(?, gen_salt('bf')), ?, ?) RETURNING uid";
         PreparedStatement create = connection.prepareStatement(query);
         try {
             create.setString(1, user.getRole().getRoleID());
@@ -200,7 +202,9 @@ public class DB {
             create.setString(3, user.getPassword());
             create.setString(4, user.getFirstName());
             create.setString(5, user.getSecondName());
-            create.executeUpdate();
+            ResultSet rs = create.executeQuery();
+            rs.next();
+            user.setId(rs.getInt("uid"));
         } finally {
             if (create != null) {
                 create.close();
@@ -228,10 +232,8 @@ public class DB {
         return ok;
     }
 
-    // TODO: public?
-    // or better to force use either a code or the old password?
     // change password
-    public void changePassword(String email, String newPassword) throws SQLException, UserNotFoundException {
+    private void changePassword(String email, String newPassword) throws SQLException, UserNotFoundException {
         final String query = "UPDATE users SET pass = crypt(?, gen_salt('bf')) WHERE email = ?";
         PreparedStatement stm = connection.prepareStatement(query);
         try {
@@ -246,6 +248,29 @@ public class DB {
                 stm.close();
             }
         }
+    }
+
+    // change password given the old one
+    public void changePasswordWithOldPassword(String email, String oldPassword, String newPassword) throws UserNotFoundException, WrongPasswordException, SQLException {
+
+        // check old password
+        if (!authenticate(email, oldPassword)) {
+            throw new WrongPasswordException();
+        }
+
+        // change password
+        changePassword(email, newPassword);
+    }
+
+    public void changePasswordWithCode(String email, String code, String newPassword) throws SQLException, WrongCodeException, UserNotFoundException {
+
+        // check code
+        if (!checkPasswordReset(email, code)) {
+            throw new WrongCodeException();
+        }
+
+        // change password
+        changePassword(email, newPassword);
     }
 
     // TODO: update user?
@@ -328,7 +353,7 @@ public class DB {
         for (int i = 0; i < maxAttempts; i++) {
             try {
                 final String code = (UUID.randomUUID().toString() + UUID.randomUUID().toString()).replace("-", "");
-                PreparedStatement stm = connection.prepareStatement("INSERT INTO resets (code, uid, exipiration) VALUES (?, ?, ?);");
+                PreparedStatement stm = connection.prepareStatement("INSERT INTO resets (code, uid, expiration) VALUES (?, ?, ?);");
                 try {
                     stm.setString(1, code);
                     stm.setInt(2, userID);
@@ -349,14 +374,35 @@ public class DB {
 
     // check password reset
     public boolean checkPasswordReset(int userID, String code) throws SQLException {
-        final String query = "SELECT exipiration FROM resets WHERE code = ? AND uid = ?;";
+        final String query = "SELECT expiration FROM resets WHERE code = ? AND uid = ?;";
         PreparedStatement stm = connection.prepareStatement(query);
         try {
             stm.setString(1, code);
             stm.setInt(2, userID);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                Timestamp expire = rs.getTimestamp("exipiration");
+                Timestamp expire = rs.getTimestamp("expiration");
+                return expire.after(new Date());
+            } else {
+                return false;
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // check password reset
+    public boolean checkPasswordReset(String email, String code) throws SQLException {
+        final String query = "SELECT r.expiration FROM resets r NATURAL JOIN users u WHERE r.code = ? AND u.email = ?;";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setString(1, code);
+            stm.setString(2, email);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                Timestamp expire = rs.getTimestamp("expiration");
                 return expire.after(new Date());
             } else {
                 return false;

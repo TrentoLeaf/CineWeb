@@ -80,6 +80,27 @@ public class User implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (id != user.id) return false;
+        if (Double.compare(user.credit, credit) != 0) return false;
+        if (role != user.role) return false;
+        if (!email.equals(user.email)) return false;
+        if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
+        return !(secondName != null ? !secondName.equals(user.secondName) : user.secondName != null);
+
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +

@@ -42,7 +42,8 @@ public enum Role {
     }
 
     public static Role fromID(String id) {
-        return map.get(id);
+        // NB: id can contains some spaces at the end since saved as CHAR(8)
+        return map.get(id.trim());
     }
 
 }
