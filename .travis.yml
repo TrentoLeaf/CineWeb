@@ -1,0 +1,9 @@
+language: java
+jdk:
+  - oraclejdk7
+  - openjdk7
+env: DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres
+addons:
+  postgresql: "9.3"
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
