@@ -27,7 +27,7 @@ public enum Role {
     }
 
     public static List<Role> getRoles() {
-        List roles = new ArrayList();
+        List<Role> roles = new ArrayList<>();
         roles.add(ADMIN);
         roles.add(CLIENT);
         return roles;
