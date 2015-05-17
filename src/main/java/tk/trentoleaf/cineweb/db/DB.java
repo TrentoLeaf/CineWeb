@@ -2,6 +2,7 @@ package tk.trentoleaf.cineweb.db;
 
 import org.joda.time.DateTime;
 import org.postgresql.util.PSQLException;
+import tk.trentoleaf.cineweb.exceptions.ConstrainException;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
@@ -262,6 +263,7 @@ public class DB {
         changePassword(email, newPassword);
     }
 
+    // change password given a code
     public void changePasswordWithCode(String email, String code, String newPassword) throws SQLException, WrongCodeException, UserNotFoundException {
 
         // check code
@@ -274,6 +276,29 @@ public class DB {
     }
 
     // TODO: update user?
+    // update a user -> NB: does not change the password
+    public void updateUser(User user) throws SQLException, UserNotFoundException, ConstrainException {
+        final String query = "UPDATE users SET roleid = ?, email = ?, first_name = ?, second_name = ?, credit = ? WHERE uid = ?";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setString(1, user.getRole().getRoleID());
+            stm.setString(2, user.getEmail());
+            stm.setString(3, user.getFirstName());
+            stm.setString(4, user.getSecondName());
+            stm.setDouble(5, user.getCredit());
+            stm.setInt(6, user.getId());
+            int rows = stm.executeUpdate();
+            if (rows != 1) {
+                throw new UserNotFoundException();
+            }
+        } catch (PSQLException e) {
+            throw new ConstrainException(e);
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
 
     // delete an user
     // NB: cascade
@@ -315,6 +340,32 @@ public class DB {
             }
         }
         return users;
+    }
+
+    // get a single user
+    public User getUser(String email) throws SQLException, UserNotFoundException {
+        final String query = "SELECT uid, roleid, first_name, second_name, credit FROM users WHERE email = ?;";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setString(1, email);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                User u = new User();
+                u.setId(rs.getInt("uid"));
+                u.setRole(Role.fromID(rs.getString("roleid")));
+                u.setEmail(email);
+                u.setFirstName(rs.getString("first_name"));
+                u.setSecondName(rs.getString("second_name"));
+                u.setCredit(rs.getDouble("credit"));
+                return u;
+            }
+            // if here -> no such user
+            throw new UserNotFoundException();
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
     }
 
     // exists user

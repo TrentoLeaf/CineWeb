@@ -61,6 +61,33 @@ public class DBTest {
     }
 
     @Test
+    public void updateUser() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+
+        // save users
+        db.createUser(u1);
+        db.createUser(u2);
+
+        // edit user 2
+        u2.setSecondName("Rossi");
+        u2.setRole(Role.ADMIN);
+        u2.setEmail("davide@tk.org");
+        u2.setCredit(34.23);
+
+        // update user
+        db.updateUser(u2);
+
+        // current
+        User retrieved = db.getUser("davide@tk.org");
+
+        // test
+        assertEquals(u2, retrieved);
+    }
+
+    @Test
     public void deleteUser() throws Exception {
 
         // create users

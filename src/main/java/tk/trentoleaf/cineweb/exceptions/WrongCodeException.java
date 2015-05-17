@@ -1,4 +1,4 @@
 package tk.trentoleaf.cineweb.exceptions;
 
-public class WrongCodeException extends Exception {
+public class WrongCodeException extends DBException {
 }
