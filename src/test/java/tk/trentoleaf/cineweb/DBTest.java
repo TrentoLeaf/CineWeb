@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
 import tk.trentoleaf.cineweb.model.Role;
@@ -61,7 +62,7 @@ public class DBTest {
     }
 
     @Test
-    public void updateUser() throws Exception {
+    public void updateUserSuccess() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
@@ -85,6 +86,16 @@ public class DBTest {
 
         // test
         assertEquals(u2, retrieved);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void updateUserFail() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "aaaaaaaaaa", "bbbbbbbb", "cccccc", "ddddddd");
+
+        // update user
+        db.updateUser(u1);
     }
 
     @Test
