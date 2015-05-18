@@ -6,6 +6,7 @@ import tk.trentoleaf.cineweb.exceptions.ConstrainException;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
+import tk.trentoleaf.cineweb.model.Film;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 
@@ -64,6 +65,7 @@ public class DB {
         createTableRoles();
         createTableUsers();
         createTablePasswordResets();
+        createTableFilms();
     }
 
     // destroy the db
@@ -73,6 +75,7 @@ public class DB {
         dropTablePasswordResets();
         dropTableUsers();
         dropTableRoles();
+        dropTableFilms();
     }
 
     // make sure the extension crypto is loaded
@@ -463,6 +466,84 @@ public class DB {
                 stm.close();
             }
         }
+    }
+
+    // create table films
+    private void createTableFilms() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("CREATE TABLE IF NOT EXISTS films (" +
+                    "fid SERIAL PRIMARY KEY," +
+                    "title VARCHAR(100) NOT NULL," +
+                    "genre VARCHAR(20)," +
+                    "trailer VARCHAR(100)," +
+                    "playbill VARCHAR(100)," +
+                    "plot TEXT," +
+                    "duration INTEGER);");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // drop table films
+    private void dropTableFilms() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("DROP TABLE IF EXISTS films;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // insert a new film
+    public void insertFilm(Film film) throws SQLException {
+        final String query = "INSERT INTO films (fid, title, genre, trailer, playbill, plot, duration) VALUES " +
+                "(DEFAULT, ?, ?, ?, ?, ?, ?) RETURNING fid";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setString(1, film.getTitle());
+            stm.setString(2, film.getGenre());
+            stm.setString(3, film.getTrailer());
+            stm.setString(4, film.getPlaybill());
+            stm.setString(5, film.getPlot());
+            stm.setInt(6, film.getDuration());
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+            film.setId(rs.getInt("fid"));
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // list of users
+    public List<Film> getFilms() throws SQLException {
+        List<Film> films = new ArrayList<>();
+        Statement stm = connection.createStatement();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT fid, title, genre, trailer, playbill, plot, duration FROM films;");
+            while (rs.next()) {
+                Film f = new Film();
+                f.setId(rs.getInt("fid"));
+                f.setTitle(rs.getString("title"));
+                f.setGenre(rs.getString("genre"));
+                f.setTrailer(rs.getString("trailer"));
+                f.setPlaybill(rs.getString("playbill"));
+                f.setPlot(rs.getString("plot"));
+                f.setDuration(rs.getInt("duration"));
+                films.add(f);
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return films;
     }
 
 }

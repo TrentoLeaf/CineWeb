@@ -8,6 +8,7 @@ import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
+import tk.trentoleaf.cineweb.model.Film;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 
@@ -202,6 +203,29 @@ public class DBTest {
 
         // change password
         db.changePasswordWithCode("teo@teo.com", code, "new_password");
+    }
+
+    @Test
+    public void insertFilmSuccess() throws Exception{
+
+        // films
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
+
+        // save films
+        db.insertFilm(f1);
+        db.insertFilm(f2);
+
+        // expected
+        List<Film> expected = new ArrayList<>();
+        expected.add(f1);
+        expected.add(f2);
+
+        // current
+        List<Film> current = db.getFilms();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
 }
