@@ -10,4 +10,4 @@ before_script:
 notifications:
   slack:
     rooms:
-      - cineweb:tKfEusk2qVyLPsv9rRbApttC#travis
+      - cineweb:tKfEusk2qVyLPsv9rRbApttC#services
