@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.exceptions.ConstrainException;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
@@ -62,6 +63,11 @@ public class DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
+    @Test(expected = UserNotFoundException.class)
+    public void getUserFail() throws Exception {
+        db.getUser("no_email");
+    }
+
     @Test
     public void updateUserSuccess() throws Exception {
 
@@ -90,7 +96,7 @@ public class DBTest {
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void updateUserFail() throws Exception {
+    public void updateUserFail1() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "aaaaaaaaaa", "bbbbbbbb", "cccccc", "ddddddd");
@@ -99,8 +105,22 @@ public class DBTest {
         db.updateUser(u1);
     }
 
+    @Test(expected = ConstrainException.class)
+    public void updateUserFail2() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "aaa", "aaa", "aaa", "aaa");
+        final User u2 = new User(Role.ADMIN, "bbb", "bbb", "bbb", "bbb");
+        db.createUser(u1);
+        db.createUser(u2);
+
+        // update user
+        u1.setEmail(u2.getEmail());
+        db.updateUser(u1);
+    }
+
     @Test
-    public void deleteUser() throws Exception {
+    public void deleteUserSuccess() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
@@ -123,6 +143,17 @@ public class DBTest {
         // test
         assertEquals(1, current.size());
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+
+    @Test(expected = UserNotFoundException.class)
+    public void deleteUserFail() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+
+        // delete user 1
+        db.deleteUser(u1.getId());
     }
 
     @Test
@@ -159,7 +190,7 @@ public class DBTest {
     }
 
     @Test(expected = WrongPasswordException.class)
-    public void changePasswordFail() throws Exception {
+    public void changePasswordFail1() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
@@ -167,6 +198,18 @@ public class DBTest {
 
         // change password
         db.changePasswordWithOldPassword("teo@teo.com", "wrong_password", "new_password");
+    }
+
+    @Test(expected = WrongPasswordException.class)
+    public void changePasswordFail2() throws Exception {
+
+        // change password
+        db.changePasswordWithOldPassword("not_existing_user", "wrong_password", "new_password");
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void requestResetPasswordFail() throws Exception {
+        db.requestResetPassword(1234534);
     }
 
     @Test
@@ -206,7 +249,7 @@ public class DBTest {
     }
 
     @Test
-    public void insertFilmSuccess() throws Exception{
+    public void insertFilmSuccess() throws Exception {
 
         // films
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
