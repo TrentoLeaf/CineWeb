@@ -58,6 +58,9 @@ public class DB {
         // use module crypt
         prepareCrypto();
 
+        // load citext
+        prepareCitext();
+
         // initialize the database
         createTableRoles();
         createTableUsers();
@@ -80,6 +83,18 @@ public class DB {
         Statement stm = connection.createStatement();
         try {
             stm.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // make sure the extension citext is loaded
+    private void prepareCitext() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("CREATE EXTENSION IF NOT EXISTS citext;");
         } finally {
             if (stm != null) {
                 stm.close();
@@ -140,7 +155,7 @@ public class DB {
             stm.execute("CREATE TABLE IF NOT EXISTS users (" +
                     "uid SERIAL PRIMARY KEY," +
                     "roleid CHAR(8) REFERENCES roles(roleid)," +
-                    "email VARCHAR(256) UNIQUE NOT NULL," +
+                    "email CITEXT UNIQUE NOT NULL," +
                     "pass CHAR(60) NOT NULL," +
                     "first_name VARCHAR(100)," +
                     "second_name VARCHAR(100)," +
@@ -193,7 +208,7 @@ public class DB {
     }
 
     // create user
-    public void createUser(User user) throws SQLException {
+    public void createUser(User user) throws SQLException, ConstrainException {
         final String query = "INSERT INTO users (uid, roleid, email, pass, first_name, second_name)" +
                 "VALUES (DEFAULT, ?, ?, crypt(?, gen_salt('bf')), ?, ?) RETURNING uid";
         PreparedStatement create = connection.prepareStatement(query);
@@ -206,6 +221,8 @@ public class DB {
             ResultSet rs = create.executeQuery();
             rs.next();
             user.setId(rs.getInt("uid"));
+        } catch (PSQLException e) {
+            throw new ConstrainException(e);
         } finally {
             if (create != null) {
                 create.close();

@@ -37,7 +37,7 @@ public class DBTest {
     }
 
     @Test
-    public void createUser() throws Exception {
+    public void createUserSuccess() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
@@ -58,6 +58,18 @@ public class DBTest {
         // test
         assertEquals(2, current.size());
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test(expected = ConstrainException.class)
+    public void createUserFail() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(Role.CLIENT, "Teo@teo.com", "dada", "Davide", "Pedranz");
+
+        // save users
+        db.createUser(u1);
+        db.createUser(u2);
     }
 
     @Test(expected = UserNotFoundException.class)
@@ -112,7 +124,7 @@ public class DBTest {
         db.createUser(u2);
 
         // update user
-        u1.setEmail(u2.getEmail());
+        u1.setEmail(u2.getEmail().toUpperCase());
         db.updateUser(u1);
     }
 
