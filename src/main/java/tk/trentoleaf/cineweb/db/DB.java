@@ -2,10 +2,7 @@ package tk.trentoleaf.cineweb.db;
 
 import org.joda.time.DateTime;
 import org.postgresql.util.PSQLException;
-import tk.trentoleaf.cineweb.exceptions.ConstrainException;
-import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
-import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
+import tk.trentoleaf.cineweb.exceptions.*;
 import tk.trentoleaf.cineweb.model.Film;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
@@ -278,7 +275,6 @@ public class DB {
         changePassword(email, newPassword);
     }
 
-    // TODO: update user?
     // update a user -> NB: does not change the password
     public void updateUser(User user) throws SQLException, UserNotFoundException, ConstrainException {
         final String query = "UPDATE users SET roleid = ?, email = ?, first_name = ?, second_name = ?, credit = ? WHERE uid = ?";
@@ -544,6 +540,46 @@ public class DB {
             }
         }
         return films;
+    }
+
+    // edit film
+    public void updateFilm(Film film) throws SQLException, EntryNotFoundException {
+        final String query = "UPDATE films SET title = ?, genre = ?, trailer = ?, playbill = ?, plot = ?, duration = ? WHERE fid = ?";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setString(1, film.getTitle());
+            stm.setString(2, film.getGenre());
+            stm.setString(3, film.getTrailer());
+            stm.setString(4, film.getPlaybill());
+            stm.setString(5, film.getPlot());
+            stm.setInt(6, film.getDuration());
+            stm.setInt(7, film.getId());
+            int rows = stm.executeUpdate();
+            if (rows != 1) {
+                throw new EntryNotFoundException();
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // delete film
+    public void deleteFilm(int id) throws SQLException, EntryNotFoundException {
+        final String query = "DELETE FROM films WHERE fid = ?";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setInt(1, id);
+            int rows = stm.executeUpdate();
+            if (rows != 1) {
+                throw new EntryNotFoundException();
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
     }
 
 }

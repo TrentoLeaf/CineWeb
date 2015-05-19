@@ -5,10 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.db.DB;
-import tk.trentoleaf.cineweb.exceptions.ConstrainException;
-import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
-import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
+import tk.trentoleaf.cineweb.exceptions.*;
 import tk.trentoleaf.cineweb.model.Film;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
@@ -269,6 +266,78 @@ public class DBTest {
 
         // test
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test
+    public void deleteFilmSuccess() throws Exception {
+
+        // save films
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
+        db.insertFilm(f1);
+        db.insertFilm(f2);
+
+        // delete
+        db.deleteFilm(f1.getId());
+
+        // expected
+        List<Film> expected = new ArrayList<>();
+        expected.add(f2);
+
+        // current
+        List<Film> current = db.getFilms();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void deleteFilmFail() throws Exception {
+
+        // delete
+        db.deleteFilm(43543543);
+    }
+
+    @Test
+    public void updateFilmSuccess() throws Exception {
+
+        // save films
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
+        db.insertFilm(f1);
+        db.insertFilm(f2);
+
+        // edit film 2
+        f2.setTitle("New title");
+        f2.setGenre("Wowo");
+        f2.setTrailer(null);
+        f2.setPlaybill("http:////");
+        f2.setPlot(null);
+        f2.setDuration(33);
+
+        // update
+        db.updateFilm(f2);
+
+        // expected
+        List<Film> expected = new ArrayList<>();
+        expected.add(f2);
+        expected.add(f1);
+
+        // current
+        List<Film> current = db.getFilms();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void updateFilmFail() throws Exception {
+
+        // film
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+
+        // edit
+        db.updateFilm(f1);
     }
 
 }
