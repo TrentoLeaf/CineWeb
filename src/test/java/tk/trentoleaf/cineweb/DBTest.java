@@ -60,6 +60,48 @@ public class DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
+    @Test
+    public void testEmailCase1() throws Exception {
+
+        // email
+        final String email = "T342eO@ddAAbb.com";
+
+        // create users
+        final User expected = new User(Role.ADMIN, email, "teo", "Matteo", "Zeni");
+
+        // save users
+        db.createUser(expected);
+
+        // from db
+        final User current = db.getUser(email.toLowerCase());
+
+        // test
+        assertEquals(expected, current);
+    }
+
+    @Test
+    public void testEmailCase2() throws Exception {
+
+        // email
+        final String email = "TeO@ddAAbb.com";
+
+        // create users
+        final User u1 = new User(Role.ADMIN, email, "teo", "Matteo", "Zeni");
+        db.createUser(u1);
+        u1.setEmail(email.toUpperCase());
+
+        // expected
+        final List<User> expected = new ArrayList<>();
+        expected.add(u1);
+
+        // from db
+        final List<User> current = db.getUsers();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(current, expected));
+    }
+
+
     @Test(expected = ConstrainException.class)
     public void createUserFail() throws Exception {
 

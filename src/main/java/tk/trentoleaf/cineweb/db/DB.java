@@ -2,7 +2,11 @@ package tk.trentoleaf.cineweb.db;
 
 import org.joda.time.DateTime;
 import org.postgresql.util.PSQLException;
-import tk.trentoleaf.cineweb.exceptions.*;
+import tk.trentoleaf.cineweb.exceptions.ConstrainException;
+import tk.trentoleaf.cineweb.exceptions.EntryNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
+import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
 import tk.trentoleaf.cineweb.model.Film;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
@@ -26,7 +30,7 @@ public class DB {
 
         final String username = dbUri.getUserInfo().split(":")[0];
         final String password = dbUri.getUserInfo().split(":")[1];
-        final String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+        final String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath() + "?stringtype=unspecified";
 
         return DriverManager.getConnection(dbUrl, username, password);
     }
@@ -210,7 +214,7 @@ public class DB {
     // create user
     public void createUser(User user) throws SQLException, ConstrainException {
         final String query = "INSERT INTO users (uid, roleid, email, pass, first_name, second_name)" +
-                "VALUES (DEFAULT, ?, ?, crypt(?, gen_salt('bf')), ?, ?) RETURNING uid";
+                "VALUES (DEFAULT, ?, lower(?), crypt(?, gen_salt('bf')), ?, ?) RETURNING uid";
         PreparedStatement create = connection.prepareStatement(query);
         try {
             create.setString(1, user.getRole().getRoleID());
@@ -339,7 +343,7 @@ public class DB {
         List<User> users = new ArrayList<>();
         Statement stm = connection.createStatement();
         try {
-            ResultSet rs = stm.executeQuery("SELECT uid, roleid, email, first_name, second_name, credit FROM users;");
+            ResultSet rs = stm.executeQuery("SELECT uid, roleid, lower(email) as email, first_name, second_name, credit FROM users;");
             while (rs.next()) {
                 User u = new User();
                 u.setId(rs.getInt("uid"));
