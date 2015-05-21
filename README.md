@@ -5,5 +5,6 @@ Progetto di programmazione per il web, anno 2014-15.
 **Link utili:**
   * demo su Heroku: https://cineweb.herokuapp.com
   * testo del progetto: https://docs.google.com/viewer?a=v&pid=sites&srcid=ZGVmYXVsdGRvbWFpbnx3ZWJwcm9ndW5pdG58Z3g6MTc3MjQwNzI1YmQ4Y2U5OA
+  * Assegnamenti tasks: https://docs.google.com/spreadsheets/d/1qIVcvdsYoqQC--T9oOEdVZJa8XHUeluESfJ1-gqp8n0/edit?usp=sharing
 
 Proudly powered by TrentoLeaf+
