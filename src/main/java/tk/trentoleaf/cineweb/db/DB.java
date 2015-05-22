@@ -70,6 +70,7 @@ public class DB {
         createTableUsers();
         createTablePasswordResets();
         createTableFilms();
+        createTableRooms();
     }
 
     // destroy the db
@@ -80,6 +81,7 @@ public class DB {
         dropTableUsers();
         dropTableRoles();
         dropTableFilms();
+        dropTableRooms();
     }
 
     // make sure the extension crypto is loaded
@@ -602,5 +604,33 @@ public class DB {
             }
         }
     }
+
+    // create table films
+    private void createTableRooms() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("CREATE TABLE IF NOT EXISTS rooms (" +
+                    "rid SERIAL PRIMARY KEY," +
+                    "rows INTEGER NOT NULL," +
+                    "cols INTEGER NOT NULL);");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // drop table films
+    private void dropTableRooms() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("DROP TABLE IF EXISTS rooms;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
 
 }
