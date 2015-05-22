@@ -5,9 +5,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.db.DB;
-import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
-import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
+import tk.trentoleaf.cineweb.exceptions.*;
+import tk.trentoleaf.cineweb.model.Film;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 
@@ -38,7 +37,7 @@ public class DBTest {
     }
 
     @Test
-    public void createUser() throws Exception {
+    public void createUserSuccess() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
@@ -59,6 +58,65 @@ public class DBTest {
         // test
         assertEquals(2, current.size());
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test
+    public void testEmailCase1() throws Exception {
+
+        // email
+        final String email = "T342eO@ddAAbb.com";
+
+        // create users
+        final User expected = new User(Role.ADMIN, email, "teo", "Matteo", "Zeni");
+
+        // save users
+        db.createUser(expected);
+
+        // from db
+        final User current = db.getUser(email.toLowerCase());
+
+        // test
+        assertEquals(expected, current);
+    }
+
+    @Test
+    public void testEmailCase2() throws Exception {
+
+        // email
+        final String email = "TeO@ddAAbb.com";
+
+        // create users
+        final User u1 = new User(Role.ADMIN, email, "teo", "Matteo", "Zeni");
+        db.createUser(u1);
+        u1.setEmail(email.toUpperCase());
+
+        // expected
+        final List<User> expected = new ArrayList<>();
+        expected.add(u1);
+
+        // from db
+        final List<User> current = db.getUsers();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(current, expected));
+    }
+
+
+    @Test(expected = ConstrainException.class)
+    public void createUserFail() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(Role.CLIENT, "Teo@teo.com", "dada", "Davide", "Pedranz");
+
+        // save users
+        db.createUser(u1);
+        db.createUser(u2);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void getUserFail() throws Exception {
+        db.getUser("no_email");
     }
 
     @Test
@@ -89,7 +147,7 @@ public class DBTest {
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void updateUserFail() throws Exception {
+    public void updateUserFail1() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "aaaaaaaaaa", "bbbbbbbb", "cccccc", "ddddddd");
@@ -98,8 +156,22 @@ public class DBTest {
         db.updateUser(u1);
     }
 
+    @Test(expected = ConstrainException.class)
+    public void updateUserFail2() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "aaa", "aaa", "aaa", "aaa");
+        final User u2 = new User(Role.ADMIN, "bbb", "bbb", "bbb", "bbb");
+        db.createUser(u1);
+        db.createUser(u2);
+
+        // update user
+        u1.setEmail(u2.getEmail().toUpperCase());
+        db.updateUser(u1);
+    }
+
     @Test
-    public void deleteUser() throws Exception {
+    public void deleteUserSuccess() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
@@ -122,6 +194,17 @@ public class DBTest {
         // test
         assertEquals(1, current.size());
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+
+    @Test(expected = UserNotFoundException.class)
+    public void deleteUserFail() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+
+        // delete user 1
+        db.deleteUser(u1.getId());
     }
 
     @Test
@@ -158,7 +241,7 @@ public class DBTest {
     }
 
     @Test(expected = WrongPasswordException.class)
-    public void changePasswordFail() throws Exception {
+    public void changePasswordFail1() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
@@ -166,6 +249,18 @@ public class DBTest {
 
         // change password
         db.changePasswordWithOldPassword("teo@teo.com", "wrong_password", "new_password");
+    }
+
+    @Test(expected = WrongPasswordException.class)
+    public void changePasswordFail2() throws Exception {
+
+        // change password
+        db.changePasswordWithOldPassword("not_existing_user", "wrong_password", "new_password");
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void requestResetPasswordFail() throws Exception {
+        db.requestResetPassword(1234534);
     }
 
     @Test
@@ -202,6 +297,101 @@ public class DBTest {
 
         // change password
         db.changePasswordWithCode("teo@teo.com", code, "new_password");
+    }
+
+    @Test
+    public void insertFilmSuccess() throws Exception {
+
+        // films
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
+
+        // save films
+        db.insertFilm(f1);
+        db.insertFilm(f2);
+
+        // expected
+        List<Film> expected = new ArrayList<>();
+        expected.add(f1);
+        expected.add(f2);
+
+        // current
+        List<Film> current = db.getFilms();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test
+    public void deleteFilmSuccess() throws Exception {
+
+        // save films
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
+        db.insertFilm(f1);
+        db.insertFilm(f2);
+
+        // delete
+        db.deleteFilm(f1.getId());
+
+        // expected
+        List<Film> expected = new ArrayList<>();
+        expected.add(f2);
+
+        // current
+        List<Film> current = db.getFilms();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void deleteFilmFail() throws Exception {
+
+        // delete
+        db.deleteFilm(43543543);
+    }
+
+    @Test
+    public void updateFilmSuccess() throws Exception {
+
+        // save films
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
+        db.insertFilm(f1);
+        db.insertFilm(f2);
+
+        // edit film 2
+        f2.setTitle("New title");
+        f2.setGenre("Wowo");
+        f2.setTrailer(null);
+        f2.setPlaybill("http:////");
+        f2.setPlot(null);
+        f2.setDuration(33);
+
+        // update
+        db.updateFilm(f2);
+
+        // expected
+        List<Film> expected = new ArrayList<>();
+        expected.add(f2);
+        expected.add(f1);
+
+        // current
+        List<Film> current = db.getFilms();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void updateFilmFail() throws Exception {
+
+        // film
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+
+        // edit
+        db.updateFilm(f1);
     }
 
 }

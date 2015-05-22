@@ -3,9 +3,11 @@ package tk.trentoleaf.cineweb.db;
 import org.joda.time.DateTime;
 import org.postgresql.util.PSQLException;
 import tk.trentoleaf.cineweb.exceptions.ConstrainException;
+import tk.trentoleaf.cineweb.exceptions.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
+import tk.trentoleaf.cineweb.model.Film;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 
@@ -28,7 +30,7 @@ public class DB {
 
         final String username = dbUri.getUserInfo().split(":")[0];
         final String password = dbUri.getUserInfo().split(":")[1];
-        final String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+        final String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath() + "?stringtype=unspecified";
 
         return DriverManager.getConnection(dbUrl, username, password);
     }
@@ -60,10 +62,14 @@ public class DB {
         // use module crypt
         prepareCrypto();
 
+        // load citext
+        prepareCitext();
+
         // initialize the database
         createTableRoles();
         createTableUsers();
         createTablePasswordResets();
+        createTableFilms();
     }
 
     // destroy the db
@@ -73,6 +79,7 @@ public class DB {
         dropTablePasswordResets();
         dropTableUsers();
         dropTableRoles();
+        dropTableFilms();
     }
 
     // make sure the extension crypto is loaded
@@ -80,6 +87,18 @@ public class DB {
         Statement stm = connection.createStatement();
         try {
             stm.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // make sure the extension citext is loaded
+    private void prepareCitext() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("CREATE EXTENSION IF NOT EXISTS citext;");
         } finally {
             if (stm != null) {
                 stm.close();
@@ -140,7 +159,7 @@ public class DB {
             stm.execute("CREATE TABLE IF NOT EXISTS users (" +
                     "uid SERIAL PRIMARY KEY," +
                     "roleid CHAR(8) REFERENCES roles(roleid)," +
-                    "email VARCHAR(256) UNIQUE NOT NULL," +
+                    "email CITEXT UNIQUE NOT NULL," +
                     "pass CHAR(60) NOT NULL," +
                     "first_name VARCHAR(100)," +
                     "second_name VARCHAR(100)," +
@@ -193,9 +212,9 @@ public class DB {
     }
 
     // create user
-    public void createUser(User user) throws SQLException {
+    public void createUser(User user) throws SQLException, ConstrainException {
         final String query = "INSERT INTO users (uid, roleid, email, pass, first_name, second_name)" +
-                "VALUES (DEFAULT, ?, ?, crypt(?, gen_salt('bf')), ?, ?) RETURNING uid";
+                "VALUES (DEFAULT, ?, lower(?), crypt(?, gen_salt('bf')), ?, ?) RETURNING uid";
         PreparedStatement create = connection.prepareStatement(query);
         try {
             create.setString(1, user.getRole().getRoleID());
@@ -206,6 +225,8 @@ public class DB {
             ResultSet rs = create.executeQuery();
             rs.next();
             user.setId(rs.getInt("uid"));
+        } catch (PSQLException e) {
+            throw new ConstrainException(e);
         } finally {
             if (create != null) {
                 create.close();
@@ -275,7 +296,6 @@ public class DB {
         changePassword(email, newPassword);
     }
 
-    // TODO: update user?
     // update a user -> NB: does not change the password
     public void updateUser(User user) throws SQLException, UserNotFoundException, ConstrainException {
         final String query = "UPDATE users SET roleid = ?, email = ?, first_name = ?, second_name = ?, credit = ? WHERE uid = ?";
@@ -323,7 +343,7 @@ public class DB {
         List<User> users = new ArrayList<>();
         Statement stm = connection.createStatement();
         try {
-            ResultSet rs = stm.executeQuery("SELECT uid, roleid, email, first_name, second_name, credit FROM users;");
+            ResultSet rs = stm.executeQuery("SELECT uid, roleid, lower(email) as email, first_name, second_name, credit FROM users;");
             while (rs.next()) {
                 User u = new User();
                 u.setId(rs.getInt("uid"));
@@ -457,6 +477,124 @@ public class DB {
                 return expire.after(new Date());
             } else {
                 return false;
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // create table films
+    private void createTableFilms() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("CREATE TABLE IF NOT EXISTS films (" +
+                    "fid SERIAL PRIMARY KEY," +
+                    "title VARCHAR(100) NOT NULL," +
+                    "genre VARCHAR(20)," +
+                    "trailer VARCHAR(100)," +
+                    "playbill VARCHAR(100)," +
+                    "plot TEXT," +
+                    "duration INTEGER);");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // drop table films
+    private void dropTableFilms() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("DROP TABLE IF EXISTS films;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // insert a new film
+    public void insertFilm(Film film) throws SQLException {
+        final String query = "INSERT INTO films (fid, title, genre, trailer, playbill, plot, duration) VALUES " +
+                "(DEFAULT, ?, ?, ?, ?, ?, ?) RETURNING fid";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setString(1, film.getTitle());
+            stm.setString(2, film.getGenre());
+            stm.setString(3, film.getTrailer());
+            stm.setString(4, film.getPlaybill());
+            stm.setString(5, film.getPlot());
+            stm.setInt(6, film.getDuration());
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+            film.setId(rs.getInt("fid"));
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // list of users
+    public List<Film> getFilms() throws SQLException {
+        List<Film> films = new ArrayList<>();
+        Statement stm = connection.createStatement();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT fid, title, genre, trailer, playbill, plot, duration FROM films;");
+            while (rs.next()) {
+                Film f = new Film();
+                f.setId(rs.getInt("fid"));
+                f.setTitle(rs.getString("title"));
+                f.setGenre(rs.getString("genre"));
+                f.setTrailer(rs.getString("trailer"));
+                f.setPlaybill(rs.getString("playbill"));
+                f.setPlot(rs.getString("plot"));
+                f.setDuration(rs.getInt("duration"));
+                films.add(f);
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return films;
+    }
+
+    // edit film
+    public void updateFilm(Film film) throws SQLException, EntryNotFoundException {
+        final String query = "UPDATE films SET title = ?, genre = ?, trailer = ?, playbill = ?, plot = ?, duration = ? WHERE fid = ?";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setString(1, film.getTitle());
+            stm.setString(2, film.getGenre());
+            stm.setString(3, film.getTrailer());
+            stm.setString(4, film.getPlaybill());
+            stm.setString(5, film.getPlot());
+            stm.setInt(6, film.getDuration());
+            stm.setInt(7, film.getId());
+            int rows = stm.executeUpdate();
+            if (rows != 1) {
+                throw new EntryNotFoundException();
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // delete film
+    public void deleteFilm(int id) throws SQLException, EntryNotFoundException {
+        final String query = "DELETE FROM films WHERE fid = ?";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setInt(1, id);
+            int rows = stm.executeUpdate();
+            if (rows != 1) {
+                throw new EntryNotFoundException();
             }
         } finally {
             if (stm != null) {

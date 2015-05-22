@@ -17,7 +17,7 @@ public class User implements Serializable {
 
     public User(Role role, String email, String password, String firstName, String secondName) {
         this.role = role;
-        this.email = email;
+        this.email = email.toLowerCase();
         this.password = password;
         this.firstName = firstName;
         this.secondName = secondName;
@@ -40,11 +40,11 @@ public class User implements Serializable {
     }
 
     public String getEmail() {
-        return email;
+        return email.toLowerCase();
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email.toLowerCase();
     }
 
     public String getPassword() {
@@ -90,7 +90,7 @@ public class User implements Serializable {
         if (id != user.id) return false;
         if (Double.compare(user.credit, credit) != 0) return false;
         if (role != user.role) return false;
-        if (!email.equals(user.email)) return false;
+        if (!email.equalsIgnoreCase(user.email)) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         return !(secondName != null ? !secondName.equals(user.secondName) : user.secondName != null);
 
