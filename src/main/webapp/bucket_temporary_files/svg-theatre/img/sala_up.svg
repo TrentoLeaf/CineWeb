@@ -1,0 +1,17 @@
+<svg>
+	<style type='text/css'>
+		.stage_step{fill:#282828;}
+		.stage_floor{fill:#464646;}
+		.stage_screen{fill:#A1D5FF;}
+		.stage_screen_depth{fill:#45A3DD;}
+	</style>
+	<g class='stage'>
+		<polygon class='stage_floor' points='675,0 5,0 0,140 680,140'/>
+		<polygon class='stage_step' points='665,165 15,165 0,140 680,140'/>
+		<g class='stage_screen'>
+			<path class='stage_screen' d='M531,105c-0.9,2.5-2.5,5-5.6,5H154.9c-3.1,0-5-2.5-5.6-5L115,35h450L531,105z'/>
+			<path class='stage_screen_depth' d='M565,35c0-2.8-2.5-5-5.6-5H120.6c-3.1,0-5.6,2.2-5.6,5l0,0c0,2.8,2.5,5,5.6,5h438.8
+				C562.5,40,565,37.8,565,35L565,35z'/>
+			</g>
+		</g>
+	</svg>

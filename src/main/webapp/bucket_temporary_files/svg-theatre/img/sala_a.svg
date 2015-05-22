@@ -1,0 +1,13 @@
+<svg>
+	<style type='text/css'>
+		.theatre_row_header_text{fill:#F0F0F0;
+		font-family:'Lato-Black';
+		font-size:20;
+		text-anchor: middle;}
+		.theatre_row_header_rectangle{fill:rgba(40,40,40,0);}
+	</style>
+	<g class='theatre_row_header'>
+		<rect x='0' y='0' class='theatre_row_header_rectangle' width='50' height='55'/>
+		<text x='25' y='35' class='theatre_row_header_text'>A</text>
+	</g>
+</svg>
