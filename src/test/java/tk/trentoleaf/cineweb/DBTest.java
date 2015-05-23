@@ -6,14 +6,13 @@ import org.junit.Before;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.exceptions.*;
-import tk.trentoleaf.cineweb.model.Film;
-import tk.trentoleaf.cineweb.model.Role;
-import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.model.*;
 
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -392,6 +391,110 @@ public class DBTest {
 
         // edit
         db.updateFilm(f1);
+    }
+
+    @Test
+    public void insertRoomSuccess() throws Exception {
+
+        // rows, cols
+        final int rows = 7;
+        final int cols = 5;
+
+        // missing seats
+        final List<Seat> missing = new ArrayList<>();
+        missing.add(new Seat(0, 0));
+        missing.add(new Seat(4, 1));
+        missing.add(new Seat(2, 2));
+        missing.add(new Seat(5, 2));
+        missing.add(new Seat(6, 2));
+        missing.add(new Seat(5, 3));
+        missing.add(new Seat(6, 3));
+        missing.add(new Seat(0, 4));
+
+        // present seats
+        final List<Seat> present = new ArrayList<>();
+        present.add(new Seat(1, 0));
+        present.add(new Seat(2, 0));
+        present.add(new Seat(3, 0));
+        present.add(new Seat(4, 0));
+        present.add(new Seat(5, 0));
+        present.add(new Seat(6, 0));
+        present.add(new Seat(0, 1));
+        present.add(new Seat(1, 1));
+        present.add(new Seat(2, 1));
+        present.add(new Seat(3, 1));
+        present.add(new Seat(5, 1));
+        present.add(new Seat(6, 1));
+        present.add(new Seat(0, 2));
+        present.add(new Seat(1, 2));
+        present.add(new Seat(3, 2));
+        present.add(new Seat(4, 2));
+        present.add(new Seat(0, 3));
+        present.add(new Seat(1, 3));
+        present.add(new Seat(2, 3));
+        present.add(new Seat(3, 3));
+        present.add(new Seat(4, 3));
+        present.add(new Seat(1, 4));
+        present.add(new Seat(2, 4));
+        present.add(new Seat(3, 4));
+        present.add(new Seat(4, 4));
+        present.add(new Seat(5, 4));
+        present.add(new Seat(6, 4));
+
+        // current room
+        final Room current = db.createRoom(rows, cols, missing);
+
+        // expected
+        for (Seat s : present) {
+            s.setRid(current.getRid());
+        }
+        final Room expected = new Room(current.getRid(), rows, cols, present);
+
+        // test
+        assertEquals(expected, current);
+    }
+
+    @Test
+    public void insertRandomRooms() throws Exception {
+        final Random random = new Random();
+
+        // try 3 random rooms
+        for (int c = 0; c < 3; c++) {
+
+            final int rows = random.nextInt(20) + 1;
+            final int cols = random.nextInt(30) + 1;
+
+            final List<Seat> allSeats = new ArrayList<>(rows * cols);
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    allSeats.add(new Seat(i, j));
+                }
+            }
+
+            final List<Seat> missing = new ArrayList<>();
+            final List<Seat> present = new ArrayList<>();
+
+            final int nMissing = random.nextInt(rows * cols);
+            for (int i = 0; i < nMissing; i++) {
+                int index = random.nextInt(allSeats.size());
+                Seat seat = allSeats.get(index);
+                allSeats.remove(index);
+                missing.add(seat);
+            }
+            present.addAll(allSeats);
+
+            // current room
+            final Room current = db.createRoom(rows, cols, missing);
+
+            // expected
+            for (Seat s : present) {
+                s.setRid(current.getRid());
+            }
+            final Room expected = new Room(current.getRid(), rows, cols, present);
+
+            // test
+            assertEquals(expected, current);
+        }
     }
 
 }

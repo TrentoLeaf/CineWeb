@@ -7,9 +7,7 @@ import tk.trentoleaf.cineweb.exceptions.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
-import tk.trentoleaf.cineweb.model.Film;
-import tk.trentoleaf.cineweb.model.Role;
-import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.model.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,6 +21,7 @@ public class DB {
 
     // the connection to the database
     private Connection connection;
+    private Connection tConnection;
 
     // return a connection object reading the environment variables
     private static Connection getConnection() throws URISyntaxException, SQLException {
@@ -46,6 +45,7 @@ public class DB {
 
         // saves the connection object
         connection = getConnection();
+        tConnection = getConnection();
 
         // initialize the DB
         init();
@@ -71,6 +71,7 @@ public class DB {
         createTablePasswordResets();
         createTableFilms();
         createTableRooms();
+        createTableSeats();
     }
 
     // destroy the db
@@ -81,6 +82,7 @@ public class DB {
         dropTableUsers();
         dropTableRoles();
         dropTableFilms();
+        dropTableSeats();
         dropTableRooms();
     }
 
@@ -345,7 +347,7 @@ public class DB {
         List<User> users = new ArrayList<>();
         Statement stm = connection.createStatement();
         try {
-            ResultSet rs = stm.executeQuery("SELECT uid, roleid, lower(email) as email, first_name, second_name, credit FROM users;");
+            ResultSet rs = stm.executeQuery("SELECT uid, roleid, lower(email) AS email, first_name, second_name, credit FROM users;");
             while (rs.next()) {
                 User u = new User();
                 u.setId(rs.getInt("uid"));
@@ -605,7 +607,7 @@ public class DB {
         }
     }
 
-    // create table films
+    // create table rooms
     private void createTableRooms() throws SQLException {
         Statement stm = connection.createStatement();
         try {
@@ -620,7 +622,7 @@ public class DB {
         }
     }
 
-    // drop table films
+    // drop table rooms
     private void dropTableRooms() throws SQLException {
         Statement stm = connection.createStatement();
         try {
@@ -632,5 +634,120 @@ public class DB {
         }
     }
 
+    // create table seats
+    private void createTableSeats() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("CREATE TABLE IF NOT EXISTS seats (" +
+                    "rid INTEGER," +
+                    "x INTEGER," +
+                    "y INTEGER," +
+                    "PRIMARY KEY (rid, x, y)," +
+                    "FOREIGN KEY (rid) REFERENCES rooms(rid) ON DELETE CASCADE)");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // drop table seats
+    private void dropTableSeats() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("DROP TABLE IF EXISTS seats;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // create a new Room
+    public Room createRoom(int rows, int cols, List<Seat> missingSeats) throws SQLException {
+
+        // create a transaction to ensure DB consistency
+        tConnection.setAutoCommit(false);
+
+        // room object
+        final Room room;
+
+        // query to create a new room
+        PreparedStatement roomStm = connection.prepareStatement("INSERT INTO rooms (rid, rows, cols) " +
+                "VALUES (DEFAULT, ?, ?) RETURNING rid;");
+
+        try {
+            roomStm.setInt(1, rows);
+            roomStm.setInt(2, cols);
+
+            ResultSet rs = roomStm.executeQuery();
+            rs.next();
+
+            final int rid = rs.getInt("rid");
+            room = new Room(rid, rows, cols);
+
+            // sort seats
+            Collections.sort(missingSeats);
+
+            // iterator
+            Iterator<Seat> iterator = missingSeats.iterator();
+
+            Seat current = null;
+            if (iterator.hasNext()) {
+                current = iterator.next();
+            }
+
+            // insert seats
+            for (int x = 0; x < rows; x++) {
+                for (int y = 0; y < cols; y++) {
+
+
+                    // if reached the current seat
+                    if (current != null && current.getX() == x && current.getY() == y) {
+
+                        // retrieve next seat and skip the insertion
+                        if (iterator.hasNext()) {
+                            current = iterator.next();
+                        } else {
+                            current = null;
+                        }
+                    }
+
+                    // this seat exists
+                    else {
+
+                        // insert this seat
+                        PreparedStatement seatsStm = connection.prepareStatement("INSERT INTO seats (rid, x, y) VALUES (?, ?, ?);");
+
+                        try {
+                            seatsStm.setInt(1, rid);
+                            seatsStm.setInt(2, x);
+                            seatsStm.setInt(3, y);
+                            seatsStm.execute();
+
+                            // add to room
+                            room.addSeats(new Seat(rid, x, y));
+
+                        } finally {
+                            if (seatsStm != null) {
+                                seatsStm.close();
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        } catch (SQLException e) {
+            tConnection.rollback();
+            throw e;
+        } finally {
+            if (roomStm != null) {
+                roomStm.close();
+            }
+        }
+
+        return room;
+    }
 
 }
