@@ -497,4 +497,32 @@ public class DBTest {
         }
     }
 
+    @Test
+    public void createCompleteRoom() throws Exception {
+
+        final Random random = new Random();
+
+        final int rows = random.nextInt(15) + 1;
+        final int cols = random.nextInt(15) + 1;
+
+        final List<Seat> allSeats = new ArrayList<>(rows * cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                allSeats.add(new Seat(i, j));
+            }
+        }
+
+        // current room
+        final Room current = db.createRoom(rows, cols);
+
+        // expected
+        for (Seat s : allSeats) {
+            s.setRid(current.getRid());
+        }
+        final Room expected = new Room(current.getRid(), rows, cols, allSeats);
+
+        // test
+        assertEquals(expected, current);
+    }
+
 }

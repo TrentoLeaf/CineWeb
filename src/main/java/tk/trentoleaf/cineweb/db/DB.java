@@ -663,6 +663,11 @@ public class DB {
         }
     }
 
+    // create a Room with all the seats
+    public Room createRoom(int rows, int cols) throws SQLException {
+        return createRoom(rows, cols, new ArrayList<Seat>());
+    }
+
     // create a new Room
     public Room createRoom(int rows, int cols, List<Seat> missingSeats) throws SQLException {
 
