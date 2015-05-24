@@ -755,4 +755,50 @@ public class DB {
         return room;
     }
 
+    // get the existing seats for a given room
+    public List<Seat> getSeatsByRoom(int rid) throws SQLException {
+        List<Seat> seats = new ArrayList<>();
+        PreparedStatement stm = connection.prepareStatement("SELECT x, y FROM seats WHERE rid = ?;");
+        try {
+            stm.setInt(1, rid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                int x = rs.getInt("x");
+                int y = rs.getInt("y");
+                seats.add(new Seat(rid, x, y));
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return seats;
+    }
+
+    // get the room list
+    public List<Room> getRooms(boolean withPlaces) throws SQLException {
+        List<Room> rooms = new ArrayList<>();
+        Statement stm = connection.createStatement();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT rid, rows, cols FROM rooms;");
+            while (rs.next()) {
+                Room r = new Room();
+                r.setRid(rs.getInt("rid"));
+                r.setRows(rs.getInt("rows"));
+                r.setColumns(rs.getInt("cols"));
+                if (withPlaces) {
+                    r.setSeats(getSeatsByRoom(r.getRid()));
+                } else {
+                    r.setSeats(new ArrayList<Seat>());
+                }
+                rooms.add(r);
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return rooms;
+    }
+
 }

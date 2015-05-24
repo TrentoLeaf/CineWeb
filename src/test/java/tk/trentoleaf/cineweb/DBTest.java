@@ -497,6 +497,18 @@ public class DBTest {
         }
     }
 
+    private Room createCompleteRoomByDimen(int rid, int rows, int cols) {
+
+        final List<Seat> allSeats = new ArrayList<>(rows * cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                allSeats.add(new Seat(rid, i, j));
+            }
+        }
+
+        return new Room(rid, rows, cols, allSeats);
+    }
+
     @Test
     public void createCompleteRoom() throws Exception {
 
@@ -505,24 +517,61 @@ public class DBTest {
         final int rows = random.nextInt(15) + 1;
         final int cols = random.nextInt(15) + 1;
 
-        final List<Seat> allSeats = new ArrayList<>(rows * cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                allSeats.add(new Seat(i, j));
-            }
-        }
-
         // current room
         final Room current = db.createRoom(rows, cols);
 
         // expected
-        for (Seat s : allSeats) {
-            s.setRid(current.getRid());
-        }
-        final Room expected = new Room(current.getRid(), rows, cols, allSeats);
+        final Room expected = createCompleteRoomByDimen(current.getRid(), rows, cols);
 
         // test
         assertEquals(expected, current);
+    }
+
+    @Test
+    public void getRoomsWithSeats() throws Exception {
+
+        // rooms in db
+        final Room r1 = db.createRoom(1, 3);
+        final Room r2 = db.createRoom(2, 1);
+        final Room r3 = db.createRoom(2, 2);
+
+        // expected
+        final List<Room> expected = new ArrayList<>(3);
+        expected.add(r1);
+        expected.add(r2);
+        expected.add(r3);
+
+        // current
+        final List<Room> current = db.getRooms(true);
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test
+    public void getRoomsWithoutSeats() throws Exception {
+
+        // rooms in db
+        final Room r1 = db.createRoom(23, 3);
+        final Room r2 = db.createRoom(10, 3);
+        final Room r3 = db.createRoom(4, 2);
+
+        // remove seats
+        r1.setSeats(new ArrayList<Seat>());
+        r3.setSeats(new ArrayList<Seat>());
+        r2.setSeats(new ArrayList<Seat>());
+
+        // expected
+        final List<Room> expected = new ArrayList<>(3);
+        expected.add(r3);
+        expected.add(r2);
+        expected.add(r1);
+
+        // current
+        final List<Room> current = db.getRooms(false);
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
 }
