@@ -601,11 +601,20 @@ public class DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
-    // TODO: test delete room fail
     // TODO: delete not existing rooms -> exception EntryNotFound
 
-    @Test
-    public void deleteRoomFail() {
+    @Test(expected = PSQLException.class)
+    public void deleteRoomFail() throws Exception {
+
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        db.insertFilm(f1);
+        final Room r1 = db.createRoom(23, 12);
+
+        final Play p1 = new Play(f1, r1, DateTime.now(), true);
+        db.createPlay(p1);
+
+        // test delete
+        db.deleteRoom(r1.getRid());
     }
 
     @Test
