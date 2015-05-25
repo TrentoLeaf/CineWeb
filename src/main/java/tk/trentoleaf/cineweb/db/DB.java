@@ -73,6 +73,7 @@ public class DB {
         createTableFilms();
         createTableRooms();
         createTableSeats();
+        createTablePlays();
     }
 
     // destroy the db
@@ -82,6 +83,7 @@ public class DB {
         dropTablePasswordResets();
         dropTableUsers();
         dropTableRoles();
+        dropTablePlays();
         dropTableFilms();
         dropTableSeats();
         dropTableRooms();
@@ -844,6 +846,87 @@ public class DB {
                 seatsStm.close();
             }
         }
+    }
+
+    // create table plays
+    public void createTablePlays() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("CREATE TABLE IF NOT EXISTS plays (" +
+                    "pid SERIAL," +
+                    "fid INTEGER," +
+                    "rid INTEGER," +
+                    "time TIMESTAMP NOT NULL," +
+                    "_3d BOOLEAN NOT NULL," +
+                    "PRIMARY KEY (pid)," +
+                    "FOREIGN KEY (fid) REFERENCES films(fid)," +
+                    "FOREIGN KEY (rid) REFERENCES rooms(rid));");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // drop table plays
+    private void dropTablePlays() throws SQLException {
+        Statement stm = connection.createStatement();
+        try {
+            stm.execute("DROP TABLE IF EXISTS plays;");
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // create play
+    public void createPlay(Play play) throws SQLException {
+
+        // TODO: check if a film is already playing at this time in this room
+
+        final String query = "INSERT INTO plays (pid, fid, rid, time, _3d) " +
+                "VALUES (DEFAULT, ?, ?, ?, ?) RETURNING pid;";
+        PreparedStatement stm = connection.prepareStatement(query);
+
+        try {
+            stm.setInt(1, play.getFid());
+            stm.setInt(2, play.getRid());
+            stm.setTimestamp(3, new Timestamp(play.getTime().toDate().getTime()));
+            stm.setBoolean(4, play.is_3d());
+            ResultSet rs = stm.executeQuery();
+
+            // if here -> no error
+            rs.next();
+            play.setPid(rs.getInt("pid"));
+
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
+    // get list of plays
+    public List<Play> getPlays() throws SQLException {
+        List<Play> plays = new ArrayList<>();
+        Statement stm = connection.createStatement();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT pid, fid, rid, time, _3d FROM plays;");
+            while (rs.next()) {
+                int pid = rs.getInt("pid");
+                int fid = rs.getInt("fid");
+                int rid = rs.getInt("rid");
+                DateTime time = new DateTime(rs.getTimestamp("time").getTime());
+                boolean _3d = rs.getBoolean("_3d");
+                plays.add(new Play(pid, fid, rid, time, _3d));
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+        return plays;
     }
 
 }

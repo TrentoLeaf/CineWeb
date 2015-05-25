@@ -12,7 +12,7 @@ public class Room implements Serializable {
     private int rows;
     private int columns;
 
-    private List<Seat> seats;
+    private transient List<Seat> seats;
 
     public Room() {
     }

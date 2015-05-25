@@ -1,9 +1,11 @@
 package tk.trentoleaf.cineweb;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.postgresql.util.PSQLException;
 import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.exceptions.*;
 import tk.trentoleaf.cineweb.model.*;
@@ -351,6 +353,8 @@ public class DBTest {
         db.deleteFilm(43543543);
     }
 
+    // TODO: delete fails for presents plays
+
     @Test
     public void updateFilmSuccess() throws Exception {
 
@@ -575,7 +579,7 @@ public class DBTest {
     }
 
     @Test
-    public void deleteRoom() throws Exception {
+    public void deleteRoomSuccess() throws Exception {
 
         // save some rooms
         final Room r1 = db.createRoom(23, 3);
@@ -595,6 +599,67 @@ public class DBTest {
 
         // test
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    // TODO: test delete room fail
+    // TODO: delete not existing rooms -> exception EntryNotFound
+
+    @Test
+    public void deleteRoomFail() {
+    }
+
+    @Test
+    public void createPlaySuccess() throws Exception {
+
+        // create films, rooms
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
+        db.insertFilm(f1);
+        db.insertFilm(f2);
+        final Room r1 = db.createRoom(23, 12);
+        final Room r2 = db.createRoom(2, 5);
+
+        // plays
+        final Play p1 = new Play(f1, r2, DateTime.now(), true);
+        final Play p2 = new Play(f2, r2, DateTime.now().plusMinutes(34), false);
+        final Play p3 = new Play(f1, r1, DateTime.now().plusMinutes(2), false);
+        final Play p4 = new Play(f2, r1, DateTime.now().plusMinutes(8), false);
+
+        // insert
+        db.createPlay(p1);
+        db.createPlay(p2);
+        db.createPlay(p3);
+        db.createPlay(p4);
+
+        // expected
+        final List<Play> expected = new ArrayList<>();
+        expected.add(p1);
+        expected.add(p2);
+        expected.add(p3);
+        expected.add(p4);
+
+        // current
+        final List<Play> current = db.getPlays();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test(expected = PSQLException.class)
+    public void createPlayFailure1() throws Exception {
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        db.insertFilm(f1);
+
+        final Play p1 = new Play(f1.getId(), 223, DateTime.now(), true);
+        db.createPlay(p1);
+    }
+
+    @Test(expected = PSQLException.class)
+    public void createPlayFailure2() throws Exception {
+        final Room r1 = db.createRoom(23, 12);
+
+        final Play p1 = new Play(23434, r1.getRid(), DateTime.now(), true);
+        db.createPlay(p1);
     }
 
 }
