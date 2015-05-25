@@ -9,6 +9,7 @@ import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
 import tk.trentoleaf.cineweb.model.*;
 
+import javax.ws.rs.POST;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
@@ -678,7 +679,7 @@ public class DB {
         final Room room;
 
         // query to create a new room
-        PreparedStatement roomStm = connection.prepareStatement("INSERT INTO rooms (rid, rows, cols) " +
+        PreparedStatement roomStm = tConnection.prepareStatement("INSERT INTO rooms (rid, rows, cols) " +
                 "VALUES (DEFAULT, ?, ?) RETURNING rid;");
 
         try {
@@ -722,7 +723,7 @@ public class DB {
                     else {
 
                         // insert this seat
-                        PreparedStatement seatsStm = connection.prepareStatement("INSERT INTO seats (rid, x, y) VALUES (?, ?, ?);");
+                        PreparedStatement seatsStm = tConnection.prepareStatement("INSERT INTO seats (rid, x, y) VALUES (?, ?, ?);");
 
                         try {
                             seatsStm.setInt(1, rid);
@@ -742,6 +743,9 @@ public class DB {
 
                 }
             }
+
+            // execute sql
+            tConnection.commit();
 
         } catch (SQLException e) {
             tConnection.rollback();
