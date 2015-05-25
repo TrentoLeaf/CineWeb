@@ -574,4 +574,27 @@ public class DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
+    @Test
+    public void deleteRoom() throws Exception {
+
+        // save some rooms
+        final Room r1 = db.createRoom(23, 3);
+        final Room r2 = db.createRoom(10, 3);
+        final Room r3 = db.createRoom(4, 2);
+
+        // remove room 2
+        db.deleteRoom(r2.getRid());
+
+        // expected
+        final List<Room> expected = new ArrayList<>(3);
+        expected.add(r3);
+        expected.add(r1);
+
+        // current
+        final List<Room> current = db.getRooms(true);
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
 }

@@ -805,4 +805,45 @@ public class DB {
         return rooms;
     }
 
+    // delete room
+    // NB: throw an exception if the room is referenced in any table
+    public void deleteRoom(int rid) throws SQLException {
+
+        // create a transaction to ensure DB consistency
+        tConnection.setAutoCommit(false);
+
+        // delete seats for this room
+        final String seatsQuery = "DELETE FROM seats WHERE rid = ?;";
+        PreparedStatement seatsStm = tConnection.prepareStatement(seatsQuery);
+
+        try {
+            seatsStm.setInt(1, rid);
+            seatsStm.execute();
+
+            // now remove the room
+            final String roomQuery = "DELETE FROM rooms WHERE rid = ?;";
+            PreparedStatement roomStm = tConnection.prepareStatement(roomQuery);
+
+            try {
+                roomStm.setInt(1, rid);
+                roomStm.execute();
+            } finally {
+                if (roomStm != null) {
+                    roomStm.close();
+                }
+            }
+
+            // execute sql
+            tConnection.commit();
+
+        } catch (SQLException e) {
+            tConnection.rollback();
+            throw e;
+        } finally {
+            if (seatsStm != null) {
+                seatsStm.close();
+            }
+        }
+    }
+
 }
