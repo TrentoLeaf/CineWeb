@@ -355,7 +355,18 @@ public class DBTest {
         db.deleteFilm(43543543);
     }
 
-    // TODO: delete fails for presents plays
+    @Test(expected = PSQLException.class)
+    public void deleteFilmFail2() throws Exception {
+
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        db.insertFilm(f1);
+        final Room r1 = db.createRoom(1, 2);
+
+        db.createPlay(new Play(f1, r1, DateTime.now(), false));
+
+        // should fail
+        db.deleteFilm(f1);
+    }
 
     @Test
     public void updateFilmSuccess() throws Exception {
@@ -603,10 +614,8 @@ public class DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
-    // TODO: delete not existing rooms -> exception EntryNotFound
-
     @Test(expected = PSQLException.class)
-    public void deleteRoomFail() throws Exception {
+    public void deleteRoomFail1() throws Exception {
 
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         db.insertFilm(f1);
@@ -618,6 +627,14 @@ public class DBTest {
         // test delete
         db.deleteRoom(r1.getRid());
     }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void deleteRoomFail2() throws Exception {
+
+        // test delete
+        db.deleteRoom(234);
+    }
+
 
     @Test
     public void createPlaySuccess() throws Exception {
@@ -632,9 +649,9 @@ public class DBTest {
 
         // plays
         final Play p1 = new Play(f1, r2, DateTime.now(), true);
-        final Play p2 = new Play(f2, r2, DateTime.now().plusMinutes(34), false);
+        final Play p2 = new Play(f2, r2, DateTime.now().plusMinutes(121), false);
         final Play p3 = new Play(f1, r1, DateTime.now().plusMinutes(2), false);
-        final Play p4 = new Play(f2, r1, DateTime.now().plusMinutes(8), false);
+        final Play p4 = new Play(f2, r1, DateTime.now().plusMinutes(150), false);
 
         // insert
         db.createPlay(p1);
@@ -673,6 +690,21 @@ public class DBTest {
         db.createPlay(p1);
     }
 
+    @Test(expected = AnotherFilmScheduledException.class)
+    public void createPlayFailure3() throws Exception {
+        final Room r1 = db.createRoom(23, 12);
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        db.insertFilm(f1);
+
+        final Play p1 = new Play(f1.getId(), r1.getRid(), DateTime.now(), true);
+
+        // ok
+        db.createPlay(p1);
+
+        // fail
+        db.createPlay(new Play(f1, r1, DateTime.now().plusMinutes(100), false));
+    }
+
     @Test
     public void deletePlaySuccess() throws Exception {
 
@@ -686,9 +718,9 @@ public class DBTest {
 
         // plays
         final Play p1 = new Play(f1, r2, DateTime.now(), true);
-        final Play p2 = new Play(f2, r2, DateTime.now().plusMinutes(34), false);
+        final Play p2 = new Play(f2, r2, DateTime.now().plusMinutes(121), false);
         final Play p3 = new Play(f1, r1, DateTime.now().plusMinutes(2), false);
-        final Play p4 = new Play(f2, r1, DateTime.now().plusMinutes(8), false);
+        final Play p4 = new Play(f2, r1, DateTime.now().plusMinutes(150), false);
 
         // insert
         db.createPlay(p1);
@@ -731,19 +763,21 @@ public class DBTest {
         final Room r2 = db.createRoom(2, 3);
 
         final Play p1 = new Play(f1, r1, ff.parseDateTime("20/05/2015 12:00:00"), true);
-        final Play p2 = new Play(f1, r1, ff.parseDateTime("20/05/2015 13:00:00"), true);
+        final Play p2 = new Play(f1, r1, ff.parseDateTime("20/05/2015 13:00:01"), true);
         db.createPlay(p1);
         db.createPlay(p2);
 
         assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 11:00:00")));
         assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 11:59:59")));
-        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:01")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:02")));
         assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 15:00:00")));
         assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:00:00")));
         assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:01:00")));
         assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:10:00")));
         assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 13:00:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 13:00:01")));
         assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:01")));
 
         assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 11:00:00")));
         assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 11:59:59")));
@@ -753,20 +787,25 @@ public class DBTest {
         assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 12:01:00")));
         assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 12:10:00")));
         assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 13:00:00")));
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 13:00:01")));
         assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 14:00:00")));
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 14:00:01")));
 
         // remove play p1
         db.deletePlay(p1);
 
         assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 11:00:00")));
         assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 11:59:59")));
-        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:01")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:02")));
         assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 15:00:00")));
         assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:00:00")));
         assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:01:00")));
         assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:10:00")));
-        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 13:00:00")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 13:00:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 13:00:01")));
         assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:01")));
+
     }
 
 }

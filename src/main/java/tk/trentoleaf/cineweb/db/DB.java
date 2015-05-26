@@ -2,11 +2,7 @@ package tk.trentoleaf.cineweb.db;
 
 import org.joda.time.DateTime;
 import org.postgresql.util.PSQLException;
-import tk.trentoleaf.cineweb.exceptions.ConstrainException;
-import tk.trentoleaf.cineweb.exceptions.EntryNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
-import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
+import tk.trentoleaf.cineweb.exceptions.*;
 import tk.trentoleaf.cineweb.model.*;
 
 import javax.ws.rs.POST;
@@ -594,6 +590,11 @@ public class DB {
     }
 
     // delete film
+    public void deleteFilm(Film film) throws SQLException, EntryNotFoundException {
+        deleteFilm(film.getId());
+    }
+
+    // delete film
     public void deleteFilm(int id) throws SQLException, EntryNotFoundException {
         final String query = "DELETE FROM films WHERE fid = ?";
         PreparedStatement stm = connection.prepareStatement(query);
@@ -809,7 +810,7 @@ public class DB {
 
     // delete room
     // NB: throw an exception if the room is referenced in any table
-    public void deleteRoom(int rid) throws SQLException {
+    public void deleteRoom(int rid) throws SQLException, EntryNotFoundException {
 
         // create a transaction to ensure DB consistency
         tConnection.setAutoCommit(false);
@@ -828,7 +829,12 @@ public class DB {
 
             try {
                 roomStm.setInt(1, rid);
-                roomStm.execute();
+                int rows = roomStm.executeUpdate();
+
+                if (rows != 1) {
+                    throw new EntryNotFoundException();
+                }
+
             } finally {
                 if (roomStm != null) {
                     roomStm.close();
@@ -838,7 +844,7 @@ public class DB {
             // execute sql
             tConnection.commit();
 
-        } catch (SQLException e) {
+        } catch (SQLException | EntryNotFoundException e) {
             tConnection.rollback();
             throw e;
         } finally {
@@ -881,9 +887,12 @@ public class DB {
     }
 
     // create play
-    public void createPlay(Play play) throws SQLException {
+    public void createPlay(Play play) throws SQLException, AnotherFilmScheduledException {
 
-        // TODO: check if a film is already playing at this time in this room
+        boolean another = isAlreadyPlay(play.getRid(), play.getTime());
+        if (another) {
+            throw new AnotherFilmScheduledException();
+        }
 
         final String query = "INSERT INTO plays (pid, fid, rid, time, _3d) " +
                 "VALUES (DEFAULT, ?, ?, ?, ?) RETURNING pid;";
