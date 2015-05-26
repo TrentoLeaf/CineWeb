@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    private int id;
+    private int uid;
     private Role role;
     private String email;
     private transient String password;      // transient = non viene serializzato
@@ -23,12 +23,12 @@ public class User implements Serializable {
         this.secondName = secondName;
     }
 
-    public int getId() {
-        return id;
+    public int getUid() {
+        return uid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
     public Role getRole() {
@@ -77,7 +77,7 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() {
-        return id;
+        return uid;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class User implements Serializable {
 
         User user = (User) o;
 
-        if (id != user.id) return false;
+        if (uid != user.uid) return false;
         if (Double.compare(user.credit, credit) != 0) return false;
         if (role != user.role) return false;
         if (!email.equalsIgnoreCase(user.email)) return false;
@@ -99,7 +99,7 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "uid=" + uid +
                 ", role=" + role +
                 ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +

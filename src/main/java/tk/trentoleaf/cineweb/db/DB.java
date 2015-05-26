@@ -199,7 +199,7 @@ public class DB {
             stm.setString(5, user.getSecondName());
             ResultSet rs = stm.executeQuery();
             rs.next();
-            user.setId(rs.getInt("uid"));
+            user.setUid(rs.getInt("uid"));
         } catch (PSQLException e) {
             throw new ConstrainException(e);
         }
@@ -207,7 +207,7 @@ public class DB {
 
     // authenticate a user
     public boolean authenticate(String email, String password) throws SQLException {
-        final String query = "SELECT COUNT(email) FROM users " + "WHERE email = ? AND pass = crypt(?, pass);";
+        final String query = "SELECT COUNT(email) FROM users WHERE email = ? AND pass = crypt(?, pass);";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setString(1, email);
@@ -266,7 +266,7 @@ public class DB {
             stm.setString(3, user.getFirstName());
             stm.setString(4, user.getSecondName());
             stm.setDouble(5, user.getCredit());
-            stm.setInt(6, user.getId());
+            stm.setInt(6, user.getUid());
             int rows = stm.executeUpdate();
             if (rows != 1) {
                 throw new UserNotFoundException();
@@ -274,6 +274,11 @@ public class DB {
         } catch (PSQLException e) {
             throw new ConstrainException(e);
         }
+    }
+
+    // delete an user
+    public void deleteUser(User user) throws SQLException, UserNotFoundException {
+        deleteUser(user.getUid());
     }
 
     // delete an user
@@ -299,7 +304,7 @@ public class DB {
 
             while (rs.next()) {
                 User u = new User();
-                u.setId(rs.getInt("uid"));
+                u.setUid(rs.getInt("uid"));
                 u.setRole(Role.fromID(rs.getString("roleid")));
                 u.setEmail(rs.getString("email"));
                 u.setFirstName(rs.getString("first_name"));
@@ -322,7 +327,7 @@ public class DB {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 User u = new User();
-                u.setId(rs.getInt("uid"));
+                u.setUid(rs.getInt("uid"));
                 u.setRole(Role.fromID(rs.getString("roleid")));
                 u.setEmail(email);
                 u.setFirstName(rs.getString("first_name"));
@@ -439,7 +444,7 @@ public class DB {
     }
 
     // insert a new film
-    public void insertFilm(Film film) throws SQLException {
+    public void createFilm(Film film) throws SQLException {
         final String query = "INSERT INTO films (fid, title, genre, trailer, playbill, plot, duration) VALUES " +
                 "(DEFAULT, ?, ?, ?, ?, ?, ?) RETURNING fid";
 
@@ -812,8 +817,9 @@ public class DB {
         return plays;
     }
 
-    public void deletePlay(Play p) throws SQLException, EntryNotFoundException {
-        deletePlay(p.getPid());
+    // delete a play
+    public void deletePlay(Play play) throws SQLException, EntryNotFoundException {
+        deletePlay(play.getPid());
     }
 
     // delete a play
