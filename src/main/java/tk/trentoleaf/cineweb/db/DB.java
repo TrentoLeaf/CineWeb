@@ -907,6 +907,7 @@ public class DB {
         }
     }
 
+    // check play
     public boolean isAlreadyPlay(Room room, DateTime time) throws SQLException {
         return isAlreadyPlay(room.getRid(), time);
     }
@@ -954,6 +955,27 @@ public class DB {
             }
         }
         return plays;
+    }
+
+    public void deletePlay(Play p) throws SQLException, EntryNotFoundException {
+        deletePlay(p.getPid());
+    }
+
+    // delete a play
+    public void deletePlay(int pid) throws SQLException, EntryNotFoundException {
+        final String query = "DELETE FROM plays WHERE pid = ?";
+        PreparedStatement stm = connection.prepareStatement(query);
+        try {
+            stm.setInt(1, pid);
+            int rows = stm.executeUpdate();
+            if (rows != 1) {
+                throw new EntryNotFoundException();
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
     }
 
 }

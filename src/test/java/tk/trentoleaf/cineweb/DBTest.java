@@ -674,6 +674,50 @@ public class DBTest {
     }
 
     @Test
+    public void deletePlaySuccess() throws Exception {
+
+        // create films, rooms
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
+        db.insertFilm(f1);
+        db.insertFilm(f2);
+        final Room r1 = db.createRoom(23, 12);
+        final Room r2 = db.createRoom(2, 5);
+
+        // plays
+        final Play p1 = new Play(f1, r2, DateTime.now(), true);
+        final Play p2 = new Play(f2, r2, DateTime.now().plusMinutes(34), false);
+        final Play p3 = new Play(f1, r1, DateTime.now().plusMinutes(2), false);
+        final Play p4 = new Play(f2, r1, DateTime.now().plusMinutes(8), false);
+
+        // insert
+        db.createPlay(p1);
+        db.createPlay(p2);
+        db.createPlay(p3);
+        db.createPlay(p4);
+
+        // remove 2, 4
+        db.deletePlay(p2);
+        db.deletePlay(p4);
+
+        // expected
+        final List<Play> expected = new ArrayList<>();
+        expected.add(p1);
+        expected.add(p3);
+
+        // current
+        final List<Play> current = db.getPlays();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void deletePlayFailure() throws Exception {
+        db.deletePlay(24543);
+    }
+
+    @Test
     public void checkFilms() throws Exception {
 
         final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
