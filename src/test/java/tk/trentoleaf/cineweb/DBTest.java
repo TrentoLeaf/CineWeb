@@ -754,6 +754,19 @@ public class DBTest {
         assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 12:10:00")));
         assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 13:00:00")));
         assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 14:00:00")));
+
+        // remove play p1
+        db.deletePlay(p1);
+
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 11:00:00")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 11:59:59")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:01")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 15:00:00")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:00:00")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:01:00")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:10:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 13:00:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:00")));
     }
 
 }
