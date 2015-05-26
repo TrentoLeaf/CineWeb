@@ -907,6 +907,33 @@ public class DB {
         }
     }
 
+    public boolean isAlreadyPlay(Room room, DateTime time) throws SQLException {
+        return isAlreadyPlay(room.getRid(), time);
+    }
+
+    // check play
+    public boolean isAlreadyPlay(int rid, DateTime time) throws SQLException {
+        PreparedStatement stm = connection.prepareStatement("SELECT COUNT(*) FROM films f NATURAL JOIN plays p " +
+                "WHERE p.rid = ? AND p.time <= ? AND ? <= p.time + (f.duration * INTERVAL '1 minute');");
+        try {
+            final Timestamp timestamp = new Timestamp(time.toDate().getTime());
+
+            stm.setInt(1, rid);
+            stm.setTimestamp(2, timestamp);
+            stm.setTimestamp(3, timestamp);
+
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+
+            return rs.getInt(1) >= 1;
+
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+        }
+    }
+
     // get list of plays
     public List<Play> getPlays() throws SQLException {
         List<Play> plays = new ArrayList<>();

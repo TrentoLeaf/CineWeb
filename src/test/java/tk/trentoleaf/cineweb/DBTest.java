@@ -2,6 +2,8 @@ package tk.trentoleaf.cineweb;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -669,6 +671,45 @@ public class DBTest {
 
         final Play p1 = new Play(23434, r1.getRid(), DateTime.now(), true);
         db.createPlay(p1);
+    }
+
+    @Test
+    public void checkFilms() throws Exception {
+
+        final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        final Film f2 = new Film("Marco", "horror", "http://bbb.com", "http://bbb.org", "trama", 30);
+        db.insertFilm(f1);
+        db.insertFilm(f2);
+
+        final Room r1 = db.createRoom(4, 5);
+        final Room r2 = db.createRoom(2, 3);
+
+        final Play p1 = new Play(f1, r1, ff.parseDateTime("20/05/2015 12:00:00"), true);
+        final Play p2 = new Play(f1, r1, ff.parseDateTime("20/05/2015 13:00:00"), true);
+        db.createPlay(p1);
+        db.createPlay(p2);
+
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 11:00:00")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 11:59:59")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:01")));
+        assertFalse(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 15:00:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:00:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:01:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 12:10:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 13:00:00")));
+        assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:00")));
+
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 11:00:00")));
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 11:59:59")));
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 14:00:01")));
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 15:00:00")));
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 12:00:00")));
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 12:01:00")));
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 12:10:00")));
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 13:00:00")));
+        assertFalse(db.isAlreadyPlay(r2, ff.parseDateTime("20/05/2015 14:00:00")));
     }
 
 }
