@@ -174,7 +174,7 @@ public class DBTest {
     }
 
     @Test
-    public void deleteUserSuccess() throws Exception {
+    public void deleteUserSuccess1() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
@@ -199,6 +199,31 @@ public class DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
+    @Test
+    public void deleteUserSuccess2() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+
+        // save users
+        db.createUser(u1);
+        db.createUser(u2);
+
+        // delete user 1
+        db.deleteUser(u2);
+
+        // expected users
+        final List<User> expected = new ArrayList<>();
+        expected.add(u1);
+
+        // current users
+        final List<User> current = db.getUsers();
+
+        // test
+        assertEquals(1, current.size());
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
 
     @Test(expected = UserNotFoundException.class)
     public void deleteUserFail() throws Exception {
