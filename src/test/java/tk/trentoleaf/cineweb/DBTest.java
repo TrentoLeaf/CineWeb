@@ -174,7 +174,7 @@ public class DBTest {
     }
 
     @Test
-    public void deleteUserSuccess() throws Exception {
+    public void deleteUserSuccess1() throws Exception {
 
         // create users
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
@@ -185,7 +185,7 @@ public class DBTest {
         db.createUser(u2);
 
         // delete user 1
-        db.deleteUser(u1.getId());
+        db.deleteUser(u1.getUid());
 
         // expected users
         final List<User> expected = new ArrayList<>();
@@ -199,6 +199,31 @@ public class DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
+    @Test
+    public void deleteUserSuccess2() throws Exception {
+
+        // create users
+        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+
+        // save users
+        db.createUser(u1);
+        db.createUser(u2);
+
+        // delete user 1
+        db.deleteUser(u2);
+
+        // expected users
+        final List<User> expected = new ArrayList<>();
+        expected.add(u1);
+
+        // current users
+        final List<User> current = db.getUsers();
+
+        // test
+        assertEquals(1, current.size());
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
 
     @Test(expected = UserNotFoundException.class)
     public void deleteUserFail() throws Exception {
@@ -207,7 +232,7 @@ public class DBTest {
         final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
 
         // delete user 1
-        db.deleteUser(u1.getId());
+        db.deleteUser(u1.getUid());
     }
 
     @Test
@@ -274,8 +299,8 @@ public class DBTest {
         db.createUser(u1);
 
         // get code
-        String code = db.requestResetPassword(u1.getId());
-        assertTrue(db.checkPasswordReset(u1.getId(), code));
+        String code = db.requestResetPassword(u1.getUid());
+        assertTrue(db.checkPasswordReset(u1.getUid(), code));
         assertTrue(db.checkPasswordReset(u1.getEmail(), code));
 
         // reset password
@@ -295,7 +320,7 @@ public class DBTest {
 
         // random code
         String code = "random_code";
-        assertFalse(db.checkPasswordReset(u1.getId(), code));
+        assertFalse(db.checkPasswordReset(u1.getUid(), code));
         assertFalse(db.checkPasswordReset(u1.getEmail(), code));
 
         // change password
@@ -310,8 +335,8 @@ public class DBTest {
         final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
 
         // save films
-        db.insertFilm(f1);
-        db.insertFilm(f2);
+        db.createFilm(f1);
+        db.createFilm(f2);
 
         // expected
         List<Film> expected = new ArrayList<>();
@@ -326,13 +351,13 @@ public class DBTest {
     }
 
     @Test
-    public void deleteFilmSuccess() throws Exception {
+    public void deleteFilmSuccess1() throws Exception {
 
         // save films
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
-        db.insertFilm(f1);
-        db.insertFilm(f2);
+        db.createFilm(f1);
+        db.createFilm(f2);
 
         // delete
         db.deleteFilm(f1.getId());
@@ -348,6 +373,30 @@ public class DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
+    @Test
+    public void deleteFilmSuccess2() throws Exception {
+
+        // save films
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
+        db.createFilm(f2);
+        db.createFilm(f1);
+
+        // delete
+        db.deleteFilm(f2);
+
+        // expected
+        List<Film> expected = new ArrayList<>();
+        expected.add(f1);
+
+        // current
+        List<Film> current = db.getFilms();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+
     @Test(expected = EntryNotFoundException.class)
     public void deleteFilmFail() throws Exception {
 
@@ -359,7 +408,7 @@ public class DBTest {
     public void deleteFilmFail2() throws Exception {
 
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.insertFilm(f1);
+        db.createFilm(f1);
         final Room r1 = db.createRoom(1, 2);
 
         db.createPlay(new Play(f1, r1, DateTime.now(), false));
@@ -374,8 +423,8 @@ public class DBTest {
         // save films
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
-        db.insertFilm(f1);
-        db.insertFilm(f2);
+        db.createFilm(f1);
+        db.createFilm(f2);
 
         // edit film 2
         f2.setTitle("New title");
@@ -618,7 +667,7 @@ public class DBTest {
     public void deleteRoomFail1() throws Exception {
 
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.insertFilm(f1);
+        db.createFilm(f1);
         final Room r1 = db.createRoom(23, 12);
 
         final Play p1 = new Play(f1, r1, DateTime.now(), true);
@@ -642,8 +691,8 @@ public class DBTest {
         // create films, rooms
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
-        db.insertFilm(f1);
-        db.insertFilm(f2);
+        db.createFilm(f1);
+        db.createFilm(f2);
         final Room r1 = db.createRoom(23, 12);
         final Room r2 = db.createRoom(2, 5);
 
@@ -676,7 +725,7 @@ public class DBTest {
     @Test(expected = PSQLException.class)
     public void createPlayFailure1() throws Exception {
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.insertFilm(f1);
+        db.createFilm(f1);
 
         final Play p1 = new Play(f1.getId(), 223, DateTime.now(), true);
         db.createPlay(p1);
@@ -694,7 +743,7 @@ public class DBTest {
     public void createPlayFailure3() throws Exception {
         final Room r1 = db.createRoom(23, 12);
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.insertFilm(f1);
+        db.createFilm(f1);
 
         final Play p1 = new Play(f1.getId(), r1.getRid(), DateTime.now(), true);
 
@@ -711,8 +760,8 @@ public class DBTest {
         // create films, rooms
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
-        db.insertFilm(f1);
-        db.insertFilm(f2);
+        db.createFilm(f1);
+        db.createFilm(f2);
         final Room r1 = db.createRoom(23, 12);
         final Room r2 = db.createRoom(2, 5);
 
@@ -756,8 +805,8 @@ public class DBTest {
 
         final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
         final Film f2 = new Film("Marco", "horror", "http://bbb.com", "http://bbb.org", "trama", 30);
-        db.insertFilm(f1);
-        db.insertFilm(f2);
+        db.createFilm(f1);
+        db.createFilm(f2);
 
         final Room r1 = db.createRoom(4, 5);
         final Room r2 = db.createRoom(2, 3);
