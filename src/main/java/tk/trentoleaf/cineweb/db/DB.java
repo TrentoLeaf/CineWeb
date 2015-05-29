@@ -7,6 +7,7 @@ import tk.trentoleaf.cineweb.model.*;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import java.awt.print.Book;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
@@ -862,7 +863,7 @@ public class DB {
         }
     }
 
-    // drop table books
+    // drop table booking
     private void dropTableBookings() throws SQLException
     {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement())
@@ -894,6 +895,33 @@ public class DB {
         }
     }
 
+    private List<Booking> getBookings() throws SQLException {
+        final List<Booking> bookings = new ArrayList<>();
+
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            ResultSet rs = stm.executeQuery("SELECT bid, uid, pid, rid, x, y, time_booking, price FROM bookings;");
+
+            while (rs.next()) {
+                int bid = rs.getInt("bid");
+                int uid = rs.getInt("uid");
+                int pid = rs.getInt("pid");
+                int rid = rs.getInt("rid");
+                int x = rs.getInt("x");
+                int y = rs.getInt("y");
+                DateTime timeBooking = new DateTime(rs.getTimestamp("time_booking").getTime());
+                double price = rs.getDouble("price");
+                bookings.add(new Booking(rid, x, y, uid, pid, timeBooking, price));
+            }
+        }
+
+        return bookings;
+    }
+
+    //todo delete booking
+    private void deleteBookings(Booking booking)
+    {
+
+    }
 
 }
 
