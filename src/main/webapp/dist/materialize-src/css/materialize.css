@@ -5346,7 +5346,7 @@ small {
       line-height: 2.88rem; } }
 
 .card-panel {
-  padding: 20px;
+  padding: 10px;
   margin: 0.5rem 0 1rem 0;
   border-radius: 2px;
   background-color: #fff; }
@@ -5406,9 +5406,9 @@ small {
       position: absolute;
       bottom: 0;
       left: 0;
-      padding: 20px; }
+      padding: 10px; }
   .card .card-content {
-    padding: 20px;
+    padding: 10px;
     border-radius: 0 0 2px 2px; }
     .card .card-content p {
       margin: 0;
@@ -5417,10 +5417,10 @@ small {
       line-height: 48px; }
   .card .card-action {
     border-top: 1px solid rgba(160, 160, 160, 0.2);
-    padding: 20px; }
+    padding: 10px; }
     .card .card-action a {
       color: #ffab40;
-      margin-right: 20px;
+      margin-right: 10px;
       -webkit-transition: color 0.3s ease;
       -moz-transition: color 0.3s ease;
       -o-transition: color 0.3s ease;
@@ -5430,7 +5430,7 @@ small {
       .card .card-action a:hover {
         color: #ffd8a6; }
   .card .card-reveal {
-    padding: 20px;
+    padding: 10px;
     position: absolute;
     background-color: #FFF;
     width: 100%;
