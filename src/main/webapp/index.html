@@ -44,8 +44,38 @@
 
 <!-- here the main content -->
 <main>
-        <div class="content-div"></div>
-        <div class="side-div"></div>
+    <div class="content-div"></div>
+    <div class="side-div"> <!-- add hide class  (to be removed from angular)-->
+        <!-- Only Mobile: bottone per chiudere la side-div-->
+        <div class="row">
+        <button class="btn hide-on-large-only col offset-s1 s10 offset-m1 m10"><i class="mdi-navigation-arrow-back left"></i> Torna indietro</button>
+        </div>
+            <ul class="side-div-menu">
+            <li class="side-cart">
+                <div class="side-cart-content row"> <!-- Contenuto carrello -->
+                    <div class="side-cart-film row"> <!-- Singolo film -->
+                        <div class="side-cart-content-main col s12 offset-m1 m10 offset-l1 l10">
+                            <!-- locandina, titolo, pulsante 'x' cancella -->
+
+                        </div>
+                        <div class="side-cart-content-tickets col s12 offset-m1 m10 offset-l1 l10">
+                            <!-- dropdown scelta tipo (young,senior,...) e quantità di ticket -->
+                        </div>
+                    </div>
+                </div>
+                <div class="side-cart-actions row"> <!-- div in fondo con bottone compra e totale -->
+                    <div class="side-cart-total row">
+                        <h5 class="col s7 m7 l7">Totale:</h5>
+                        <h5 class="total col s5 m5 l5 right-align">13.00 €</h5>
+                    </div>
+                    <button class="btn-large col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
+                </div>
+
+            </li>
+            <li class="side-login"></li>
+            <li class="side-search"></li>
+        </ul>
+    </div>
 </main>
 
 <footer class="footer-copyright grey darken-4">

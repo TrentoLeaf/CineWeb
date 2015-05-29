@@ -20,7 +20,12 @@ main {
   main .side-div {
     position: absolute;
     right: 0%;
+    background-color: green;
     height: 100%;
-    width: 0px;
+    width: 40%;
     z-index: 2;
     transition: width 0.5s; }
+    main .side-div .side-cart-actions {
+      position: absolute;
+      width: 100%;
+      bottom: 0%; }
