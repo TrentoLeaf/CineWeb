@@ -1,5 +1,7 @@
 package tk.trentoleaf.cineweb.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -7,7 +9,7 @@ public class User implements Serializable {
     private int uid;
     private Role role;
     private String email;
-    private transient String password;      // transient = non viene serializzato
+    private String password;
     private String firstName;
     private String secondName;
     private double credit;
@@ -51,6 +53,10 @@ public class User implements Serializable {
         return password;
     }
 
+    public void removePassword() {
+        this.password = null;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -73,6 +79,15 @@ public class User implements Serializable {
 
     public void setCredit(double credit) {
         this.credit = credit;
+    }
+
+    public boolean isValid() {
+        return role != null && StringUtils.isNotEmpty(email) && StringUtils.isNotEmpty(firstName)
+                && StringUtils.isNotEmpty(secondName) && credit >= 0;
+    }
+
+    public boolean isValidWithPassword() {
+        return isValid() && StringUtils.isNotEmpty(password);
     }
 
     @Override

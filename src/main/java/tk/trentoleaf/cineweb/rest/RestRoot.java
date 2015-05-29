@@ -6,7 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("/")
-public class Root {
+public class RestRoot {
 	
     @GET
     @Produces(MediaType.TEXT_PLAIN)
