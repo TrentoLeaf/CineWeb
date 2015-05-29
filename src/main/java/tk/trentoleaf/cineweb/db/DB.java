@@ -82,6 +82,7 @@ public class DB {
         createTableRooms();
         createTableSeats();
         createTablePlays();
+        //createTableBookings();
     }
 
     // destroy the db
@@ -95,6 +96,7 @@ public class DB {
         dropTableFilms();
         dropTableSeats();
         dropTableRooms();
+        //dropTableBookings();
     }
 
     // make sure the extension crypto is loaded
@@ -118,7 +120,7 @@ public class DB {
         try (Connection connection = getConnection()) {
 
             // create table roles
-            try (Statement createStm = connection.createStatement();) {
+            try (Statement createStm = connection.createStatement()) {
                 createStm.execute("CREATE TABLE IF NOT EXISTS roles (" +
                         "roleid CHAR(8) PRIMARY KEY," +
                         "description VARCHAR(200));");
@@ -426,13 +428,14 @@ public class DB {
     private void createTableFilms() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS films (" +
-                    "fid SERIAL PRIMARY KEY," +
+                    "fid SERIAL," +
                     "title VARCHAR(100) NOT NULL," +
                     "genre VARCHAR(20)," +
                     "trailer VARCHAR(100)," +
                     "playbill VARCHAR(100)," +
                     "plot TEXT," +
-                    "duration INTEGER);");
+                    "duration INTEGER," +
+                    "PRIMARY KEY (fid));");
         }
     }
 
@@ -621,6 +624,7 @@ public class DB {
                                 seatsStm.setInt(1, rid);
                                 seatsStm.setInt(2, x);
                                 seatsStm.setInt(3, y);
+
                                 seatsStm.execute();
 
                                 // add to room
@@ -836,4 +840,60 @@ public class DB {
         }
     }
 
+    // create table books
+    private void createTableBookings() throws SQLException
+    {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement())
+        {
+            stm.execute("CREATE TABLE IF NOT EXISTS bookings (" +
+                    "bid SERIAL," +
+                    "uid INTEGER," +
+                    "pid INTEGER," +
+                    "rid INTEGER," +
+                    "x INTEGER," +
+                    "y INTEGER," +
+                    "time_booking TIMESTAMP NOT NULL," +
+                    "price DOUBLE PRECISION," +
+                    "PRIMARY KEY (bid)," +
+                    "FOREIGN KEY (rid,x,y) REFERENCES seats(rid,x,y)," +
+                    "FOREIGN KEY (uid) REFERENCES roles(uid)," +
+                    "FOREIGN KEY (pid) REFERENCES plays(pid));");
+            //stm.execute("CREATE INDEX ON bookings (pid);");
+        }
+    }
+
+    // drop table books
+    private void dropTableBookings() throws SQLException
+    {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement())
+        {
+            stm.execute("DROP TABLE IF EXISTS bookings;");
+        }
+    }
+
+    private void createBookings(Booking booking)  throws SQLException
+    {
+        final String query = "INSERT INTO bookings (bid, uid, pid, rid, x, y, time_booking, price) VALUES " +
+                "(DEFAULT, ?, ?, ?, ?, ?, ?, ?) RETURNING bid";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query))
+        {
+            stm.setInt(1, booking.getUid());
+            stm.setInt(2, booking.getPid());
+            stm.setInt(3, booking.getRid());
+            stm.setInt(4, booking.getX());
+            stm.setInt(5, booking.getY());
+            stm.setTimestamp(6, new Timestamp(booking.getTimeBooking().toDate().getTime()));
+            stm.setDouble(7, booking.getPrice());
+
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+
+            int bid = rs.getInt("bid");
+            booking.setBid(bid);
+        }
+    }
+
+
 }
+

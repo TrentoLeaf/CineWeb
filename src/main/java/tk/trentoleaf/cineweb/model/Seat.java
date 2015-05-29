@@ -70,14 +70,6 @@ public class Seat implements Serializable, Comparable {
     }
 
     @Override
-    public int hashCode() {
-        int result = rid;
-        result = 31 * result + x;
-        result = 31 * result + y;
-        return result;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -88,6 +80,14 @@ public class Seat implements Serializable, Comparable {
         if (x != seat.x) return false;
         return y == seat.y;
 
+    }
+
+    @Override
+    public int hashCode() {
+        int result = rid;
+        result = 31 * result + x;
+        result = 31 * result + y;
+        return result;
     }
 
     @Override
