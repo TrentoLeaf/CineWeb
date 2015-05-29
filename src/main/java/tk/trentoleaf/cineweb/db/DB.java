@@ -44,10 +44,25 @@ public class DB {
         return connectionPool.getConnection();
     }
 
+    // singleton
+    private static DB db;
+
+    // get db instance
+    public static DB instance() {
+        if (db == null) {
+            db = new DB();
+        }
+        return db;
+    }
+
     // constructor
-    public DB() throws ClassNotFoundException {
-        // load PostgresSQL drivers
-        Class.forName("org.postgresql.Driver");
+    private DB() {
+        try {
+            // load PostgresSQL drivers
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // open the connection & initialize the database
