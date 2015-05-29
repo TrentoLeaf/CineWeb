@@ -10,6 +10,10 @@
     <link href="dist/materialize-src/font/material-design-icons/" type="text/css" rel="stylesheet"/>
     <link href="css/stylesheet.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="js/materialize.min.js"></script>
     <script src="js/app.js"></script>
@@ -43,7 +47,22 @@
 </nav>
 
 <!-- here the main content -->
-<main>
+<main ng-app="playbillcontainer">
+    <div class="content-div" ng-controller="ArchiveController as ctrl">
+        <div class="card" ng-repeat="film in ctrl.archive">
+            <div class="card-image waves-effect waves-block waves-light">
+                <img class="activator" ng-src="{{film.playbill}}">
+            </div>
+            <div class="card-content">
+                <span class="card-title activator grey-text text-darken-4">{{film.title}} <i class="mdi-navigation-more-vert right"></i></span>
+            </div>
+            <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">{{film.title2}} <i class="mdi-navigation-close right"></i></span>
+                <p>{{film.description}}</p>
+            </div>
+        </div>
+    </div>
+
 
 
 
