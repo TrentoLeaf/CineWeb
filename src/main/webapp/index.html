@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="it" ng-app="Main" >
+<html lang="it" ng-app="Main" ng-app="Router">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -19,14 +19,14 @@
     <script src="js/controller/plays.js"></script>
 
 </head>
-<body ng-controller="TabController as tab">
+<body ng-controller="TabController as tab" ng-controller="RouterController as router">
 <nav class="grey darken-4" role="navigation">
     <div class="nav-wrapper">
         <a href="#" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
         <ul class="left hide-on-med-and-down">
-            <li><a class="yellow-text text-accent-4" href="#">Oggi</a></li>
-            <li><a class="yellow-text text-accent-4" href="#">Programmazione</a></li>
-            <li><a class="yellow-text text-accent-4" href="#">Informazioni</a></li>
+            <li><a class="yellow-text text-accent-4" href="/partials/today.html">Oggi</a></li>
+            <li><a class="yellow-text text-accent-4" href="/partials/soon.html">Programmazione</a></li>
+            <li><a class="yellow-text text-accent-4" href="/partials/informations.html">Informazioni</a></li>
         </ul>
 
         <ul class="right hide-on-med-and-down">
@@ -51,20 +51,7 @@
 <main>
 
     <div class="content-div">
-        <div ng-controller="PlaysController as ctrl">
-            <div class="card" ng-repeat="film in ctrl.archive">
-                <div class="card-image waves-effect waves-block waves-light">
-                    <img class="activator" ng-src="{{film.playbill}}">
-                </div>
-                <div class="card-content">
-                    <span class="card-title activator grey-text text-darken-4">{{film.title}} <i class="mdi-navigation-more-vert right"></i></span>
-                </div>
-                <div class="card-reveal">
-                    <span class="card-title grey-text text-darken-4">{{film.title2}} <i class="mdi-navigation-close right"></i></span>
-                    <p>{{film.description}}</p>
-                </div>
-            </div>
-        </div>
+
     </div>
 
     <div class="side-div hide"> <!-- add hide class  (to be removed from angular)-->
