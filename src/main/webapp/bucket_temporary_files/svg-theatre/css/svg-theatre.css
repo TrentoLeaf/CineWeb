@@ -50,6 +50,8 @@
 .seat_armchair .seat_sitting {
   fill: #ebebff; }
 
+.seat-unavailable .seat_armchair {
+  cursor: not-allowed; }
 .seat-unavailable .seat_back {
   fill: #b21b1b; }
 .seat-unavailable .seat_arm {

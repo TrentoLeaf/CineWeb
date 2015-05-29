@@ -1,4 +1,16 @@
 #logo{
-    height: 1.7em;
-    width: 1.7em;
+    max-height: 100%;
+    width: 50px;
+    margin-top: 7px;
+    margin-right: 0.5rem;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
 }

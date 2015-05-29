@@ -102,6 +102,9 @@ $color-seat-sitting-hover: rgb(82,202,255);
 }
 
 .seat-unavailable {
+    .seat_armchair {
+        cursor: not-allowed;
+    }
 
     .seat_back {
         fill: $color-seat-back-unavailable;
