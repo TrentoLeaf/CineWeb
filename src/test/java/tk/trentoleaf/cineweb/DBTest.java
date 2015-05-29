@@ -854,7 +854,51 @@ public class DBTest {
         assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 13:00:01")));
         assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:00")));
         assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:01")));
+    }
 
+
+    @Test
+    public void createBooking() throws Exception {
+
+        final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+
+        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        db.createUser(u1);
+        db.createUser(u2);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        final Film f2 = new Film("Marco", "horror", "http://bbb.com", "http://bbb.org", "trama", 30);
+        db.createFilm(f1);
+        db.createFilm(f2);
+
+        final Room r1 = db.createRoom(4, 5);
+        final Room r2 = db.createRoom(2, 3);
+
+        final List<Seat> s1 = r1.getSeats();
+        final List<Seat> s2 = r2.getSeats();
+
+        final Play p1 = new Play(f1, r1, ff.parseDateTime("20/05/2015 12:00:00"), true);
+        final Play p2 = new Play(f1, r1, ff.parseDateTime("20/05/2015 13:00:01"), true);
+        db.createPlay(p1);
+        db.createPlay(p2);
+
+        // create bookings
+        final Booking b1 = new Booking(s1.get(0), u1, p1, ff.parseDateTime("18/05/2015 12:00:00"), 12);
+        final Booking b2 = new Booking(s2.get(2), u2, p2, ff.parseDateTime("18/05/2015 12:00:00"), 12);
+        db.createBookings(b1);
+        db.createBookings(b2);
+
+        // expected
+        List<Booking> expected = new ArrayList<>();
+        expected.add(b1);
+        expected.add(b2);
+
+        // current
+        List<Booking> current = db.getBookings();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
 }
