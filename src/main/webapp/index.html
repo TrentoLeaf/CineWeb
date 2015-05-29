@@ -52,6 +52,28 @@
 
     <div class="content-div">
 
+        <div ng-controller="PlaysController as ctrl">
+            <div class="card row" ng-repeat="film in ctrl.archive">
+                <!--Inizio MiniModulo -->
+                <div class="col s12 m6 l4">
+                    <div class="card-image col l4">
+                        <img class="responsive-img" ng-src="{{film.playbill}}">
+                    </div>
+                    <div class="card-content col l8">
+                        <span class="card-title grey-text accent-4">{{film.title}}</span>
+                        <br>
+                        <span class="card-title grey-text accent-4">{{film.gender}}</span>
+                        <br>
+                        <span class="card-title grey-text accent-4">{{film.time}}</span>
+                        <br>
+                        <a class="waves-effect waves-light btn black yellow-text text-accent-3"><i class="mdi-editor-attach-money">Prenota Biglietto</i></a>
+                        <br>
+                        <a class="waves-effect waves-light btn black yellow-text text-accent-3"><i class="mdi-action-theaters">Dettagli del Film</i></a>
+                    </div>
+                </div>
+                <!--Fine MiniModulo -->
+            </div>
+        </div>
     </div>
 
     <div class="side-div hide"> <!-- add hide class  (to be removed from angular)-->
