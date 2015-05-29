@@ -1,26 +1,42 @@
-#logo {
+// variables
+
+
+
+#logo{
   max-height: 100%;
   width: 50px;
   margin-top: 7px;
-  margin-right: 0.5rem; }
+  margin-right: 0.5rem;
+}
 
 body {
   display: flex;
   min-height: 100vh;
-  flex-direction: column; }
+  flex-direction: column;
+}
 
 main {
   position: relative;
-  flex: 1 0 auto; }
-  main .content-div {
+  flex: 1 0 auto;
+
+
+  .content-div {
     position: absolute;
+    //background-color: blue;
     width: 100%;
     height: 100%;
-    z-index: 1; }
-  main .side-div {
+    z-index: 1;
+  }
+
+  .side-div {
     position: absolute;
     right: 0%;
+    //background-color: green;
     height: 100%;
     width: 0px;
     z-index: 2;
-    transition: width 0.5s; }
+    transition: width 0.5s;
+
+  }
+
+}
