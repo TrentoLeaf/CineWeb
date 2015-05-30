@@ -58,7 +58,8 @@ public class MyJerseyTest extends JerseyTest {
                     public void start() {
                         try {
                             this.server = GrizzlyWebContainerFactory.create(
-                                    baseUri, Collections.singletonMap("jersey.config.server.provider.packages", "tk.trentoleaf.cineweb.rest")
+                                    baseUri, Collections.singletonMap("jersey.config.server.provider.packages",
+                                            "tk.trentoleaf.cineweb.rest")
                             );
                         } catch (ProcessingException e) {
                             throw new TestContainerException(e);

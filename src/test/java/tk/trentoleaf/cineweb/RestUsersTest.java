@@ -1,7 +1,6 @@
 package tk.trentoleaf.cineweb;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
@@ -18,12 +17,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class RestUsersTest extends MyJerseyTest {
 
+    private static final String COOKIE_NAME = "JSESSIONID";
+
     @Override
     protected Application configure() {
-        enable(TestProperties.LOG_TRAFFIC);
         return new ResourceConfig(RestUsers.class)
                 .register(GsonJerseyProvider.class)
                 .register(BadRequestHandler.class)
@@ -37,28 +39,27 @@ public class RestUsersTest extends MyJerseyTest {
         // create a user
         db.createUser(new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni"));
 
-        final Entity<Auth> ee = Entity.json(new Auth("teo@teo.com", "teo"));
-        final Response response = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE).post(ee);
+        final Response response = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(new Auth("teo@teo.com", "teo")));
         assertEquals(200, response.getStatus());
-
-        // @Context HttpServletRequest request -> null!
-
+        assertTrue(response.getCookies().containsKey(COOKIE_NAME));
     }
 
     @Test
     public void testLoginFail1() {
         final Response response = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE).post(null);
         assertEquals(400, response.getStatus());
+        assertFalse(response.getCookies().containsKey(COOKIE_NAME));
     }
 
     @Test
     public void testLoginFail2() {
         final Response response = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(new Auth("stefano@ste.com", "ccc")));
         assertEquals(404, response.getStatus());
+        assertFalse(response.getCookies().containsKey(COOKIE_NAME));
     }
 
     @Test
-    public void deleteUser() throws Exception{
+    public void deleteUser() throws Exception {
 
         // create a user
         final User u = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
