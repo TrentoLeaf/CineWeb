@@ -24,9 +24,11 @@
     <script src="js/materialize.min.js"></script>
     <script src="js/app.js"></script>
     <script src="js/controller/plays.js"></script>
+    <script src="js/controller/tab.js"></script>
 
 </head>
 <body ng-controller="TabController as tab" ng-controller="RouterController as router">
+
 <div class="navbar-fixed">
     <nav class="grey darken-4" role="navigation">
         <div class="nav-wrapper">
@@ -42,6 +44,7 @@
                 <li><a class="yellow-text text-accent-4" href="#" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle"></i></a></li>
                 <li><a class="yellow-text text-accent-4" href="#" ng-click="tab.setTab(3)"><i class="mdi-action-search"></i></a></li>
             </ul>
+
 
             <ul id="nav-mobile" class="side-nav grey darken-4">
                 <li><a class="yellow-text text-accent-4" href="#today">Oggi</a></li>
@@ -59,7 +62,8 @@
 <!-- here the main content -->
 <main>
     <div class="content-div" ng-view>
-    </div>
+
+     </div>
 
     <div class="side-div grey darken-4 white-text"> <!-- add hide class  (to be removed from angular)-->
         <!-- Only Mobile: bottone per chiudere la side-div-->

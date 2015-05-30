@@ -26,70 +26,37 @@ $(document).ready(function(){
 
 });
 (function() {
-    'use strict';
 
-    var app= angular.module('cineweb', ['ngRoute', 'PlaysModule']);
+  'use strict';
 
-    // handles routes
-    app.config([ '$routeProvider', function($routeProvider) {
-        $routeProvider.when('/', {
-            redirectTo: '/today'
-        }).when ('/home', {
-            redirectTo: '/today'
-        }).when('/today', {
-            templateUrl: 'partials/today.html'
-        }).when('/soon', {
-            templateUrl: 'partials/soon.html'
-        }).when('/informations', {
-            templateUrl: 'partials/informations.html'
-        }).when('/registration', {
-            templateUrl: 'partials/registration.html',
-            controller: 'registrationCtrl',
-            controllerAs: 'ctrl'
-        }).when('/error', {
-            templateUrl: 'partials/error.html'
-        }).otherwise({
-            redirectTo: '/error'
-        });
-    } ]);
+  var app= angular.module('cineweb', ['PlaysModule', 'ngRoute', 'tabmodule']);
 
-
-    app.controller('TabController', function() {
-
-        this.tab = -1;
-
-        this.setTab = function (tab) {
-
-            if (this.tab == tab ) {
-                // hide side-div
-                $('.side-div').removeClass('side-div-w');
-                this.tab = -1;
-            } else {
-
-                // show side-div
-                $('.side-div').addClass('side-div-w');
-
-                this.tab = tab;
-            }
-
-        };
-
-        this.isSet = function (Value) {
-            return this.tab === Value;
-        };
+  app.config([ '$routeProvider', function($routeProvider) {
+    $routeProvider.when('/', {
+      redirectTo: '/today'
+    }).when('/home', {
+      redirectTo: '/today'
+    }).when('/today', {
+      templateUrl: '../partials/today.html',
+      controller: 'PlaysController',
+      controllerAs: 'ctrl'
+    }).when('/soon', {
+      templateUrl: '../partials/soon.html',
+      controller: 'PlaysController',
+      controllerAs: 'ctrl'
+    }).when('/informations', {
+      templateUrl: '../partials/informations.html',
+      controller: '', //controller per informations
+      controllerAs: '' //alias controller per informstions
+    }).when('/registration', {
+        templateUrl: 'partials/registration.html',
+        cntroller: 'registrationCtrl',
+        controllerAs: 'ctrl'
+    }).when('/error', {
+        templateUrl: 'partials/error.html'
+    }).otherwise({
+      redirectTo: '/error'
     });
-
-    app.controller('registrationCtrl', function () {
-
-        this.user = "";
-
-        this.submit = function () {
-            console.log(this.user);
-            // TODO! call backend
-        };
-
-    });
-
-
+  } ]);
 
 })();
