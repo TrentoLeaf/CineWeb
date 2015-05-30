@@ -16,9 +16,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RestUsersTest extends MyJerseyTest {
 
@@ -59,6 +57,28 @@ public class RestUsersTest extends MyJerseyTest {
     }
 
     @Test
+    public void testLogout() throws Exception {
+
+        // create a user
+        db.createUser(new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni"));
+
+        // login
+        final Response responseLogin = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(new Auth("teo@teo.com", "teo")));
+        assertTrue(responseLogin.getCookies().containsKey(COOKIE_NAME));
+        final String oldCookie = responseLogin.getCookies().get(COOKIE_NAME).getValue();
+
+        // logout
+        final Response responseLogout = getTarget().path("/users/logout").request(MediaType.APPLICATION_JSON_TYPE).post(null);
+        assertNotEquals(oldCookie, responseLogout.getCookies().get(COOKIE_NAME));
+    }
+
+    @Test
+    public void getUsers() throws Exception {
+        final Response response = getTarget().path("/users").request(MediaType.APPLICATION_JSON_TYPE).get();
+        assertEquals(200, response.getStatus());
+    }
+
+    @Test
     public void deleteUser() throws Exception {
 
         // create a user
@@ -70,10 +90,6 @@ public class RestUsersTest extends MyJerseyTest {
         assertEquals(200, response.getStatus());
     }
 
-    @Test
-    public void getUsers() throws Exception {
-        final Response response = getTarget().path("/users").request(MediaType.APPLICATION_JSON_TYPE).get();
-        assertEquals(200, response.getStatus());
-    }
+
 }
 

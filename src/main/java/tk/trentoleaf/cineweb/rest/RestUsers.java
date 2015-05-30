@@ -12,8 +12,8 @@ import tk.trentoleaf.cineweb.rest.exceptions.BadRequestException;
 import tk.trentoleaf.cineweb.rest.exceptions.ConflictException;
 import tk.trentoleaf.cineweb.rest.exceptions.NotFoundException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.ServletContext;
+import javax.servlet.http.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -25,6 +25,14 @@ public class RestUsers {
 
     // db singleton
     private DB db = DB.instance();
+
+    private void removeCookie(HttpServletResponse response, String name) {
+        Cookie cookie = new Cookie(name, null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+    }
 
     // rest function to do a login
     @POST
@@ -63,11 +71,15 @@ public class RestUsers {
 
     @POST
     @Path("/logout")
-    public Response logout(@Context HttpServletRequest request) {
+    public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 
         // invalidate the session
         final HttpSession session = request.getSession();
         session.invalidate();
+
+        // remove cookie popcorn and JSESSIONID
+        removeCookie(response, "JSESSIONID");
+        removeCookie(response, "popcorn");
 
         return Response.ok().build();
     }
