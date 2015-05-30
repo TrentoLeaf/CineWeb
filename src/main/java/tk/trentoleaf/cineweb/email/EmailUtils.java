@@ -13,4 +13,14 @@ public class EmailUtils {
 
         return sb.toString();
     }
+
+
+    public static String resetPasswordText(String url) {
+        StringBuilder sb =new StringBuilder();
+
+        sb.append("Come da sua richiesta le è stata mandata la possibilità di ripristinare la sua password.\n" +
+                " Per completare questa operazione clicchi sul link sottostante.\n\n" + url + "\n\n ");
+
+        return sb.toString();
+    }
 }
