@@ -22,6 +22,12 @@
         <listener-class>tk.trentoleaf.cineweb.db.DBListener</listener-class>
     </listener>
 
+    <!-- SendGrid -->
+    <listener>
+        <description>ServletContextListener</description>
+        <listener-class>tk.trentoleaf.cineweb.email.EmailListener</listener-class>
+    </listener>
+
     <!-- Jersey -->
     <servlet>
         <servlet-name>Jersey</servlet-name>
