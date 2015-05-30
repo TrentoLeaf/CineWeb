@@ -12,10 +12,6 @@ jQuery(document).ready(function($){
 
 		$('body').addClass('overlay-layer');
 		animateQuickView(selectedImage, sliderFinalWidth, maxQuickWidth, 'open');
-
-		//update the visible slider image in the quick view panel
-		//you don't need to implement/use the updateQuickView if retrieving the quick view data with ajax
-		updateQuickView(slectedImageUrl);
 	});
 
 	//close the quick view panel
@@ -31,31 +27,12 @@ jQuery(document).ready(function($){
 		}
 	});
 
-	//quick view slider implementation
-	$('.cd-quick-view').on('click', '.cd-slider-navigation a', function(){
-		updateSlider($(this));
-	});
-
 	//center quick-view on window resize
 	$(window).on('resize', function(){
 		if($('.cd-quick-view').hasClass('is-visible')){
 			window.requestAnimationFrame(resizeQuickView);
 		}
 	});
-
-	function updateSlider(navigation) {
-		var sliderConatiner = navigation.parents('.cd-slider-wrapper').find('.cd-slider'),
-			activeSlider = sliderConatiner.children('.selected').removeClass('selected');
-		if ( navigation.hasClass('cd-next') ) {
-			( !activeSlider.is(':last-child') ) ? activeSlider.next().addClass('selected') : sliderConatiner.children('li').eq(0).addClass('selected'); 
-		} else {
-			( !activeSlider.is(':first-child') ) ? activeSlider.prev().addClass('selected') : sliderConatiner.children('li').last().addClass('selected');
-		} 
-	}
-
-	function updateQuickView(url) {
-		$('.cd-quick-view .cd-slider li').removeClass('selected').find('img[src="'+ url +'"]').parent('li').addClass('selected');
-	}
 
 	function resizeQuickView() {
 		var quickViewLeft = ($(window).width() - $('.cd-quick-view').width())/2,
