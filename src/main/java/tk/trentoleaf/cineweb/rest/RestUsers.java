@@ -8,6 +8,7 @@ import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.entities.Auth;
 import tk.trentoleaf.cineweb.rest.entities.ChangePassword;
 import tk.trentoleaf.cineweb.rest.entities.LoginOk;
+import tk.trentoleaf.cineweb.rest.entities.Registration;
 import tk.trentoleaf.cineweb.rest.exceptions.AuthFailedException;
 import tk.trentoleaf.cineweb.rest.exceptions.BadRequestException;
 import tk.trentoleaf.cineweb.rest.exceptions.ConflictException;
@@ -112,6 +113,15 @@ public class RestUsers {
         } catch (WrongPasswordException e2) {
             throw new AuthFailedException();
         }
+    }
+
+    @POST
+    @Path("/registration")
+    public Response registration(Registration registration) {
+
+        // TODO
+
+        return Response.ok().build();
     }
 
     @GET
