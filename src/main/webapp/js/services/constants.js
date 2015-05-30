@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('constants', [])
+    angular.module('constantsModule', [])
         .constant('BASE', '/rest');
 
 })();

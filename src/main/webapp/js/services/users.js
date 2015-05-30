@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('usersModule', ['constants'])
+    angular.module('usersModule', ['constantsModule', 'ngResource'])
 
         .factory('Users', ['BASE', '$resource', function (BASE, $resource) {
             return $resource(BASE + '/users/:id', {id: '@id'}, {
@@ -11,16 +11,18 @@
             });
         }])
 
-        .factory('Auth', ['BASE', $http, $q, $log, function (BASE, $http, $q, $log) {
+        .factory('Auth', ['BASE', '$http', '$q', '$log', function (BASE, $http, $q, $log) {
+            var BASE_USERS = BASE + "/users";
+
             return {
                 login: function (email, password) {
                     var deferred = $q.defer();
 
-                    $http.post(BASE + '/login', {email: email, password: password})
+                    $http.post(BASE_USERS + '/login', {email: email, password: password})
                         .success(function (data) {
                             deferred.resolve(data);
                         })
-                        .error(function () {
+                        .error(function (data) {
                             $log.warn('LOGIN FAILED: ' + status + " " + data.error);
                             deferred.reject(data.error);
                         });
@@ -29,14 +31,14 @@
                 },
 
                 logout: function () {
-                    $http.post(BASE + '/logout')
+                    return $http.post(BASE_USERS + '/logout')
                         .error(function (data, status) {
                             $log.warn('LOGOUT FAILED: ' + status + " " + data);
                         });
                 },
 
                 changePassword: function (email, oldPassword, newPassword) {
-                    return $http.post(BASE + 'change-password', {
+                    return $http.post(BASE_USERS + '/change-password', {
                         email: email,
                         oldPassword: oldPassword,
                         newPassword: newPassword

@@ -97,6 +97,13 @@ public class DB {
         createTableRooms();
         createTableSeats();
         createTablePlays();
+
+        // create first user
+        try {
+            db.createUser(new User(Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin"));
+        } catch (ConstrainException e) {
+            logger.warning("User ADMIN already exixsts");
+        }
     }
 
     // destroy the db
