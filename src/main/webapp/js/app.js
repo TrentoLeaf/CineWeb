@@ -42,6 +42,10 @@ $(document).ready(function(){
             templateUrl: 'partials/soon.html'
         }).when('/informations', {
             templateUrl: 'partials/informations.html'
+        }).when('/registration', {
+            templateUrl: 'partials/registration.html',
+            controller: 'registrationCtrl',
+            controllerAs: 'ctrl'
         }).when('/error', {
             templateUrl: 'partials/error.html'
         }).otherwise({
@@ -73,6 +77,17 @@ $(document).ready(function(){
         this.isSet = function (Value) {
             return this.tab === Value;
         };
+    });
+
+    app.controller('registrationCtrl', function () {
+
+        this.user = "";
+
+        this.submit = function () {
+            console.log(this.user);
+            // TODO! call backend
+        };
+
     });
 
 
