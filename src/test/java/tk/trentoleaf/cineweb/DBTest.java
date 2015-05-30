@@ -26,7 +26,7 @@ public class DBTest {
 
     @Before
     public void before() throws SQLException, URISyntaxException, ClassNotFoundException {
-        db = new DB();
+        db = DB.instance();
         db.open();
         db.reset();
         db.init();

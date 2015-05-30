@@ -14,15 +14,12 @@ public class DBListener implements ServletContextListener {
 
         try {
             // create a DB connection
-            DB db = new DB();
+            DB db = DB.instance();
 
             // open the connection
             db.open();
 
-            // and save the db
-            sce.getServletContext().setAttribute("db", db);
-
-        } catch (ClassNotFoundException | SQLException | URISyntaxException e) {
+        } catch (RuntimeException | SQLException | URISyntaxException e) {
             logger.severe("Cannot open the connection to the database -> " + e.toString());
             logger.warning("Try to set the Environment variable DATABASE_URL to 'postgres://user:password@localhost:5432/db'");
             throw new RuntimeException(e);
@@ -34,7 +31,7 @@ public class DBListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce) {
 
         // retrieve the database
-        final DB db = (DB) sce.getServletContext().getAttribute("db");
+        final DB db = DB.instance();
 
         // close the connection
         try {

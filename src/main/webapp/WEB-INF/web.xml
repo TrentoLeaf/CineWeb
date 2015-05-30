@@ -7,8 +7,14 @@
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+
+    <!-- change session cookie -->
+    <session-config>
+        <cookie-config>
+            <name>popcorn</name>
+        </cookie-config>
+    </session-config>
 
     <!-- PostgreSQL -->
     <listener>
@@ -28,7 +34,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Jersey</servlet-name>
-        <url-pattern>/rest</url-pattern>
+        <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

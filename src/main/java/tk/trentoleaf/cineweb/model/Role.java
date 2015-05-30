@@ -1,5 +1,7 @@
 package tk.trentoleaf.cineweb.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +9,10 @@ import java.util.Map;
 
 public enum Role {
 
+    @SerializedName("admin")
     ADMIN("admin", "Admin user"),
+
+    @SerializedName("client")
     CLIENT("client", "Client user");
 
     private String roleID;
