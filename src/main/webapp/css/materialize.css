@@ -5346,7 +5346,7 @@ small {
       line-height: 2.88rem; } }
 
 .card-panel {
-  padding: 20px;
+  padding: 10px;
   margin: 0.5rem 0 1rem 0;
   border-radius: 2px;
   background-color: #fff; }
@@ -5406,9 +5406,9 @@ small {
       position: absolute;
       bottom: 0;
       left: 0;
-      padding: 20px; }
+      padding: 10px; }
   .card .card-content {
-    padding: 20px;
+    padding: 10px;
     border-radius: 0 0 2px 2px; }
     .card .card-content p {
       margin: 0;
@@ -5417,10 +5417,10 @@ small {
       line-height: 48px; }
   .card .card-action {
     border-top: 1px solid rgba(160, 160, 160, 0.2);
-    padding: 20px; }
+    padding: 10px; }
     .card .card-action a {
       color: #ffab40;
-      margin-right: 20px;
+      margin-right: 10px;
       -webkit-transition: color 0.3s ease;
       -moz-transition: color 0.3s ease;
       -o-transition: color 0.3s ease;
@@ -5430,7 +5430,7 @@ small {
       .card .card-action a:hover {
         color: #ffd8a6; }
   .card .card-reveal {
-    padding: 20px;
+    padding: 10px;
     position: absolute;
     background-color: #FFF;
     width: 100%;
@@ -6107,8 +6107,8 @@ textarea.materialize-textarea {
   input[type=number]:focus:not([readonly]),
   input[type=search]:focus:not([readonly]),
   textarea.materialize-textarea:focus:not([readonly]) {
-    border-bottom: 1px solid #26a69a;
-    box-shadow: 0 1px 0 0 #26a69a; }
+    border-bottom: 1px solid #ffd600;
+    box-shadow: 0 1px 0 0 #ffd600; }
   input[type=text]:focus:not([readonly]) + label,
   input[type=password]:focus:not([readonly]) + label,
   input[type=email]:focus:not([readonly]) + label,
@@ -6120,7 +6120,7 @@ textarea.materialize-textarea {
   input[type=number]:focus:not([readonly]) + label,
   input[type=search]:focus:not([readonly]) + label,
   textarea.materialize-textarea:focus:not([readonly]) + label {
-    color: #26a69a; }
+    color: #ffd600; }
   input[type=text].valid, input[type=text]:focus.valid,
   input[type=password].valid,
   input[type=password]:focus.valid,
@@ -6200,7 +6200,7 @@ textarea.materialize-textarea {
     -ms-transition: color 0.2s;
     transition: color 0.2s; }
     .input-field .prefix.active {
-      color: #26a69a; }
+      color: #ffd600; }
   .input-field .prefix ~ input,
   .input-field .prefix ~ textarea {
     margin-left: 3rem;
@@ -8010,5 +8010,3 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 @media (min-height: 40.125em) {
   .picker--time .picker__box {
     margin-bottom: 5em; } }
-
-/*# sourceMappingURL=materialize.css.map */

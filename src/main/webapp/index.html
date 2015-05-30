@@ -19,74 +19,71 @@
 
 </head>
 <body ng-controller="TabController as tab" ng-controller="RouterController as router">
-<nav class="grey darken-4" role="navigation">
-    <div class="nav-wrapper">
-        <a href="#" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
-        <ul class="left hide-on-med-and-down">
-            <li><a class="yellow-text text-accent-4" href="partials/today.html">Oggi al Cinema</a></li>
-            <li><a class="yellow-text text-accent-4" href="partials/soon.html">Prossimamente</a></li>
-            <li><a class="yellow-text text-accent-4" href="gi tpartials/informations.html">Informazioni</a></li>
-        </ul>
+<div class="navbar-fixed">
+    <nav class="grey darken-4" role="navigation">
+        <div class="nav-wrapper">
+            <a href="#" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
+            <ul class="left hide-on-med-and-down">
+                <li><a class="yellow-text text-accent-4" href="partials/today.html">Oggi al Cinema</a></li>
+                <li><a class="yellow-text text-accent-4" href="partials/soon.html">Prossimamente</a></li>
+                <li><a class="yellow-text text-accent-4" href="gi tpartials/informations.html">Informazioni</a></li>
+            </ul>
 
-        <ul class="right hide-on-med-and-down">
-            <li><a class="yellow-text text-accent-4" href="#" ng-click="tab.setTab(1)"><i class="mdi-action-shopping-cart"></i></a></li>
-            <li><a class="yellow-text text-accent-4" href="#" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle"></i></a></li>
-            <li><a class="yellow-text text-accent-4" href="#" ng-click="tab.setTab(3)"><i class="mdi-action-search"></i></a></li>
-        </ul>
+            <ul class="right hide-on-med-and-down">
+                <li><a class="yellow-text text-accent-4" href="#" ng-click="tab.setTab(1)"><i class="mdi-action-shopping-cart"></i></a></li>
+                <li><a class="yellow-text text-accent-4" href="#" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle"></i></a></li>
+                <li><a class="yellow-text text-accent-4" href="#" ng-click="tab.setTab(3)"><i class="mdi-action-search"></i></a></li>
+            </ul>
 
-        <ul id="nav-mobile" class="side-nav grey darken-4">
-            <li><a class="yellow-text text-accent-4" href="#">Oggi</a></li>
-            <li><a class="yellow-text text-accent-4" href="#">Programmazione</a></li>
-            <li><a class="yellow-text text-accent-4" href="#">Informazioni</a></li>
-            <li><a class="yellow-text text-accent-4" href="#"><i class="mdi-action-shopping-cart left"></i>Carrello</a></li>
-            <li><a class="yellow-text text-accent-4" href="#"><i class="mdi-action-account-circle left"></i>Accedi</a></li>
-        </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse yellow-text text-accent-4"><i class=" mdi-navigation-menu"></i></a>
-        <a href="#" data-activates="nav-mobile" class="button hide-on-large-only right"><i class="yellow-text text-accent-4 mdi-action-search"></i></a>
-    </div>
-</nav>
+            <ul id="nav-mobile" class="side-nav grey darken-4">
+                <li><a class="yellow-text text-accent-4" href="#">Oggi</a></li>
+                <li><a class="yellow-text text-accent-4" href="#">Programmazione</a></li>
+                <li><a class="yellow-text text-accent-4" href="#">Informazioni</a></li>
+                <li><a class="yellow-text text-accent-4" href="#"><i class="mdi-action-shopping-cart left"></i>Carrello</a></li>
+                <li><a class="yellow-text text-accent-4" href="#"><i class="mdi-action-account-circle left"></i>Accedi</a></li>
+            </ul>
+            <a href="#" data-activates="nav-mobile" class="button-collapse yellow-text text-accent-4"><i class=" mdi-navigation-menu"></i></a>
+            <a href="#" data-activates="nav-mobile" class="button hide-on-large-only right"><i class="yellow-text text-accent-4 mdi-action-search"></i></a>
+        </div>
+    </nav>
+</div>
 
 <!-- here the main content -->
 <main>
 
     <div class="content-div">
-
-        <div ng-controller="PlaysController as ctrl">
-            <div class="card row" ng-repeat="film in ctrl.archive">
-                <!--Inizio MiniModulo -->
-                <div class="col s12 m6 l4">
-                    <div class="card-image col l4">
-                        <img class="responsive-img" ng-src="{{film.playbill}}">
-                    </div>
-                    <div class="card-content col l8">
-                        <span class="card-title grey-text accent-4">{{film.title}}</span>
-                        <br>
-                        <span class="card-title grey-text accent-4">{{film.gender}}</span>
-                        <br>
-                        <span class="card-title grey-text accent-4">{{film.time}}</span>
-                        <br>
-                        <a class="waves-effect waves-light btn black yellow-text text-accent-3"><i class="mdi-editor-attach-money">Prenota Biglietto</i></a>
-                        <br>
-                        <a class="waves-effect waves-light btn black yellow-text text-accent-3"><i class="mdi-action-theaters">Dettagli del Film</i></a>
-                    </div>
-                </div>
-                <!--Fine MiniModulo -->
-            </div>
-        </div>
     </div>
 
     <div class="side-div grey darken-4 white-text"> <!-- add hide class  (to be removed from angular)-->
         <!-- Only Mobile: bottone per chiudere la side-div-->
         <div class="row">
-            <button class="btn hide-on-large-only col offset-s1 s10 offset-m1 m10"><i class="mdi-navigation-arrow-back left"></i> Torna indietro</button>
+            <button class="hide-side-nav-button-mobile btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i> Torna indietro</button>
         </div>
         <ul class="side-div-menu">
             <li class="side-cart" ng-show="tab.isSet(1)">
                 <div class="side-cart-content row"> <!-- Contenuto carrello -->
                     <div class="side-cart-film row"> <!-- Singolo film -->
-                        <div class="side-cart-content-main col s12 offset-m1 m10 offset-l1 l10">
+                        <div class="side-cart-items-main col s12 offset-m1 m10 offset-l1 l10">
                             <!-- locandina, titolo, pulsante 'x' cancella -->
+                            <ul class="side-cart-items">
+                                <li>
+                                    <span class="cd-qty">1x</span> Product Name
+                                    <div class="cd-price">$9.99</div>
+                                    <a href="#0" class="cd-item-remove cd-img-replace">Remove</a>
+                                </li>
 
+                                <li>
+                                    <span class="cd-qty">2x</span> Product Name
+                                    <div class="cd-price">$19.98</div>
+                                    <a href="#0" class="cd-item-remove cd-img-replace">Remove</a>
+                                </li>
+
+                                <li>
+                                    <span class="cd-qty">1x</span> Product Name
+                                    <div class="cd-price">$9.99</div>
+                                    <a href="#0" class="cd-item-remove cd-img-replace">Remove</a>
+                                </li>
+                            </ul> <!-- cd-cart-items -->
                         </div>
                         <div class="side-cart-content-tickets col s12 offset-m1 m10 offset-l1 l10">
                             <!-- dropdown scelta tipo (young,senior,...) e quantità di ticket -->
@@ -98,14 +95,13 @@
                         <h5 class="col s7 m7 l7">Totale:</h5>
                         <h5 class="total col s5 m5 l5 right-align">13.00 €</h5>
                     </div>
-                    <button class="btn-large col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
+                    <button class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
                 </div>
-
             </li>
             <li class="side-login" ng-show="tab.isSet(2)">
-                <div class="row card grey darken-3">
-                    <div class="col s12 m12 l12 center-align white-text">
-                        <h5>Login</h5>
+                <div class="card row grey darken-4">
+                    <div class="card-content">
+                        <span class="card-title">Login</span>
                         <form action="servlet-di-login" method="post">
                             <div class="input-field">
                                 <i class="mdi-action-account-circle prefix"></i>
@@ -117,25 +113,32 @@
                                 <input id="icon_prefix" type="password">
                                 <label for="icon_prefix" class="white-text">Password</label>
                             </div>
-                            <div class="input-field">
-                                <a class="yellow-text text-accent-4" type="submit" name="forgot">Password dimenticata?</a>
+                            <div class="row">
+                            <div class="col">
+                                <a class=" yellow-text text-accent-4" type="submit" name="forgot" href="#">Password dimenticata? Clicca qui.</a>
                             </div>
-                            <div class="col s5 m5 l5">
-                                <button class="btn white black-text waves-effect waves-light right" type="submit" name="login">Login
-                                    <i class="mdi-content-send right"></i>
+                            </div>
+                            <div class="row">
+                                    <button class="col offset-s1 s10 offset-m1 m10 offset-l1 l10 btn-large green white-text waves-effect waves-light" type="submit" name="login">Login
+                                        <i class="mdi-content-send white-text right"></i>
+                                    </button>
+                            </div>
+                            <div class="row">
+                                <button class="col offset-s1 s10 offset-m1 m10 offset-l1 l10 btn yellow accent-4 black-text waves-effect waves-light" type="submit" name="register">Registrati
+                                    <i class="mdi-action-assignment black-text left"></i>
                                 </button>
                             </div>
+                        </form>
                     </div>
-                    </form>
-
                 </div>
-    </div>
+            </li>
+            <li class="side-search" ng-show="tab.isSet(3)">
 
 
 
-    </li>
-    <li class="side-search" ng-show="tab.isSet(3)"></li>
-    </ul>
+
+            </li>
+        </ul>
     </div>
 
 </main>
