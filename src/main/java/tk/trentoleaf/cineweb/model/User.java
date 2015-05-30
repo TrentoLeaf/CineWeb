@@ -75,6 +75,11 @@ public class User implements Serializable {
         this.credit = credit;
     }
 
+    public void addCredit(double credit)
+    {
+        this.credit += credit;
+    }
+
     @Override
     public int hashCode() {
         return uid;

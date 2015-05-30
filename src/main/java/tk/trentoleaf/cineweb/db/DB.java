@@ -83,7 +83,7 @@ public class DB {
         createTableRooms();
         createTableSeats();
         createTablePlays();
-        //createTableBookings();
+        createTableBookings();
     }
 
     // destroy the db
@@ -97,7 +97,7 @@ public class DB {
         dropTableFilms();
         dropTableSeats();
         dropTableRooms();
-        //dropTableBookings();
+        dropTableBookings();
     }
 
     // make sure the extension crypto is loaded
@@ -333,6 +333,30 @@ public class DB {
                 u.setUid(rs.getInt("uid"));
                 u.setRole(Role.fromID(rs.getString("roleid")));
                 u.setEmail(email);
+                u.setFirstName(rs.getString("first_name"));
+                u.setSecondName(rs.getString("second_name"));
+                u.setCredit(rs.getDouble("credit"));
+                return u;
+            }
+
+            // if here -> no such user
+            throw new UserNotFoundException();
+        }
+    }
+
+    // get a single user
+    public User getUser(int uid) throws SQLException, UserNotFoundException {
+        final String query = "SELECT email, roleid, first_name, second_name, credit FROM users WHERE uid = ?;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, uid);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                User u = new User();
+                u.setUid(uid);
+                u.setRole(Role.fromID(rs.getString("roleid")));
+                u.setEmail(rs.getString("email"));
                 u.setFirstName(rs.getString("first_name"));
                 u.setSecondName(rs.getString("second_name"));
                 u.setCredit(rs.getDouble("credit"));
@@ -895,7 +919,8 @@ public class DB {
         }
     }
 
-    private List<Booking> getBookings() throws SQLException {
+    //list of all booking
+    public List<Booking> getBookings() throws SQLException {
         final List<Booking> bookings = new ArrayList<>();
 
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
@@ -917,10 +942,68 @@ public class DB {
         return bookings;
     }
 
-    //todo delete booking
-    private void deleteBookings(Booking booking)
-    {
+    public Booking getBooking(int bookingId) throws SQLException {
+        final Booking booking;
+        final String query = "SELECT bid, uid, pid, rid, x, y, time_booking, price FROM bookings WHERE bid = ?;";
 
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, bookingId);
+            ResultSet rs = stm.executeQuery();
+
+            rs.next();
+            bookingId = rs.getInt("bid");
+            int uid = rs.getInt("uid");
+            int pid = rs.getInt("pid");
+            int rid = rs.getInt("rid");
+            int x = rs.getInt("x");
+            int y = rs.getInt("y");
+            DateTime timeBooking = new DateTime(rs.getTimestamp("time_booking").getTime());
+            double price = rs.getDouble("price");
+
+            booking = new Booking( bookingId, rid, x, y, uid, pid, timeBooking, price);
+        }
+
+        return booking;
+    }
+
+    //delete booking
+    public void deleteBooking(Booking booking) throws SQLException, UserNotFoundException {
+
+        final String query = "DELETE FROM bookings WHERE bid = ?";
+        final User user;
+
+        try (Connection connection = getConnection()) {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
+                stm.setInt(1, booking.getBid());
+                ResultSet rs = stm.executeQuery();
+                rs.next();
+
+                double accredit = booking.getPrice() * 0.80;
+                user = getUser(booking.getUid());
+                user.addCredit(accredit);
+
+                final String queryUser = "UPDATE users SET credit = ? WHERE uid = ?";
+
+                try (PreparedStatement stmUser = connection.prepareStatement(queryUser)) {
+                    stmUser.setDouble(1, user.getCredit());
+                    stmUser.execute();
+                }
+
+                connection.commit();
+
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            }
+        }
+
+    }
+
+    // delete a Booking
+    public void deleteBooking(int bid) throws SQLException, UserNotFoundException {
+        deleteBooking(getBooking(bid));
     }
 
 }

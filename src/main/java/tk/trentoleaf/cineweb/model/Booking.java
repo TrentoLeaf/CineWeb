@@ -15,6 +15,9 @@ public class Booking implements Serializable
     private DateTime timeBooking;
     private double price;
 
+    public Booking()
+    {}
+
     public Booking(Seat seat, User user, Play play, DateTime timeBooking, double price) {
         this(seat.getRid(), seat.getX(), seat.getY(), user.getUid(), play.getPid(), timeBooking, price);
     }
