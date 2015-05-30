@@ -1,3 +1,4 @@
+'use strict';
 jQuery(document).ready(function($){
 	//final width --> this is the quick view image slider width
 	//maxQuickWidth --> this is the max-width of the quick-view panel
