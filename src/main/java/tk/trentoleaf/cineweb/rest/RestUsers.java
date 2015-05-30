@@ -23,6 +23,8 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import javax.xml.ws.spi.http.HttpContext;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Logger;
@@ -123,7 +125,7 @@ public class RestUsers {
 
     @POST
     @Path("/registration")
-    public Response registration(Registration registration) throws SQLException {
+    public Response registration(@Context UriInfo uriInfo, Registration registration) throws SQLException {
 
         // validate registration
         if (registration == null || !registration.isValid()) {
@@ -142,7 +144,7 @@ public class RestUsers {
                 final String code = db.requestConfirmationCode(user.getUid());
 
                 // send email
-                EmailSender.instance().sendRegistrationEmail(user.getEmail(), code);
+                EmailSender.instance().sendRegistrationEmail(uriInfo.getRequestUri(), user, code);
 
             } catch (SendGridException e) {
                 logger.severe("Cannot send verification email to: " + user.getEmail() + " --> " + e);

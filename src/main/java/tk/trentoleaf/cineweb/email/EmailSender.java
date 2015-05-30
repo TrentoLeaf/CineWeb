@@ -3,7 +3,10 @@ package tk.trentoleaf.cineweb.email;
 
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
+import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.rest.utils.Utils;
 
+import java.net.URI;
 import java.util.logging.Logger;
 
 public class EmailSender {
@@ -37,14 +40,17 @@ public class EmailSender {
     }
 
     // send an email to confirm the registration
-    public void sendRegistrationEmail(String emailAddress, String verificationCode) throws SendGridException {
+    public void sendRegistrationEmail(URI uri, User user, String verificationCode) throws SendGridException {
+
+        // create url
+        final String url = Utils.uriToRoot(uri) + "/#?c=" + verificationCode;
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
         email.setFrom(FROM);
-        email.addTo(emailAddress);
+        email.addTo(user.getEmail());
         email.setSubject(WE + " - Conferma registrazione");
-        email.setText("TODO -> text by stefano, HTML to set");
+        email.setText(EmailUtils.registrationText(user.getFirstName(), user.getSecondName(), url));
 
         // try to send, log failures
         try {
