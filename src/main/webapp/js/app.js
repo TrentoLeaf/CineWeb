@@ -2,12 +2,16 @@ $(document).ready(function(){
     // init the mobile menu sidenav
     $(".button-collapse").sideNav();
 
+    // init the dropdown selectors
+        $('select').material_select();
+
+
     // intercept all clicks
     $('main').on('click.hideSide',function(e) {
         // check if click come from hide on mobile buttons
         if ($(e.target).hasClass('hide-side-nav-button-mobile')) {
             $('.side-div').removeClass('side-div-w');
-            $('.side-div').find('li').addClass('ng-hide');
+            $('.side-div').find('.side-nav-element').addClass('ng-hide');
         }
 
         if (!$(e.target).hasClass('side-div')) {
@@ -15,7 +19,7 @@ $(document).ready(function(){
             if (!($(e.target).parents().hasClass('side-div'))) {
                 // hide the side-div
                 $('.side-div').removeClass('side-div-w');
-                $('.side-div').find('li').addClass('ng-hide');
+                $('.side-div').find('.side-nav-element').addClass('ng-hide');
             }
         }
     });
