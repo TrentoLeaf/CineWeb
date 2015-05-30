@@ -265,6 +265,21 @@ public class DB {
         }
     }
 
+    // TODO -> test!
+    // enable or disable a user
+    public void changeUserStatus(int uid, boolean enable) throws SQLException, UserNotFoundException {
+        final String query = "UPDATE users SET enabled = ? WHERE uid = ?";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setBoolean(1, enable);
+            stm.setInt(2, uid);
+            int rows = stm.executeUpdate();
+            if (rows != 1) {
+                throw new UserNotFoundException();
+            }
+        }
+    }
+
     // change password
     private void changePassword(String email, String newPassword) throws SQLException, UserNotFoundException {
         final String query = "UPDATE users SET pass = crypt(?, gen_salt('bf')) WHERE enabled = TRUE AND email = ?";
@@ -301,21 +316,6 @@ public class DB {
 
         // change password
         changePassword(email, newPassword);
-    }
-
-    // TODO -> test!
-    // enable or disable a user
-    public void changeUserStatus(int uid, boolean enable) throws SQLException, UserNotFoundException {
-        final String query = "UPDATE users SET enabled = ? WHERE uid = ?";
-
-        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setBoolean(1, enable);
-            stm.setInt(2, uid);
-            int rows = stm.executeUpdate();
-            if (rows != 1) {
-                throw new UserNotFoundException();
-            }
-        }
     }
 
     // update a user -> NB: does not change the password
@@ -413,6 +413,45 @@ public class DB {
             stm.setInt(1, userID);
             ResultSet rs = stm.executeQuery();
             rs.next();
+            return rs.getInt(1) == 1;
+        }
+    }
+
+    // request a confirmation code
+    public String requestConfirmationCode(int userID) throws UserNotFoundException, SQLException {
+
+        // check for userID
+        if (!existsAndEnabledUser(userID)) {
+            throw new UserNotFoundException();
+        }
+
+        // request confirmation code
+        final String code = (UUID.randomUUID().toString() + UUID.randomUUID().toString()).replace("-", "");
+        final String query = "INSERT INTO registration_codes (uid, code) VALUES (?, ?);";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, userID);
+            stm.setString(2, code);
+            stm.execute();
+        } catch (PSQLException e) {
+            logger.warning("Cannot create a confirmation code for the user with uid: " + userID + " -> " + e.toString());
+            throw e;
+        }
+
+        return code;
+    }
+
+    // check a confirmation code
+    public boolean checkConfirmationCode(int userID, String code) throws SQLException {
+        final String query = "SELECT COUNT(*) FROM registration_codes WHERE uid = ? AND code = ?;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, userID);
+            stm.setString(2, code);
+
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+
             return rs.getInt(1) == 1;
         }
     }

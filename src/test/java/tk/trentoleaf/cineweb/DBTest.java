@@ -254,6 +254,55 @@ public class DBTest {
     }
 
     @Test
+    public void changeUserStatusSuccess() throws Exception {
+
+        // create users
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        db.createUser(u1);
+
+        // change status
+        db.changeUserStatus(u1.getUid(), false);
+        u1.setEnabled(false);
+
+        // expected
+        final List<User> expected = new ArrayList<>();
+        expected.add(u1);
+
+        // current
+        final List<User> current = db.getUsers();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+
+        // check auth fail
+        assertFalse(db.authenticate("teo@teo.com", "teo"));
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void changeUserStatusFail() throws Exception {
+
+        // change status
+        db.changeUserStatus(2345, false);
+    }
+
+    @Test
+    public void checkConfirmationCode() throws Exception {
+
+        // create user
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        db.createUser(u1);
+
+        // not existing
+        final boolean b1 = db.checkConfirmationCode(u1.getUid(), "sduifhdsou");
+        assertFalse(b1);
+
+        // existing
+        final String code = db.requestConfirmationCode(u1.getUid());
+        final boolean b2 = db.checkConfirmationCode(u1.getUid(), code);
+        assertTrue(b2);
+    }
+
+    @Test
     public void changePasswordSuccess() throws Exception {
 
         // create users
