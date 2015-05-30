@@ -7,6 +7,7 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     private int uid;
+    private boolean enabled;
     private Role role;
     private String email;
     private String password;
@@ -17,12 +18,25 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Role role, String email, String password, String firstName, String secondName) {
+    public User(boolean enabled, Role role, String email, String password, String firstName, String secondName) {
+        this.enabled = enabled;
         this.role = role;
         this.email = email.toLowerCase();
         this.password = password;
         this.firstName = firstName;
         this.secondName = secondName;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getUid() {
@@ -103,20 +117,22 @@ public class User implements Serializable {
         User user = (User) o;
 
         if (uid != user.uid) return false;
+        if (enabled != user.enabled) return false;
         if (Double.compare(user.credit, credit) != 0) return false;
         if (role != user.role) return false;
         if (!email.equalsIgnoreCase(user.email)) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         return !(secondName != null ? !secondName.equals(user.secondName) : user.secondName != null);
-
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "uid=" + uid +
+                ", enabled=" + enabled +
                 ", role=" + role +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
                 ", credit=" + credit +

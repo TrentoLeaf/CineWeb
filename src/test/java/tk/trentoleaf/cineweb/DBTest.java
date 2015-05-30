@@ -43,8 +43,8 @@ public class DBTest {
     public void createUserSuccess() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
-        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
 
         // save users
         db.createUser(u1);
@@ -70,7 +70,7 @@ public class DBTest {
         final String email = "T342eO@ddAAbb.com";
 
         // create users
-        final User expected = new User(Role.ADMIN, email, "teo", "Matteo", "Zeni");
+        final User expected = new User(true, Role.ADMIN, email, "teo", "Matteo", "Zeni");
 
         // save users
         db.createUser(expected);
@@ -89,7 +89,7 @@ public class DBTest {
         final String email = "TeO@ddAAbb.com";
 
         // create users
-        final User u1 = new User(Role.ADMIN, email, "teo", "Matteo", "Zeni");
+        final User u1 = new User(true, Role.ADMIN, email, "teo", "Matteo", "Zeni");
         db.createUser(u1);
         u1.setEmail(email.toUpperCase());
 
@@ -109,8 +109,8 @@ public class DBTest {
     public void createUserFail() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
-        final User u2 = new User(Role.CLIENT, "Teo@teo.com", "dada", "Davide", "Pedranz");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(true, Role.CLIENT, "Teo@teo.com", "dada", "Davide", "Pedranz");
 
         // save users
         db.createUser(u1);
@@ -126,8 +126,8 @@ public class DBTest {
     public void updateUserSuccess() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
-        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
 
         // save users
         db.createUser(u1);
@@ -153,7 +153,7 @@ public class DBTest {
     public void updateUserFail1() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "aaaaaaaaaa", "bbbbbbbb", "cccccc", "ddddddd");
+        final User u1 = new User(true, Role.ADMIN, "aaaaaaaaaa", "bbbbbbbb", "cccccc", "ddddddd");
 
         // update user
         db.updateUser(u1);
@@ -163,8 +163,8 @@ public class DBTest {
     public void updateUserFail2() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "aaa", "aaa", "aaa", "aaa");
-        final User u2 = new User(Role.ADMIN, "bbb", "bbb", "bbb", "bbb");
+        final User u1 = new User(true, Role.ADMIN, "aaa", "aaa", "aaa", "aaa");
+        final User u2 = new User(true, Role.ADMIN, "bbb", "bbb", "bbb", "bbb");
         db.createUser(u1);
         db.createUser(u2);
 
@@ -177,8 +177,8 @@ public class DBTest {
     public void deleteUserSuccess1() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
-        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
 
         // save users
         db.createUser(u1);
@@ -203,8 +203,8 @@ public class DBTest {
     public void deleteUserSuccess2() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
-        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
 
         // save users
         db.createUser(u1);
@@ -229,7 +229,7 @@ public class DBTest {
     public void deleteUserFail() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
 
         // delete user 1
         db.deleteUser(u1.getUid());
@@ -239,8 +239,8 @@ public class DBTest {
     public void authentication() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
-        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
 
         // save users
         db.createUser(u1);
@@ -257,7 +257,7 @@ public class DBTest {
     public void changePasswordSuccess() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         db.createUser(u1);
 
         // change password
@@ -272,7 +272,7 @@ public class DBTest {
     public void changePasswordFail1() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         db.createUser(u1);
 
         // change password
@@ -295,7 +295,7 @@ public class DBTest {
     public void resetPasswordOk() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         db.createUser(u1);
 
         // get code
@@ -315,7 +315,7 @@ public class DBTest {
     public void resetPasswordFail() throws Exception {
 
         // create users
-        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         db.createUser(u1);
 
         // random code

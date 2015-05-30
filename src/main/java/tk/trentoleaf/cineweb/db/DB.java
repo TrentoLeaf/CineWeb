@@ -92,6 +92,7 @@ public class DB {
         // initialize the database
         createTableRoles();
         createTableUsers();
+        createTableRegistrationCodes();
         createTablePasswordResets();
         createTableFilms();
         createTableRooms();
@@ -103,6 +104,7 @@ public class DB {
     public void reset() throws SQLException {
 
         // drop tables
+        dropTableRegistrationCodes();
         dropTablePasswordResets();
         dropTableUsers();
         dropTableRoles();
@@ -116,7 +118,7 @@ public class DB {
     public void createAdminUser() throws SQLException {
         // create first user
         try {
-            db.createUser(new User(Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin"));
+            db.createUser(new User(true, Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin"));
         } catch (ConstrainException e) {
             logger.warning("User ADMIN already exixsts");
         }
@@ -143,7 +145,7 @@ public class DB {
         try (Connection connection = getConnection()) {
 
             // create table roles
-            try (Statement createStm = connection.createStatement();) {
+            try (Statement createStm = connection.createStatement()) {
                 createStm.execute("CREATE TABLE IF NOT EXISTS roles (" +
                         "roleid CHAR(8) PRIMARY KEY," +
                         "description VARCHAR(200));");
@@ -177,6 +179,7 @@ public class DB {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS users (" +
                     "uid SERIAL PRIMARY KEY," +
+                    "enabled BOOLEAN," +
                     "roleid CHAR(8) REFERENCES roles(roleid)," +
                     "email CITEXT UNIQUE NOT NULL," +
                     "pass CHAR(60) NOT NULL," +
@@ -191,6 +194,24 @@ public class DB {
     private void dropTableUsers() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("DROP TABLE IF EXISTS users;");
+        }
+    }
+
+    // create table registration codes
+    private void createTableRegistrationCodes() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            stm.execute("CREATE TABLE IF NOT EXISTS registration_codes (" +
+                    "uid INTEGER," +
+                    "code CHAR(64)," +
+                    "PRIMARY KEY(uid)," +
+                    "FOREIGN KEY(uid) REFERENCES users(uid) ON DELETE CASCADE);");
+        }
+    }
+
+    // drop table password resets
+    private void dropTableRegistrationCodes() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            stm.execute("DROP TABLE IF EXISTS registration_codes;");
         }
     }
 
@@ -213,15 +234,16 @@ public class DB {
 
     // create user
     public void createUser(User user) throws SQLException, ConstrainException {
-        final String query = "INSERT INTO users (uid, roleid, email, pass, first_name, second_name)" +
-                "VALUES (DEFAULT, ?, lower(?), crypt(?, gen_salt('bf')), ?, ?) RETURNING uid";
+        final String query = "INSERT INTO users (uid, enabled, roleid, email, pass, first_name, second_name)" +
+                "VALUES (DEFAULT, ?, ?, lower(?), crypt(?, gen_salt('bf')), ?, ?) RETURNING uid";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setString(1, user.getRole().getRoleID());
-            stm.setString(2, user.getEmail());
-            stm.setString(3, user.getPassword());
-            stm.setString(4, user.getFirstName());
-            stm.setString(5, user.getSecondName());
+            stm.setBoolean(1, user.isEnabled());
+            stm.setString(2, user.getRole().getRoleID());
+            stm.setString(3, user.getEmail());
+            stm.setString(4, user.getPassword());
+            stm.setString(5, user.getFirstName());
+            stm.setString(6, user.getSecondName());
             ResultSet rs = stm.executeQuery();
             rs.next();
             user.setUid(rs.getInt("uid"));
@@ -232,7 +254,7 @@ public class DB {
 
     // authenticate a user
     public boolean authenticate(String email, String password) throws SQLException {
-        final String query = "SELECT COUNT(email) FROM users WHERE email = ? AND pass = crypt(?, pass);";
+        final String query = "SELECT COUNT(email) FROM users WHERE enabled = TRUE AND email = ? AND pass = crypt(?, pass);";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setString(1, email);
@@ -245,7 +267,7 @@ public class DB {
 
     // change password
     private void changePassword(String email, String newPassword) throws SQLException, UserNotFoundException {
-        final String query = "UPDATE users SET pass = crypt(?, gen_salt('bf')) WHERE email = ?";
+        final String query = "UPDATE users SET pass = crypt(?, gen_salt('bf')) WHERE enabled = TRUE AND email = ?";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setString(1, newPassword);
@@ -279,6 +301,21 @@ public class DB {
 
         // change password
         changePassword(email, newPassword);
+    }
+
+    // TODO -> test!
+    // enable or disable a user
+    public void changeUserStatus(int uid, boolean enable) throws SQLException, UserNotFoundException {
+        final String query = "UPDATE users SET enabled = ? WHERE uid = ?";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setBoolean(1, enable);
+            stm.setInt(2, uid);
+            int rows = stm.executeUpdate();
+            if (rows != 1) {
+                throw new UserNotFoundException();
+            }
+        }
     }
 
     // update a user -> NB: does not change the password
@@ -325,11 +362,12 @@ public class DB {
         List<User> users = new ArrayList<>();
 
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
-            ResultSet rs = stm.executeQuery("SELECT uid, roleid, lower(email) AS email, first_name, second_name, credit FROM users;");
+            ResultSet rs = stm.executeQuery("SELECT enabled, uid, roleid, lower(email) AS email, first_name, second_name, credit FROM users;");
 
             while (rs.next()) {
                 User u = new User();
                 u.setUid(rs.getInt("uid"));
+                u.setEnabled(rs.getBoolean("enabled"));
                 u.setRole(Role.fromID(rs.getString("roleid")));
                 u.setEmail(rs.getString("email"));
                 u.setFirstName(rs.getString("first_name"));
@@ -344,7 +382,7 @@ public class DB {
 
     // get a single user
     public User getUser(String email) throws SQLException, UserNotFoundException {
-        final String query = "SELECT uid, roleid, first_name, second_name, credit FROM users WHERE email = ?;";
+        final String query = "SELECT enabled, uid, roleid, first_name, second_name, credit FROM users WHERE email = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setString(1, email);
@@ -353,6 +391,7 @@ public class DB {
             if (rs.next()) {
                 User u = new User();
                 u.setUid(rs.getInt("uid"));
+                u.setEnabled(rs.getBoolean("enabled"));
                 u.setRole(Role.fromID(rs.getString("roleid")));
                 u.setEmail(email);
                 u.setFirstName(rs.getString("first_name"));
@@ -367,8 +406,8 @@ public class DB {
     }
 
     // exists user
-    private boolean existsUser(int userID) throws SQLException {
-        final String query = "SELECT COUNT(uid) FROM users WHERE uid = ?;";
+    private boolean existsAndEnabledUser(int userID) throws SQLException {
+        final String query = "SELECT COUNT(uid) FROM users WHERE enabled = TRUE AND uid = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setInt(1, userID);
@@ -387,7 +426,7 @@ public class DB {
     public String requestResetPassword(int userID, int expireInMinutes) throws UserNotFoundException, SQLException {
 
         // check for userID
-        if (!existsUser(userID)) {
+        if (!existsAndEnabledUser(userID)) {
             throw new UserNotFoundException();
         }
 
@@ -415,7 +454,7 @@ public class DB {
 
     // check password reset
     public boolean checkPasswordReset(int userID, String code) throws SQLException {
-        final String query = "SELECT expiration FROM resets WHERE code = ? AND uid = ?;";
+        final String query = "SELECT expiration FROM resets r NATURAL JOIN users u WHERE u.enabled = TRUE AND r.code = ? AND u.uid = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setString(1, code);
@@ -432,7 +471,7 @@ public class DB {
 
     // check password reset
     public boolean checkPasswordReset(String email, String code) throws SQLException {
-        final String query = "SELECT r.expiration FROM resets r NATURAL JOIN users u WHERE r.code = ? AND u.email = ?;";
+        final String query = "SELECT r.expiration FROM resets r NATURAL JOIN users u WHERE u.enabled = TRUE AND r.code = ? AND u.email = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setString(1, code);
