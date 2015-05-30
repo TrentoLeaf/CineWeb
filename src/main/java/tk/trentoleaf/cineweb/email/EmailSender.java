@@ -37,7 +37,7 @@ public class EmailSender {
     }
 
     // send an email to confirm the registration
-    public void sendRegistrationEmail(String emailAddress) throws SendGridException {
+    public void sendRegistrationEmail(String emailAddress, String verificationCode) throws SendGridException {
 
         // create email
         SendGrid.Email email = new SendGrid.Email();

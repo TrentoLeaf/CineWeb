@@ -406,6 +406,18 @@ public class DB {
     }
 
     // exists user
+    private boolean existsUser(int userID) throws SQLException {
+        final String query = "SELECT COUNT(uid) FROM users WHERE uid = ?;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, userID);
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+            return rs.getInt(1) == 1;
+        }
+    }
+
+    // exists user & enabled
     private boolean existsAndEnabledUser(int userID) throws SQLException {
         final String query = "SELECT COUNT(uid) FROM users WHERE enabled = TRUE AND uid = ?;";
 
@@ -421,7 +433,7 @@ public class DB {
     public String requestConfirmationCode(int userID) throws UserNotFoundException, SQLException {
 
         // check for userID
-        if (!existsAndEnabledUser(userID)) {
+        if (!existsUser(userID)) {
             throw new UserNotFoundException();
         }
 

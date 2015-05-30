@@ -1,6 +1,7 @@
 package tk.trentoleaf.cineweb.model;
 
 import org.apache.commons.lang3.StringUtils;
+import tk.trentoleaf.cineweb.rest.entities.Registration;
 
 import java.io.Serializable;
 
@@ -25,6 +26,10 @@ public class User implements Serializable {
         this.password = password;
         this.firstName = firstName;
         this.secondName = secondName;
+    }
+
+    public User(Registration registration) {
+        this(false, Role.CLIENT, registration.getEmail(), registration.getPassword(), registration.getFirstName(), registration.getSecondName());
     }
 
     public boolean isEnabled() {

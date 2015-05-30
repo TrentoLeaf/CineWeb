@@ -1,5 +1,8 @@
 package tk.trentoleaf.cineweb.rest.entities;
 
+import org.apache.commons.lang3.StringUtils;
+import tk.trentoleaf.cineweb.rest.utils.EmailChecker;
+
 import java.io.Serializable;
 
 public class Registration implements Serializable {
@@ -8,6 +11,16 @@ public class Registration implements Serializable {
     private String password;
     private String firstName;
     private String secondName;
+
+    public Registration() {
+    }
+
+    public Registration(String email, String password, String firstName, String secondName) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.secondName = secondName;
+    }
 
     public String getEmail() {
         return email;
@@ -26,8 +39,7 @@ public class Registration implements Serializable {
     }
 
     public boolean isValid() {
-
-        // TODO
-        return false;
+        return EmailChecker.isValidEmail(email) && StringUtils.isNotEmpty(password)
+                && StringUtils.isNotEmpty(firstName) && StringUtils.isNotEmpty(secondName);
     }
 }
