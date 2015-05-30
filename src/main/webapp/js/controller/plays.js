@@ -6,6 +6,8 @@
     angular.module('PlaysModule', []).controller('PlaysController', function () {
         this.current = {};
 
+        this.cart = [];
+
         this.archive = [
             {
                 date: 'Data 1',
@@ -15,33 +17,33 @@
                         time: "Orario 1",
                         gender: "Genere 1",
                         playbill: "img/temporary/img1.jpg",
-                        description: "Descrizione 1",
+                        description: "Descrizione 1"
                     }, {
                         title: "Titolo 2",
                         time: "Orario 2",
                         gender: "Genere 2",
                         playbill: "img/temporary/img2.jpg",
-                        description: "Descrizione 2",
+                        description: "Descrizione 2"
                     }, {
                         title: "Titolo 3",
                         time: "Orario 3",
                         gender: "Genere 3",
                         playbill: "img/temporary/img3.jpg",
-                        description: "Descrizione 3",
+                        description: "Descrizione 3"
                     }, {
                         title: "Titolo 4",
                         time: "Orario 4",
                         gender: "Genere 4",
                         playbill: "img/temporary/img4.jpg",
-                        description: "Descrizione 4",
+                        description: "Descrizione 4"
                     }, {
                         title: "Titolo 5",
                         time: "Orario 5",
                         gender: "Genere 5",
                         playbill: "img/temporary/img5.jpg",
-                        description: "Descrizione 5",
-                    },
-                ],
+                        description: "Descrizione 5"
+                    }
+                ]
             }, {
                 date: 'Data 2',
                 films: [
@@ -76,11 +78,10 @@
 
         this.setCurrent = function(date, film){
             this.current = this.archive[date].films[film];
-            console.log(this.current);
         };
 
-        this.addToCart = function(){
-            console.alert("sicuro di volerlo comprare? Puzza!!")
+        this.addToCart = function(currentFilm){
+            this.cart.push(currentFilm);
         };
 
     });

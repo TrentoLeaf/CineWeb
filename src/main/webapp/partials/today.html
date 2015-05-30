@@ -1,7 +1,7 @@
 <div ng-controller="PlaysController as ctrl">
     <div ng-repeat="date in ctrl.archive">>
         <div class="row">
-            <h1 class="brand-logo center">{{date.date}}</h1>
+            <h1 class="brand-logo center yellow-text text-accent-4">{{date.date}}</h1>
         </div>
 
         <ul class="cd-items cd-container">
@@ -11,7 +11,7 @@
             </li>
         </ul>
 
-        <div class="cd-quick-view">ng-click="ctrl.setCurrent($parent.$index, $index)"
+        <div class="cd-quick-view">
             <div class="cd-slider-wrapper">
                 <ul class="cd-slider">
                     <li class="selected"><img ng-src="{{ctrl.current.playbill}}" alt="PlayBill"></li>
@@ -23,7 +23,7 @@
                 <p>{{ctrl.current.gender}}</p>
                 <p>{{ctrl.current.description}}</p>
                 <ul class="cd-item-action">
-                    <li><button class="add-to-cart" ng-click="ctrl.current.addToCart()"><i src="mdi-editor-attach-money"/>Acquistami!</button></li>
+                    <li><a class="btn grey darken-3 yellow-text text-accent-3" ng-click="ctrl.addToCart(ctrl.current)"><i class="mdi-editor-attach-money"></i>Acquistami!</a></li>
                 </ul>
             </div>
             <a class="cd-close">Close</a>
