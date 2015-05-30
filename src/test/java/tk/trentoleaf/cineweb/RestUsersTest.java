@@ -58,7 +58,6 @@ public class RestUsersTest extends MyJerseyTest {
     public void testLoginFail2() {
         final Response response = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(new Auth("stefano@ste.com", "ccc")));
         assertEquals(404, response.getStatus());
-        assertFalse(response.getCookies().containsKey(COOKIE_NAME));
     }
 
     @Test

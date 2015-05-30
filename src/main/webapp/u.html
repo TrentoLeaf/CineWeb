@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="cinema">
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Test</title>
+
+    <script src="lib/angular.min.js"></script>
+    <script src="lib/angular-resource.min.js"></script>
+    <script src="lib/angular-locker.min.js"></script>
+
+    <script src="js/services/constants.js"></script>
+    <script src="js/services/storage.js"></script>
+    <script src="js/services/users.js"></script>
+    <script src="js/u.js"></script>
+
+</head>
+<body>
+
+<h1>{{7 + 7}}</h1>
+
+<div ng-controller="MyController as c">
+
+    <h2>{{c.email}}</h2>
+
+    <h3 ng-show="c.data">DATA: {{c.data}}</h3>
+
+    <h3 ng-show="c.error">ERROR: {{c.error}}</h3>
+
+    <button ng-click="c.login('admin@trentoleaf.tk', 'admin')">LOGIN OK</button>
+    <button ng-click="c.login('aaa', 'aaa')">LOGIN FAIL</button>
+    <button ng-click="c.logout()">LOGOUT</button>
+
+    <button ng-click="c.change('admin@trentoleaf.tk', 'admin', 'admin')">CHANGE PASS OK</button>
+    <button ng-click="c.change('admin@trentoleaf.tk', 'aaa', 'admin')">CHANGE PASS FAIL</button>
+
+</div>
+
+
+</body>
+</html>

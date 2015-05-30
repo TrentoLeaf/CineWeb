@@ -19,6 +19,9 @@ public class DBListener implements ServletContextListener {
             // open the connection
             db.open();
 
+            // create first user
+            db.createAdminUser();
+
         } catch (RuntimeException | SQLException | URISyntaxException e) {
             logger.severe("Cannot open the connection to the database -> " + e.toString());
             logger.warning("Try to set the Environment variable DATABASE_URL to 'postgres://user:password@localhost:5432/db'");

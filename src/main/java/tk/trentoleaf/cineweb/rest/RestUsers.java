@@ -7,6 +7,7 @@ import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
 import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.entities.Auth;
 import tk.trentoleaf.cineweb.rest.entities.ChangePassword;
+import tk.trentoleaf.cineweb.rest.entities.LoginOk;
 import tk.trentoleaf.cineweb.rest.exceptions.AuthFailedException;
 import tk.trentoleaf.cineweb.rest.exceptions.BadRequestException;
 import tk.trentoleaf.cineweb.rest.exceptions.ConflictException;
@@ -26,6 +27,7 @@ public class RestUsers {
     // db singleton
     private DB db = DB.instance();
 
+    // remove a given cookie
     private void removeCookie(HttpServletResponse response, String name) {
         Cookie cookie = new Cookie(name, null);
         cookie.setPath("/");
@@ -34,10 +36,17 @@ public class RestUsers {
         response.addCookie(cookie);
     }
 
+    // remove all session cookies
+    private void removeSession(HttpSession session, HttpServletResponse response) {
+        session.invalidate();
+        removeCookie(response, "JSESSIONID");
+        removeCookie(response, "popcorn");
+    }
+
     // rest function to do a login
     @POST
     @Path("/login")
-    public Response login(@Context HttpServletRequest request, Auth auth) throws SQLException {
+    public Response login(@Context HttpServletRequest request, @Context HttpServletResponse response, Auth auth) throws SQLException {
 
         // check payload
         if (auth == null || !auth.isValid()) {
@@ -53,18 +62,25 @@ public class RestUsers {
                 final User user = db.getUser(auth.getEmail());
 
                 // login ok, create session
-                final HttpSession session = request.getSession();
-                session.setAttribute("user", user);
+                final HttpSession session = request.getSession(false);
+                if (session == null) {
+                    request.getSession(true).setAttribute("user", user);
+                } else {
+                    session.invalidate();
+                    request.getSession(true).setAttribute("user", user);
+                }
 
-                return Response.ok().build();
+                return Response.ok(new LoginOk(user)).build();
 
             } catch (UserNotFoundException e) {
+                removeSession(request.getSession(), response);
                 throw new AuthFailedException();
             }
         }
 
         // login failed
         else {
+            removeSession(request.getSession(), response);
             throw new AuthFailedException();
         }
     }
@@ -73,13 +89,8 @@ public class RestUsers {
     @Path("/logout")
     public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 
-        // invalidate the session
-        final HttpSession session = request.getSession();
-        session.invalidate();
-
-        // remove cookie popcorn and JSESSIONID
-        removeCookie(response, "JSESSIONID");
-        removeCookie(response, "popcorn");
+        // invalidate session and remove cookies
+        removeSession(request.getSession(), response);
 
         return Response.ok().build();
     }

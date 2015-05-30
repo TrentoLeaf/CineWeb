@@ -112,6 +112,16 @@ public class DB {
         dropTableRooms();
     }
 
+    // create user admin
+    public void createAdminUser() throws SQLException {
+        // create first user
+        try {
+            db.createUser(new User(Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin"));
+        } catch (ConstrainException e) {
+            logger.warning("User ADMIN already exixsts");
+        }
+    }
+
     // make sure the extension crypto is loaded
     private void prepareCrypto() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
