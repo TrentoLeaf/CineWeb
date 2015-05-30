@@ -20,13 +20,18 @@ $(document).ready(function(){
 
     // handles routes
     app.config([ '$routeProvider', function($routeProvider) {
-
-        console.log("aaaaaaaaaaaaaaaaaa");
-
         $routeProvider.when('/', {
             redirectTo: '/today'
+        }).when ('/home', {
+            redirectTo: '/today'
         }).when('/today', {
-            templateUrl: 'partials/today.html',
+            templateUrl: 'partials/today.html'
+        }).when('/soon', {
+            templateUrl: 'partials/soon.html'
+        }).when('/informations', {
+            templateUrl: 'partials/informations.html'
+        }).when('/error', {
+            templateUrl: 'partials/error.html'
         }).otherwise({
             redirectTo: '/error'
         });

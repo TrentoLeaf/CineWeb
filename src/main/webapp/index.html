@@ -22,11 +22,11 @@
 <body ng-controller="TabController as tab" ng-controller="RouterController as router">
 <nav class="grey darken-4" role="navigation">
     <div class="nav-wrapper">
-        <a href="#" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
+        <a href="#home" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
         <ul class="left hide-on-med-and-down">
-            <li><a class="yellow-text text-accent-4" href="partials/today.html">Oggi al Cinema</a></li>
-            <li><a class="yellow-text text-accent-4" href="partials/soon.html">Prossimamente</a></li>
-            <li><a class="yellow-text text-accent-4" href="gi tpartials/informations.html">Informazioni</a></li>
+            <li><a class="yellow-text text-accent-4" href="#today">Oggi al Cinema</a></li>
+            <li><a class="yellow-text text-accent-4" href="#soon">Prossimamente</a></li>
+            <li><a class="yellow-text text-accent-4" href="#informations">Informazioni</a></li>
         </ul>
 
         <ul class="right hide-on-med-and-down">
@@ -50,32 +50,7 @@
 <!-- here the main content -->
 <main>
 
-    <div class="content-div">
-
-        <div ng-view></div>
-
-        <div ng-controller="PlaysController as ctrl">
-            <div class="card row" ng-repeat="film in ctrl.archive">
-                <!--Inizio MiniModulo -->
-                <div class="col s12 m6 l4">
-                    <div class="card-image col l4">
-                        <img class="responsive-img" ng-src="{{film.playbill}}">
-                    </div>
-                    <div class="card-content col l8">
-                        <span class="card-title grey-text accent-4">{{film.title}}</span>
-                        <br>
-                        <span class="card-title grey-text accent-4">{{film.gender}}</span>
-                        <br>
-                        <span class="card-title grey-text accent-4">{{film.time}}</span>
-                        <br>
-                        <a class="waves-effect waves-light btn black yellow-text text-accent-3"><i class="mdi-editor-attach-money">Prenota Biglietto</i></a>
-                        <br>
-                        <a class="waves-effect waves-light btn black yellow-text text-accent-3"><i class="mdi-action-theaters">Dettagli del Film</i></a>
-                    </div>
-                </div>
-                <!--Fine MiniModulo -->
-            </div>
-        </div>
+    <div class="content-div" ng-view>
     </div>
 
     <div class="side-div grey darken-4 white-text"> <!-- add hide class  (to be removed from angular)-->
