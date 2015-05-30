@@ -31,7 +31,7 @@ main {
       margin-top: 1em; }
     main .side-div .side-cart-content {
       position: absolute;
-      top: 0px;
+      top: 11%;
       height: 60%;
       padding-top: 1em;
       overflow-y: scroll; }
