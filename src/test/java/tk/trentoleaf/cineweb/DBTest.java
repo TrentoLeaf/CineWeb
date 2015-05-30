@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class DBTest {
 
@@ -885,7 +886,7 @@ public class DBTest {
 
         // create bookings  int rid, int x, int y, int uid, int pid, double price
         final Booking b1 = db.createBookings(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
-        final Booking b2 = db.createBookings(s2.get(2).getRid(),s2.get(2).getX(),s2.get(2).getY(), u2.getUid(), p2.getPid(), 12);
+        final Booking b2 = db.createBookings(s2.get(2).getRid(), s2.get(2).getX(), s2.get(2).getY(), u2.getUid(), p2.getPid(), 12);
 
         // expected
         List<Booking> expected = new ArrayList<>();
@@ -900,6 +901,7 @@ public class DBTest {
     }
 
 
+    //booking fail by time expired
     @Test(expected = FilmAlreadyGoneException.class)
     public void createBookingFail() throws Exception {
 
@@ -933,5 +935,54 @@ public class DBTest {
         db.createBookings(s2.get(2).getRid(), s2.get(2).getX(), s2.get(2).getY(), u2.getUid(), p2.getPid(), 12);
         db.createBookings(s2.get(3).getRid(), s2.get(3).getX(), s2.get(3).getY(), u2.getUid(), p3.getPid(), 12);
     }
+
+    @Test
+    public void deleteBooking() throws Exception {
+
+        final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+
+        final User u1 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        db.createUser(u1);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        db.createFilm(f1);
+
+        final Room r1 = db.createRoom(4, 5);
+
+        final List<Seat> s1 = r1.getSeats();
+
+        final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
+
+        db.createPlay(p1);
+
+        // create bookings  int rid, int x, int y, int uid, int pid, double price
+        final Booking b1 = db.createBookings(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
+        final Booking b2 = db.createBookings(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
+
+        // expected
+        List<Booking> expected = new ArrayList<>();
+        expected.add(b1);
+        double creditExpected = u1.getCredit() + b2.getPrice() * 0.8;
+
+        // current
+        db.deleteBooking(b2.getBid());
+        List<Booking> current = db.getBookings();
+        double creditUpdated = db.getUser(u1.getUid()).getCredit();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+        assertEquals(creditExpected, creditUpdated, 0.00000001);
+    }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void deleteBookingFail1() throws Exception {
+        db.deleteBooking(43535);
+    }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void deleteBookingFail2() throws Exception {
+        db.deleteBooking(new Booking(345, 4, 6,4, 345, DateTime.now(), 34.23));
+    }
+
 
 }

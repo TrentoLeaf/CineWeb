@@ -888,7 +888,6 @@ public class DB {
         }
     }
 
-
     // create table books
     private void createTableBookings() throws SQLException
     {
@@ -977,32 +976,32 @@ public class DB {
         return bookings;
     }
 
-    public Booking getBooking(int bookingId) throws SQLException {
-        final Booking booking;
-        final String query = "SELECT bid, uid, pid, rid, x, y, time_booking, price FROM bookings WHERE bid = ?;";
+    public Booking getBooking(int bookingId) throws SQLException, EntryNotFoundException {
+        final String query = "SELECT uid, pid, rid, x, y, time_booking, price FROM bookings WHERE bid = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setInt(1, bookingId);
             ResultSet rs = stm.executeQuery();
 
-            rs.next();
-            bookingId = rs.getInt("bid");
-            int uid = rs.getInt("uid");
-            int pid = rs.getInt("pid");
-            int rid = rs.getInt("rid");
-            int x = rs.getInt("x");
-            int y = rs.getInt("y");
-            DateTime timeBooking = new DateTime(rs.getTimestamp("time_booking").getTime());
-            double price = rs.getDouble("price");
+            if(rs.next()) {
+                int uid = rs.getInt("uid");
+                int pid = rs.getInt("pid");
+                int rid = rs.getInt("rid");
+                int x = rs.getInt("x");
+                int y = rs.getInt("y");
+                DateTime timeBooking = new DateTime(rs.getTimestamp("time_booking").getTime());
+                double price = rs.getDouble("price");
 
-            booking = new Booking( bookingId, rid, x, y, uid, pid, timeBooking, price);
+                return new Booking(bookingId, rid, x, y, uid, pid, timeBooking, price);
+            }
+
+            // no such booking
+            throw new EntryNotFoundException();
         }
-
-        return booking;
     }
 
     //delete booking
-    public void deleteBooking(Booking booking) throws SQLException, UserNotFoundException {
+    public void deleteBooking(Booking booking) throws SQLException, UserNotFoundException, EntryNotFoundException{
 
         final String query = "DELETE FROM bookings WHERE bid = ?";
         final User user;
@@ -1012,8 +1011,13 @@ public class DB {
 
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, booking.getBid());
-                ResultSet rs = stm.executeQuery();
-                rs.next();
+
+                int n = stm.executeUpdate();
+
+                if(n==0)
+                {
+                    throw new EntryNotFoundException();
+                }
 
                 double accredit = booking.getPrice() * 0.80;
                 user = getUser(booking.getUid());
@@ -1023,7 +1027,9 @@ public class DB {
 
                 try (PreparedStatement stmUser = connection.prepareStatement(queryUser)) {
                     stmUser.setDouble(1, user.getCredit());
+                    stmUser.setInt(2, user.getUid());
                     stmUser.execute();
+
                 }
 
                 connection.commit();
@@ -1037,7 +1043,7 @@ public class DB {
     }
 
     // delete a Booking
-    public void deleteBooking(int bid) throws SQLException, UserNotFoundException {
+    public void deleteBooking(int bid) throws SQLException, EntryNotFoundException, UserNotFoundException {
         deleteBooking(getBooking(bid));
     }
 
