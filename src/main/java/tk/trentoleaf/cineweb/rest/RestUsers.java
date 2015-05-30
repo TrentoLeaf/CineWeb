@@ -146,10 +146,11 @@ public class RestUsers {
 
     @DELETE
     @Path("/{id}")
-    public void deleteUser(@PathParam("id") int id) throws SQLException {
+    public Response deleteUser(@PathParam("id") int id) throws SQLException {
 
         try {
             db.deleteUser(id);
+            return Response.ok().build();
         } catch (UserNotFoundException e) {
             throw NotFoundException.USER_NOT_FOUND;
         }
