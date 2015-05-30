@@ -4,11 +4,6 @@
   margin-top: 7px;
   margin-right: 0.5rem; }
 
-body {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column; }
-
 main {
   position: relative;
   flex: 1 0 auto; }
