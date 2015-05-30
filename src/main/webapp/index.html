@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="it" ng-app="Main" ng-app="Router">
+<html lang="it" ng-app="Main" ng-app="TabModule">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -24,9 +24,9 @@
     <div class="nav-wrapper">
         <a href="#" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
         <ul class="left hide-on-med-and-down">
-            <li><a class="yellow-text text-accent-4" href="/partials/today.html">Oggi</a></li>
-            <li><a class="yellow-text text-accent-4" href="/partials/soon.html">Programmazione</a></li>
-            <li><a class="yellow-text text-accent-4" href="/partials/informations.html">Informazioni</a></li>
+            <li><a class="yellow-text text-accent-4" href="#today">Oggi</a></li>
+            <li><a class="yellow-text text-accent-4" href="#soon">Programmazione</a></li>
+            <li><a class="yellow-text text-accent-4" href="#information">Informazioni</a></li>
         </ul>
 
         <ul class="right hide-on-med-and-down">
@@ -36,9 +36,9 @@
         </ul>
 
         <ul id="nav-mobile" class="side-nav grey darken-4">
-            <li><a class="yellow-text text-accent-4" href="#">Oggi</a></li>
-            <li><a class="yellow-text text-accent-4" href="#">Programmazione</a></li>
-            <li><a class="yellow-text text-accent-4" href="#">Informazioni</a></li>
+            <li><a class="yellow-text text-accent-4" href="#today">Oggi</a></li>
+            <li><a class="yellow-text text-accent-4" href="#soon">Programmazione</a></li>
+            <li><a class="yellow-text text-accent-4" href="#informations">Informazioni</a></li>
             <li><a class="yellow-text text-accent-4" href="#"><i class="mdi-action-shopping-cart left"></i>Carrello</a></li>
             <li><a class="yellow-text text-accent-4" href="#"><i class="mdi-action-account-circle left"></i>Accedi</a></li>
         </ul>
@@ -52,28 +52,7 @@
 
     <div class="content-div">
 
-        <div ng-controller="PlaysController as ctrl">
-            <div class="card row" ng-repeat="film in ctrl.archive">
-                <!--Inizio MiniModulo -->
-                <div class="col s12 m6 l4">
-                    <div class="card-image col l4">
-                        <img class="responsive-img" ng-src="{{film.playbill}}">
-                    </div>
-                    <div class="card-content col l8">
-                        <span class="card-title grey-text accent-4">{{film.title}}</span>
-                        <br>
-                        <span class="card-title grey-text accent-4">{{film.gender}}</span>
-                        <br>
-                        <span class="card-title grey-text accent-4">{{film.time}}</span>
-                        <br>
-                        <a class="waves-effect waves-light btn black yellow-text text-accent-3"><i class="mdi-editor-attach-money">Prenota Biglietto</i></a>
-                        <br>
-                        <a class="waves-effect waves-light btn black yellow-text text-accent-3"><i class="mdi-action-theaters">Dettagli del Film</i></a>
-                    </div>
-                </div>
-                <!--Fine MiniModulo -->
-            </div>
-        </div>
+
     </div>
 
     <div class="side-div hide"> <!-- add hide class  (to be removed from angular)-->

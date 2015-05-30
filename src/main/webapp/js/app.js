@@ -4,36 +4,29 @@ $(document).ready(function(){
 (function() {
   'use strict';
 
-  var app= angular.module('Main', ['PlaysModule']);
-  app.controller('TabController', function() {
+  var app= angular.module('Main', ['PlaysModule',]);
 
-    this.tab = -1;
-
-    this.setTab = function (tab) {
-
-      if (this.tab == tab ) {
-        // hide side-div
-        $('.side-div').addClass('hide').css({width:"0%"});
-        this.tab = -1;
-      } else {
-
-        // show side-div
-        $('.side-div').removeClass('hide').css({width:"30%"});
-        this.tab = tab;
-      }
-
-
-    };
-    this.isSet = function (Value) {
-      return this.tab === Value;
-    };
-
-
-
-
-
-  });
-
+  app.config([ '$routeProvider', function($routeProvider) {
+    $routeProvider.when('/', {
+      redirectTo: '/today'
+    }).when('/home', {
+      redirectTo: '/today'
+    }).when('/today', {
+      templateUrl: 'partials/today.html',
+      controller: 'PlaysController',
+      controllerAs: 'ctrl'
+    }).when('/soon', {
+      templateUrl: 'partials/soon.html',
+      controller: 'PlaysController',
+      controllerAs: 'ctrl'
+    }).when('/information', {
+      templateUrl: 'partials/informations.html',
+      controller: '', //controller per informations
+      controllerAs: '' //alias controller per informstions
+    }).otherwise({
+      redirectTo: '/error'
+    });
+  } ]);
 
 
 })();
