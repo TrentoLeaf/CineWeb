@@ -1,8 +1,8 @@
 /*
-Error: File to import not found or unreadable: bourbon.
+Error: File to import not found or unreadable: ../bourbon/burbon.
         on line 1 of style.scss
 
-1: @import 'bourbon'; // http://bourbon.io/
+1: @import '../bourbon/burbon'; // http://bourbon.io/
 2: 
 3: @import '../partials/variables'; // colors, fonts etc...
 4: 
@@ -52,4 +52,4 @@ style.scss:1
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: File to import not found or unreadable: bourbon.\A         on line 1 of style.scss\A \A 1: @import 'bourbon'; // http://bourbon.io/\A 2: \A 3: @import '../partials/variables'; // colors, fonts etc...\A 4: \A 5: @import '../partials/mixins'; // custom mixins\A 6: "; }
+  content: "Error: File to import not found or unreadable: ../bourbon/burbon.\A         on line 1 of style.scss\A \A 1: @import '../bourbon/burbon'; // http://bourbon.io/\A 2: \A 3: @import '../partials/variables'; // colors, fonts etc...\A 4: \A 5: @import '../partials/mixins'; // custom mixins\A 6: "; }
