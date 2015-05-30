@@ -9,7 +9,6 @@
 
     <!-- CSS  -->
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link href="dist/materialize-src/font/material-design-icons/" type="text/css" rel="stylesheet"/>
     <link href="css/stylesheet.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -24,8 +23,8 @@
     <div class="nav-wrapper">
         <a href="#" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
         <ul class="left hide-on-med-and-down">
-            <li><a class="yellow-text text-accent-4" href="/partials/today.html">Oggi</a></li>
-            <li><a class="yellow-text text-accent-4" href="/partials/soon.html">Programmazione</a></li>
+            <li><a class="yellow-text text-accent-4" href="/partials/today.html">Oggi al Cinema</a></li>
+            <li><a class="yellow-text text-accent-4" href="/partials/soon.html">Prossimamente</a></li>
             <li><a class="yellow-text text-accent-4" href="/partials/informations.html">Informazioni</a></li>
         </ul>
 
@@ -76,7 +75,7 @@
         </div>
     </div>
 
-    <div class="side-div hide"> <!-- add hide class  (to be removed from angular)-->
+    <div class="side-div grey darken-4 white-text"> <!-- add hide class  (to be removed from angular)-->
         <!-- Only Mobile: bottone per chiudere la side-div-->
         <div class="row">
             <button class="btn hide-on-large-only col offset-s1 s10 offset-m1 m10"><i class="mdi-navigation-arrow-back left"></i> Torna indietro</button>
@@ -103,9 +102,40 @@
                 </div>
 
             </li>
-            <li class="side-login" ng-show="tab.isSet(2)"></li>
-            <li class="side-search" ng-show="tab.isSet(3)"></li>
-        </ul>
+            <li class="side-login" ng-show="tab.isSet(2)">
+                <div class="row card grey darken-3">
+                    <div class="col s12 m12 l12 center-align white-text">
+                        <h5>Login</h5>
+                        <form action="servlet-di-login" method="post">
+                            <div class="input-field">
+                                <i class="mdi-action-account-circle prefix"></i>
+                                <input id="icon_prefix" type="text">
+                                <label for="icon_prefix" class="white-text">Username</label>
+                            </div>
+                            <div class="input-field">
+                                <i class="mdi-action-lock prefix"></i>
+                                <input id="icon_prefix" type="password">
+                                <label for="icon_prefix" class="white-text">Password</label>
+                            </div>
+                            <div class="input-field">
+                                <a class="yellow-text text-accent-4" type="submit" name="forgot">Password dimenticata?</a>
+                            </div>
+                            <div class="col s5 m5 l5">
+                                <button class="btn white black-text waves-effect waves-light right" type="submit" name="login">Login
+                                    <i class="mdi-content-send right"></i>
+                                </button>
+                            </div>
+                    </div>
+                    </form>
+
+                </div>
+    </div>
+
+
+
+    </li>
+    <li class="side-search" ng-show="tab.isSet(3)"></li>
+    </ul>
     </div>
 
 </main>
