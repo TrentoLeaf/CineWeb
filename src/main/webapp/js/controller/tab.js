@@ -4,7 +4,7 @@
 (function() {
     'use strict';
 
-    var app=angular.module('TabModule', []).controller('TabController', function() {
+    var app=angular.module('tabmodule', []).controller('TabController', function() {
 
         this.tab = -1;
 
@@ -23,7 +23,7 @@
             }
 
         };
-    
+
         this.isSet = function (Value) {
             return this.tab === Value;
         };

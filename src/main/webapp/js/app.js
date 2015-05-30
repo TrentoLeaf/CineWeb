@@ -29,7 +29,7 @@ $(document).ready(function(){
 
   'use strict';
 
-  var app= angular.module('cineweb', ['PlaysModule', 'ngRoute']);
+  var app= angular.module('cineweb', ['PlaysModule', 'ngRoute', 'tabmodule']);
 
   app.config([ '$routeProvider', function($routeProvider) {
     $routeProvider.when('/', {
@@ -37,15 +37,15 @@ $(document).ready(function(){
     }).when('/home', {
       redirectTo: '/today'
     }).when('/today', {
-      templateUrl: 'partials/today.html',
+      templateUrl: '../partials/today.html',
       controller: 'PlaysController',
       controllerAs: 'ctrl'
     }).when('/soon', {
-      templateUrl: 'partials/soon.html',
+      templateUrl: '../partials/soon.html',
       controller: 'PlaysController',
       controllerAs: 'ctrl'
-    }).when('/information', {
-      templateUrl: 'partials/informations.html',
+    }).when('/informations', {
+      templateUrl: '../partials/informations.html',
       controller: '', //controller per informations
       controllerAs: '' //alias controller per informstions
     }).when('/error', {
