@@ -1,0 +1,39 @@
+<div class="row">
+    <h1>{{date.date}}</h1>
+</div>
+
+<ul class="cd-items cd-container">
+    <li class="cd-item">
+        <img src="../img/temporary/item-1.jpg" alt="Item Preview">
+        <a class="cd-trigger">film.title</a>
+    </li>
+</ul>
+
+<div class="cd-quick-view">
+    <div class="cd-slider-wrapper">
+        <ul class="cd-slider">
+            <li class="selected"><img src="../img/temporary/item-1.jpg" alt="Product 1"></li>
+            <li><img src="../img/temporary/item-2.jpg" alt="Product 2"></li>
+            <li><img src="../img/temporary/item-3.jpg" alt="Product 3"></li>
+        </ul> <!-- cd-slider -->
+
+        <ul class="cd-slider-navigation">
+            <li><a class="cd-next" >Prev</a></li>
+            <li><a class="cd-prev" >Next</a></li>
+        </ul> <!-- cd-slider-navigation -->
+    </div> <!-- cd-slider-wrapper -->
+
+    <div class="cd-item-info">
+        <h2>film.title</h2>
+        <p>film.gender</p>
+        <p>film.description</p>
+        <ul class="cd-item-action">
+            <li><button class="add-to-cart"><i src="mdi-editor-attach-money"/>Acquistami!</button></li>
+        </ul> <!-- cd-item-action -->
+    </div> <!-- cd-item-info -->
+    <a class="cd-close">Close</a>
+</div> <!-- cd-quick-view -->
+
+<script src="../js/jquery-2.1.1.js"></script>
+<script src="../js/velocity.min.js"></script>
+<script src="../js/today.js"></script> <!-- Resource jQuery -->
