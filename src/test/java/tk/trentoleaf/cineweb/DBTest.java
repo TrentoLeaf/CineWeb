@@ -878,16 +878,14 @@ public class DBTest {
         final List<Seat> s1 = r1.getSeats();
         final List<Seat> s2 = r2.getSeats();
 
-        final Play p1 = new Play(f1, r1, ff.parseDateTime("20/05/2015 12:00:00"), true);
-        final Play p2 = new Play(f1, r1, ff.parseDateTime("20/05/2015 13:00:01"), true);
+        final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
+        final Play p2 = new Play(f1, r1, ff.parseDateTime("20/10/2015 13:00:01"), true);
         db.createPlay(p1);
         db.createPlay(p2);
 
-        // create bookings
-        final Booking b1 = new Booking(s1.get(0), u1, p1, ff.parseDateTime("18/05/2015 12:00:00"), 12);
-        final Booking b2 = new Booking(s2.get(2), u2, p2, ff.parseDateTime("18/05/2015 12:00:00"), 12);
-        db.createBookings(b1);
-        db.createBookings(b2);
+        // create bookings  int rid, int x, int y, int uid, int pid, double price
+        final Booking b1 = db.createBookings(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
+        final Booking b2 = db.createBookings(s2.get(2).getRid(),s2.get(2).getX(),s2.get(2).getY(), u2.getUid(), p2.getPid(), 12);
 
         // expected
         List<Booking> expected = new ArrayList<>();
@@ -899,6 +897,41 @@ public class DBTest {
 
         // test
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+
+    @Test(expected = FilmAlreadyGoneException.class)
+    public void createBookingFail() throws Exception {
+
+        final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+
+        final User u1 = new User(Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u2 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        db.createUser(u1);
+        db.createUser(u2);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        final Film f2 = new Film("Marco", "horror", "http://bbb.com", "http://bbb.org", "trama", 30);
+        db.createFilm(f1);
+        db.createFilm(f2);
+
+        final Room r1 = db.createRoom(4, 5);
+        final Room r2 = db.createRoom(2, 3);
+
+        final List<Seat> s1 = r1.getSeats();
+        final List<Seat> s2 = r2.getSeats();
+
+        final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
+        final Play p2 = new Play(f1, r1, ff.parseDateTime("20/10/2015 13:00:01"), true);
+        final Play p3 = new Play(f1, r1, ff.parseDateTime("20/03/2015 13:00:01"), true);
+        db.createPlay(p1);
+        db.createPlay(p2);
+        db.createPlay(p3);
+
+        // create bookings  int rid, int x, int y, int uid, int pid, double price
+        db.createBookings(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
+        db.createBookings(s2.get(2).getRid(), s2.get(2).getX(), s2.get(2).getY(), u2.getUid(), p2.getPid(), 12);
+        db.createBookings(s2.get(3).getRid(), s2.get(3).getX(), s2.get(3).getY(), u2.getUid(), p3.getPid(), 12);
     }
 
 }

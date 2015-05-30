@@ -7,7 +7,6 @@ import tk.trentoleaf.cineweb.model.*;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import java.awt.print.Book;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
@@ -826,6 +825,30 @@ public class DB {
         }
     }
 
+    // check if is older play
+    public boolean isOlderPlay(int pid, DateTime time) throws SQLException {
+
+        boolean isOlderPlay=false;
+        final String query = "SELECT time FROM plays " +
+                "WHERE pid = ? ;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+
+            stm.setInt(1, pid);
+
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+
+
+
+            if(rs.getTimestamp(1).before(new Timestamp(time.toDate().getTime())))
+            {
+                isOlderPlay = true;
+            }
+        }
+        return isOlderPlay;
+    }
+
     // get list of plays
     public List<Play> getPlays() throws SQLException {
         final List<Play> plays = new ArrayList<>();
@@ -865,6 +888,7 @@ public class DB {
         }
     }
 
+
     // create table books
     private void createTableBookings() throws SQLException
     {
@@ -896,26 +920,37 @@ public class DB {
         }
     }
 
-    public void createBookings(Booking booking)  throws SQLException
+    public Booking createBookings(int rid, int x, int y, int uid, int pid, double price)  throws SQLException, FilmAlreadyGoneException
     {
         final String query = "INSERT INTO bookings (bid, uid, pid, rid, x, y, time_booking, price) VALUES " +
                 "(DEFAULT, ?, ?, ?, ?, ?, ?, ?) RETURNING bid";
 
+
+        final DateTime timeBooking = new DateTime(System.currentTimeMillis());
+        if(isOlderPlay( pid,  timeBooking))
+        {
+            throw  new FilmAlreadyGoneException();
+        }
+
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query))
         {
+
+            final Booking booking = new Booking(rid, x, y, uid, pid, timeBooking, price);
+
             stm.setInt(1, booking.getUid());
             stm.setInt(2, booking.getPid());
             stm.setInt(3, booking.getRid());
             stm.setInt(4, booking.getX());
             stm.setInt(5, booking.getY());
             stm.setTimestamp(6, new Timestamp(booking.getTimeBooking().toDate().getTime()));
-            stm.setDouble(7, booking.getPrice());
+            stm.setDouble(7, price);
 
             ResultSet rs = stm.executeQuery();
             rs.next();
 
             int bid = rs.getInt("bid");
             booking.setBid(bid);
+            return booking;
         }
     }
 
