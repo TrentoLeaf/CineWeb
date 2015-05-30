@@ -28,20 +28,45 @@ main {
   }
 
   .side-div {
-    position: absolute;
-    right: 0%;
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    top: 64px;
+    right: 0;
     height: 100%;
-    width: 0; // riportare a 0
+    width: 0px; // riportare a 0
     z-index: 2;
     transition: width 0.3s;
 
+
+    .hide-side-nav-button-mobile {
+      margin-top: 1em;
+    }
+
     .side-cart-actions {
+      box-sizing: border-box;
       position: absolute;
       width: 100%;
-      bottom: 0%;
-
+      bottom: 11%;
     }
 
   }
+
+  // valori per aprire la side-nav in varie dimensioni in base al dispositivo
+  .side-div-w {
+
+    @media only screen and (min-width: 992px) {
+      width: 30%;
+    }
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+      width: 50% ;
+    }
+    @media only screen and (max-width: 600px) {
+      top: 56px ;
+      width: 100%;
+    }
+  }
+
+
 
 }
