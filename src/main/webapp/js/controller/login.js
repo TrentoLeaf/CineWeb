@@ -1,11 +1,13 @@
 (function () {
     'use strict';
 
-    var app = angular.module('cinema', ['usersModule', 'storageModule', 'constantsModule']);
+    var app = angular.module('loginModule', ['usersModule', 'storageModule', 'constantsModule']);
 
-    app.controller('MyController', ['Auth', 'StorageService', function (Auth, StorageService) {
+    app.controller('LoginController', ['Auth', 'StorageService', function (Auth, StorageService) {
 
         var ctrl = this;
+
+        this.user = {};
 
         this.data = "";
         this.error = "";
@@ -23,13 +25,14 @@
         };
 
         this.login = function (email, password) {
+
             Auth.login(email, password).then(
                 function (data) {
                     setData(data);
                     StorageService.login(data);
                 },
                 function (error) {
-                    setError(error);
+                    setError('Nome utente o password errati.');
                 }
             );
         };
@@ -37,11 +40,11 @@
         this.logout = function () {
             Auth.logout().then(
                 function () {
-                    setData("logout OK");
+                    setData("Logout eseguito con successo.");
                     StorageService.logout();
                 },
                 function () {
-                    setError("logout ERROR");
+                    setError("Logout fallito.");
                     StorageService.logout();
                 }
             )
@@ -57,6 +60,17 @@
                 }
             )
         };
+
+        this.losePass = function (email) {
+            // redirect to a new partial
+        }
+
+
+
+        this.register = function (email) {
+            // redirect al partial registrazione
+        }
+
 
     }]);
 
