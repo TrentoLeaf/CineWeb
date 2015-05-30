@@ -16,7 +16,23 @@ $(document).ready(function(){
 (function() {
     'use strict';
 
-    var app= angular.module('Main', ['PlaysModule']);
+    var app= angular.module('cineweb', ['ngRoute', 'PlaysModule']);
+
+    // handles routes
+    app.config([ '$routeProvider', function($routeProvider) {
+
+        console.log("aaaaaaaaaaaaaaaaaa");
+
+        $routeProvider.when('/', {
+            redirectTo: '/today'
+        }).when('/today', {
+            templateUrl: 'partials/today.html',
+        }).otherwise({
+            redirectTo: '/error'
+        });
+    } ]);
+
+
     app.controller('TabController', function() {
 
         this.tab = -1;
@@ -40,11 +56,6 @@ $(document).ready(function(){
         this.isSet = function (Value) {
             return this.tab === Value;
         };
-
-
-
-
-
     });
 
 
