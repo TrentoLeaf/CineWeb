@@ -10,19 +10,20 @@
 
         this.setTab = function (tab) {
 
-            if (this.tab == tab) {
+            if (this.tab == tab ) {
                 // hide side-div
-                $('.side-div').addClass('hide').css({width: "0%"});
+                $('.side-div').removeClass('side-div-w');
                 this.tab = -1;
             } else {
 
                 // show side-div
-                $('.side-div').removeClass('hide').css({width: "30%"});
+                $('.side-div').addClass('side-div-w');
+
                 this.tab = tab;
             }
 
-
         };
+    
         this.isSet = function (Value) {
             return this.tab === Value;
         };

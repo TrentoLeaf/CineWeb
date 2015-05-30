@@ -1,10 +1,35 @@
 $(document).ready(function(){
-  $(".button-collapse").sideNav();
+    // init the mobile menu sidenav
+    $(".button-collapse").sideNav();
+
+    // init the dropdown selectors
+        $('select').material_select();
+
+
+    // intercept all clicks
+    $('main').on('click.hideSide',function(e) {
+        // check if click come from hide on mobile buttons
+        if ($(e.target).hasClass('hide-side-nav-button-mobile')) {
+            $('.side-div').removeClass('side-div-w');
+            $('.side-div').find('.side-nav-element').addClass('ng-hide');
+        }
+
+        if (!$(e.target).hasClass('side-div')) {
+            // check if click not come from the Sidediv
+            if (!($(e.target).parents().hasClass('side-div'))) {
+                // hide the side-div
+                $('.side-div').removeClass('side-div-w');
+                $('.side-div').find('.side-nav-element').addClass('ng-hide');
+            }
+        }
+    });
+
 });
 (function() {
+
   'use strict';
 
-  var app= angular.module('Main', ['PlaysModule',]);
+  var app= angular.module('cineweb', ['PlaysModule', 'ngRoute']);
 
   app.config([ '$routeProvider', function($routeProvider) {
     $routeProvider.when('/', {
@@ -23,10 +48,11 @@ $(document).ready(function(){
       templateUrl: 'partials/informations.html',
       controller: '', //controller per informations
       controllerAs: '' //alias controller per informstions
+    }).when('/error', {
+        templateUrl: 'partials/error.html'
     }).otherwise({
       redirectTo: '/error'
     });
   } ]);
-
 
 })();

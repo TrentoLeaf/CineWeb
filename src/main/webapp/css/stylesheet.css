@@ -18,14 +18,46 @@ main {
     height: 100%;
     z-index: 1; }
   main .side-div {
-    position: absolute;
-    right: 0%;
-    background-color: green;
-    height: 100%;
-    width: 40%;
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    top: 64px;
+    right: 0;
+    height: auto;
+    width: 0px;
     z-index: 2;
-    transition: width 0.5s; }
+    transition: width 0.3s; }
+    main .side-div .hide-side-nav-button-mobile {
+      margin-top: 1em; }
+    main .side-div .side-cart-content {
+      position: absolute;
+      top: 11%;
+      height: 60%;
+      padding-top: 1em;
+      overflow-y: scroll; }
+      main .side-div .side-cart-content .side-cart-film .cart-item {
+        padding: 0.1em; }
+        main .side-div .side-cart-content .side-cart-film .cart-item .item-image {
+          padding-top: 0.5em; }
+        main .side-div .side-cart-content .side-cart-film .cart-item .item-details {
+          padding: 0; }
+          main .side-div .side-cart-content .side-cart-film .cart-item .item-details .mdi-action-highlight-remove {
+            padding: 0.1em; }
+          main .side-div .side-cart-content .side-cart-film .cart-item .item-details .row {
+            margin: 0;
+            padding: 0; }
     main .side-div .side-cart-actions {
+      box-sizing: border-box;
       position: absolute;
       width: 100%;
-      bottom: 0%; }
+      bottom: 0; }
+  @media only screen and (min-width: 992px) {
+    main .side-div-w {
+      width: 30%; } }
+  @media only screen and (min-width: 600px) and (max-width: 992px) {
+    main .side-div-w {
+      width: 50%; } }
+  @media only screen and (max-width: 600px) {
+    main .side-div-w {
+      top: 56px;
+      width: 100%; } }

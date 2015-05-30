@@ -28,21 +28,77 @@ main {
   }
 
   .side-div {
-    position: absolute;
-    right: 0%;
-    background-color: green;
-    height: 100%;
-    width: 40%; // riportare a 0
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    top: 64px;
+    right: 0;
+    height: auto;
+    width: 0px; // riportare a 0
     z-index: 2;
-    transition: width 0.5s;
+    transition: width 0.3s;
+
+    .hide-side-nav-button-mobile {
+      margin-top: 1em;
+    }
+
+    .side-cart-content {
+      position: absolute;
+      top: 11%;
+      height: 60%;
+      padding-top: 1em;
+      overflow-y: scroll;
+
+      .side-cart-film {
+
+        .cart-item {
+          padding: 0.1em;
+
+          .item-image {
+            padding-top: 0.5em;
+          }
+
+          .item-details {
+            padding: 0;
+
+            .mdi-action-highlight-remove {
+              padding: 0.1em;
+            }
+
+            .row {
+              margin: 0;
+              padding: 0;
+            }
+          }
+        }
+
+      }
+    }
 
     .side-cart-actions {
+      box-sizing: border-box;
       position: absolute;
       width: 100%;
-      bottom: 0%;
-
+      bottom: 0;
     }
 
   }
 
+  // valori per aprire la side-nav in varie dimensioni in base al dispositivo
+  .side-div-w {
+
+    @media only screen and (min-width: 992px) {
+      width: 30%;
+    }
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+      width: 50%;
+    }
+    @media only screen and (max-width: 600px) {
+      top: 56px;
+      width: 100%;
+    }
+  }
 }
+
+
+

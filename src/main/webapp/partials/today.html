@@ -1,31 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-<div ng-controller="PlaysController as ctrl">
-    <div class="card row" ng-repeat="film in ctrl.archive">
-        <!--Inizio MiniModulo -->
-        <div class="col s12 m6 l4">
-            <div class="card-image col l4">
-                <img class="responsive-img" ng-src="{{film.playbill}}">
-            </div>
-            <div class="card-content col l8">
-                <span class="card-title grey-text accent-4">{{film.title}}</span>
-                <br>
-                <span class="card-title grey-text accent-4">{{film.gender}}</span>
-                <br>
-                <span class="card-title grey-text accent-4">{{film.time}}</span>
-                <br>
-                <a class="waves-effect waves-light btn black yellow-text text-accent-3"><i class="mdi-editor-attach-money">Prenota Biglietto</i></a>
-                <br>
-                <a class="waves-effect waves-light btn black yellow-text text-accent-3"><i class="mdi-action-theaters">Dettagli del Film</i></a>
-            </div>
-        </div>
-        <!--Fine MiniModulo -->
-    </div>
+<div class="row">
+    <h1>{{date.date}}</h1>
 </div>
-</body>
-</html>
+
+<ul class="cd-items cd-container">
+    <li class="cd-item">
+        <img src="../img/temporary/item-1.jpg" alt="Item Preview">
+        <a class="cd-trigger">film.title</a>
+    </li>
+</ul>
+
+<div class="cd-quick-view">
+    <div class="cd-slider-wrapper">
+        <ul class="cd-slider">
+            <li class="selected"><img src="../img/temporary/item-1.jpg" alt="Product 1"></li>
+            <li><img src="../img/temporary/item-2.jpg" alt="Product 2"></li>
+            <li><img src="../img/temporary/item-3.jpg" alt="Product 3"></li>
+        </ul> <!-- cd-slider -->
+
+        <ul class="cd-slider-navigation">
+            <li><a class="cd-next" >Prev</a></li>
+            <li><a class="cd-prev" >Next</a></li>
+        </ul> <!-- cd-slider-navigation -->
+    </div> <!-- cd-slider-wrapper -->
+
+    <div class="cd-item-info">
+        <h2>film.title</h2>
+        <p>film.gender</p>
+        <p>film.description</p>
+        <ul class="cd-item-action">
+            <li><button class="add-to-cart"><i src="mdi-editor-attach-money"/>Acquistami!</button></li>
+        </ul> <!-- cd-item-action -->
+    </div> <!-- cd-item-info -->
+    <a class="cd-close">Close</a>
+</div> <!-- cd-quick-view -->
+
+<script src="../js/jquery-2.1.1.js"></script>
+<script src="../js/velocity.min.js"></script>
+<script src="../js/today.js"></script> <!-- Resource jQuery -->
