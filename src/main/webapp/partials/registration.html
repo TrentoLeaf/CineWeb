@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<div class="row" ng-app="cineweb" ng-controller="registrationCtrl as ctrl">
+    <form class="offset-s3 col s6">
 
-</body>
-</html>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="name" type="text" class="validate" ng-model="ctrl.user.name">
+                <label for="name">Nome</label>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="input-field col s12">
+                <input id="surname" type="text" class="validate" ng-model="ctrl.user.surname">
+                <label for="surname">Cognome</label>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="email" type="email" class="validate" ng-model="ctrl.user.email">
+                <label for="email">Email</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="password" type="password" class="validate" ng-model="ctrl.user.password">
+                <label for="password">Password</label>
+            </div>
+        </div>
+
+        <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 black-text" ng-click="ctrl.submit()" name="action">Registrati
+            <i class="mdi-action-assignment left"></i>
+        </button>
+    </form>
+</div>

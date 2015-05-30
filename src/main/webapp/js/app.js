@@ -48,6 +48,10 @@ $(document).ready(function(){
       templateUrl: '../partials/informations.html',
       controller: '', //controller per informations
       controllerAs: '' //alias controller per informstions
+    }).when('/registration', {
+        templateUrl: 'partials/registration.html',
+        cntroller: 'registrationCtrl',
+        controllerAs: 'ctrl'
     }).when('/error', {
         templateUrl: 'partials/error.html'
     }).otherwise({
