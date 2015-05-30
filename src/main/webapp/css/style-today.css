@@ -13,9 +13,8 @@ Primary style
 
 body {
   font-size: 100%;
-  font-family: "PT Sans", sans-serif;
-  color: #3e585f;
-  background-color: #47374e; }
+  color: #ffea00;
+  background-color: #424242; }
   body::after {
     /* dark overlay layer - visible when we fire .cd-quick-view */
     position: fixed;

@@ -12,10 +12,8 @@ Primary style
   content: ''; }
 
 body {
-  font-size: 100%;
-  font-family: "PT Sans", sans-serif;
-  color: #3e585f;
-  background-color: #47374e; }
+  color: #ffea00;
+  background-color: #00bfa5; }
   body::after {
     /* dark overlay layer - visible when we fire .cd-quick-view */
     position: fixed;
@@ -23,7 +21,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(71, 55, 78, 0.8);
+    background: rgba(0, 191, 165, 0.8);
     visibility: hidden;
     opacity: 0;
     -webkit-transition: opacity .3s 0s, visibility 0s .3s;
@@ -38,7 +36,7 @@ body {
       transition: opacity .3s 0s, visibility 0s 0s; } }
 
 a {
-  color: #f82f53;
+  color: #212121;
   text-decoration: none; }
 
 img {
@@ -126,7 +124,7 @@ header {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: #392c3f; } }
+        background-color: #00a68f; } }
 
 .cd-trigger {
   position: absolute;
@@ -259,9 +257,9 @@ header {
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-transition: opacity 0.2s, background 0.2s;
-    -moz-transition: opacity 0.2s, background 0.2s;
-    transition: opacity 0.2s, background 0.2s; }
+    -webkit-transition: opacity 0.1s, background 0.1s;
+    -moz-transition: opacity 0.1s, background 0.1s;
+    transition: opacity 0.1s, background 0.1s; }
     .cd-slider-navigation li a::before, .cd-slider-navigation li a::after {
       /* create arrows in CSS */
       position: absolute;
@@ -286,7 +284,7 @@ header {
     .add-content .cd-slider-navigation li a {
       opacity: .2; }
     .no-touch .cd-slider-navigation li a:hover {
-      background: rgba(71, 55, 78, 0.8);
+      background: rgba(0, 191, 165, 0.8);
       opacity: 1; }
     .touch .cd-slider-navigation li a {
       opacity: 1; }
@@ -317,38 +315,21 @@ header {
   .cd-item-info p {
     line-height: 1.6;
     margin: 1em 0;
-    color: #67919c; }
+    color: #fff266; }
   .cd-item-info .cd-item-action li {
     display: inline-block;
     margin-right: 1em; }
     .cd-item-info .cd-item-action li:first-child {
       margin-left: -4px; }
-  .cd-item-info .add-to-cart {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -ms-appearance: none;
-    -o-appearance: none;
-    appearance: none;
-    border-radius: 0.25em;
-    border: none;
-    padding: .6em 1.2em;
-    background-color: #f82f53;
-    color: #ffffff;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-family: "PT Sans", sans-serif;
-    font-size: 16px;
-    font-size: 1rem;
-    cursor: pointer; }
   .add-content .cd-item-info {
     /* class added at the end of the width animation, used to show the content */
     position: relative;
     visibility: visible;
     opacity: 1; }
     .add-content .cd-item-info h2 {
-      -webkit-animation: cd-slide-in 0.3s;
-      -moz-animation: cd-slide-in 0.3s;
-      animation: cd-slide-in 0.3s; }
+      -webkit-animation: cd-slide-in 0.3xs;
+      -moz-animation: cd-slide-in 0.3xs;
+      animation: cd-slide-in 0.3xs; }
     .add-content .cd-item-info p {
       -webkit-animation: cd-slide-in 0.4s;
       -moz-animation: cd-slide-in 0.4s;
@@ -409,7 +390,7 @@ header {
     display: inline-block;
     height: 4px;
     width: 20px;
-    background: #47374e;
+    background: #00bfa5;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden; }
   .cd-close::before {
