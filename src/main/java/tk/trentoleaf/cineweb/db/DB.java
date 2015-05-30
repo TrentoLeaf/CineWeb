@@ -91,13 +91,13 @@ public class DB {
 
         // drop tables
         dropTablePasswordResets();
+        dropTableBookings();
         dropTableUsers();
         dropTableRoles();
         dropTablePlays();
         dropTableFilms();
         dropTableSeats();
         dropTableRooms();
-        dropTableBookings();
     }
 
     // make sure the extension crypto is loaded
@@ -881,7 +881,7 @@ public class DB {
                     "price DOUBLE PRECISION," +
                     "PRIMARY KEY (bid)," +
                     "FOREIGN KEY (rid,x,y) REFERENCES seats(rid,x,y)," +
-                    "FOREIGN KEY (uid) REFERENCES roles(uid)," +
+                    "FOREIGN KEY (uid) REFERENCES users(uid)," +
                     "FOREIGN KEY (pid) REFERENCES plays(pid));");
             //stm.execute("CREATE INDEX ON bookings (pid);");
         }
@@ -896,7 +896,7 @@ public class DB {
         }
     }
 
-    private void createBookings(Booking booking)  throws SQLException
+    public void createBookings(Booking booking)  throws SQLException
     {
         final String query = "INSERT INTO bookings (bid, uid, pid, rid, x, y, time_booking, price) VALUES " +
                 "(DEFAULT, ?, ?, ?, ?, ?, ?, ?) RETURNING bid";
@@ -935,7 +935,7 @@ public class DB {
                 int y = rs.getInt("y");
                 DateTime timeBooking = new DateTime(rs.getTimestamp("time_booking").getTime());
                 double price = rs.getDouble("price");
-                bookings.add(new Booking(rid, x, y, uid, pid, timeBooking, price));
+                bookings.add(new Booking(bid, rid, x, y, uid, pid, timeBooking, price));
             }
         }
 
