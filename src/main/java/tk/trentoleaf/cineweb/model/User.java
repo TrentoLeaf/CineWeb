@@ -16,6 +16,8 @@ public class User implements Serializable {
     private String secondName;
     private double credit;
 
+    public static User FIRST_ADMIN = new User(true, Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin");
+
     public User() {
     }
 

@@ -117,6 +117,24 @@ public class DBTest {
         db.createUser(u2);
     }
 
+    @Test
+    public void createUserAdmin() throws Exception {
+
+        // create admin
+        db.createAdminUser();   // ok
+        db.createAdminUser();   // fails -> no exception
+
+        // expected
+        final List<User> expected = new ArrayList<>();
+        expected.add(User.FIRST_ADMIN);
+
+        // current
+        final List<User> current = db.getUsers();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
     @Test(expected = UserNotFoundException.class)
     public void getUserFail() throws Exception {
         db.getUser("no_email");

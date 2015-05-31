@@ -118,9 +118,9 @@ public class DB {
     public void createAdminUser() throws SQLException {
         // create first user
         try {
-            db.createUser(new User(true, Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin"));
+            db.createUser(User.FIRST_ADMIN);
         } catch (ConstrainException e) {
-            logger.warning("User ADMIN already exixsts");
+            logger.warning("User FIRST_ADMIN already exixsts");
         }
     }
 
@@ -406,7 +406,7 @@ public class DB {
     }
 
     // exists user
-    private boolean existsUser(int userID) throws SQLException {
+    public boolean existsUser(int userID) throws SQLException {
         final String query = "SELECT COUNT(uid) FROM users WHERE uid = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
@@ -418,7 +418,7 @@ public class DB {
     }
 
     // exists user & enabled
-    private boolean existsAndEnabledUser(int userID) throws SQLException {
+    public boolean existsAndEnabledUser(int userID) throws SQLException {
         final String query = "SELECT COUNT(uid) FROM users WHERE enabled = TRUE AND uid = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
@@ -451,6 +451,20 @@ public class DB {
         }
 
         return code;
+    }
+
+    // get the confirmation code for a given user -> TEST PORPOISE ONLY
+    public String getConfirmationCode(String email) throws SQLException {
+        final String query = "SELECT r.code FROM resets r NATURAL JOIN users u WHERE u.email = ? LIMIT 1;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setString(1, email);
+
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+
+            return rs.getString(1);
+        }
     }
 
     // check a confirmation code
