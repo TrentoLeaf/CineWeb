@@ -453,6 +453,20 @@ public class DB {
         return code;
     }
 
+    // get the confirmation code for a given user -> TEST PORPOISE ONLY
+    public String getConfirmationCode(String email) throws SQLException {
+        final String query = "SELECT r.code FROM resets r NATURAL JOIN users u WHERE u.email = ? LIMIT 1;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setString(1, email);
+
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+
+            return rs.getString(1);
+        }
+    }
+
     // check a confirmation code
     public boolean checkConfirmationCode(int userID, String code) throws SQLException {
         final String query = "SELECT COUNT(*) FROM registration_codes WHERE uid = ? AND code = ?;";

@@ -199,9 +199,7 @@ public class RestUsers {
         try {
             db.changePasswordWithCode(change.getEmail(), change.getCode(), change.getNewPassword());
             return Response.ok().build();
-        } catch (UserNotFoundException e1) {
-            throw NotFoundException.USER_NOT_FOUND;
-        } catch (WrongCodeException e2) {
+        } catch (UserNotFoundException | WrongCodeException e) {
             throw new AuthFailedException();
         }
     }

@@ -6,10 +6,7 @@ import org.junit.Test;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.RestUsers;
-import tk.trentoleaf.cineweb.rest.entities.Auth;
-import tk.trentoleaf.cineweb.rest.entities.ChangePassword;
-import tk.trentoleaf.cineweb.rest.entities.ForgotPassword;
-import tk.trentoleaf.cineweb.rest.entities.Registration;
+import tk.trentoleaf.cineweb.rest.entities.*;
 import tk.trentoleaf.cineweb.rest.handlers.BadRequestHandler;
 import tk.trentoleaf.cineweb.rest.handlers.ConflictHandler;
 import tk.trentoleaf.cineweb.rest.handlers.NotFoundHandler;
@@ -259,6 +256,52 @@ public class RestUsersTest extends MyJerseyTest {
         final Response r1 = getTarget().path("/users/forgot-password").request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.json(new ForgotPassword("aaaaaaa@aaa.com")));
         assertEquals(404, r1.getStatus());
+    }
+
+    @Test
+    public void changePasswordRecoverSuccess() throws Exception {
+
+        // create a user
+        db.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+
+        // forgot password request
+        final Response r1 = getTarget().path("/users/forgot-password").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ForgotPassword("teo@teo.com")));
+        assertEquals(200, r1.getStatus());
+
+        // test recover password
+        final Response r2 = getTarget().path("/users/change-password-code").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ChangePasswordWithCode("teo@teo.com", db.getConfirmationCode("teo@teo.com"), "aaa")));
+        assertEquals(200, r2.getStatus());
+
+        // login
+        assertTrue(db.authenticate("teo@teo.com", "aaa"));
+    }
+
+    @Test
+    public void changePasswordRecoverFail1() throws Exception {
+
+        // test recover password
+        final Response r2 = getTarget().path("/users/change-password-code").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ChangePasswordWithCode("teo@teo.com", null, "aaa")));
+        assertEquals(400, r2.getStatus());
+    }
+
+    @Test
+    public void changePasswordRecoverFail2() throws Exception {
+
+        // create a user
+        db.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+
+        // forgot password request
+        final Response r1 = getTarget().path("/users/forgot-password").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ForgotPassword("teo@teo.com")));
+        assertEquals(200, r1.getStatus());
+
+        // test recover password
+        final Response r2 = getTarget().path("/users/change-password-code").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ChangePasswordWithCode("aaa@teo.com", db.getConfirmationCode("teo@teo.com"), "aaa")));
+        assertEquals(404, r2.getStatus());
     }
 
     @Test
