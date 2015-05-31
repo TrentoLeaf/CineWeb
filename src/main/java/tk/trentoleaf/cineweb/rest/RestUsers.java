@@ -3,10 +3,7 @@ package tk.trentoleaf.cineweb.rest;
 import com.sendgrid.SendGridException;
 import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.email.EmailSender;
-import tk.trentoleaf.cineweb.exceptions.ConstrainException;
-import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
-import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
+import tk.trentoleaf.cineweb.exceptions.*;
 import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.entities.*;
 import tk.trentoleaf.cineweb.rest.exceptions.AuthFailedException;
@@ -149,6 +146,26 @@ public class RestUsers {
         }
 
         return Response.ok().build();
+    }
+
+    @POST
+    @Path("/confirm")
+    public ActivateUser confirmUser(ConfirmCode confirmCode) throws SQLException {
+
+        // validate code
+        if (confirmCode == null || !confirmCode.isValid()) {
+            throw new BadRequestException("Bad confirmation code");
+        }
+
+        // try to confirm the user
+        try {
+            db.confirmUser(confirmCode.getCode());
+            return new ActivateUser(0, "User activated");
+        } catch (UserNotFoundException e) {
+            throw NotFoundException.GENERIC;
+        } catch (UserAlreadyActivatedException e) {
+            return new ActivateUser(1, "User already activated");
+        }
     }
 
     @POST

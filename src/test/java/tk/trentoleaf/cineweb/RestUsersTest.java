@@ -239,6 +239,49 @@ public class RestUsersTest extends MyJerseyTest {
     }
 
     @Test
+    public void confirmRegistrationSuccess() throws Exception {
+
+        // create a users (REST)
+        final Response r1 = getTarget().path("/users/registration").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new Registration("email@trentoleaf.tk", "password", "name", "surname")));
+        assertEquals(200, r1.getStatus());
+
+        // get registration code
+        final String code = db.getConfirmationCode("email@trentoleaf.tk");
+
+        // confirm user
+        final Response r2 = getTarget().path("/users/confirm").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ConfirmCode(code)));
+        assertEquals(200, r2.getStatus());
+        assertEquals(0, r2.readEntity(ActivateUser.class).getCode());
+
+        // confirm user
+        final Response r3 = getTarget().path("/users/confirm").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ConfirmCode(code)));
+        assertEquals(200, r3.getStatus());
+        assertEquals(1, r3.readEntity(ActivateUser.class).getCode());
+    }
+
+    @Test
+    public void confirmRegistrationFail() throws Exception {
+
+        // confirm user (not existing)
+        final Response r1 = getTarget().path("/users/confirm").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ConfirmCode("sdgfdgds")));
+        assertEquals(404, r1.getStatus());
+
+        // confirm user (bad request)
+        final Response r2 = getTarget().path("/users/confirm").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(null));
+        assertEquals(400, r2.getStatus());
+
+        // confirm user (bad request)
+        final Response r3 = getTarget().path("/users/confirm").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ConfirmCode(null)));
+        assertEquals(400, r3.getStatus());
+    }
+
+    @Test
     public void forgotPasswordSuccess() throws Exception {
 
         // create a user
@@ -299,7 +342,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // test recover password
         final Response r2 = getTarget().path("/users/change-password-code").request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.json(new ChangePasswordWithCode("teo@teo.com", db.getConfirmationCode("teo@teo.com"), "aaa")));
+                .post(Entity.json(new ChangePasswordWithCode("teo@teo.com", db.getResetPasswordCode("teo@teo.com"), "aaa")));
         assertEquals(200, r2.getStatus());
 
         // login
@@ -328,7 +371,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // test recover password
         final Response r2 = getTarget().path("/users/change-password-code").request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.json(new ChangePasswordWithCode("aaa@teo.com", db.getConfirmationCode("teo@teo.com"), "aaa")));
+                .post(Entity.json(new ChangePasswordWithCode("aaa@teo.com", db.getResetPasswordCode("teo@teo.com"), "aaa")));
         assertEquals(404, r2.getStatus());
     }
 
