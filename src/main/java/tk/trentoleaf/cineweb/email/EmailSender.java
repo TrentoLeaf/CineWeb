@@ -3,9 +3,13 @@ package tk.trentoleaf.cineweb.email;
 
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
+import tk.trentoleaf.cineweb.email.pdf.FilmTicketData;
+import tk.trentoleaf.cineweb.email.pdf.FullFillPDF;
 import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.utils.Utils;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Logger;
 
@@ -138,6 +142,28 @@ public class EmailSender {
         email.addTo(user.getEmail());
         email.setSubject(WE + " - Recupero password");
         email.setText("TESTO... " + url);
+
+        // try to send, log failures
+        try {
+            sendgrid.send(email);
+        } catch (SendGridException e) {
+            logger.severe(e.toString());
+            throw e;
+        }
+    }
+
+    //send a pdf with the ticket
+    public void sendTicketPDFEmail(URI uri, User user, FilmTicketData data) throws SendGridException, IOException {
+
+        // create email
+        SendGrid.Email email = new SendGrid.Email();
+        email.setFrom(FROM);
+        email.addTo(user.getEmail());
+        email.setSubject(WE + " - Ticket acquistato");
+        email.setText("Ecco a lei il Ticket in allegato in formato PDF!");
+        //TODO: optionally add a cute html text
+
+        email.addAttachment("Ticket", new FullFillPDF(data));
 
         // try to send, log failures
         try {
