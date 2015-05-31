@@ -64,13 +64,33 @@
                         });
                 },
 
-                forgotPassword: function(email) {
+                confirmRegistration: function (code) {
+                    return $http.post(BASE_USERS + '/confirm', {code: code})
+                        .success(function (data) {
+                            $log.info('CONFIRM REGISTRATION OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('CONFIRM REGISTRATION FAILED: ' + status + " " + data);
+                        });
+                },
+
+                forgotPassword: function (email) {
                     return $http.post(BASE_USERS + "/forgot-password", {email: email})
                         .success(function (data) {
                             $log.info('FORGOT PASSWORD OK: ' + data);
                         })
                         .error(function (data, status) {
                             $log.warn('FORGOT PASSWORD FAILED: ' + status + " " + data);
+                        });
+                },
+
+                me: function () {
+                    return $http.get(BASE_USERS + "/me")
+                        .success(function (data) {
+                            $log.info('ME OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('ME FAILED: ' + status + " " + data);
                         });
                 }
             }
