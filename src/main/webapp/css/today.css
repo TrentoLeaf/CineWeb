@@ -27,7 +27,7 @@ body {
     -webkit-transition: opacity .3s 0s, visibility 0s .3s;
     -moz-transition: opacity .3s 0s, visibility 0s .3s;
     transition: opacity .3s 0s, visibility 0s .3s; }
-  @media only screen and (min-width: 1024px) {
+  @media only screen and (min-width: 480px) {
     body.overlay-layer::after {
       visibility: visible;
       opacity: 1;
@@ -76,6 +76,12 @@ header {
     color: #ffffff;
     font-size: 20px;
     font-size: 1.25rem; }
+  @media only screen and (min-width: 480px) {
+    header {
+      line-height: 100px; }
+      header h1 {
+        font-size: 18px;
+        font-size: 1.125rem; } }
   @media only screen and (min-width: 768px) {
     header {
       line-height: 180px; }
@@ -101,6 +107,13 @@ header {
   .cd-item > img {
     display: block;
     width: 100%; }
+  @media only screen and (min-width: 480px) {
+    .cd-item {
+      width: 18%;
+      float: left;
+      margin: 0 2% 1em 0; }
+      .cd-item:nth-child(2n) {
+        margin-right: 0; } }
   @media only screen and (min-width: 768px) {
     .cd-item {
       width: 48%;
@@ -128,23 +141,14 @@ header {
 
 .cd-trigger {
   position: absolute;
-  height: 50px;
-  line-height: 50px;
   width: 100%;
   bottom: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.1);
-  text-align: center;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #ffffff;
-  opacity: 0;
-  visibility: hidden;
-  -webkit-transition: opacity 0.2s, background-color 0.2s;
-  -moz-transition: opacity 0.2s, background-color 0.2s;
-  transition: opacity 0.2s, background-color 0.2s; }
+  -webkit-transition: opacity 0.15s, background-color 0.15s;
+  -moz-transition: opacity 0.15s, background-color 0.15s;
+  transition: opacity 0.15s, background-color 0.15s; }
   .no-touch .cd-trigger:hover {
-    background: rgba(0, 0, 0, 0.2); }
+    background: rgba(0, 0, 0, 0.8); }
   @media only screen and (min-width: 1024px) {
     .cd-trigger {
       /* always visible on small devices */
@@ -152,8 +156,7 @@ header {
       opacity: 1; } }
   @media only screen and (min-width: 1170px) {
     .cd-trigger {
-      /* only visible on hover on big devices */
-      opacity: 0; } }
+      opacity: 1; } }
 
 @media only screen and (min-width: 1170px) {
   .no-touch .cd-item:hover .cd-trigger {
@@ -161,39 +164,74 @@ header {
 
   .touch .cd-item .cd-trigger {
     opacity: 1; } }
-.cd-quick-view {
-  /* quick view non available on small devices */
-  display: none; }
-  @media only screen and (min-width: 1024px) {
-    .cd-quick-view {
-      display: block;
-      position: fixed;
-      max-width: 900px;
-      visibility: hidden;
-      /* Force Hardware Acceleration in WebKit */
-      -webkit-transform: translateZ(0);
-      -moz-transform: translateZ(0);
-      -ms-transform: translateZ(0);
-      -o-transform: translateZ(0);
-      transform: translateZ(0);
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-      will-change: left, top, width;
-      z-index: 1; }
-      .cd-quick-view::after {
+@media only screen and (min-width: 480px) {
+  .cd-quick-view {
+    display: block;
+    position: fixed;
+    max-width: 600px;
+    visibility: hidden;
+    /* Force Hardware Acceleration in WebKit */
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: left, top, width;
+    z-index: 1; }
+    .cd-quick-view::after {
+      clear: both;
+      content: "";
+      display: table; }
+    .cd-quick-view.is-visible {
+      /* class added when user clicks on .cd-trigger */
+      visibility: visible; }
+    .cd-quick-view.animate-width {
+      /* class added at the end of the first zoom-in animation */
+      background-color: #ffffff;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+      -webkit-transition: box-shadow 0.3s;
+      -moz-transition: box-shadow 0.3s;
+      transition: box-shadow 0.3s; }
+    .cd-quick-view .cd-slider-wrapper {
+      position: relative;
+      display: inline-block;
+      float: left; }
+      .cd-quick-view .cd-slider-wrapper::after {
         clear: both;
         content: "";
-        display: table; }
-      .cd-quick-view.is-visible {
-        /* class added when user clicks on .cd-trigger */
-        visibility: visible; }
-      .cd-quick-view.animate-width {
-        /* class added at the end of the first zoom-in animation */
-        background-color: #ffffff;
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
-        -webkit-transition: box-shadow 0.3s;
-        -moz-transition: box-shadow 0.3s;
-        transition: box-shadow 0.3s; } }
+        display: table; } }
+@media only screen and (min-width: 1024px) {
+  .cd-quick-view {
+    display: block;
+    position: fixed;
+    max-width: 900px;
+    visibility: hidden;
+    /* Force Hardware Acceleration in WebKit */
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: left, top, width;
+    z-index: 1; }
+    .cd-quick-view::after {
+      clear: both;
+      content: "";
+      display: table; }
+    .cd-quick-view.is-visible {
+      /* class added when user clicks on .cd-trigger */
+      visibility: visible; }
+    .cd-quick-view.animate-width {
+      /* class added at the end of the first zoom-in animation */
+      background-color: #ffffff;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+      -webkit-transition: box-shadow 0.3s;
+      -moz-transition: box-shadow 0.3s;
+      transition: box-shadow 0.3s; } }
 
 .cd-slider-wrapper {
   position: relative;

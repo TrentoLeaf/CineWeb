@@ -39,7 +39,7 @@ body {
 		transition: opacity .3s 0s, visibility 0s .3s;
 	}
 
-	@include MQ(L) {
+	@include MQ(S) {
 		&.overlay-layer::after {
 			visibility: visible;
 			opacity: 1;
@@ -94,6 +94,14 @@ header {
 		@include font-size(20px);
 	}
 
+    @include MQ(S) {
+      line-height: 100px;
+
+      h1 {
+        @include font-size(18px);
+      }
+    }
+
 	@include MQ(M) {
 		line-height: 180px;
 
@@ -127,6 +135,15 @@ header {
 		display: block;
 		width: 100%;
 	}
+
+    @include MQ(S) {
+      @include column(.18);
+      margin: 0 2% 1em 0;
+
+      &:nth-child(2n) {
+        margin-right: 0;
+      }
+    }
 
 	@include MQ(M) {
 		@include column(.48);
@@ -163,21 +180,13 @@ header {
 
 .cd-trigger {
 	position: absolute;
-	height: 50px;
-	line-height: 50px;
 	width: 100%;
 	bottom: 0;
 	left: 0;
-	background: rgba(#000, .1);
-	text-align: center;
-	@include font-smoothing;
-	color: $color-4;
-	opacity: 0;
-	visibility: hidden;
-	@include transition(opacity .2s, background-color .2s);
+	@include transition(opacity .15s, background-color .15s);
 
 	.no-touch &:hover {
-		background: rgba(#000, .2);
+		background: rgba(#000, .8);
 	}
 
 	@include MQ(L) {
@@ -187,8 +196,7 @@ header {
 	}
 
 	@include MQ(XL) {
-		/* only visible on hover on big devices */
-		opacity: 0;
+		opacity: 1;
 	}
 }
 
@@ -203,8 +211,41 @@ header {
 }
 
 .cd-quick-view {
-	/* quick view non available on small devices */
-	display: none;
+
+    @include MQ(S) {
+      display: block;
+      position: fixed;
+      max-width: 600px;
+      visibility: hidden;
+
+      /* Force Hardware Acceleration in WebKit */
+      @include transform(translateZ(0));
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      will-change: left, top, width;
+
+      @include clearfix;
+      z-index: 1;
+
+      &.is-visible {
+        /* class added when user clicks on .cd-trigger */
+        visibility: visible;
+      }
+
+      &.animate-width {
+        /* class added at the end of the first zoom-in animation */
+        background-color: $color-4;
+        box-shadow: 0 0 30px rgba(#000, .8);
+        @include transition(box-shadow .3s);
+      }
+
+      .cd-slider-wrapper {
+        position: relative;
+        display: inline-block;
+        float: left;
+        @include clearfix;
+      }
+    }
 
 	@include MQ(L) {
 		display: block;
