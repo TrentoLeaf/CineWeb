@@ -207,7 +207,7 @@ header {
     display: block;
     position: fixed;
     max-width: 900px;
-    visibility: hidden;
+    visibility: visible;
     /* Force Hardware Acceleration in WebKit */
     -webkit-transform: translateZ(0);
     -moz-transform: translateZ(0);
