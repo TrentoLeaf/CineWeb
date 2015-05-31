@@ -427,7 +427,7 @@ public class DBTest {
         db.createFilm(f2);
 
         // delete
-        db.deleteFilm(f1.getId());
+        db.deleteFilm(f1.getFid());
 
         // expected
         List<Film> expected = new ArrayList<>();
@@ -794,7 +794,7 @@ public class DBTest {
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         db.createFilm(f1);
 
-        final Play p1 = new Play(f1.getId(), 223, DateTime.now(), true);
+        final Play p1 = new Play(f1.getFid(), 223, DateTime.now(), true);
         db.createPlay(p1);
     }
 
@@ -812,7 +812,7 @@ public class DBTest {
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         db.createFilm(f1);
 
-        final Play p1 = new Play(f1.getId(), r1.getRid(), DateTime.now(), true);
+        final Play p1 = new Play(f1.getFid(), r1.getRid(), DateTime.now(), true);
 
         // ok
         db.createPlay(p1);
