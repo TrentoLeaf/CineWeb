@@ -19,15 +19,17 @@
                     </ul>
                 </div>
 
-                <div class="cd-item-info">
-                    <h2>{{ctrl.current.title}}</h2>
-                    <p>{{ctrl.current.gender}}</p>
-                    <p>{{ctrl.current.description}}</p>
-                    <ul class="cd-item-action">
-                        <li><a class="btn-large grey darken-3 yellow-text text-accent-3" ng-click="cc.addToCart(ctrl.current)"><i class="mdi-editor-attach-money prefix"></i>Acquista</a></li>
-                    </ul>
-                </div>
-                <a class="cd-close">Close</a>
+            <div class="cd-item-info">
+                <h2>{{ctrl.current.title}}</h2>
+                <p>{{ctrl.current.genre}}</p>
+                <p>{{ctrl.current.plot}}</p>
+                <p>{{ctrl.current.duration}}</p>
+                <ul class="cd-item-action">
+                    <li><a class="btn-large grey darken-3 yellow-text text-accent-3" ng-click="cc.addToCart(ctrl.current)"><i class="mdi-editor-attach-money prefix"></i>Acquistami!</a></li>
+                </ul>
+                <video class="responsive-video" controls>
+                    <source ng-src="{{ctrl.current.trailer}}" type="video/mp4">
+                </video>
             </div>
         </div>
 

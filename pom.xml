@@ -109,13 +109,6 @@
             <version>5.5.0</version>
         </dependency>
 
-        <!--BeanUtilis-->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.8.0</version>
-        </dependency>
-
     </dependencies>
 
     <build>

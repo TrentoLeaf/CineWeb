@@ -1,10 +1,12 @@
-(function() {
+(function () {
     "use strict";
 
 
+    angular.module('PlaysModule', ['filmsPlaysModule'])
+        .controller('PlaysController', ['$location', 'CompletePlays', function ($location, CompletePlays) {
+            this.current = {};
 
-    angular.module('PlaysModule', []).controller('PlaysController', function () {
-        this.current = {};
+            var ctrl = this;
 
         this.archive = [
             {
@@ -45,48 +47,32 @@
                         gender: "Genere 5",
                         playbill: "img/temporary/img5.jpg",
                         description: "Descrizione 5"
-                    }
-                ]
-            }, {
-                date: 'Data 2',
-                films: [
-                    {
-                        title: "Titolo 6",
-                        date: "Data 1",
-                        time: "Orario 6",
-                        gender: "Genere 6",
-                        playbill: "img/temporary/img6.jpg",
-                        description: "Descrizione 6",
-                    }, {
-                        title: "Titolo 7",
-                        date: "Data 1",
-                        time: "Orario 7",
-                        gender: "Genere 7",
-                        playbill: "img/temporary/img7.jpg",
-                        description: "Descrizione 7",
-                    }, {
-                        title: "Titolo 8",
-                        date: "Data 1",
-                        time: "Orario 8",
-                        gender: "Genere 8",
-                        playbill: "img/temporary/img8.jpg",
-                        description: "Descrizione 8"
-                    }, {
-                        title: "Titolo 9",
-                        date: "Data 1",
-                        time: "Orario 9",
-                        gender: "Genere 9",
-                        playbill: "img/temporary/img9.jpg",
-                        description: "Descrizione 9"
-                    }
-                ]
-            }
-        ];
+                    }]
+            }];
 
-        this.setCurrent = function(date, film) {
-            this.current = this.archive[date].films[film];
-            this.current['date'] = date;
-        };
+            this.loadData = function () {
+                CompletePlays.playsByDate().then(
+                    function (data) {
+                        ctrl.archive = data;
+                    },
+                    function (error) {
+                        // TODO: handle error
 
-    });
+                    }
+                );
+            };
+
+            this.isNow = function(date){
+                var act = new Date();
+                console.log("This is the date: "+date+" and this is the actual: "+act);
+                return true;
+            };
+
+            this.setCurrent = function (date, film) {
+                this.current = this.archive[date].films[film];
+                this.current['date'] = date;
+            };
+
+
+    }]);
 })();
