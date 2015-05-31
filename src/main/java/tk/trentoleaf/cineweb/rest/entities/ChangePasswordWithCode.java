@@ -4,18 +4,18 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
-public class ChangePassword implements Serializable {
+public class ChangePasswordWithCode implements Serializable {
 
     private String email;
-    private String oldPassword;
+    private String code;
     private String newPassword;
 
-    public ChangePassword() {
+    public ChangePasswordWithCode() {
     }
 
-    public ChangePassword(String email, String oldPassword, String newPassword) {
+    public ChangePasswordWithCode(String email, String code, String newPassword) {
         this.email = email;
-        this.oldPassword = oldPassword;
+        this.code = code;
         this.newPassword = newPassword;
     }
 
@@ -27,12 +27,12 @@ public class ChangePassword implements Serializable {
         return newPassword;
     }
 
-    public String getOldPassword() {
-        return oldPassword;
+    public String getCode() {
+        return code;
     }
 
     public boolean isValid() {
-        return StringUtils.isNotEmpty(email) && StringUtils.isNotEmpty(oldPassword) && StringUtils.isNotEmpty(newPassword);
+        return StringUtils.isNotEmpty(email) && StringUtils.isNotEmpty(code) && StringUtils.isNotEmpty(newPassword);
     }
 
 }

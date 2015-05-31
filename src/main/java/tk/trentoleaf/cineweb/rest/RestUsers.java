@@ -6,6 +6,7 @@ import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.email.EmailSender;
 import tk.trentoleaf.cineweb.exceptions.ConstrainException;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
 import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.entities.*;
@@ -107,7 +108,7 @@ public class RestUsers {
     @Path("/change-password")
     public Response changePassword(ChangePassword change) throws SQLException {
 
-        if (change == null) {
+        if (change == null || !change.isValid()) {
             throw new BadRequestException("Missing email, oldPassword or newPassword");
         }
 
@@ -190,6 +191,25 @@ public class RestUsers {
 
         } catch (UserNotFoundException e) {
             throw NotFoundException.USER_NOT_FOUND;
+        }
+    }
+
+    @POST
+    @Path("/change-password-code")
+    public Response changePasswordWithCode(ChangePasswordWithCode change) throws SQLException {
+
+        if (change == null || !change.isValid()) {
+            throw new BadRequestException("Missing email, code or newPassword");
+        }
+
+        // try to change the password
+        try {
+            db.changePasswordWithCode(change.getEmail(), change.getCode(), change.getNewPassword());
+            return Response.ok().build();
+        } catch (UserNotFoundException e1) {
+            throw NotFoundException.USER_NOT_FOUND;
+        } catch (WrongCodeException e2) {
+            throw new AuthFailedException();
         }
     }
 

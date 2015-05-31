@@ -118,9 +118,9 @@ public class DB {
     public void createAdminUser() throws SQLException {
         // create first user
         try {
-            db.createUser(new User(true, Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin"));
+            db.createUser(User.FIRST_ADMIN);
         } catch (ConstrainException e) {
-            logger.warning("User ADMIN already exixsts");
+            logger.warning("User FIRST_ADMIN already exixsts");
         }
     }
 
