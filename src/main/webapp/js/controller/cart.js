@@ -1,11 +1,7 @@
-/**
- * Created by andrea on 5/31/15.
- */
-
-(function() {
+(function () {
     "use strict";
 
-    angular.module('CartModule', []).controller('CartController', function () {
+    angular.module('CartModule', []).controller('CartController', ['$rootScope', function ($rootScope) {
 
         this.prices = {
             ticket_normale: 8,
@@ -16,7 +12,7 @@
 
 
         // carrello che contiene oggetti film modificati
-        this.cart = [ {
+        $rootScope.cart = [{
             title: "Titolo 1",
             date: "Data 1",
             time: "Orario 1",
@@ -31,19 +27,18 @@
 
         this.total = 0.00;
 
-        this.addToCart = function(film) {
+        this.addToCart = function (film) {
             // numero di ticket per tipologia
             film['normale'] = 1;
             film['ridotto'] = 0;
             film['militari'] = 0;
             film['disabili'] = 0;
-            this.cart.push(film);
+            $rootScope.cart.push(film);
             this.updateTotal();
-            console.log(this.cart);
+            console.log($rootScope.cart);
         };
 
-        this.removeFromCart = function(film) {
-            var i = this.cart.indexOf(film);
+        this.removeFromCart = function (film) {
             if (i > -1) {
                 this.cart.splice(film);
                 this.updateTotal();
@@ -53,20 +48,20 @@
         this.updateTiket = function (film, type, number) {
             film[type] = number;
             this.updateTotal();
-        }
+        };
 
         this.updateTotal = function () {
             this.total = 0;
 
-            for (var i=0; i < this.cart.length; i++) {
+            for (var i = 0; i < $rootScope.cart.length; i++) {
 
                 this.total = this.total
-                    + ((this.prices['ticket_normale']*this.cart[i]['normale'])
-                    +(this.prices['ticket_ridotto']*this.cart[i]['ridotto'])
-                    +(this.prices['ticket_militare']*this.cart[i]['militari'])
-                    +(this.prices['ticket_disabile']*this.cart[i]['disabili']));
+                    + ((this.prices['ticket_normale'] * $rootScope.cart[i]['normale'])
+                    + (this.prices['ticket_ridotto'] * $rootScope.cart[i]['ridotto'])
+                    + (this.prices['ticket_militare'] * $rootScope.cart[i]['militari'])
+                    + (this.prices['ticket_disabile'] * $rootScope.cart[i]['disabili']));
             }
-        }
+        };
 
-    });
+    }]);
 })();

@@ -92,7 +92,7 @@
                 <div class="side-cart-content row"> <!-- Contenuto carrello -->
                     <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
                     <!--  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa  ng-repeat qua sotto -->
-                        <li ng-repeat="film in cc.cart" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
+                        <li ng-repeat="film in cart track by $index" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
                                 <img class="responsive-img" src="{{film.playbill}}" alt="locandina" />
                             </div>
