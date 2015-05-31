@@ -12,7 +12,7 @@
         this.data = "";
         this.error = "";
 
-        this.email= StorageService.getEmail();
+        this.email = StorageService.getEmail();
 
         var setData = function (data) {
             ctrl.data = data;
@@ -50,7 +50,7 @@
             )
         };
 
-        this.change = function(email, oldPass, newPass) {
+        this.change = function (email, oldPass, newPass) {
             Auth.changePassword(email, oldPass, newPass).then(
                 function () {
                     setData("pass OK");
@@ -63,14 +63,12 @@
 
         this.losePass = function (email) {
             // redirect to a new partial
-        }
-
-
+        };
 
         this.register = function (email) {
             // redirect al partial registrazione
             $location.path('/registration');
-        }
+        };
 
 
     }]);

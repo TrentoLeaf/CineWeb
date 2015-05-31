@@ -37,6 +37,7 @@
     <script src="js/services/users.js"></script>
     <script src="js/controller/login.js"></script>
     <script src="js/controller/plays.js"></script>
+    <script src="js/controller/cart.js"></script>
     <script src="js/controller/tab.js"></script>
     <script src="js/controller/registration.js"></script>
     <script src="js/controller/userArea.js"></script>
@@ -79,31 +80,31 @@
 
 <!-- here the main content -->
 <main>
-    <div class="content-div" ng-view>
+    <div ng-click="tab.setTab(-1)" class="content-div" ng-view>
 
     </div>
 
     <div class="side-div grey darken-4 white-text">
         <!-- Only Mobile: bottone per chiudere la side-div-->
         <div class="row">
-            <button class="hide-side-nav-button-mobile btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i> Torna indietro</button>
+            <button ng-click="tab.setTab(-1)" class="hide-side-nav-button-mobile btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i> Torna indietro</button>
         </div>
         <ul class="side-div-menu">
-            <li ng-controller="PlaysController as ctrl" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
+            <li ng-controller="CartController as cc" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
                 <div class="side-cart-content row"> <!-- Contenuto carrello -->
-                    <ul ng-repeat="film in ctrl.cart" class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
-
-                        <li class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
+                    <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
+                    <!--  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa  ng-repeat qua sotto -->
+                        <li ng-repeat="film in cart track by $index" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
-                                <img class="responsive-img" src="img/temporary/item-1.jpg" alt="locandina" />
+                                <img class="responsive-img" src="{{film.playbill}}" alt="locandina" />
                             </div>
                             <div class="item-details col s8 m8 l8"> <!-- titolo, data, doropdowns -->
                                 <div class="row">
                                     <div class="col s9 m9 l9">
-                                        <h5>Titolo</h5> <!-- titolo -->
-                                        <h6>29/05/2015, 21:00</h6> <!-- data -->
+                                        <h5>{{film.title}}</h5> <!-- titolo -->
+                                        <h6>{{film.date}}, {{film.time}}</h6> <!-- data -->
                                     </div>
-                                    <i class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
+                                    <i ng-click="cc.removeFromCart($index)" class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
                                 </div>
                                 <div class="row">
                                     <div class="col s7 m7 l7">
@@ -116,14 +117,15 @@
                                 <div class="row"> <!-- dropdowns -->
                                     <div class="col s7 m7 l7"> <!-- dropdown tipologia biglietto -->
                                         <select class="browser-default black-text">
-                                            <option value="1" selected>Adulto</option>
-                                            <option value="2">Bambino</option>
-                                            <option value="3">Regista</option>
+                                            <option value="normale" selected>Normale</option>
+                                            <option value="ridotto">Ridotto</option>
+                                            <option value="militari">Militari</option>
+                                            <option value="disabili">Disabili</option>
                                         </select>
                                     </div>
                                     <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4"> <!-- dropdown quantità biglietti -->
                                         <select class="browser-default black-text">
-                                            <option selected value="-1">Cancella</option>
+                                            <option selected value="0">Cancella</option>
                                             <option value="1" selected>1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -139,15 +141,12 @@
                         </li>  <!-- END singolo film acquistato -->
                     </ul> <!-- END lista acquisti -->
 
-                    <div class="side-cart-content-tickets col s12 offset-m1 m10 offset-l1 l10">
-                        <!-- dropdown scelta tipo (young,senior,...) e quantità di ticket -->
-                    </div>
-
                 </div>
                 <div class="side-cart-actions row"> <!-- div in fondo con bottone compra e totale -->
                     <div class="side-cart-total row">
                         <h5 class="col s7 m7 l7">Totale:</h5>
-                        <h5 class="total col s5 m5 l5 right-align">13.00 €</h5>
+                        <!--  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  espressione qua sotto -->
+                        <h5 class="total col s5 m5 l5 right-align">{{cc.total | currency:"€ "}}</h5>
                     </div>
                     <button class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
                 </div>

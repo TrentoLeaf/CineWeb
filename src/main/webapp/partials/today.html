@@ -1,22 +1,23 @@
-<div ng-controller="PlaysController as ctrl">
-    <div ng-repeat="date in ctrl.archive">
-        <div class="row">
-            <h1 class="brand-logo center yellow-text text-accent-4">{{date.date}}</h1>
-        </div>
-
-        <ul class="cd-items cd-container">
-            <li class="cd-item" ng-repeat="film in date.films">
-                <img  ng-src="{{film.playbill}}" alt="Item Preview">
-                <a class="cd-trigger" ng-click="ctrl.setCurrent($parent.$index, $index)">{{film.title}}</a>
-            </li>
-        </ul>
-
-        <div class="cd-quick-view">
-            <div class="cd-slider-wrapper">
-                <ul class="cd-slider">
-                    <li class="selected"><img ng-src="{{ctrl.current.playbill}}" alt="PlayBill"></li>
-                </ul>
+<div ng-controller="PlaysController as ctrl" >
+    <did ng-controller="CartController as cc">
+        <div ng-repeat="date in ctrl.archive">
+            <div class="row">
+                <h1 class="brand-logo center yellow-text text-accent-4">{{date.date}}</h1>
             </div>
+
+            <ul class="cd-items cd-container">
+                <li class="cd-item" ng-repeat="film in date.films">
+                    <img  ng-src="{{film.playbill}}" alt="Item Preview">
+                    <a class="cd-trigger" ng-click="ctrl.setCurrent($parent.$index, $index)">{{film.title}}</a>
+                </li>
+            </ul>
+
+            <div class="cd-quick-view">
+                <div class="cd-slider-wrapper">
+                    <ul class="cd-slider">
+                        <li class="selected"><img ng-src="{{ctrl.current.playbill}}" alt="PlayBill"></li>
+                    </ul>
+                </div>
 
             <div class="cd-item-info">
                 <h2>{{ctrl.current.title}}</h2>
@@ -24,17 +25,16 @@
                 <p>{{ctrl.current.plot}}</p>
                 <p>{{ctrl.current.duration}}</p>
                 <ul class="cd-item-action">
-                    <li><a class="btn grey darken-3 yellow-text text-accent-3" ng-click="ctrl.addToCart(ctrl.current)"><i class="mdi-editor-attach-money"></i>Acquistami!</a></li>
+                    <li><a class="btn-large grey darken-3 yellow-text text-accent-3" ng-click="cc.addToCart(ctrl.current)"><i class="mdi-editor-attach-money prefix"></i>Acquistami!</a></li>
                 </ul>
                 <video class="responsive-video" controls>
                     <source ng-src="{{ctrl.current.trailer}}" type="video/mp4">
                 </video>
             </div>
-            <a class="cd-close">Close</a>
         </div>
-    </div>
 
-    <script src="../js/jquery-2.1.1.js"></script>
-    <script src="../js/velocity.min.js"></script>
-    <script src="../js/today.js"></script>
+        <script src="../js/jquery-2.1.1.js"></script>
+        <script src="../js/velocity.min.js"></script>
+        <script src="../js/today.js"></script>
+    </did>
 </div>

@@ -453,32 +453,60 @@ public class DB {
         return code;
     }
 
-    // get the confirmation code for a given user -> TEST PORPOISE ONLY
-    public String getConfirmationCode(String email) throws SQLException {
+    // get the reset password code for a given user -> TEST PORPOISE ONLY
+    public String getResetPasswordCode(String email) throws SQLException {
         final String query = "SELECT r.code FROM resets r NATURAL JOIN users u WHERE u.email = ? LIMIT 1;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setString(1, email);
 
             ResultSet rs = stm.executeQuery();
-            rs.next();
 
-            return rs.getString(1);
+            if(rs.next()) {
+                return rs.getString(1);
+            } else {
+                return null;
+            }
+        }
+    }
+
+    // get the confirmation code for a given user -> TEST PORPOISE ONLY
+    public String getConfirmationCode(String email) throws SQLException {
+        final String query = "SELECT r.code FROM registration_codes r NATURAL JOIN users u WHERE u.email = ? LIMIT 1;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setString(1, email);
+
+            ResultSet rs = stm.executeQuery();
+
+            if(rs.next()) {
+                return rs.getString(1);
+            } else {
+                return null;
+            }
         }
     }
 
     // check a confirmation code
-    public boolean checkConfirmationCode(int userID, String code) throws SQLException {
-        final String query = "SELECT COUNT(*) FROM registration_codes WHERE uid = ? AND code = ?;";
+    public void confirmUser(String code) throws SQLException, UserNotFoundException, UserAlreadyActivatedException {
+        final String queryFindUser = "SELECT uid FROM registration_codes WHERE code = ?;";
 
-        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setInt(1, userID);
-            stm.setString(2, code);
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(queryFindUser)) {
+            stm.setString(1, code);
 
             ResultSet rs = stm.executeQuery();
-            rs.next();
+            if (rs.next()) {
+                final int uid = rs.getInt(1);
 
-            return rs.getInt(1) == 1;
+                if (existsAndEnabledUser(uid)) {
+                    throw new UserAlreadyActivatedException();
+                }
+
+                changeUserStatus(rs.getInt(1), true);
+
+            } else {
+                throw new UserNotFoundException();
+            }
         }
     }
 

@@ -6,7 +6,7 @@ $(document).ready(function () {
     $('select').material_select();
 
 
-    // intercept all clicks
+   /* // intercept all clicks
     $('main').on('click.hideSide', function (e) {
         // check if click come from hide on mobile buttons
         if ($(e.target).hasClass('hide-side-nav-button-mobile')) {
@@ -21,7 +21,7 @@ $(document).ready(function () {
                 close_Sidediv();
             }
         }
-    });
+    });*/
 
 });
 
@@ -34,7 +34,7 @@ function close_Sidediv() {
 (function () {
     'use strict';
 
-    var app = angular.module('cineweb', ['PlaysModule', 'ngRoute', 'tabmodule', 'loginModule', 'registrationModule', 'usermodule']);
+    var app = angular.module('cineweb', ['PlaysModule', 'CartModule', 'ngRoute', 'tabmodule', 'loginModule', 'registrationModule', 'usermodule']);
 
     app.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/', {
