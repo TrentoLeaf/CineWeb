@@ -82,19 +82,19 @@
         <ul class="side-div-menu">
             <li ng-controller="PlaysController as ctrl" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
                 <div class="side-cart-content row"> <!-- Contenuto carrello -->
-                    <ul ng-repeat="film in ctrl.cart" class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
+                    <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
 
-                        <li class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
+                        <li ng-repeat="film in ctrl.cart" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
-                                <img class="responsive-img" src="img/temporary/item-1.jpg" alt="locandina" />
+                                <img class="responsive-img" src="{{film.playbill}}" alt="locandina" />
                             </div>
                             <div class="item-details col s8 m8 l8"> <!-- titolo, data, doropdowns -->
                                 <div class="row">
                                     <div class="col s9 m9 l9">
-                                        <h5>Titolo</h5> <!-- titolo -->
-                                        <h6>29/05/2015, 21:00</h6> <!-- data -->
+                                        <h5>{{film.title}}</h5> <!-- titolo -->
+                                        <h6>{{film.date}}, {{film.time}}</h6> <!-- data -->
                                     </div>
-                                    <i class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
+                                    <i ng-click="ctrl.removeFromCart($index)" class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
                                 </div>
                                 <div class="row">
                                     <div class="col s7 m7 l7">
@@ -107,14 +107,15 @@
                                 <div class="row"> <!-- dropdowns -->
                                     <div class="col s7 m7 l7"> <!-- dropdown tipologia biglietto -->
                                         <select class="browser-default black-text">
-                                            <option value="1" selected>Adulto</option>
-                                            <option value="2">Bambino</option>
-                                            <option value="3">Regista</option>
+                                            <option value="normale" selected>Normale</option>
+                                            <option value="ridotto">Ridotto</option>
+                                            <option value="militari">Militari</option>
+                                            <option value="disabili">Disabili</option>
                                         </select>
                                     </div>
                                     <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4"> <!-- dropdown quantità biglietti -->
                                         <select class="browser-default black-text">
-                                            <option selected value="-1">Cancella</option>
+                                            <option selected value="0">Cancella</option>
                                             <option value="1" selected>1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -130,15 +131,11 @@
                         </li>  <!-- END singolo film acquistato -->
                     </ul> <!-- END lista acquisti -->
 
-                    <div class="side-cart-content-tickets col s12 offset-m1 m10 offset-l1 l10">
-                        <!-- dropdown scelta tipo (young,senior,...) e quantità di ticket -->
-                    </div>
-
                 </div>
                 <div class="side-cart-actions row"> <!-- div in fondo con bottone compra e totale -->
                     <div class="side-cart-total row">
                         <h5 class="col s7 m7 l7">Totale:</h5>
-                        <h5 class="total col s5 m5 l5 right-align">13.00 €</h5>
+                        <h5 class="total col s5 m5 l5 right-align">{{ctrl.total}} €</h5>
                     </div>
                     <button class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
                 </div>

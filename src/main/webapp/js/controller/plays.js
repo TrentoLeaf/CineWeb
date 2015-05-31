@@ -6,7 +6,14 @@
     angular.module('PlaysModule', []).controller('PlaysController', function () {
         this.current = {};
 
-        this.cart = [];
+        this.cart = [ {
+            title: "Titolo 1",
+            time: "Orario 1",
+            gender: "Genere 1",
+            playbill: "img/temporary/img1.jpg",
+            description: "Descrizione 1"
+        }];
+        this.total = 0.00;
 
         this.archive = [
             {
@@ -82,11 +89,12 @@
         };
 
         this.addToCart = function(film) {
-            film['normale'] = 1;
-            film['ridotto'] = 0;
-            film['militari'] = 0;
-            film['disabili'] = 0;
-            this.cart.push(film);
+                film['normale'] = 1;
+                film['ridotto'] = 0;
+                film['militari'] = 0;
+                film['disabili'] = 0;
+                this.cart.push(film);
+                console.log(this.cart);
         };
 
         this.removeFromCart = function(film) {
@@ -97,6 +105,14 @@
             }
         };
 
+        this.updateTiket = function (film, type, number) {
+            film[type] = number;
+        }
+
+        this.updateTotal = function () {
+
+
+        };
 
     });
 })();
