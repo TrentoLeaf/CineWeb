@@ -6,7 +6,7 @@ $(document).ready(function () {
     $('select').material_select();
 
 
-    // intercept all clicks
+   /* // intercept all clicks
     $('main').on('click.hideSide', function (e) {
         // check if click come from hide on mobile buttons
         if ($(e.target).hasClass('hide-side-nav-button-mobile')) {
@@ -21,7 +21,7 @@ $(document).ready(function () {
                 close_Sidediv();
             }
         }
-    });
+    });*/
 
 });
 

@@ -14,11 +14,13 @@
                 // hide side-div
                 $('.side-div').removeClass('side-div-w');
                 this.tab = -1;
-            } else {
-
+            } else if (tab == -1) {
+                // hide side-div
+                $('.side-div').removeClass('side-div-w');
+                this.tab = -1;
+            }   else {
                 // show side-div
                 $('.side-div').addClass('side-div-w');
-
                 this.tab = tab;
             }
 
