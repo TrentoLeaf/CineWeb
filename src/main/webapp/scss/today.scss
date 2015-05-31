@@ -21,10 +21,6 @@ Primary style
 }
 
 body {
-	font: {
-		size: 100%;
-		family: $primary-font; // variables inside partials > _variables.scss
-	}
 	color: $color-1;
 	background-color: $color-3;
 
@@ -306,7 +302,7 @@ header {
 		@include transform(translateZ(0));
 		-webkit-backface-visibility: hidden;
 		backface-visibility: hidden;
-		@include transition(opacity .2s, background .2s);
+		@include transition(opacity .1s, background .1s);
 
 		&::before, &::after {
 			/* create arrows in CSS */
@@ -378,19 +374,6 @@ header {
 		}
 	}
 
-	.add-to-cart {
-		@include appearance(none);
-		@include border-radius;
-		border: none;
-		padding: .6em 1.2em;
-		background-color: $color-2;
-		color: $color-4;
-		@include font-smoothing;
-		font-family: $primary-font;
-		@include font-size(16px);
-		cursor: pointer;
-	}
-
 	.add-content & {
 		/* class added at the end of the width animation, used to show the content */
 		position: relative;
@@ -398,7 +381,7 @@ header {
 		opacity: 1;
 
 		h2 {
-			@include animation(cd-slide-in .3s);
+			@include animation(cd-slide-in .3xs);
 		}
 
 		p {
