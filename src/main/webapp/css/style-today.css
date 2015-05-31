@@ -146,7 +146,7 @@ header {
   transition: opacity 0.2s, background-color 0.2s; }
   .no-touch .cd-trigger:hover {
     background: rgba(0, 0, 0, 0.6); }
-    @media only screen and (min-width: 600px) {
+    @media only screen and (min-width: 300px) {
         .cd-trigger {
         /* always visible on small devices */
         visibility: visible;
@@ -170,6 +170,37 @@ header {
 .cd-quick-view {
   /* quick view non available on small devices */
   display: none; }
+@media only screen and (min-width: 300px) {
+    .cd-quick-view {
+        top: 20% !important;
+        display: inline-block;
+        position: fixed;
+        max-width: 900px;
+        visibility: hidden;
+        /* Force Hardware Acceleration in WebKit */
+        -webkit-transform: translateZ(0);
+        -moz-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        -o-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        will-change: left, top, width;
+        z-index: 1; }
+    .cd-quick-view::after {
+        clear: both;
+        content: "";
+        display: table; }
+    .cd-quick-view.is-visible {
+        /* class added when user clicks on .cd-trigger */
+        visibility: visible; }
+    .cd-quick-view.animate-width {
+        /* class added at the end of the first zoom-in animation */
+        background-color: #ffffff;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+        -webkit-transition: box-shadow 0.3s;
+        -moz-transition: box-shadow 0.3s;
+        transition: box-shadow 0.3s; } }
   @media only screen and (min-width: 1024px) {
     .cd-quick-view {
       display: block;
