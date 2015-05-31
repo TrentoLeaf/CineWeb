@@ -3,7 +3,7 @@
 
     var app = angular.module('loginModule', ['usersModule', 'storageModule', 'constantsModule']);
 
-    app.controller('LoginController', ['Auth', 'StorageService', function (Auth, StorageService) {
+    app.controller('LoginController', ['$location', 'Auth', 'StorageService', function ($location, Auth, StorageService) {
 
         var ctrl = this;
 
@@ -69,6 +69,7 @@
 
         this.register = function (email) {
             // redirect al partial registrazione
+            $location.path('/registration');
         }
 
 

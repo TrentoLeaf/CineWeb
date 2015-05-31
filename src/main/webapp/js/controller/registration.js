@@ -1,18 +1,32 @@
 (function () {
     'use strict';
 
-    var app = angular.module('registration-module', [])
+    angular.module('registrationModule', ['usersModule'])
+        .controller('RegistrationCtrl', ['Auth', function (Auth) {
 
-        .controller('registrationCtrl', function () {
+            console.log("yeeeeeeeeeeee");
 
-        this.user = "";
+            var ctrl = this;
 
-        this.submit = function () {
-            console.log(this.user);
-            // TODO! call backend
-        };
+            this.status = "";
+            this.user = {};
 
-})
+            var setStatus = function (msg) {
+                ctrl.status = msg;
+            };
 
+            this.submit = function (user) {
+                console.log(user);
 
-});
+                Auth.registration(user.email, user.password, user.firstName, user.secondName).then(
+                    function (data) {
+                        setStatus("OK " + data);
+                    },
+                    function (error) {
+                        setStatus("ERROR " + error);
+                    }
+                );
+            };
+        }]);
+
+})();
