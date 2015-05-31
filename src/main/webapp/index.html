@@ -35,6 +35,7 @@
     <script src="js/services/users.js"></script>
     <script src="js/controller/login.js"></script>
     <script src="js/controller/plays.js"></script>
+    <script src="js/controller/cart.js"></script>
     <script src="js/controller/tab.js"></script>
     <script src="js/controller/registration.js"></script>
     <script src="js/controller/userArea.js"></script>
@@ -87,11 +88,11 @@
             <button ng-click="tab.setTab(-1)" class="hide-side-nav-button-mobile btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i> Torna indietro</button>
         </div>
         <ul class="side-div-menu">
-            <li ng-controller="PlaysController as ctrl" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
+            <li ng-controller="CartController as cc" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
                 <div class="side-cart-content row"> <!-- Contenuto carrello -->
                     <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
-
-                        <li ng-repeat="film in ctrl.cart" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
+                    <!--  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa  ng-repeat qua sotto -->
+                        <li ng-repeat="film in cc.cart" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
                                 <img class="responsive-img" src="{{film.playbill}}" alt="locandina" />
                             </div>
@@ -101,7 +102,7 @@
                                         <h5>{{film.title}}</h5> <!-- titolo -->
                                         <h6>{{film.date}}, {{film.time}}</h6> <!-- data -->
                                     </div>
-                                    <i ng-click="ctrl.removeFromCart($index)" class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
+                                    <i ng-click="cc.removeFromCart($index)" class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
                                 </div>
                                 <div class="row">
                                     <div class="col s7 m7 l7">
@@ -142,7 +143,8 @@
                 <div class="side-cart-actions row"> <!-- div in fondo con bottone compra e totale -->
                     <div class="side-cart-total row">
                         <h5 class="col s7 m7 l7">Totale:</h5>
-                        <h5 class="total col s5 m5 l5 right-align">{{ctrl.total | currency:"€ "}}</h5>
+                        <!--  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  espressione qua sotto -->
+                        <h5 class="total col s5 m5 l5 right-align">{{cc.total | currency:"€ "}}</h5>
                     </div>
                     <button class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
                 </div>
