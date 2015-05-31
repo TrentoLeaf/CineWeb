@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Film implements Serializable {
 
-    private int id;
+    private int fid;
     private String title;
     private String genre;
     private String trailer;
@@ -24,12 +24,12 @@ public class Film implements Serializable {
         this.duration = duration;
     }
 
-    public int getId() {
-        return id;
+    public int getFid() {
+        return fid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setFid(int id) {
+        this.fid = id;
     }
 
     public String getTitle() {
@@ -82,7 +82,7 @@ public class Film implements Serializable {
 
     @Override
     public int hashCode() {
-        return id;
+        return fid;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class Film implements Serializable {
 
         Film film = (Film) o;
 
-        if (id != film.id) return false;
+        if (fid != film.fid) return false;
         if (duration != film.duration) return false;
         if (!title.equals(film.title)) return false;
         if (genre != null ? !genre.equals(film.genre) : film.genre != null) return false;
@@ -104,7 +104,7 @@ public class Film implements Serializable {
     @Override
     public String toString() {
         return "Film{" +
-                "id=" + id +
+                "fid=" + fid +
                 ", title='" + title + '\'' +
                 ", genre='" + genre + '\'' +
                 ", trailer='" + trailer + '\'' +
