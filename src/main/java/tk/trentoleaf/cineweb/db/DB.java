@@ -586,7 +586,7 @@ public class DB {
             stm.setInt(6, film.getDuration());
             ResultSet rs = stm.executeQuery();
             rs.next();
-            film.setId(rs.getInt("fid"));
+            film.setFid(rs.getInt("fid"));
         }
     }
 
@@ -599,7 +599,7 @@ public class DB {
 
             while (rs.next()) {
                 Film f = new Film();
-                f.setId(rs.getInt("fid"));
+                f.setFid(rs.getInt("fid"));
                 f.setTitle(rs.getString("title"));
                 f.setGenre(rs.getString("genre"));
                 f.setTrailer(rs.getString("trailer"));
@@ -624,7 +624,7 @@ public class DB {
             stm.setString(4, film.getPlaybill());
             stm.setString(5, film.getPlot());
             stm.setInt(6, film.getDuration());
-            stm.setInt(7, film.getId());
+            stm.setInt(7, film.getFid());
 
             int rows = stm.executeUpdate();
             if (rows != 1) {
@@ -635,7 +635,7 @@ public class DB {
 
     // delete film
     public void deleteFilm(Film film) throws SQLException, EntryNotFoundException {
-        deleteFilm(film.getId());
+        deleteFilm(film.getFid());
     }
 
     // delete film
