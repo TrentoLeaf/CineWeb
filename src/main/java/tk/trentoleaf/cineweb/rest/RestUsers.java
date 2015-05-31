@@ -205,10 +205,19 @@ public class RestUsers {
     }
 
     @GET
-    @Path("/{id}")
-    public Object getUser(@PathParam("id") int id) {
-        // TODO -> waiting for DB api
-        return id;
+    @Path("/me")
+    public UserDetails getUser(@Context HttpServletRequest request) throws NotFoundException {
+
+        final HttpSession session = request.getSession(false);
+        if (session != null) {
+            final User current = (User) session.getAttribute("user");
+            if (current != null) {
+                return new UserDetails(current);
+            }
+        }
+
+        // if here -> no user logged in
+        throw NotFoundException.USER_NOT_FOUND;
     }
 
     @GET
