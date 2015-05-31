@@ -49,7 +49,6 @@ main {
     z-index: 2;
     transition: width 0.3s; }
     main .side-div .side-div-menu {
-      display: flex;
       height: 100%; }
     main .side-div .hide-side-nav-button-mobile {
       margin-top: 1em; }
@@ -76,7 +75,6 @@ main {
             height: 2em;
             margin-bottom: 0.5em; }
     main .side-div .side-cart .side-cart-actions {
-      align-self: flex-end;
       box-sizing: border-box;
       position: absolute;
       width: 100%;

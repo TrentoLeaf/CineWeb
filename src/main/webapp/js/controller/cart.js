@@ -4,12 +4,15 @@
     angular.module('CartModule', []).controller('CartController', ['$rootScope', function ($rootScope) {
 
         this.prices = {
-            ticket_normale: 8,
-            ticket_ridotto: 5,
+            ticket_normale: 8.50,
+            ticket_ridotto: 5.50,
             ticket_militare: 6,
             ticket_disabile: 7
         };
 
+        this.types = {
+
+        };
 
         // carrello che contiene oggetti film modificati
         $rootScope.cart = [{
@@ -25,7 +28,7 @@
             disabili: 0
         }];
 
-        this.total = 0.00;
+        $rootScope.total = 0.00;
 
         this.addToCart = function (film) {
             // numero di ticket per tipologia
@@ -51,11 +54,11 @@
         };
 
         this.updateTotal = function () {
-            this.total = 0;
+            $rootScope.total = 0;
 
             for (var i = 0; i < $rootScope.cart.length; i++) {
 
-                this.total = this.total
+                $rootScope.total = $rootScope.total
                     + ((this.prices['ticket_normale'] * $rootScope.cart[i]['normale'])
                     + (this.prices['ticket_ridotto'] * $rootScope.cart[i]['ridotto'])
                     + (this.prices['ticket_militare'] * $rootScope.cart[i]['militari'])

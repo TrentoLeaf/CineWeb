@@ -68,7 +68,7 @@ main {
     transition: width 0.3s;
 
     .side-div-menu {
-      display: flex;
+      // display: flex;
       height: 100%;
     }
 
@@ -126,7 +126,7 @@ main {
       }
 
       .side-cart-actions {
-        align-self: flex-end;
+        //align-self: flex-end;
 
         box-sizing: border-box;
         position: absolute;

@@ -8,6 +8,7 @@
         var ctrl = this;
 
         this.user = {};
+        this.logged = false;
 
         this.data = "";
         this.error = "";
@@ -30,8 +31,14 @@
                 function (data) {
                     setData(data);
                     StorageService.login(data);
+                    // set logged var
+                    ctrl.logged = true;
+                    // redirect al partial principale
+                    $location.path('/today');
+
                 },
                 function (error) {
+                    ctrl.logged = false;
                     setError('Nome utente o password errati.');
                 }
             );
@@ -42,9 +49,11 @@
                 function () {
                     setData("Logout eseguito con successo.");
                     StorageService.logout();
+                    ctrl.logged = false;
+                    $location.path('/today');
                 },
                 function () {
-                    setError("Logout fallito.");
+                    setError("Logout fallito. Riprova.");
                     StorageService.logout();
                 }
             )
@@ -64,6 +73,10 @@
         this.losePass = function (email) {
             // redirect to a new partial
         };
+
+        this.toUserArea = function () {
+            $location.path('/userArea');
+        }
 
         this.register = function (email) {
             // redirect al partial registrazione

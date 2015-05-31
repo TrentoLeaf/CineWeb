@@ -91,7 +91,7 @@
             <li ng-controller="CartController as cc" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
                 <div class="side-cart-content row"> <!-- Contenuto carrello -->
                     <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
-                    <!--  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa  ng-repeat qua sotto -->
+                        <!--  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa  ng-repeat qua sotto -->
                         <li ng-repeat="film in cart track by $index" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
                                 <img class="responsive-img" src="{{film.playbill}}" alt="locandina" />
@@ -144,14 +144,14 @@
                     <div class="side-cart-total row">
                         <h5 class="col s7 m7 l7">Totale:</h5>
                         <!--  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  espressione qua sotto -->
-                        <h5 class="total col s5 m5 l5 right-align">{{cc.total | currency:"€ "}}</h5>
+                        <h5 class="total col s5 m5 l5 right-align">{{total | currency:"€ "}}</h5>
                     </div>
                     <button class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
                 </div>
             </li>
             <li class="side-login side-nav-element" ng-show="tab.isSet(2)">
-                <div ng-controller="LoginController as c" class="row grey darken-4">
-                    <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+                <ul ng-controller="LoginController as c" class="row grey darken-4">
+                    <li ng-hide="c.logged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- login page -->
                         <h4>Login</h4>
                         <h6 ng-show="c.error" class="red-text">{{c.error}}</h6>
                         <form>
@@ -166,7 +166,8 @@
                                 <label for="pass" class="white-text">Password</label>
                             </div>
                             <div class="row">
-                                <a  ng-click="c.losePass(c.user.email)" class="yellow-text text-accent-4" type="submit" name="forgot" href="#">Password dimenticata? Clicca qui.</a>
+                                <!-- TODO redirect to userPass partial -->
+                                <a  ng-click="c.losePass(c.user.email)" class="yellow-text text-accent-4" type="submit" name="forgot" href="#resetPass">Password dimenticata? Clicca qui.</a>
                             </div>
                             <div class="row">
                                 <button ng-click="c.login(c.user.email, c.user.pass)" class="col s12 m12 l12 btn-large green white-text waves-effect waves-light" type="submit" name="login">Login
@@ -175,12 +176,29 @@
                             </div>
                             <div class="row">
                                 <button ng-click="c.register(c.user.email)" class="col s12 m12 l12 btn yellow accent-4 black-text waves-effect waves-light" type="submit" name="register">Registrati
-                                    <i class="mdi-action-assignment black-text left"></i>
+                                    <i class="mdi-action-description black-text left"></i>
                                 </button>
                             </div>
                         </form>
-                    </div>
-                </div>
+                    </li>
+                    <li ng-show="c.logged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- altready login page -->
+                        <div class="row">
+                            <div class="col s7 m7 l7">
+                                <h6 ng-show="c.error" class="red-text">{{c.error}}</h6>
+                            </div>
+                            <div class="col s5 m5 l5">
+                                <button ng-click="c.logout()" class="btn red white-text">Logout</button>
+                            </div>
+                        </div>
+                        <h4>Benvenuto</h4>
+                        <h5>{{c.user.name}}</h5> <!-- TODO definire -->
+                        <h6>{{c.email}}</h6> <!-- TODO definire -->
+                        <div class="row" style="margin-top:3em;">
+                            <!-- TODO redirect to userArea partial -->
+                            <button ng-click="c.toUserArea()" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-action-assignment right"></i>I tuoi dati</button>
+                        </div>
+                    </li>
+                </ul>
             </li>
             <li class="side-search side-nav-element" ng-show="tab.isSet(3)">
                 <div class="row">
