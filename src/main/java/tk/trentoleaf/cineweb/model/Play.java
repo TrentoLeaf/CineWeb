@@ -16,7 +16,7 @@ public class Play implements Serializable {
     private transient Room room;
 
     public Play(Film film, Room room, DateTime time, boolean _3d) {
-        this.fid = film.getId();
+        this.fid = film.getFid();
         this.rid = room.getRid();
         this.time = time;
         this._3d = _3d;

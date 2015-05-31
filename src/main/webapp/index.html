@@ -78,15 +78,15 @@
 
     </div>
 
-    <div class="side-div grey darken-4 white-text"> <!-- add hide class  (to be removed from angular)-->
+    <div class="side-div grey darken-4 white-text">
         <!-- Only Mobile: bottone per chiudere la side-div-->
         <div class="row">
             <button class="hide-side-nav-button-mobile btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i> Torna indietro</button>
         </div>
         <ul class="side-div-menu">
-            <li class="side-cart side-nav-element" ng-show="tab.isSet(1)">
+            <li ng-controller="PlaysController as ctrl" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
                 <div class="side-cart-content row"> <!-- Contenuto carrello -->
-                    <ul class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
+                    <ul ng-repeat="film in ctrl.cart" class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
 
                         <li class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
@@ -125,23 +125,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col s7 m7 l7">
-                                        <select class="browser-default black-text">
-                                            <option value="1" selected>Adulto</option>
-                                            <option value="2">Bambino</option>
-                                            <option value="3">Regista</option>
-                                        </select>
-                                    </div>
-                                    <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4">
-                                        <select class="browser-default black-text">
-                                            <option selected value="-1">Cancella</option>
-                                            <option value="1" selected>1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                        </select>
-                                    </div>
-                                </div>
+
 
                                 <div class="row"> <!-- pulsante di aggiunta tipologia -->
                                     <a class="col s12 m12 l12  white-text waves-effect waves-yellow btn-flat center-align">Aggiungi tipologia</a>

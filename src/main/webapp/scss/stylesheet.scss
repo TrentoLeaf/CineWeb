@@ -1,7 +1,8 @@
 // variables
 
 /* slider */
-/*::-webkit-scrollbar {
+/*
+::-webkit-scrollbar {
   background-color: rgba(0,0,0,0);
 }
 
@@ -10,7 +11,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 1);
+
+  background-color: rgba(0, 0, 0, 0.2);
+} /
+
+::-webkit-scrollbar-button {
+  background-color: #7c2929;
 }
 
 ::-webkit-scrollbar-button { //#f0f0f0
@@ -20,7 +26,8 @@
 
 ::-webkit-scrollbar-corner {
   background-color: black;
-} */
+}
+*/
 
 #logo{
   max-height: 100%;

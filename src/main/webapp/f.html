@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html ng-app="test">
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Test</title>
+
+    <script src="lib/angular.min.js"></script>
+    <script src="lib/angular-resource.min.js"></script>
+    <script src="lib/angular-locker.min.js"></script>
+
+    <script src="js/services/constants.js"></script>
+    <script src="js/services/storage.js"></script>
+    <script src="js/services/filmsPlays.js"></script>
+    <script src="js/controller/f.js"></script>
+
+</head>
+<body>
+
+<h1>{{7 + 5}}</h1>
+
+<div ng-controller="TestController as c">
+
+    <p ng-show="c.data">{{c.data | json:4}}</p>
+    <p ng-show="c.data">LEN: {{c.data.length}}</p>
+    <p ng-show="c.error">ERROR: {{c.error}}</p>
+
+    <button ng-click="c.films()">FILMS</button>
+    <button ng-click="c.plays()">PLAYS</button>
+    <button ng-click="c.playsByDate()">FIGO</button>
+</div>
+
+</body>
+</html>

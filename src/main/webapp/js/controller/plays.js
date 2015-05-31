@@ -76,13 +76,27 @@
             }
         ];
 
-        this.setCurrent = function(date, film){
+        this.setCurrent = function(date, film) {
             this.current = this.archive[date].films[film];
+            this.current['date'] = date;
         };
 
-        this.addToCart = function(currentFilm){
-            this.cart.push(currentFilm);
+        this.addToCart = function(film) {
+            film['normale'] = 1;
+            film['ridotto'] = 0;
+            film['militari'] = 0;
+            film['disabili'] = 0;
+            this.cart.push(film);
         };
+
+        this.removeFromCart = function(film) {
+
+            var i = this.cart.indexOf(film);
+            if (i > -1) {
+                this.cart.splice(film);
+            }
+        };
+
 
     });
 })();
