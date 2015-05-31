@@ -62,6 +62,16 @@
                         .error(function (data, status) {
                             $log.warn('REGISTRATION FAILED: ' + status + " " + data);
                         });
+                },
+
+                forgotPassword: function(email) {
+                    return $http.post(BASE_USERS + "/forgot-password", {email: email})
+                        .success(function (data) {
+                            $log.info('FORGOT PASSWORD OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('FORGOT PASSWORD FAILED: ' + status + " " + data);
+                        });
                 }
             }
         }]);
