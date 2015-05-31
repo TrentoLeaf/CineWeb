@@ -8,6 +8,7 @@ import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.RestUsers;
 import tk.trentoleaf.cineweb.rest.entities.Auth;
 import tk.trentoleaf.cineweb.rest.entities.ChangePassword;
+import tk.trentoleaf.cineweb.rest.entities.ForgotPassword;
 import tk.trentoleaf.cineweb.rest.entities.Registration;
 import tk.trentoleaf.cineweb.rest.handlers.BadRequestHandler;
 import tk.trentoleaf.cineweb.rest.handlers.ConflictHandler;
@@ -210,6 +211,54 @@ public class RestUsersTest extends MyJerseyTest {
         final Response r2 = getTarget().path("/users/registration").request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.json(new Registration("email@trentoleaf.tk", "password", "name", "surname")));
         assertEquals(409, r2.getStatus());
+    }
+
+    @Test
+    public void forgotPasswordSuccess() throws Exception {
+
+        // create a user
+        db.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+
+        // forgot password request
+        final Response r1 = getTarget().path("/users/forgot-password").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ForgotPassword("teo@teo.com")));
+        assertEquals(200, r1.getStatus());
+    }
+
+    @Test
+    public void forgotPasswordFail1() throws Exception {
+
+        // create a user
+        db.createUser(new User(false, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+
+        // forgot password request
+        final Response r1 = getTarget().path("/users/forgot-password").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ForgotPassword("teo@teo.com")));
+        assertEquals(404, r1.getStatus());
+    }
+
+    @Test
+    public void forgotPasswordFail2() throws Exception {
+
+        // create a user
+        db.createUser(new User(false, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+
+        // forgot password request
+        final Response r1 = getTarget().path("/users/forgot-password").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ForgotPassword(null)));
+        assertEquals(400, r1.getStatus());
+    }
+
+    @Test
+    public void forgotPasswordFail3() throws Exception {
+
+        // create a user
+        db.createUser(new User(false, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+
+        // forgot password request
+        final Response r1 = getTarget().path("/users/forgot-password").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ForgotPassword("aaaaaaa@aaa.com")));
+        assertEquals(404, r1.getStatus());
     }
 
     @Test

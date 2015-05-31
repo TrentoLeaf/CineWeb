@@ -11,7 +11,7 @@ public class ForgotPassword implements Serializable {
     public ForgotPassword() {
     }
 
-    private ForgotPassword(String email) {
+    public ForgotPassword(String email) {
         this.email = email;
     }
 
