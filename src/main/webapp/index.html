@@ -34,6 +34,8 @@
     <script src="js/controller/plays.js"></script>
     <script src="js/controller/tab.js"></script>
     <script src="js/controller/registration.js"></script>
+    <script src="js/controller/userArea.js"></script>
+
 
 </head>
 <body ng-controller="TabController as tab">
@@ -46,6 +48,7 @@
                 <li><a class="yellow-text text-accent-4" href="#today">Oggi al Cinema</a></li>
                 <li><a class="yellow-text text-accent-4" href="#soon">Prossimamente</a></li>
                 <li><a class="yellow-text text-accent-4" href="#informations">Informazioni</a></li>
+                <li><a class="yellow-text text-accent-4" href="#me">Me</a></li>
             </ul>
 
             <ul class="right hide-on-med-and-down">
@@ -59,6 +62,7 @@
                 <li><a class="yellow-text text-accent-4" href="#today">Oggi</a></li>
                 <li><a class="yellow-text text-accent-4" href="#soon">Programmazione</a></li>
                 <li><a class="yellow-text text-accent-4" href="#informations">Informazioni</a></li>
+                <li><a class="yellow-text text-accent-4" href="#me">Me</a></li>
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(1)"><i class="mdi-action-shopping-cart left"></i>Carrello</a></li>
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle left"></i>Accedi</a></li>
             </ul>

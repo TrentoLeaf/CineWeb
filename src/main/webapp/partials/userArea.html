@@ -1,0 +1,23 @@
+<head>
+    <link href="css/userArea.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+<div ng-controller="UserController as ctrl">
+
+    <div class="page-title">
+        <h1>Il mio profilo</h1>
+    </div>
+
+    <div class="user-informations">
+        <h3>{{ctrl.user.firstName}}</h3>
+
+        <h3>{{ctrl.user.secondName}}</h3>
+
+        <h3>{{ctrl.user.email}}</h3>
+
+        <h3>{{ctrl.user.credit}}<i class="mdi-editor-attach-money"/></h3>
+    </div>
+</div>
+
+</body>
+</html>
