@@ -1,7 +1,14 @@
-body .page-title{
-    align-content: center;
+.page-title{
+    text-align: center;
 }
 
-body .page-title{
-    padding-left: 30px;
+td{
+    padding-left: 100px;
+    font-size: 25px;
+}
+
+.info-table{
+    width: 50%;
+    text-align: center;
+    tab-size: 10;
 }
