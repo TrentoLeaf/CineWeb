@@ -406,7 +406,7 @@ public class DB {
     }
 
     // exists user
-    private boolean existsUser(int userID) throws SQLException {
+    public boolean existsUser(int userID) throws SQLException {
         final String query = "SELECT COUNT(uid) FROM users WHERE uid = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
@@ -418,7 +418,7 @@ public class DB {
     }
 
     // exists user & enabled
-    private boolean existsAndEnabledUser(int userID) throws SQLException {
+    public boolean existsAndEnabledUser(int userID) throws SQLException {
         final String query = "SELECT COUNT(uid) FROM users WHERE enabled = TRUE AND uid = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {

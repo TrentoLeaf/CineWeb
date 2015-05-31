@@ -60,4 +60,26 @@ public class EmailSender {
             throw e;
         }
     }
+
+    // send a password recover
+    public void sendRecoverPasswordEmail(URI uri, User user, String code) throws SendGridException {
+
+        // create url
+        final String url = Utils.uriToRoot(uri) + "/#?r=" + code;
+
+        // create email
+        SendGrid.Email email = new SendGrid.Email();
+        email.setFrom(FROM);
+        email.addTo(user.getEmail());
+        email.setSubject(WE + " - Recupero password");
+        email.setText("TESTO... " + url);
+
+        // try to send, log failures
+        try {
+            sendgrid.send(email);
+        } catch (SendGridException e) {
+            logger.severe(e.toString());
+            throw e;
+        }
+    }
 }

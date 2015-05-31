@@ -1,16 +1,14 @@
 package tk.trentoleaf.cineweb.rest;
 
 import com.sendgrid.SendGridException;
+import org.apache.commons.lang3.StringUtils;
 import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.email.EmailSender;
 import tk.trentoleaf.cineweb.exceptions.ConstrainException;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
 import tk.trentoleaf.cineweb.model.User;
-import tk.trentoleaf.cineweb.rest.entities.Auth;
-import tk.trentoleaf.cineweb.rest.entities.ChangePassword;
-import tk.trentoleaf.cineweb.rest.entities.LoginOk;
-import tk.trentoleaf.cineweb.rest.entities.Registration;
+import tk.trentoleaf.cineweb.rest.entities.*;
 import tk.trentoleaf.cineweb.rest.exceptions.AuthFailedException;
 import tk.trentoleaf.cineweb.rest.exceptions.BadRequestException;
 import tk.trentoleaf.cineweb.rest.exceptions.ConflictException;
@@ -26,6 +24,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.ws.spi.http.HttpContext;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -148,13 +147,50 @@ public class RestUsers {
 
             } catch (SendGridException e) {
                 logger.severe("Cannot send verification email to: " + user.getEmail() + " --> " + e);
-                throw new BadRequestException("Bad email");
+                throw new BadRequestException("Bad email"); // TODO
             }
         } catch (ConstrainException | UserNotFoundException e) {
             throw ConflictException.EMAIL_IN_USE;
         }
 
         return Response.ok().build();
+    }
+
+    @POST
+    @Path("/forgot-password")
+    public Response forgotPassword(@Context UriInfo uriInfo, ForgotPassword forgotPassword) throws SQLException {
+
+        // validate email
+        if (forgotPassword == null && !forgotPassword.isValid()) {
+            throw new BadRequestException("Missing email");
+        }
+
+        // check if user exists
+        try {
+            final User user = db.getUser(forgotPassword.getEmail());
+
+            // check if enabled
+            if (!user.isEnabled()) {
+                throw new UserNotFoundException();
+            }
+
+            // if here -> request password reset
+            final String code = db.requestResetPassword(user.getUid());
+
+            // send email
+            try {
+                EmailSender.instance().sendRecoverPasswordEmail(uriInfo.getRequestUri(), user, code);
+            } catch (SendGridException e) {
+                logger.severe("Cannot send password recover email to: " + user.getEmail() + " --> " + e);
+                throw new BadRequestException("Bad email"); // TODO
+            }
+
+            // ok
+            return Response.ok().build();
+
+        } catch (UserNotFoundException e) {
+            throw NotFoundException.USER_NOT_FOUND;
+        }
     }
 
     @GET
