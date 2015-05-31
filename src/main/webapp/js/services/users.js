@@ -16,22 +16,20 @@
 
             return {
                 login: function (email, password) {
-                    var deferred = $q.defer();
-
-                    $http.post(BASE_USERS + '/login', {email: email, password: password})
+                    return $http.post(BASE_USERS + '/login', {email: email, password: password})
                         .success(function (data) {
-                            deferred.resolve(data);
+                            $log.info('LOGIN OK: ' + data);
                         })
-                        .error(function (data) {
+                        .error(function (data, status) {
                             $log.warn('LOGIN FAILED: ' + status + " " + data.error);
-                            deferred.reject(data.error);
                         });
-
-                    return deferred.promise;
                 },
 
                 logout: function () {
                     return $http.post(BASE_USERS + '/logout')
+                        .success(function (data) {
+                            $log.info('LOGOUT OK: ' + data);
+                        })
                         .error(function (data, status) {
                             $log.warn('LOGOUT FAILED: ' + status + " " + data);
                         });
@@ -42,7 +40,38 @@
                         email: email,
                         oldPassword: oldPassword,
                         newPassword: newPassword
-                    });
+                    })
+                        .success(function (data) {
+                            $log.info('CHANGE PASSWORD OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('CHANGE PASSWORD FAILED: ' + status + " " + data);
+                        });
+                },
+
+                registration: function (email, password, firstName, secondName) {
+                    return $http.post(BASE_USERS + '/registration', {
+                        email: email,
+                        password: password,
+                        firstName: firstName,
+                        secondName: secondName
+                    })
+                        .success(function (data) {
+                            $log.info('REGISTRATION OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('REGISTRATION FAILED: ' + status + " " + data);
+                        });
+                },
+
+                forgotPassword: function(email) {
+                    return $http.post(BASE_USERS + "/forgot-password", {email: email})
+                        .success(function (data) {
+                            $log.info('FORGOT PASSWORD OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('FORGOT PASSWORD FAILED: ' + status + " " + data);
+                        });
                 }
             }
         }]);

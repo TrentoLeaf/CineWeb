@@ -1,9 +1,9 @@
-<div class="row" ng-app="cineweb" ng-controller="registrationCtrl as ctrl">
+<div class="row">
     <form class="offset-s3 col s6">
 
         <div class="row">
             <div class="input-field col s12">
-                <input id="name" type="text" class="validate" ng-model="ctrl.user.name">
+                <input id="name" type="text" class="validate" ng-model="ctrl.user.firstName">
                 <label for="name">Nome</label>
             </div>
         </div>
@@ -11,7 +11,7 @@
         <div class="row">
 
             <div class="input-field col s12">
-                <input id="surname" type="text" class="validate" ng-model="ctrl.user.surname">
+                <input id="surname" type="text" class="validate" ng-model="ctrl.user.secondName">
                 <label for="surname">Cognome</label>
             </div>
 
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 black-text" ng-click="ctrl.submit()" name="action">Registrati
+        <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 black-text" ng-click="ctrl.submit(ctrl.user)">Registrati
             <i class="mdi-action-assignment left"></i>
         </button>
     </form>

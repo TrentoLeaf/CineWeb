@@ -21,19 +21,19 @@ public class EmailSender {
     // singleton
     private static EmailSender sender;
 
-    public static EmailSender instance() {
+    public static EmailSender instance() throws SendGridException {
         if (sender == null) {
             sender = new EmailSender();
         }
         return sender;
     }
 
-    private EmailSender() {
+    private EmailSender() throws SendGridException {
         final String username = System.getenv("SENDGRID_USERNAME");
         final String password = System.getenv("SENDGRID_PASSWORD");
 
         if (username == null || password == null) {
-            throw new RuntimeException("Please set the system variables SENDGRID_USERNAME & SENDGRID_PASSWORD");
+            throw new SendGridException(new RuntimeException("Please set the system variables SENDGRID_USERNAME & SENDGRID_PASSWORD"));
         }
 
         this.sendgrid = new SendGrid(username, password);
@@ -117,6 +117,28 @@ public class EmailSender {
                 "</tr></table></td>\n" +
                 "</tr></table></body>\n" +
                 "</html>\n");
+        // try to send, log failures
+        try {
+            sendgrid.send(email);
+        } catch (SendGridException e) {
+            logger.severe(e.toString());
+            throw e;
+        }
+    }
+
+    // send a password recover
+    public void sendRecoverPasswordEmail(URI uri, User user, String code) throws SendGridException {
+
+        // create url
+        final String url = Utils.uriToRoot(uri) + "/#?r=" + code;
+
+        // create email
+        SendGrid.Email email = new SendGrid.Email();
+        email.setFrom(FROM);
+        email.addTo(user.getEmail());
+        email.setSubject(WE + " - Recupero password");
+        email.setText("TESTO... " + url);
+
         // try to send, log failures
         try {
             sendgrid.send(email);
