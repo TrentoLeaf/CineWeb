@@ -7,8 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
     <title>CineWeb</title>
 
+    <!-- favicon -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+
     <!--Cose aggiunte da willy-->
-    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="../css/reset-today.css"> <!-- CSS reset -->
     <link rel="stylesheet" href="../css/style-today.css"> <!-- Resource style -->
     <script src="../js/modernizr.js"></script> <!-- Modernizr -->
@@ -34,6 +37,8 @@
     <script src="js/controller/plays.js"></script>
     <script src="js/controller/tab.js"></script>
     <script src="js/controller/registration.js"></script>
+    <script src="js/controller/userArea.js"></script>
+
 
 </head>
 <body ng-controller="TabController as tab">
@@ -46,6 +51,7 @@
                 <li><a class="yellow-text text-accent-4" href="#today">Oggi al Cinema</a></li>
                 <li><a class="yellow-text text-accent-4" href="#soon">Prossimamente</a></li>
                 <li><a class="yellow-text text-accent-4" href="#informations">Informazioni</a></li>
+                <li><a class="yellow-text text-accent-4" href="#me">Me</a></li>
             </ul>
 
             <ul class="right hide-on-med-and-down">
@@ -59,6 +65,7 @@
                 <li><a class="yellow-text text-accent-4" href="#today">Oggi</a></li>
                 <li><a class="yellow-text text-accent-4" href="#soon">Programmazione</a></li>
                 <li><a class="yellow-text text-accent-4" href="#informations">Informazioni</a></li>
+                <li><a class="yellow-text text-accent-4" href="#me">Me</a></li>
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(1)"><i class="mdi-action-shopping-cart left"></i>Carrello</a></li>
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle left"></i>Accedi</a></li>
             </ul>
