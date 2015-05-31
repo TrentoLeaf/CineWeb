@@ -3,10 +3,7 @@ package tk.trentoleaf.cineweb.rest;
 import com.sendgrid.SendGridException;
 import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.email.EmailSender;
-import tk.trentoleaf.cineweb.exceptions.ConstrainException;
-import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.WrongCodeException;
-import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
+import tk.trentoleaf.cineweb.exceptions.*;
 import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.entities.*;
 import tk.trentoleaf.cineweb.rest.exceptions.AuthFailedException;
@@ -152,6 +149,26 @@ public class RestUsers {
     }
 
     @POST
+    @Path("/confirm")
+    public ActivateUser confirmUser(ConfirmCode confirmCode) throws SQLException {
+
+        // validate code
+        if (confirmCode == null || !confirmCode.isValid()) {
+            throw new BadRequestException("Bad confirmation code");
+        }
+
+        // try to confirm the user
+        try {
+            db.confirmUser(confirmCode.getCode());
+            return new ActivateUser(0, "User activated");
+        } catch (UserNotFoundException e) {
+            throw NotFoundException.GENERIC;
+        } catch (UserAlreadyActivatedException e) {
+            return new ActivateUser(1, "User already activated");
+        }
+    }
+
+    @POST
     @Path("/forgot-password")
     public Response forgotPassword(@Context UriInfo uriInfo, ForgotPassword forgotPassword) throws SQLException {
 
@@ -205,10 +222,19 @@ public class RestUsers {
     }
 
     @GET
-    @Path("/{id}")
-    public Object getUser(@PathParam("id") int id) {
-        // TODO -> waiting for DB api
-        return id;
+    @Path("/me")
+    public UserDetails getUser(@Context HttpServletRequest request) throws NotFoundException {
+
+        final HttpSession session = request.getSession(false);
+        if (session != null) {
+            final User current = (User) session.getAttribute("user");
+            if (current != null) {
+                return new UserDetails(current);
+            }
+        }
+
+        // if here -> no user logged in
+        throw NotFoundException.USER_NOT_FOUND;
     }
 
     @GET

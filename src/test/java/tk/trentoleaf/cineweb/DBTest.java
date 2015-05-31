@@ -304,20 +304,40 @@ public class DBTest {
     }
 
     @Test
-    public void checkConfirmationCode() throws Exception {
+    public void confirmUserSuccess() throws Exception {
 
         // create user
-        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        final User u1 = new User(false, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         db.createUser(u1);
-
-        // not existing
-        final boolean b1 = db.checkConfirmationCode(u1.getUid(), "sduifhdsou");
-        assertFalse(b1);
 
         // existing
         final String code = db.requestConfirmationCode(u1.getUid());
-        final boolean b2 = db.checkConfirmationCode(u1.getUid(), code);
-        assertTrue(b2);
+        db.confirmUser(code);
+    }
+
+    @Test(expected = UserAlreadyActivatedException.class)
+    public void confirmUserFail1() throws Exception {
+
+        // create user
+        final User u1 = new User(false, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        db.createUser(u1);
+
+        // existing
+        final String code = db.requestConfirmationCode(u1.getUid());
+        db.confirmUser(code);
+        db.confirmUser(code);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void confirmUserFail2() throws Exception {
+
+        // create user
+        final User u1 = new User(false, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        db.createUser(u1);
+
+        // existing
+        final String code = db.requestConfirmationCode(u1.getUid());
+        db.confirmUser("sdfsdfsd");
     }
 
     @Test
