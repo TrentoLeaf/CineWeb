@@ -1,6 +1,8 @@
 package tk.trentoleaf.cineweb.rest;
 
+import com.sendgrid.SendGridException;
 import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.email.EmailSender;
 import tk.trentoleaf.cineweb.exceptions.ConstrainException;
 import tk.trentoleaf.cineweb.exceptions.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.WrongPasswordException;
@@ -8,21 +10,28 @@ import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.entities.Auth;
 import tk.trentoleaf.cineweb.rest.entities.ChangePassword;
 import tk.trentoleaf.cineweb.rest.entities.LoginOk;
+import tk.trentoleaf.cineweb.rest.entities.Registration;
 import tk.trentoleaf.cineweb.rest.exceptions.AuthFailedException;
 import tk.trentoleaf.cineweb.rest.exceptions.BadRequestException;
 import tk.trentoleaf.cineweb.rest.exceptions.ConflictException;
 import tk.trentoleaf.cineweb.rest.exceptions.NotFoundException;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import javax.xml.ws.spi.http.HttpContext;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Path("/users")
 public class RestUsers {
+    private Logger logger = Logger.getLogger(RestUsers.class.getSimpleName());
 
     // db singleton
     private DB db = DB.instance();
@@ -112,6 +121,40 @@ public class RestUsers {
         } catch (WrongPasswordException e2) {
             throw new AuthFailedException();
         }
+    }
+
+    @POST
+    @Path("/registration")
+    public Response registration(@Context UriInfo uriInfo, Registration registration) throws SQLException {
+
+        // validate registration
+        if (registration == null || !registration.isValid()) {
+            throw new BadRequestException("Bad registration request");
+        }
+
+        // try to add the user
+        try {
+
+            // add user to db
+            final User user = new User(registration);
+            db.createUser(user);
+
+            try {
+                // request verification code
+                final String code = db.requestConfirmationCode(user.getUid());
+
+                // send email
+                EmailSender.instance().sendRegistrationEmail(uriInfo.getRequestUri(), user, code);
+
+            } catch (SendGridException e) {
+                logger.severe("Cannot send verification email to: " + user.getEmail() + " --> " + e);
+                throw new BadRequestException("Bad email");
+            }
+        } catch (ConstrainException | UserNotFoundException e) {
+            throw ConflictException.EMAIL_IN_USE;
+        }
+
+        return Response.ok().build();
     }
 
     @GET

@@ -95,6 +95,13 @@
             <version>2.7</version>
         </dependency>
 
+        <!-- Email -->
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
