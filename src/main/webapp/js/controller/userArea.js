@@ -1,18 +1,26 @@
-/**
- * Created by stefano on 31/05/15.
- */
-(function(){
+(function () {
     'use strict';
 
-    var app=angular.module('usermodule', []).controller('UserController', function(){
-        this.user=person;
+    angular.module('usermodule', ['usersModule'])
+        .controller('UserController', ['$location', 'Auth', function ($location, Auth) {
 
-    });
-    var person = {
-        firstName:'pippo',
-        secondName: 'pluto',   <!-- Poi verranno gestite con chiamate al database -->
-        email: 'paperino',
-        credit: '13',
-    };
+            var ctrl = this;
+            this.user = {};
 
+            this.loadUserData = function () {
+                Auth.me().then(
+                    function (data) {
+                        ctrl.user = data.data;
+                    },
+                    function () {
+                        // on errors -> redirect to login
+                        $location.path('/login');
+                    }
+                )
+            };
+
+            // when page loads -> load user info
+            this.loadUserData();
+
+        }]);
 })();
