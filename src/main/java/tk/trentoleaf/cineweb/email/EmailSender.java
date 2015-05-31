@@ -21,19 +21,19 @@ public class EmailSender {
     // singleton
     private static EmailSender sender;
 
-    public static EmailSender instance() {
+    public static EmailSender instance() throws SendGridException {
         if (sender == null) {
             sender = new EmailSender();
         }
         return sender;
     }
 
-    private EmailSender() {
+    private EmailSender() throws SendGridException {
         final String username = System.getenv("SENDGRID_USERNAME");
         final String password = System.getenv("SENDGRID_PASSWORD");
 
         if (username == null || password == null) {
-            throw new RuntimeException("Please set the system variables SENDGRID_USERNAME & SENDGRID_PASSWORD");
+            throw new SendGridException(new RuntimeException("Please set the system variables SENDGRID_USERNAME & SENDGRID_PASSWORD"));
         }
 
         this.sendgrid = new SendGrid(username, password);

@@ -8,6 +8,7 @@ import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.RestUsers;
 import tk.trentoleaf.cineweb.rest.entities.Auth;
 import tk.trentoleaf.cineweb.rest.entities.ChangePassword;
+import tk.trentoleaf.cineweb.rest.entities.Registration;
 import tk.trentoleaf.cineweb.rest.handlers.BadRequestHandler;
 import tk.trentoleaf.cineweb.rest.handlers.ConflictHandler;
 import tk.trentoleaf.cineweb.rest.handlers.NotFoundHandler;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class RestUsersTest extends MyJerseyTest {
 
@@ -37,7 +39,7 @@ public class RestUsersTest extends MyJerseyTest {
     }
 
     @Test
-    public void testLoginSuccess() throws Exception {
+    public void testLoginSuccess1() throws Exception {
 
         // create a user
         db.createUser(new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni"));
@@ -45,6 +47,26 @@ public class RestUsersTest extends MyJerseyTest {
         final Response response = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(new Auth("teo@teo.com", "teo")));
         assertEquals(200, response.getStatus());
         assertTrue(response.getCookies().containsKey(COOKIE_NAME));
+    }
+
+    @Test
+    public void testLoginSuccess2() throws Exception {
+
+        // create a user
+        db.createUser(new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni"));
+
+        final Response r1 = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(new Auth("teo@teo.com", "teo")));
+        assertEquals(200, r1.getStatus());
+        assertTrue(r1.getCookies().containsKey(COOKIE_NAME));
+        final String c1 = r1.getCookies().get(COOKIE_NAME).toString();
+
+        final Response r2 = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE).cookie(COOKIE_NAME, c1).post(Entity.json(new Auth("teo@teo.com", "teo")));
+        assertEquals(200, r2.getStatus());
+        assertTrue(r2.getCookies().containsKey(COOKIE_NAME));
+        final String c2 = r2.getCookies().get(COOKIE_NAME).toString();
+
+        // check if 2 sessions
+        assertNotEquals(c1, c2);
     }
 
     @Test
@@ -128,6 +150,66 @@ public class RestUsersTest extends MyJerseyTest {
         // change password
         final Response response = getTarget().path("/users/change-password").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(null));
         assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    public void testChangePasswordFail4() throws Exception {
+
+        // create a user
+        db.createUser(new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni"));
+
+        // change password
+        final Response response = getTarget().path("/users/change-password").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new ChangePassword("teo@teooooo.com", "sdfsdfds", "new")));
+        assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    public void registrationSuccess() throws Exception {
+
+        // create a users (REST)
+        final Response response = getTarget().path("/users/registration").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new Registration("email@trentoleaf.tk", "password", "name", "surname")));
+        assertEquals(200, response.getStatus());
+
+        final User current = db.getUser("email@trentoleaf.tk");
+        final User expected = new User(false, Role.CLIENT, "email@trentoleaf.tk", "password", "name", "surname");
+        expected.setUid(current.getUid());
+
+        // test
+        assertEquals(expected, current);
+    }
+
+    @Test
+    public void registrationFail1() throws Exception {
+
+        // create a users (REST)
+        final Response response = getTarget().path("/users/registration").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new Registration(null, "password", "name", "surname")));
+        assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    public void registrationFail2() throws Exception {
+
+        // create a users (REST)
+        final Response response = getTarget().path("/users/registration").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(null));
+        assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    public void registrationFail3() throws Exception {
+
+        // create a users (REST)
+        final Response r1 = getTarget().path("/users/registration").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new Registration("email@trentoleaf.tk", "password", "name", "surname")));
+        assertEquals(200, r1.getStatus());
+
+        // create a users (REST) -> already exists
+        final Response r2 = getTarget().path("/users/registration").request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(new Registration("email@trentoleaf.tk", "password", "name", "surname")));
+        assertEquals(409, r2.getStatus());
     }
 
     @Test
