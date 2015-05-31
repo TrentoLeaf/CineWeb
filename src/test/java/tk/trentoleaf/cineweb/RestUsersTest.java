@@ -14,6 +14,7 @@ import tk.trentoleaf.cineweb.rest.utils.GsonJerseyProvider;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -94,6 +95,33 @@ public class RestUsersTest extends MyJerseyTest {
         // logout
         final Response responseLogout = getTarget().path("/users/logout").request(MediaType.APPLICATION_JSON_TYPE).post(null);
         assertNotEquals(oldCookie, responseLogout.getCookies().get(COOKIE_NAME));
+    }
+
+    @Test
+    public void testUserMe() throws Exception {
+
+        // create a user
+        final User user = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        db.createUser(user);
+
+        final Response r0 = getTarget().path("/users/me").request(MediaType.APPLICATION_JSON_TYPE).get();
+        assertEquals(404, r0.getStatus());
+
+        final Response r1 = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(new Auth("teo@teo.com", "teo")));
+        assertEquals(200, r1.getStatus());
+        final Cookie c = r1.getCookies().get(COOKIE_NAME);
+
+        final Response r2 = getTarget().path("/users/me").request(MediaType.APPLICATION_JSON_TYPE).cookie(COOKIE_NAME, c.getValue()).get();
+        assertEquals(200, r2.getStatus());
+
+        // check current user
+        assertNotEquals(new UserDetails(user), r2.readEntity(UserDetails.class));
+
+        final Response r3 = getTarget().path("/users/me").request(MediaType.APPLICATION_JSON_TYPE).get();
+        assertEquals(404, r3.getStatus());
+
+        final Response r4 = getTarget().path("/users/me").request(MediaType.APPLICATION_JSON_TYPE).cookie(COOKIE_NAME, "asfjksdof").get();
+        assertEquals(404, r4.getStatus());
     }
 
     @Test
