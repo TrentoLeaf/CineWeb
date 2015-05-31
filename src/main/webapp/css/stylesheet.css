@@ -1,90 +1,65 @@
-/* slider */
-/*::-webkit-scrollbar {
-  background-color: rgba(0,0,0,0);
-}
+/*
+Error: Invalid CSS after "*\/": expected identifier, was "#logo"
+        on line 28 of stylesheet.scss
 
-::-webkit-scrollbar-track {
-  background-color: #212121;
-}
+23:   border-radius: 2px;
+24: }
+25: 
+26: ::-webkit-scrollbar-corner {
+27:   background-color: black;
+28: } *\/
+29: 
+30: #logo{
+31:   max-height: 100%;
+32:   width: 47px;
+33:   margin-top: 5px;
 
-::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 1);
-}
-
-::-webkit-scrollbar-button { //#f0f0f0
-  background-color: #f0f0f0;
-  border-radius: 2px;
-}
-
-::-webkit-scrollbar-corner {
-  background-color: black;
-} */
-#logo {
-  max-height: 100%;
-  width: 47px;
-  margin-top: 5px;
-  margin-right: 0.5rem; }
-
-main {
-  height: auto; }
-  main .content-div {
-    width: 100%;
-    height: auto;
-    z-index: 1; }
-  main .side-div {
-    box-sizing: border-box;
-    position: fixed;
-    bottom: 0px;
-    top: 64px;
-    right: 0px;
-    height: auto;
-    width: 0px;
-    z-index: 2;
-    transition: width 0.3s; }
-    main .side-div .side-div-menu {
-      display: flex;
-      height: 100%; }
-    main .side-div .hide-side-nav-button-mobile {
-      margin-top: 1em; }
-    main .side-div .side-cart .side-cart-content {
-      position: absolute;
-      height: 50%;
-      overflow-y: scroll; }
-      main .side-div .side-cart .side-cart-content .cart-item {
-        padding: 0.1em; }
-        main .side-div .side-cart .side-cart-content .cart-item .item-image {
-          padding-top: 0.3em;
-          padding-left: 0.3em; }
-          main .side-div .side-cart .side-cart-content .cart-item .item-image img {
-            width: 100%;
-            height: 100%; }
-        main .side-div .side-cart .side-cart-content .cart-item .item-details {
-          padding: 0; }
-          main .side-div .side-cart .side-cart-content .cart-item .item-details .mdi-action-highlight-remove {
-            padding-right: 0.1em; }
-          main .side-div .side-cart .side-cart-content .cart-item .item-details .row {
-            margin: 0;
-            padding: 0; }
-          main .side-div .side-cart .side-cart-content .cart-item .item-details select {
-            height: 2em;
-            margin-bottom: 0.5em; }
-    main .side-div .side-cart .side-cart-actions {
-      align-self: flex-end;
-      box-sizing: border-box;
-      position: absolute;
-      width: 100%;
-      bottom: 0; }
-    main .side-div .side-login {
-      width: 100%; }
-    main .side-div .side-search {
-      width: 100%; }
-  @media only screen and (min-width: 992px) {
-    main .side-div-w {
-      width: 30%; } }
-  @media only screen and (min-width: 600px) and (max-width: 992px) {
-    main .side-div-w {
-      width: 50%; } }
-  @media only screen and (max-width: 600px) {
-    main .side-div-w {
-      top: 56px;
-      width: 100%; } }
+Backtrace:
+stylesheet.scss:28
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/scss/parser.rb:1164:in `expected'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/scss/parser.rb:1098:in `expected'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/scss/parser.rb:1078:in `expr!'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/scss/static_parser.rb:145:in `reference_combinator'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/scss/static_parser.rb:139:in `combinator'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/scss/static_parser.rb:119:in `selector'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/scss/static_parser.rb:86:in `selector_comma_sequence'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/scss/parser.rb:1076:in `expr!'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/scss/static_parser.rb:20:in `parse_selector'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/perform.rb:424:in `visit_rule'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/stack.rb:79:in `block in with_base'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/stack.rb:115:in `with_frame'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/stack.rb:79:in `with_base'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/perform.rb:158:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/base.rb:52:in `map'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/perform.rb:167:in `block in visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/perform.rb:166:in `visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/perform.rb:186:in `visit_root'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/perform.rb:157:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/visitors/perform.rb:8:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/root_node.rb:36:in `css_tree'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/tree/root_node.rb:20:in `render'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/engine.rb:268:in `render'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/plugin/compiler.rb:492:in `update_stylesheet'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/plugin/compiler.rb:209:in `each'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/plugin.rb:82:in `update_stylesheets'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/exec/sass_scss.rb:361:in `watch_or_update'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/exec/sass_scss.rb:51:in `process_result'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/exec/base.rb:52:in `parse'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/lib/sass/exec/base.rb:19:in `parse!'
+/var/lib/gems/1.9.1/gems/sass-3.4.14/bin/scss:13:in `<top (required)>'
+/usr/local/bin/scss:23:in `load'
+/usr/local/bin/scss:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Invalid CSS after \"*/\": expected identifier, was \"#logo\"\A         on line 28 of stylesheet.scss\A \A 23:   border-radius: 2px;\A 24: }\A 25: \A 26: ::-webkit-scrollbar-corner {\A 27:   background-color: black;\A 28: } */\A 29: \A 30: #logo{\A 31:   max-height: 100%;\A 32:   width: 47px;\A 33:   margin-top: 5px;"; }

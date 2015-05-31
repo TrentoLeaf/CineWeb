@@ -6,7 +6,7 @@
 
         <ul class="cd-items cd-container">
             <li class="cd-item" ng-repeat="film in date.films">
-                <img ng-src="{{film.playbill}}" alt="Item Preview">
+                <img  ng-src="{{film.playbill}}" alt="Item Preview">
                 <a class="cd-trigger" ng-click="ctrl.setCurrent($parent.$index, $index)">{{film.title}}</a>
             </li>
         </ul>

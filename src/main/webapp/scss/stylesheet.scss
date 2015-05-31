@@ -1,7 +1,7 @@
 // variables
 
 /* slider */
-/*::-webkit-scrollbar {
+::-webkit-scrollbar {
   background-color: rgba(0,0,0,0);
 }
 
@@ -10,8 +10,13 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 1);
-}
+
+  background-color: rgba(0, 0, 0, 0.2);
+} /* this will style the thumb, ignoring the track */
+
+::-webkit-scrollbar-button {
+  background-color: #7c2929;
+} /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
 
 ::-webkit-scrollbar-button { //#f0f0f0
   background-color: #f0f0f0;
