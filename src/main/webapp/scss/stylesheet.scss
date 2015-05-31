@@ -24,8 +24,8 @@
 
 #logo{
   max-height: 100%;
-  width: 50px;
-  margin-top: 7px;
+  width: 47px;
+  margin-top: 5px;
   margin-right: 0.5rem;
 }
 
@@ -61,61 +61,86 @@ main {
     z-index: 2;
     transition: width 0.3s;
 
+    .side-div-menu {
+      display: flex;
+      height: 100%;
+    }
+
+
     .hide-side-nav-button-mobile {
       margin-top: 1em;
     }
 
-    .side-cart-content {
-      position: absolute;
-      top: 11%;
-      height: 60%;
-      padding-top: 1em;
-      overflow-y: scroll;
+    .side-cart {
+
+      // display: flex;
+      //flex-direction: column;
 
 
-      .side-cart-film {
+      .side-cart-content {
+        position: absolute;
+        //top: 11%;
+        height: 50%;
+        //padding-top: 1em;
+        overflow-y: scroll;
 
-        .cart-item {
-          padding: 0.1em;
 
-          .item-image {
-            padding-top: 0.3em;
-            padding-left: 0.3em;
-            img { // for firefox and ie
-              width: 100%;
-              height: 100%;
+
+
+
+
+          .cart-item {
+            padding: 0.1em;
+
+            .item-image {
+              padding-top: 0.3em;
+              padding-left: 0.3em;
+              img { // for firefox and ie
+                width: 100%;
+                height: 100%;
+              }
             }
-          }
 
-          .item-details {
-            padding: 0;
-
-            .mdi-action-highlight-remove {
-              padding: 0.1em;
-            }
-
-            .row {
-              margin: 0;
+            .item-details {
               padding: 0;
-            }
 
-            select {
-              height: 2em;
-              margin-bottom: 0.5em;
-            }
+              .mdi-action-highlight-remove {
+                padding-right: 0.1em;
+              }
 
+              .row {
+                margin: 0;
+                padding: 0;
+              }
+
+              select {
+                height: 2em;
+                margin-bottom: 0.5em;
+              }
+
+            }
           }
-        }
 
+
+      }
+
+      .side-cart-actions {
+        align-self: flex-end;
+
+        box-sizing: border-box;
+        position: absolute;
+        width: 100%;
+        bottom: 0;
       }
     }
 
-    .side-cart-actions {
-      box-sizing: border-box;
-      position: absolute;
+    .side-login {
       width: 100%;
-      bottom: 0;
     }
+    .side-search {
+      width: 100%;
+    }
+
 
   }
 

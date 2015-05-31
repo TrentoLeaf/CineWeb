@@ -81,79 +81,74 @@
         <ul class="side-div-menu">
             <li class="side-cart side-nav-element" ng-show="tab.isSet(1)">
                 <div class="side-cart-content row"> <!-- Contenuto carrello -->
-                    <div class="side-cart-film row"> <!-- Singolo film -->
-                        <div class="side-cart-items-main col s12 m12 l12">
-                            <!-- locandina, titolo, pulsante 'x' cancella -->
-                            <ul class="cart-items">
-                                <li class="cart-item row grey darken-3">
-                                    <div class="item-image col s4 m4 l4">
-                                        <img class="responsive-img" src="img/temporary/item-1.jpg" alt="locandina" />
-                                    </div>
-                                    <div class="item-details col s8 m8 l8">
-                                        <div class="row">
-                                            <div class="col s9 m9 l9">
-                                                <h5>Titolo</h5>
-                                                <h6>29/05/2015, 21:00</h6>
-                                            </div>
-                                            <i class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col s7 m7 l7">
-                                                <label>Tipologia</label>
-                                            </div>
-                                            <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4">
-                                                <label>Quantità</label>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <!-- TODO: modificare un po tutto -->
-                                            <div class="col s7 m7 l7">
-                                                <select class="browser-default black-text">
-                                                    <option value="1" selected>Adulto</option>
-                                                    <option value="2">Bambino</option>
-                                                    <option value="3">Regista</option>
-                                                </select>
-                                            </div>
-                                            <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4">
-                                                <select class="browser-default black-text">
-                                                    <option selected value="-1">Cancella</option>
-                                                    <option value="1" selected>1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <!-- TODO: modificare un po tutto -->
-                                            <div class="col s7 m7 l7">
-                                                <select class="browser-default black-text">
-                                                    <option value="1" selected>Adulto</option>
-                                                    <option value="2">Bambino</option>
-                                                    <option value="3">Regista</option>
-                                                </select>
-                                            </div>
-                                            <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4">
-                                                <select class="browser-default black-text">
-                                                    <option selected value="-1">Cancella</option>
-                                                    <option value="1" selected>1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                </select>
-                                            </div>
-                                        </div>
+                    <ul class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
 
-                                        <div class="row">
-                                            <!-- TODO: modificare un po tutto -->
-                                            <a class="col s12 m12 l12  white-text waves-effect waves-yellow btn-flat center-align">Aggiungi tipologia</a>
-                                        </div>
+                        <li class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
+                            <div class="item-image col s4 m4 l4"> <!-- locandina -->
+                                <img class="responsive-img" src="img/temporary/item-1.jpg" alt="locandina" />
+                            </div>
+                            <div class="item-details col s8 m8 l8"> <!-- titolo, data, doropdowns -->
+                                <div class="row">
+                                    <div class="col s9 m9 l9">
+                                        <h5>Titolo</h5> <!-- titolo -->
+                                        <h6>29/05/2015, 21:00</h6> <!-- data -->
                                     </div>
-                                </li>
-                            </ul> <!-- cd-cart-items -->
-                        </div>
-                        <div class="side-cart-content-tickets col s12 offset-m1 m10 offset-l1 l10">
-                            <!-- dropdown scelta tipo (young,senior,...) e quantità di ticket -->
-                        </div>
+                                    <i class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
+                                </div>
+                                <div class="row">
+                                    <div class="col s7 m7 l7">
+                                        <label>Tipologia</label>
+                                    </div>
+                                    <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4">
+                                        <label>Quantità</label>
+                                    </div>
+                                </div>
+                                <div class="row"> <!-- dropdowns -->
+                                    <div class="col s7 m7 l7"> <!-- dropdown tipologia biglietto -->
+                                        <select class="browser-default black-text">
+                                            <option value="1" selected>Adulto</option>
+                                            <option value="2">Bambino</option>
+                                            <option value="3">Regista</option>
+                                        </select>
+                                    </div>
+                                    <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4"> <!-- dropdown quantità biglietti -->
+                                        <select class="browser-default black-text">
+                                            <option selected value="-1">Cancella</option>
+                                            <option value="1" selected>1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s7 m7 l7">
+                                        <select class="browser-default black-text">
+                                            <option value="1" selected>Adulto</option>
+                                            <option value="2">Bambino</option>
+                                            <option value="3">Regista</option>
+                                        </select>
+                                    </div>
+                                    <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4">
+                                        <select class="browser-default black-text">
+                                            <option selected value="-1">Cancella</option>
+                                            <option value="1" selected>1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row"> <!-- pulsante di aggiunta tipologia -->
+                                    <a class="col s12 m12 l12  white-text waves-effect waves-yellow btn-flat center-align">Aggiungi tipologia</a>
+                                </div>
+                            </div>
+                        </li>  <!-- END singolo film acquistato -->
+                    </ul> <!-- END lista acquisti -->
+
+                    <div class="side-cart-content-tickets col s12 offset-m1 m10 offset-l1 l10">
+                        <!-- dropdown scelta tipo (young,senior,...) e quantità di ticket -->
                     </div>
+
                 </div>
                 <div class="side-cart-actions row"> <!-- div in fondo con bottone compra e totale -->
                     <div class="side-cart-total row">
