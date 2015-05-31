@@ -6,16 +6,6 @@
     angular.module('PlaysModule', []).controller('PlaysController', function () {
         this.current = {};
 
-        this.cart = [ {
-            title: "Titolo 1",
-            date: "Data 1",
-            time: "Orario 1",
-            gender: "Genere 1",
-            playbill: "img/temporary/img1.jpg",
-            description: "Descrizione 1"
-        }];
-        this.total = 0.00;
-
         this.archive = [
             {
                 date: 'Data 1',
@@ -96,32 +86,6 @@
         this.setCurrent = function(date, film) {
             this.current = this.archive[date].films[film];
             this.current['date'] = date;
-        };
-
-        this.addToCart = function(film) {
-                film['normale'] = 1;
-                film['ridotto'] = 0;
-                film['militari'] = 0;
-                film['disabili'] = 0;
-                this.cart.push(film);
-                console.log(this.cart);
-        };
-
-        this.removeFromCart = function(film) {
-
-            var i = this.cart.indexOf(film);
-            if (i > -1) {
-                this.cart.splice(film);
-            }
-        };
-
-        this.updateTiket = function (film, type, number) {
-            film[type] = number;
-        }
-
-        this.updateTotal = function () {
-
-
         };
 
     });

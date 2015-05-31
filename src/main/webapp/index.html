@@ -91,7 +91,6 @@
             <li ng-controller="CartController as cc" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
                 <div class="side-cart-content row"> <!-- Contenuto carrello -->
                     <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
-                        <!--  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa  ng-repeat qua sotto -->
                         <li ng-repeat="film in cart track by $index" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
                                 <img class="responsive-img" src="{{film.playbill}}" alt="locandina" />
@@ -112,9 +111,9 @@
                                         <label>Quantità</label>
                                     </div>
                                 </div>
-                                <div class="row"> <!-- dropdowns -->
+                                <div ng-repeat="drop in cart[$index].dropdowns track by $index" class="row"> <!-- dropdowns -->
                                     <div class="col s7 m7 l7"> <!-- dropdown tipologia biglietto -->
-                                        <select class="browser-default black-text">
+                                        <select ng-options="type in ticket_types" class="browser-default black-text">
                                             <option value="normale" selected>Normale</option>
                                             <option value="ridotto">Ridotto</option>
                                             <option value="militari">Militari</option>
@@ -133,7 +132,7 @@
 
 
                                 <div class="row"> <!-- pulsante di aggiunta tipologia -->
-                                    <a class="col s12 m12 l12  white-text waves-effect waves-yellow btn-flat center-align">Aggiungi tipologia</a>
+                                    <a ng-click="cc.addDropDown($index)" class="col s12 m12 l12  white-text waves-effect waves-yellow btn-flat center-align">Aggiungi tipologia</a>
                                 </div>
                             </div>
                         </li>  <!-- END singolo film acquistato -->
@@ -143,7 +142,6 @@
                 <div class="side-cart-actions row"> <!-- div in fondo con bottone compra e totale -->
                     <div class="side-cart-total row">
                         <h5 class="col s7 m7 l7">Totale:</h5>
-                        <!--  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  espressione qua sotto -->
                         <h5 class="total col s5 m5 l5 right-align">{{total | currency:"€ "}}</h5>
                     </div>
                     <button class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
@@ -192,7 +190,7 @@
                         </div>
                         <h4>Benvenuto</h4>
                         <h5>{{c.user.name}}</h5> <!-- TODO definire -->
-                        <h6>{{c.email}}</h6> <!-- TODO definire -->
+                        <h6>{{c.user.email}}</h6> <!-- TODO definire -->
                         <div class="row" style="margin-top:3em;">
                             <!-- TODO redirect to userArea partial -->
                             <button ng-click="c.toUserArea()" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-action-assignment right"></i>I tuoi dati</button>
