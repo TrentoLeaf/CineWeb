@@ -585,15 +585,15 @@ public class DB {
         }
     }
 
-    private List<SeatReserved> getSeatsReservedByPlay(Play play) throws SQLException {
+    public List<SeatReserved> getSeatsReservedByPlay(Play play) throws SQLException {
 
         return getSeatsReservedByPlay(play.getPid());
     }
 
-    private List<SeatReserved> getSeatsReservedByPlay(int pid) throws SQLException {
+    public List<SeatReserved> getSeatsReservedByPlay(int pid) throws SQLException {
         final List<SeatReserved> seastReserved = new ArrayList<>();
 
-        final String query = "SELECT rid,x,y FROM booking WHERE pid = ?;";
+        final String query = "SELECT rid,x,y FROM bookings WHERE pid = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setInt(1, pid);

@@ -985,4 +985,47 @@ public class DBTest {
     }
 
 
+
+
+
+    @Test
+    public void getSeatsReservedByPlay() throws Exception {
+
+        final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+
+        final User u1 = new User(Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        db.createUser(u1);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        db.createFilm(f1);
+
+        final Room r1 = db.createRoom(4, 5);
+
+        final List<Seat> s1 = r1.getSeats();
+
+        final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
+
+        db.createPlay(p1);
+
+        // create bookings  int rid, int x, int y, int uid, int pid, double price
+        final Booking b1 = db.createBookings(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
+        final Booking b2 = db.createBookings(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
+
+        // expected
+        List<SeatReserved> expected = new ArrayList<>();
+        expected.add(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(),true) );
+        expected.add(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(),true) );
+
+
+        // current
+
+        List<SeatReserved> current = db.getSeatsReservedByPlay(p1);
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+
+
+
 }
