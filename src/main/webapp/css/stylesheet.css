@@ -52,41 +52,52 @@ main {
       height: 100%; }
     main .side-div .hide-side-nav-button-mobile-container {
       margin-top: 1em; }
-    main .side-div .side-cart .side-cart-content {
-      position: absolute;
-      margin-top: 0.5em;
-      width: 100%;
-      height: 50%;
-      overflow-y: scroll;
-      z-index: 2; }
-      main .side-div .side-cart .side-cart-content .cart-item {
-        padding: 0.1em; }
-        main .side-div .side-cart .side-cart-content .cart-item .item-image {
-          padding-top: 0.3em;
-          padding-left: 0.3em; }
-          main .side-div .side-cart .side-cart-content .cart-item .item-image img {
-            width: 100%;
-            height: 100%; }
-        main .side-div .side-cart .side-cart-content .cart-item .item-details {
-          padding: 0; }
-          main .side-div .side-cart .side-cart-content .cart-item .item-details .mdi-action-highlight-remove {
-            padding-right: 0.1em; }
-          main .side-div .side-cart .side-cart-content .cart-item .item-details .row {
-            margin: 0;
+    main .side-div .side-cart {
+      height: 100%; }
+      main .side-div .side-cart .side-cart-content {
+        position: absolute;
+        margin-top: 0.5em;
+        width: 100%;
+        height: 50%;
+        overflow-y: scroll;
+        z-index: 2; }
+        @media only screen and (min-width: 992px) {
+          main .side-div .side-cart .side-cart-content {
+            height: 70%; } }
+        @media only screen and (min-width: 600px) and (max-width: 992px) {
+          main .side-div .side-cart .side-cart-content {
+            height: 60%; } }
+        @media only screen and (max-width: 600px) {
+          main .side-div .side-cart .side-cart-content {
+            height: 50%; } }
+        main .side-div .side-cart .side-cart-content .cart-item {
+          padding: 0.1em; }
+          main .side-div .side-cart .side-cart-content .cart-item .item-image {
+            padding-top: 0.3em;
+            padding-left: 0.3em; }
+            main .side-div .side-cart .side-cart-content .cart-item .item-image img {
+              width: 100%;
+              height: 100%; }
+          main .side-div .side-cart .side-cart-content .cart-item .item-details {
             padding: 0; }
-          main .side-div .side-cart .side-cart-content .cart-item .item-details select {
-            height: 2em;
-            margin-bottom: 0.5em; }
-          main .side-div .side-cart .side-cart-content .cart-item .item-details input[type="number"] {
-            margin: 0;
-            height: 28px;
-            margin-top: -30px; }
-    main .side-div .side-cart .side-cart-actions {
-      box-sizing: border-box;
-      position: absolute;
-      width: 100%;
-      bottom: 0;
-      z-index: 1; }
+            main .side-div .side-cart .side-cart-content .cart-item .item-details .mdi-action-highlight-remove {
+              padding-right: 0.1em; }
+            main .side-div .side-cart .side-cart-content .cart-item .item-details .row {
+              margin: 0;
+              padding: 0; }
+            main .side-div .side-cart .side-cart-content .cart-item .item-details select {
+              height: 2em;
+              margin-bottom: 0.5em; }
+            main .side-div .side-cart .side-cart-content .cart-item .item-details input[type="number"] {
+              margin: 0;
+              height: 28px;
+              margin-top: -30px; }
+      main .side-div .side-cart .side-cart-actions {
+        box-sizing: border-box;
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        z-index: 1; }
     main .side-div .side-login {
       width: 100%; }
     main .side-div .side-search {

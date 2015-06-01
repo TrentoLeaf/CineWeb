@@ -85,12 +85,12 @@
 
     <div class="side-div grey darken-4 white-text">
         <!-- Only Mobile: bottone per chiudere la side-div-->
-        <div class="row hide-side-nav-button-mobile-container hide-on-med-and-up">
+        <div class="row hide-side-nav-button-mobile-container hide-on-med-and-up grey darken-4">
             <button ng-click="tab.setTab(-1)" class="hide-side-nav-button-mobile btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i>Torna indietro</button>
         </div>
         <ul class="side-div-menu">
             <li ng-controller="CartController as cc" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
-                <div class="side-cart-content row"> <!-- Contenuto carrello -->
+                <div class="side-cart-content grey darken-4 row"> <!-- Contenuto carrello -->
                     <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
                         <li ng-repeat="film in cart track by $index" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
