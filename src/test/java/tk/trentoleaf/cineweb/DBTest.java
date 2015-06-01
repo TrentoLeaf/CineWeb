@@ -985,9 +985,6 @@ public class DBTest {
     }
 
 
-
-
-
     @Test
     public void getSeatsReservedByPlay() throws Exception {
 

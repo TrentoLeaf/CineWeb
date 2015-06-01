@@ -585,13 +585,15 @@ public class DB {
         }
     }
 
-    public List<SeatReserved> getSeatsReservedByPlay(Play play) throws SQLException {
+    //get a list of all seats reserved by a Play
+    public List<SeatReserved> getSeatsReservedByPlay(Play play) throws SQLException, WrongCodeException {
 
         return getSeatsReservedByPlay(play.getPid());
     }
 
-    public List<SeatReserved> getSeatsReservedByPlay(int pid) throws SQLException {
-        final List<SeatReserved> seastReserved = new ArrayList<>();
+    //get a list of all seats reserved by a Play
+    public List<SeatReserved> getSeatsReservedByPlay(int pid) throws SQLException, WrongCodeException {
+        final List<SeatReserved> seatsReserved = new ArrayList<>();
 
         final String query = "SELECT rid,x,y FROM bookings WHERE pid = ?;";
 
@@ -599,18 +601,60 @@ public class DB {
             stm.setInt(1, pid);
             ResultSet rs = stm.executeQuery();
 
-
+            int ridCheck=-1;
             while (rs.next()) {
                 int rid = rs.getInt("rid");
+
+                // check if all seats find are part of the same room
+                if(ridCheck==rid ||ridCheck==-1)
+                {
+                    ridCheck=rid;
+                }
+                else
+                    throw new WrongCodeException();
+
                 int x = rs.getInt("x");
                 int y = rs.getInt("y");
-                seastReserved.add(new SeatReserved(rid, x, y,true));
+                seatsReserved.add(new SeatReserved(rid, x, y,true));
             }
 
         }
 
 
-        return seastReserved;
+        return seatsReserved;
+    }
+
+    //get a list of all seats by a Play
+    public List<SeatReserved> getSeatsByPlay(Play play) throws SQLException, WrongCodeException {
+        return getSeatsByPlay(play.getPid());
+    }
+
+    //get a list of all seats by a Play
+    public List<SeatReserved> getSeatsByPlay(int pid) throws SQLException, WrongCodeException {
+        //list of seat reserved
+        final List<SeatReserved> seatReserved = getSeatsReservedByPlay(pid);
+
+        //list of all seat in the room
+        final List<Seat> allSeat=getSeatsByRoom(seatReserved.get(1).getRid());
+
+        //list of all seatReserved in the room
+        final List<SeatReserved> seat =new ArrayList<>();
+
+        for(int i=0;i<allSeat.size();i++)
+        {
+            if(seatReserved.contains(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), true)))
+            {
+                seat.add(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), true));
+            }
+            else
+                seat.add(new SeatReserved(allSeat.get(i).getRid(),allSeat.get(i).getX(),allSeat.get(i).getY(),false));
+        }
+
+
+
+
+
+        return seat;
     }
 
     // create a Room with all the seats
