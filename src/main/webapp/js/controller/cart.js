@@ -22,13 +22,14 @@
             var duplicate = false;
 
             // controllo di non inserire dublicati
-            for (var i = 0; i< $rootScope.cart.length; i++) {
+           /* for (var i = 0; i< $rootScope.cart.length; i++) {
                 // TODO assicurarsi che film abbia un fid
                 if (film.fid == $rootScope.cart[i].fid) {
                     duplicate = true;
                     i = $rootScope.cart.length;
                 }
-            }
+                console.log(duplicate);
+            }*/
 
             if (! duplicate) {
                 // aggiungo un dropdown con tipo e numero di biglietti
