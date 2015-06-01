@@ -29,11 +29,17 @@
 }
 */
 
-#logo{
+#logo {
   max-height: 100%;
   width: 47px;
   margin-top: 5px;
   margin-right: 0.5rem;
+}
+
+#title {
+  @media only screen and (max-width: 600px) {
+    font-size: 1.5rem;
+  }
 }
 
 body {
@@ -155,6 +161,10 @@ main {
         width: 100%;
         bottom: 0;
         z-index: 1;
+
+        .side-cart-total {
+          margin-bottom: 0em;
+        }
       }
     }
 
@@ -180,6 +190,7 @@ main {
     @media only screen and (max-width: 600px) {
       top: 56px;
       width: 100%;
+      overflow-y: auto;
     }
   }
 

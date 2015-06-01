@@ -32,6 +32,10 @@
   margin-top: 5px;
   margin-right: 0.5rem; }
 
+@media only screen and (max-width: 600px) {
+  #title {
+    font-size: 1.5rem; } }
+
 main {
   height: auto; }
   main .content-div {
@@ -98,6 +102,8 @@ main {
         width: 100%;
         bottom: 0;
         z-index: 1; }
+        main .side-div .side-cart .side-cart-actions .side-cart-total {
+          margin-bottom: 0em; }
     main .side-div .side-login {
       width: 100%; }
     main .side-div .side-search {
@@ -111,4 +117,5 @@ main {
   @media only screen and (max-width: 600px) {
     main .side-div-w {
       top: 56px;
-      width: 100%; } }
+      width: 100%;
+      overflow-y: auto; } }
