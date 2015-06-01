@@ -591,7 +591,7 @@ public class DB {
         return getSeatsReservedByPlay(play.getPid());
     }
 
-    //get a list of all seats reserved by a Play
+    //get a list of all seats reserved by a Play.getPid()
     public List<SeatReserved> getSeatsReservedByPlay(int pid) throws SQLException, WrongCodeException {
         final List<SeatReserved> seatsReserved = new ArrayList<>();
 
@@ -629,7 +629,7 @@ public class DB {
         return getSeatsByPlay(play.getPid());
     }
 
-    //get a list of all seats by a Play
+    //get a list of all seats by a Play.getPid()
     public List<SeatReserved> getSeatsByPlay(int pid) throws SQLException, WrongCodeException {
         //list of seat reserved
         final List<SeatReserved> seatReserved = getSeatsReservedByPlay(pid);
