@@ -89,6 +89,7 @@ main {
         height: 50%;
         //padding-top: 1em;
         overflow-y: scroll;
+        z-index: 2;
 
         .cart-item {
           padding: 0.1em;
@@ -138,6 +139,7 @@ main {
         position: absolute;
         width: 100%;
         bottom: 0;
+        z-index: 1;
       }
     }
 

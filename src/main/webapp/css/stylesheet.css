@@ -55,7 +55,8 @@ main {
     main .side-div .side-cart .side-cart-content {
       position: absolute;
       height: 50%;
-      overflow-y: scroll; }
+      overflow-y: scroll;
+      z-index: 2; }
       main .side-div .side-cart .side-cart-content .cart-item {
         padding: 0.1em; }
         main .side-div .side-cart .side-cart-content .cart-item .item-image {
@@ -82,7 +83,8 @@ main {
       box-sizing: border-box;
       position: absolute;
       width: 100%;
-      bottom: 0; }
+      bottom: 0;
+      z-index: 1; }
     main .side-div .side-login {
       width: 100%; }
     main .side-div .side-search {
