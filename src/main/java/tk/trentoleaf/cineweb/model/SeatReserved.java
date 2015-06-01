@@ -14,4 +14,19 @@ public class SeatReserved extends Seat
         super(x, y);
         this.reserved=reserved;
     }
+
+    public boolean isReserved() {
+        return reserved;
+    }
+
+    public void setReserved(boolean reserved) {
+        this.reserved = reserved;
+    }
+
+    @Override
+    public String toString() {
+        return "SeatReserved{" +
+                "reserved=" + reserved +
+                "} " + super.toString();
+    }
 }

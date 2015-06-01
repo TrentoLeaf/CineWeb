@@ -585,6 +585,34 @@ public class DB {
         }
     }
 
+    private List<SeatReserved> getSeatsReservedByPlay(Play play) throws SQLException {
+
+        return getSeatsReservedByPlay(play.getPid());
+    }
+
+    private List<SeatReserved> getSeatsReservedByPlay(int pid) throws SQLException {
+        final List<SeatReserved> seastReserved = new ArrayList<>();
+
+        final String query = "SELECT rid,x,y FROM booking WHERE pid = ?;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, pid);
+            ResultSet rs = stm.executeQuery();
+
+
+            while (rs.next()) {
+                int rid = rs.getInt("rid");
+                int x = rs.getInt("x");
+                int y = rs.getInt("y");
+                seastReserved.add(new SeatReserved(rid, x, y,true));
+            }
+
+        }
+
+
+        return seastReserved;
+    }
+
     // create a Room with all the seats
     public Room createRoom(int rows, int cols) throws SQLException {
         return createRoom(rows, cols, new ArrayList<Seat>());
