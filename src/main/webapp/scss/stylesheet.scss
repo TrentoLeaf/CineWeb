@@ -72,10 +72,13 @@ main {
       height: 100%;
     }
 
-
-    .hide-side-nav-button-mobile {
+    .hide-side-nav-button-mobile-container {
       margin-top: 1em;
+      .hide-side-nav-button-mobile {
+
+      }
     }
+
 
     .side-cart {
 
@@ -85,6 +88,8 @@ main {
 
       .side-cart-content {
         position: absolute;
+        margin-top: 0.5em;
+        width: 100%;
         //top: 11%;
         height: 50%;
         //padding-top: 1em;
