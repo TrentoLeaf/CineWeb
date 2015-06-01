@@ -34,7 +34,7 @@ function close_Sidediv() {
 (function () {
     'use strict';
 
-    var app = angular.module('cineweb', ['PlaysModule', 'CartModule', 'ngRoute', 'tabmodule', 'loginModule', 'registrationModule', 'usermodule']);
+    var app = angular.module('cineweb', ['PlaysModule', 'CartModule', 'ngRoute', 'tabmodule', 'loginModule', 'registrationModule', 'usermodule', 'adminUsers']);
 
     app.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/', {
@@ -60,6 +60,10 @@ function close_Sidediv() {
         }).when('/me', {
             templateUrl: '../partials/userArea.html',
             controller: 'UserController',
+            controllerAs: 'ctrl'
+        }).when('/admin/users', {
+            templateUrl: '../partials/admin/users.html',
+            controller: 'AdminUsersController',
             controllerAs: 'ctrl'
         }).when('/error', {
             templateUrl: '../partials/error.html'
