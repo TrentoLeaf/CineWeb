@@ -70,7 +70,7 @@ public class MyJerseyTest extends JerseyTest {
 
                     @Override
                     public void stop() {
-                        this.server.stop();
+                        this.server.shutdownNow();
                     }
                 };
             }
