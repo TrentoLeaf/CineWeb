@@ -5,12 +5,25 @@
         .controller('AdminUsersController', ['$location', 'Users', function ($location, Users) {
 
             var ctrl = this;
+            this.order = 'uid';
+            this.reverse = false;
+
             this.newUser = new Users();
             this.newUser.role = "client";
 
             var init = function () {
                 ctrl.loading = true;
                 ctrl.users = [];
+            };
+
+            // order list
+            this.setOrder = function (order) {
+                if (this.order === order) {
+                    this.reverse = !this.reverse;
+                } else {
+                    this.reverse = false;
+                    this.order = order;
+                }
             };
 
             // load the users list

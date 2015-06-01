@@ -9,17 +9,17 @@
             <table class="bordered">
                 <thead>
                 <tr>
-                    <th>uid</th>
-                    <th>Email</th>
-                    <th>FirstName</th>
-                    <th>SecondName</th>
-                    <th>Credit</th>
-                    <th>Confirmed</th>
+                    <td><a href="" ng-click="ctrl.setOrder('uid')">uid</a></td>
+                    <td><a href="" ng-click="ctrl.setOrder('email')">Email</a></td>
+                    <td><a href="" ng-click="ctrl.setOrder('firstName')">FirstName</a></td>
+                    <td><a href="" ng-click="ctrl.setOrder('secondName')">SecondName</a></td>
+                    <td><a href="" ng-click="ctrl.setOrder('credit')">Credit</a></td>
+                    <td><a href="" ng-click="ctrl.setOrder('enabled')">Confirmed</a></td>
                 </tr>
                 </thead>
 
                 <tbody>
-                <tr ng-repeat="u in ctrl.users">
+                <tr ng-repeat="u in ctrl.users | orderBy:ctrl.order:ctrl.reverse">
                     <td>{{u.uid}}</td>
                     <td>{{u.email}}</td>
                     <td>{{u.firstName}}</td>
@@ -83,6 +83,7 @@
                     </div>
 
                     <p>Aggiungere ruolo!</p>
+
                     <p>Aggiungere gli altri campi</p>
 
                     <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 black-text"
@@ -94,3 +95,4 @@
             </div>
         </div>
     </div>
+</div>
