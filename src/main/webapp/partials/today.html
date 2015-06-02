@@ -1,40 +1,82 @@
-<div ng-controller="PlaysController as ctrl" >
-    <did ng-controller="CartController as cc">
-        <div ng-repeat="date in ctrl.archive">
-            <div class="row">
-                <h1 class="brand-logo center yellow-text text-accent-4">{{date.date}}</h1>
-            </div>
+<div ng-controller="CartController as cc">
+    <div ng-repeat="date in ctrl.archive">
+        <div class="row">
+            <h1 class="brand-logo center yellow-text text-accent-4">{{date.date}}</h1>
+        </div>
 
-            <ul class="cd-items cd-container">
-                <li class="cd-item" ng-repeat="film in date.films">
-                    <img  ng-src="{{film.playbill}}" alt="Item Preview">
-                    <a class="cd-trigger" ng-click="ctrl.setCurrent($parent.$index, $index)">{{film.title}}</a>
+        <ul class="row">
+            <div class="col s12 m11 l11">
+                <li class="col s12 offset-m1 m5 offset-l1 l3" ng-repeat="film in date.films"
+                    style="margin-bottom: 4em;">
+                    <div class="card">
+                        <div class="card-image">
+                            <img class="responsive-img" ng-src="{{film.playbill}}" alt="Locandina">
+                        </div>
+                        <div class="card-content grey-text text-darken-4">
+                            <span class="card-title black-text">{{film.title}}</span>
+
+                            <p>{{film.description}} I am a very simple card. I am good at containing small bits of
+                                information.
+                                I am convenient because I require little markup to use effectively.</p>
+                        </div>
+                        <div class="card-action center-align">
+                            <a ng-click="ctrl.setCurrent($parent.$index, $index)" data-target="modal"
+                               class="modal-trigger waves-effect waves-blue btn-flat grey-text text-darken-4"
+                               style="padding: 0; margin: 0; width: 100%">
+                                <i class="mdi-action-info-outline left"></i>Dettagli e Acquista<i
+                                    class="mdi-editor-attach-money right"></i></a>
+                        </div>
+                    </div>
                 </li>
-            </ul>
+            </div>
+        </ul>
 
-            <div class="cd-quick-view">
-                <div class="cd-slider-wrapper">
-                    <ul class="cd-slider">
-                        <li class="selected"><img ng-src="{{ctrl.current.playbill}}" alt="PlayBill"></li>
-                    </ul>
+        <div id="modal" class="modal modal-fixed-footer grey-text text-darken-4"
+             style="max-height: 80%; height: 80%; width: 80%">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col s11 m11 l11">
+                        <h4>{{ctrl.current.title}}</h4>
+                    </div>
+                    <div class="col s1 m1 l1">
+                        <i class="mdi-navigation-close right small" ng-click="ctrl.closeWindow()"></i>
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="col s12 m12 l6">
+                        <div class="row">
+                            <button ng-click="ctrl.showTrailer()" class="btn red darken-1 col s12 m12 l12"><i
+                                    class="mdi-maps-local-movies right"></i>{{ctrl.show_trailer_for_current}}
+                            </button>
+                        </div>
+                        <div class="row">
+                            <img ng-show="ctrl.show_trailer_for_current == 'Guarda il Trailer'"
+                                 class="responsive-img col s12 m12 l12" ng-src="{{ctrl.current.playbill}}"
+                                 alt="Locandina">
+                            <video ng-hide="ctrl.show_trailer_for_current == 'Guarda il Trailer'"
+                                   class="responsive-video col s12 m12 l12" controls>
+                                <source ng-src="{{ctrl.current.trailer}}" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                    <div class="col s12 m12 l6">
+                        <h5 style="margin-top: 0">Data: <span>{{ctrl.current.date}}</span></h5>
+                        <h5>Orari:</h5>
+                        <span class="btn-flat blue lighten-2 white-text" ng-repeat="time in ctrl.current.time"
+                              style="margin-left: 1em; margin-bottom: 0.5em;">{{time}}</span>
+                        <h5>Descrizione:</h5>
 
-                <div class="cd-item-info">
-                    <h2>{{ctrl.current.title}}</h2>
-                    <p>{{ctrl.current.genre}}</p>
-                    <p>{{ctrl.current.plot}}</p>
-                    <p>{{ctrl.current.duration}}</p>
-                    <ul class="cd-item-action">
-                        <li><a class="btn-large grey darken-3 yellow-text text-accent-3" ng-click="cc.addToCart(ctrl.current)"><i class="mdi-editor-attach-money prefix"></i>Acquistami!</a></li>
-                    </ul>
-                    <video class="responsive-video" controls>
-                        <source ng-src="{{ctrl.current.trailer}}" type="video/mp4">
-                    </video>
+                        <p>{{ctrl.current.description}}</p>
+                    </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button ng-repeat="tm in ctrl.current.time track by $index"
+                        ng-click="cc.addToCart(ctrl.current, $index); ctrl.closeWindow()"
+                        class="modal-action waves-effect waves-green btn-flat"><i
+                        class="mdi-action-add-shopping-cart right"></i>Acquista (ore: {{tm}})
+                </button>
             </div>
         </div>
-        <script src="../js/jquery-2.1.1.js"></script>
-        <script src="../js/velocity.min.js"></script>
-        <script src="../js/today.js"></script>
-    </did>
+    </div>
 </div>
