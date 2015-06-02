@@ -50,7 +50,7 @@ body {
 }
 
 main {
-  height: auto;
+  height: 100%;
   //position: relative;
   //flex: 1 0 auto;
 
@@ -60,6 +60,11 @@ main {
     width: 100%;
     height: auto;
     z-index: 1;
+
+    .plays-locandina {
+      min-height: 300px;
+      max-height: 300px;
+    }
 
   }
 
@@ -198,3 +203,6 @@ main {
 
 }
 
+footer {
+  marign-top: 0px;
+}

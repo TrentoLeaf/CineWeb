@@ -17,7 +17,7 @@
                             date: "Data 1",
                             time: ["17:00", "21:00"],
                             gender: "Genere 1",
-                            playbill: "img/temporary/img1.jpg",
+                            playbill: "img/temporary/mad-max-fury-road-locandina-400x250.jpg",
                             description: "Descrizione 1"
                         },
                         {
@@ -25,7 +25,7 @@
                             date: "Data 1",
                             time: ["17:00", "21:00"],
                             gender: "Genere 2",
-                            playbill: "img/temporary/img2.jpg",
+                            playbill: "img/temporary/terminator_genisys_ver9-201x298.jpg",
                             description: "Descrizione 2"
                         },
                         {
@@ -33,7 +33,7 @@
                             date: "Data 1",
                             time: ["16:00"],
                             gender: "Genere 3",
-                            playbill: "img/temporary/img3.jpg",
+                            playbill: "img/temporary/the-lazarus-effect-LOCANDINA-400x250.jpg",
                             description: "Descrizione 3"
                         },
                         {
@@ -41,7 +41,7 @@
                             date: "Data 1",
                             time: ["17:00", "21:00"],
                             gender: "Genere 4",
-                            playbill: "img/temporary/img4.jpg",
+                            playbill: "img/temporary/san-andreas-locandina-400x250.jpg",
                             description: "Descrizione 4"
                         },
                         {
@@ -49,7 +49,7 @@
                             date: "Data 1",
                             time: ["17:00", "21:00"],
                             gender: "Genere 5",
-                            playbill: "img/temporary/img5.jpg",
+                            playbill: "img/temporary/tomorrowland-il-mondo-di-domani-locandina-400x250.jpg",
                             description: "Descrizione 5"
                         }
                     ]

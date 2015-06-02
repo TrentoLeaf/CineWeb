@@ -37,11 +37,14 @@
     font-size: 1.5rem; } }
 
 main {
-  height: auto; }
+  height: 100%; }
   main .content-div {
     width: 100%;
     height: auto;
     z-index: 1; }
+    main .content-div .plays-locandina {
+      min-height: 300px;
+      max-height: 300px; }
   main .side-div {
     box-sizing: border-box;
     position: fixed;
@@ -119,3 +122,6 @@ main {
       top: 56px;
       width: 100%;
       overflow-y: auto; } }
+
+footer {
+  marign-top: 0px }

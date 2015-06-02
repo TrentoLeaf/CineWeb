@@ -1,7 +1,7 @@
 <div ng-controller="CartController as cc">
     <div ng-repeat="date in ctrl.archive">
         <div class="row">
-           <h1 class="center yellow-text text-accent-4">{{date.date}}</h1>
+            <h1 class="center yellow-text text-accent-4">{{date.date}}</h1>
         </div>
 
         <ul class="row">
@@ -10,7 +10,7 @@
                     style="margin-bottom: 4em;">
                     <div class="card">
                         <div class="card-image">
-                            <img class="responsive-img" ng-src="{{film.playbill}}" alt="Locandina">
+                            <img class="responsive-img plays-locandina" ng-src="{{film.playbill}}" alt="Locandina">
                         </div>
                         <div class="card-content grey-text text-darken-4">
                             <span class="card-title black-text">{{film.title}}</span>
