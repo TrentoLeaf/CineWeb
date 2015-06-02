@@ -1,5 +1,7 @@
 package tk.trentoleaf.cineweb.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 
 public class Film implements Serializable {
@@ -78,6 +80,12 @@ public class Film implements Serializable {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    // TODO
+    public boolean isValid() {
+        return StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(genre) && StringUtils.isNotEmpty(trailer)
+                && StringUtils.isNotEmpty(playbill) && StringUtils.isNotEmpty(plot) && duration > 0;
     }
 
     @Override
