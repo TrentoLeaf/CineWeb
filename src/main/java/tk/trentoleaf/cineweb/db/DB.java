@@ -462,7 +462,7 @@ public class DB {
 
             ResultSet rs = stm.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 return rs.getString(1);
             } else {
                 return null;
@@ -479,7 +479,7 @@ public class DB {
 
             ResultSet rs = stm.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 return rs.getString(1);
             } else {
                 return null;
@@ -619,6 +619,30 @@ public class DB {
     }
 
     // list of users
+    public Film getFilm(int fid) throws SQLException, EntryNotFoundException {
+        final String query = "SELECT title, genre, trailer, playbill, plot, duration FROM films WHERE fid = ?;";
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, fid);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                Film f = new Film();
+                f.setFid(fid);
+                f.setTitle(rs.getString("title"));
+                f.setGenre(rs.getString("genre"));
+                f.setTrailer(rs.getString("trailer"));
+                f.setPlaybill(rs.getString("playbill"));
+                f.setPlot(rs.getString("plot"));
+                f.setDuration(rs.getInt("duration"));
+                return f;
+            }
+
+            // no such film found
+            throw new EntryNotFoundException();
+        }
+    }
+
+    // list of films
     public List<Film> getFilms() throws SQLException {
         List<Film> films = new ArrayList<>();
 
