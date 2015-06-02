@@ -17,50 +17,57 @@ $(document).ready(function () {
 });
 
 /* può tornare utile
-function close_Sidediv() {
-    $('.side-div').removeClass('side-div-w');
-    $('.side-div').find('.side-nav-element').addClass('ng-hide');
-}*/
+ function close_Sidediv() {
+ $('.side-div').removeClass('side-div-w');
+ $('.side-div').find('.side-nav-element').addClass('ng-hide');
+ }*/
 
 
 (function () {
     'use strict';
 
-    var app = angular.module('cineweb', ['PlaysModule', 'CartModule', 'ngRoute', 'tabmodule', 'loginModule', 'registrationModule', 'usermodule', 'adminUsers']);
+    angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'PlaysModule', 'CartModule',
+        'tabmodule', 'loginModule', 'registrationModule', 'usermodule', 'adminUsers'])
 
-    app.config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.when('/', {
-            redirectTo: '/today'
-        }).when('/home', {
-            redirectTo: '/today'
-        }).when('/today', {
-            templateUrl: '../partials/today.html',
-            controller: 'PlaysController',
-            controllerAs: 'ctrl'
-        }).when('/soon', {
-            templateUrl: '../partials/soon.html',
-            controller: 'PlaysController',
-            controllerAs: 'ctrl'
-        }).when('/informations', {
-            templateUrl: '../partials/informations.html',
-            controller: '', //controller per informations
-            controllerAs: '' //alias controller per informstions
-        }).when('/registration', {
-            templateUrl: '../partials/registration.html',
-            controller: 'RegistrationCtrl',
-            controllerAs: 'ctrl'
-        }).when('/me', {
-            templateUrl: '../partials/userArea.html',
-            controller: 'UserController',
-            controllerAs: 'ctrl'
-        }).when('/admin/users', {
-            templateUrl: '../partials/admin/users.html',
-            controller: 'AdminUsersController',
-            controllerAs: 'ctrl'
-        }).when('/error', {
-            templateUrl: '../partials/error.html'
-        }).otherwise({
-            redirectTo: '/error'
-        });
-    }]);
+        .config(['$routeProvider', function ($routeProvider) {
+            $routeProvider.when('/', {
+                redirectTo: '/today'
+            }).when('/home', {
+                redirectTo: '/today'
+            }).when('/today', {
+                templateUrl: '../partials/today.html',
+                controller: 'PlaysController',
+                controllerAs: 'ctrl'
+            }).when('/soon', {
+                templateUrl: '../partials/soon.html',
+                controller: 'PlaysController',
+                controllerAs: 'ctrl'
+            }).when('/info', {
+                templateUrl: '../partials/info.html'
+            }).when('/registration', {
+                templateUrl: '../partials/registration.html',
+                controller: 'RegistrationCtrl',
+                controllerAs: 'ctrl'
+            }).when('/me', {
+                templateUrl: '../partials/userArea.html',
+                controller: 'UserController',
+                controllerAs: 'ctrl'
+            }).when('/admin/users', {
+                templateUrl: '../partials/admin/users.html',
+                controller: 'AdminUsersController',
+                controllerAs: 'ctrl'
+            }).when('/error', {
+                templateUrl: '../partials/error.html'
+            }).otherwise({
+                redirectTo: '/error'
+            });
+        }])
+
+        .config(['uiGmapGoogleMapApiProvider', function (uiGmapGoogleMapApiProvider) {
+            uiGmapGoogleMapApiProvider.configure({
+                //    key: 'your api key',
+                v: '3.17',
+                libraries: 'weather,geometry,visualization'
+            });
+        }]);
 })();
