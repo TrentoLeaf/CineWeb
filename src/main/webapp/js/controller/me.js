@@ -1,8 +1,8 @@
 (function () {
     'use strict';
 
-    angular.module('usermodule', ['usersModule'])
-        .controller('UserController', ['$location', 'Auth', function ($location, Auth) {
+    angular.module('meModule', ['usersModule'])
+        .controller('MeController', ['$location', 'Auth', function ($location, Auth) {
 
             var ctrl = this;
             this.user = {};
@@ -21,6 +21,5 @@
 
             // when page loads -> load user info
             this.loadUserData();
-
         }]);
 })();

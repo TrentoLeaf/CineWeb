@@ -12,7 +12,6 @@ $(document).ready(function () {
         opacity: .5, // Opacity of modal background
         in_duration: 400, // Transition in duration
         out_duration: 300 // Transition out duration
-
     });
 });
 
@@ -22,12 +21,11 @@ $(document).ready(function () {
  $('.side-div').find('.side-nav-element').addClass('ng-hide');
  }*/
 
-
 (function () {
     'use strict';
 
-    angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'PlaysModule', 'CartModule',
-        'tabmodule', 'loginModule', 'registrationModule', 'usermodule', 'adminUsers'])
+    angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule',
+        'tabmodule', 'loginModule', 'registrationModule', 'meModule', 'adminUsers'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -50,7 +48,7 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when('/me', {
                 templateUrl: '../partials/userArea.html',
-                controller: 'UserController',
+                controller: 'MeController',
                 controllerAs: 'ctrl'
             }).when('/admin/users', {
                 templateUrl: '../partials/admin/users.html',
