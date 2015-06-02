@@ -382,6 +382,25 @@ public class RestUsersTest extends MyJerseyTest {
     }
 
     @Test
+    public void getUserSuccess() throws Exception {
+
+        // create a user
+        final User u = new User(true, Role.CLIENT, "email@email.com", "pass", "name", "name");
+        db.createUser(u);
+
+        // search the user
+        final Response r1 = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        assertEquals(200, r1.getStatus());
+        assertEquals(u, r1.readEntity(User.class));
+    }
+
+    @Test
+    public void getUserFail() throws Exception {
+        final Response r1 = getTarget().path("/users/" + 34).request(MediaType.APPLICATION_JSON_TYPE).get();
+        assertEquals(404, r1.getStatus());
+    }
+
+    @Test
     public void createUserSuccess() throws Exception {
 
         // create a user

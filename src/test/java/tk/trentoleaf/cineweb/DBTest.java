@@ -337,7 +337,7 @@ public class DBTest {
         db.createUser(u1);
 
         // existing
-        final String code = db.requestConfirmationCode(u1.getUid());
+        db.requestConfirmationCode(u1.getUid());
         db.confirmUser("sdfsdfsd");
     }
 
@@ -944,10 +944,8 @@ public class DBTest {
         assertTrue(db.isAlreadyPlay(r1, ff.parseDateTime("20/05/2015 14:00:01")));
     }
 
-
     @Test
     public void createBooking() throws Exception {
-
         final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
 
         final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
@@ -988,7 +986,7 @@ public class DBTest {
     }
 
 
-    //booking fail by time expired
+    // booking fail by time expired
     @Test(expected = FilmAlreadyGoneException.class)
     public void createBookingFail() throws Exception {
 
@@ -1025,7 +1023,6 @@ public class DBTest {
 
     @Test
     public void deleteBooking() throws Exception {
-
         final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
 
         final User u1 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
@@ -1035,11 +1032,9 @@ public class DBTest {
         db.createFilm(f1);
 
         final Room r1 = db.createRoom(4, 5);
-
         final List<Seat> s1 = r1.getSeats();
 
         final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
-
         db.createPlay(p1);
 
         // create bookings  int rid, int x, int y, int uid, int pid, double price
@@ -1068,13 +1063,12 @@ public class DBTest {
 
     @Test(expected = EntryNotFoundException.class)
     public void deleteBookingFail2() throws Exception {
-        db.deleteBooking(new Booking(345, 4, 6,4, 345, DateTime.now(), 34.23));
+        db.deleteBooking(new Booking(345, 4, 6, 4, 345, DateTime.now(), 34.23));
     }
 
 
     @Test
     public void getSeatsReservedByPlay() throws Exception {
-
         final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
 
         final User u1 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
@@ -1084,25 +1078,21 @@ public class DBTest {
         db.createFilm(f1);
 
         final Room r1 = db.createRoom(4, 5);
-
         final List<Seat> s1 = r1.getSeats();
 
         final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
-
         db.createPlay(p1);
 
         // create bookings  int rid, int x, int y, int uid, int pid, double price
-        final Booking b1 = db.createBookings(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
-        final Booking b2 = db.createBookings(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
+        db.createBookings(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
+        db.createBookings(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
 
         // expected
         List<SeatReserved> expected = new ArrayList<>();
-        expected.add(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(),true) );
-        expected.add(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(),true) );
-
+        expected.add(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), true));
+        expected.add(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), true));
 
         // current
-
         List<SeatReserved> current = db.getSeatsReservedByPlay(p1);
 
         // test
@@ -1111,7 +1101,6 @@ public class DBTest {
 
     @Test
     public void getSeatsByPlay() throws Exception {
-
         final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
 
         final User u1 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
@@ -1121,11 +1110,9 @@ public class DBTest {
         db.createFilm(f1);
 
         final Room r1 = db.createRoom(4, 5);
-
         final List<Seat> s1 = r1.getSeats();
 
         final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
-
         db.createPlay(p1);
 
         // create bookings  int rid, int x, int y, int uid, int pid, double price
@@ -1136,23 +1123,20 @@ public class DBTest {
         List<SeatReserved> expected = new ArrayList<>();
         //expected.add(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(),true) );
         //expected.add(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(),true) );
-        for(int i=0;i<s1.size();i++)
-        {
-            expected.add(new SeatReserved(s1.get(i).getRid(),s1.get(i).getX(),s1.get(i).getY(),false));
-        }
-        expected.remove(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(),false));
-        expected.remove(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(),false));
-        expected.add(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(),true) );
-        expected.add(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(),true) );
 
+        for (int i = 0; i < s1.size(); i++) {
+            expected.add(new SeatReserved(s1.get(i).getRid(), s1.get(i).getX(), s1.get(i).getY(), false));
+        }
+        expected.remove(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), false));
+        expected.remove(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), false));
+        expected.add(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), true));
+        expected.add(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), true));
 
         // current
-
         List<SeatReserved> current = db.getSeatsByPlay(p1);
 
         // test
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
-
 
 }

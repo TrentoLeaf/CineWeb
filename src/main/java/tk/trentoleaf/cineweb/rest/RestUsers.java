@@ -242,6 +242,16 @@ public class RestUsers {
         return db.getUsers();
     }
 
+    @GET
+    @Path("/{id}")
+    public User getUser(@PathParam("id") int uid) throws SQLException {
+        try {
+            return db.getUser(uid);
+        } catch (UserNotFoundException e) {
+            throw NotFoundException.USER_NOT_FOUND;
+        }
+    }
+
     @POST
     public User createUser(@Context HttpServletRequest request, User user) throws SQLException {
 
@@ -286,14 +296,12 @@ public class RestUsers {
     @DELETE
     @Path("/{id}")
     public Response deleteUser(@PathParam("id") int id) throws SQLException {
-
         try {
             db.deleteUser(id);
             return Response.ok().build();
         } catch (UserNotFoundException e) {
             throw NotFoundException.USER_NOT_FOUND;
         }
-
     }
 
 }

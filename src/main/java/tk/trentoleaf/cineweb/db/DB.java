@@ -409,7 +409,7 @@ public class DB {
 
     // get a single user
     public User getUser(int uid) throws SQLException, UserNotFoundException {
-        final String query = "SELECT email, roleid, first_name, second_name, credit FROM users WHERE uid = ?;";
+        final String query = "SELECT enabled, email, roleid, first_name, second_name, credit FROM users WHERE uid = ?;";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setInt(1, uid);
@@ -418,6 +418,7 @@ public class DB {
             if (rs.next()) {
                 User u = new User();
                 u.setUid(uid);
+                u.setEnabled(rs.getBoolean("enabled"));
                 u.setRole(Role.fromID(rs.getString("roleid")));
                 u.setEmail(rs.getString("email"));
                 u.setFirstName(rs.getString("first_name"));
