@@ -19,6 +19,8 @@
         $rootScope.total = 0.00;
 
         this.addToCart = function (film, time_index) {
+            console.log("Add to cart!!!");
+
             // film: l'oggetto film da acquistare
             // time_index: l'indice dell'ora (nell' array time di film) da prenotare
 
@@ -83,7 +85,7 @@
 
         this.cloneObject = function (obj) {
             return (JSON.parse(JSON.stringify(obj)));
-        }
+        };
 
 
         this.log = function() {
