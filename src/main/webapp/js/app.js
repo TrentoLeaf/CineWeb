@@ -8,7 +8,7 @@
             }).when('/home', {
                 redirectTo: '/today'
             }).when('/today', {
-                templateUrl: '../partials/today2.html',
+                templateUrl: '../partials/today.html',
                 controller: 'PlaysController',
                 controllerAs: 'ctrl'
             }).when('/soon', {
