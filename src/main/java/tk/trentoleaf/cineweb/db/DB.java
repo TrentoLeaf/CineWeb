@@ -98,6 +98,7 @@ public class DB {
         createTableRooms();
         createTableSeats();
         createTablePlays();
+        createTableBookings();
     }
 
     // destroy the db
@@ -106,6 +107,7 @@ public class DB {
         // drop tables
         dropTableRegistrationCodes();
         dropTablePasswordResets();
+        dropTableBookings();
         dropTableUsers();
         dropTableRoles();
         dropTablePlays();
@@ -405,6 +407,30 @@ public class DB {
         }
     }
 
+    // get a single user
+    public User getUser(int uid) throws SQLException, UserNotFoundException {
+        final String query = "SELECT email, roleid, first_name, second_name, credit FROM users WHERE uid = ?;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, uid);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                User u = new User();
+                u.setUid(uid);
+                u.setRole(Role.fromID(rs.getString("roleid")));
+                u.setEmail(rs.getString("email"));
+                u.setFirstName(rs.getString("first_name"));
+                u.setSecondName(rs.getString("second_name"));
+                u.setCredit(rs.getDouble("credit"));
+                return u;
+            }
+
+            // if here -> no such user
+            throw new UserNotFoundException();
+        }
+    }
+
     // exists user
     public boolean existsUser(int userID) throws SQLException {
         final String query = "SELECT COUNT(uid) FROM users WHERE uid = ?;";
@@ -583,13 +609,14 @@ public class DB {
     private void createTableFilms() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS films (" +
-                    "fid SERIAL PRIMARY KEY," +
+                    "fid SERIAL," +
                     "title VARCHAR(100) NOT NULL," +
                     "genre VARCHAR(20)," +
                     "trailer VARCHAR(100)," +
                     "playbill VARCHAR(100)," +
                     "plot TEXT," +
-                    "duration INTEGER);");
+                    "duration INTEGER," +
+                    "PRIMARY KEY (fid));");
         }
     }
 
@@ -739,6 +766,78 @@ public class DB {
         }
     }
 
+    //get a list of all seats reserved by a Play
+    public List<SeatReserved> getSeatsReservedByPlay(Play play) throws SQLException, WrongCodeException {
+
+        return getSeatsReservedByPlay(play.getPid());
+    }
+
+    //get a list of all seats reserved by a Play.getPid()
+    public List<SeatReserved> getSeatsReservedByPlay(int pid) throws SQLException, WrongCodeException {
+        final List<SeatReserved> seatsReserved = new ArrayList<>();
+
+        final String query = "SELECT rid,x,y FROM bookings WHERE pid = ?;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, pid);
+            ResultSet rs = stm.executeQuery();
+
+            int ridCheck=-1;
+            while (rs.next()) {
+                int rid = rs.getInt("rid");
+
+                // check if all seats find are part of the same room
+                if(ridCheck==rid ||ridCheck==-1)
+                {
+                    ridCheck=rid;
+                }
+                else
+                    throw new WrongCodeException();
+
+                int x = rs.getInt("x");
+                int y = rs.getInt("y");
+                seatsReserved.add(new SeatReserved(rid, x, y,true));
+            }
+
+        }
+
+
+        return seatsReserved;
+    }
+
+    //get a list of all seats by a Play
+    public List<SeatReserved> getSeatsByPlay(Play play) throws SQLException, WrongCodeException {
+        return getSeatsByPlay(play.getPid());
+    }
+
+    //get a list of all seats by a Play.getPid()
+    public List<SeatReserved> getSeatsByPlay(int pid) throws SQLException, WrongCodeException {
+        //list of seat reserved
+        final List<SeatReserved> seatReserved = getSeatsReservedByPlay(pid);
+
+        //list of all seat in the room
+        final List<Seat> allSeat=getSeatsByRoom(seatReserved.get(1).getRid());
+
+        //list of all seatReserved in the room
+        final List<SeatReserved> seat =new ArrayList<>();
+
+        for(int i=0;i<allSeat.size();i++)
+        {
+            if(seatReserved.contains(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), true)))
+            {
+                seat.add(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), true));
+            }
+            else
+                seat.add(new SeatReserved(allSeat.get(i).getRid(),allSeat.get(i).getX(),allSeat.get(i).getY(),false));
+        }
+
+
+
+
+
+        return seat;
+    }
+
     // create a Room with all the seats
     public Room createRoom(int rows, int cols) throws SQLException {
         return createRoom(rows, cols, new ArrayList<Seat>());
@@ -802,6 +901,7 @@ public class DB {
                                 seatsStm.setInt(1, rid);
                                 seatsStm.setInt(2, x);
                                 seatsStm.setInt(3, y);
+
                                 seatsStm.execute();
 
                                 // add to room
@@ -978,6 +1078,30 @@ public class DB {
         }
     }
 
+    // check if is older play
+    public boolean isOlderPlay(int pid, DateTime time) throws SQLException {
+
+        boolean isOlderPlay=false;
+        final String query = "SELECT time FROM plays " +
+                "WHERE pid = ? ;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+
+            stm.setInt(1, pid);
+
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+
+
+
+            if(rs.getTimestamp(1).before(new Timestamp(time.toDate().getTime())))
+            {
+                isOlderPlay = true;
+            }
+        }
+        return isOlderPlay;
+    }
+
     // get list of plays
     public List<Play> getPlays() throws SQLException {
         final List<Play> plays = new ArrayList<>();
@@ -1017,4 +1141,164 @@ public class DB {
         }
     }
 
+    // create table books
+    private void createTableBookings() throws SQLException
+    {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement())
+        {
+            stm.execute("CREATE TABLE IF NOT EXISTS bookings (" +
+                    "bid SERIAL," +
+                    "uid INTEGER," +
+                    "pid INTEGER," +
+                    "rid INTEGER," +
+                    "x INTEGER," +
+                    "y INTEGER," +
+                    "time_booking TIMESTAMP NOT NULL," +
+                    "price DOUBLE PRECISION," +
+                    "PRIMARY KEY (bid)," +
+                    "FOREIGN KEY (rid,x,y) REFERENCES seats(rid,x,y)," +
+                    "FOREIGN KEY (uid) REFERENCES users(uid)," +
+                    "FOREIGN KEY (pid) REFERENCES plays(pid));");
+            //stm.execute("CREATE INDEX ON bookings (pid);");
+        }
+    }
+
+    // drop table booking
+    private void dropTableBookings() throws SQLException
+    {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement())
+        {
+            stm.execute("DROP TABLE IF EXISTS bookings;");
+        }
+    }
+
+    public Booking createBookings(int rid, int x, int y, int uid, int pid, double price)  throws SQLException, FilmAlreadyGoneException
+    {
+        final String query = "INSERT INTO bookings (bid, uid, pid, rid, x, y, time_booking, price) VALUES " +
+                "(DEFAULT, ?, ?, ?, ?, ?, ?, ?) RETURNING bid";
+
+
+        final DateTime timeBooking = new DateTime(System.currentTimeMillis());
+        if(isOlderPlay( pid,  timeBooking))
+        {
+            throw  new FilmAlreadyGoneException();
+        }
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query))
+        {
+
+            final Booking booking = new Booking(rid, x, y, uid, pid, timeBooking, price);
+
+            stm.setInt(1, booking.getUid());
+            stm.setInt(2, booking.getPid());
+            stm.setInt(3, booking.getRid());
+            stm.setInt(4, booking.getX());
+            stm.setInt(5, booking.getY());
+            stm.setTimestamp(6, new Timestamp(booking.getTimeBooking().toDate().getTime()));
+            stm.setDouble(7, price);
+
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+
+            int bid = rs.getInt("bid");
+            booking.setBid(bid);
+            return booking;
+        }
+    }
+
+    //list of all booking
+    public List<Booking> getBookings() throws SQLException {
+        final List<Booking> bookings = new ArrayList<>();
+
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            ResultSet rs = stm.executeQuery("SELECT bid, uid, pid, rid, x, y, time_booking, price FROM bookings;");
+
+            while (rs.next()) {
+                int bid = rs.getInt("bid");
+                int uid = rs.getInt("uid");
+                int pid = rs.getInt("pid");
+                int rid = rs.getInt("rid");
+                int x = rs.getInt("x");
+                int y = rs.getInt("y");
+                DateTime timeBooking = new DateTime(rs.getTimestamp("time_booking").getTime());
+                double price = rs.getDouble("price");
+                bookings.add(new Booking(bid, rid, x, y, uid, pid, timeBooking, price));
+            }
+        }
+
+        return bookings;
+    }
+
+    public Booking getBooking(int bookingId) throws SQLException, EntryNotFoundException {
+        final String query = "SELECT uid, pid, rid, x, y, time_booking, price FROM bookings WHERE bid = ?;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, bookingId);
+            ResultSet rs = stm.executeQuery();
+
+            if(rs.next()) {
+                int uid = rs.getInt("uid");
+                int pid = rs.getInt("pid");
+                int rid = rs.getInt("rid");
+                int x = rs.getInt("x");
+                int y = rs.getInt("y");
+                DateTime timeBooking = new DateTime(rs.getTimestamp("time_booking").getTime());
+                double price = rs.getDouble("price");
+
+                return new Booking(bookingId, rid, x, y, uid, pid, timeBooking, price);
+            }
+
+            // no such booking
+            throw new EntryNotFoundException();
+        }
+    }
+
+    //delete booking
+    public void deleteBooking(Booking booking) throws SQLException, UserNotFoundException, EntryNotFoundException{
+
+        final String query = "DELETE FROM bookings WHERE bid = ?";
+        final User user;
+
+        try (Connection connection = getConnection()) {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
+                stm.setInt(1, booking.getBid());
+
+                int n = stm.executeUpdate();
+
+                if(n==0)
+                {
+                    throw new EntryNotFoundException();
+                }
+
+                double accredit = booking.getPrice() * 0.80;
+                user = getUser(booking.getUid());
+                user.addCredit(accredit);
+
+                final String queryUser = "UPDATE users SET credit = ? WHERE uid = ?";
+
+                try (PreparedStatement stmUser = connection.prepareStatement(queryUser)) {
+                    stmUser.setDouble(1, user.getCredit());
+                    stmUser.setInt(2, user.getUid());
+                    stmUser.execute();
+
+                }
+
+                connection.commit();
+
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            }
+        }
+
+    }
+
+    // delete a Booking
+    public void deleteBooking(int bid) throws SQLException, EntryNotFoundException, UserNotFoundException {
+        deleteBooking(getBooking(bid));
+    }
+
 }
+

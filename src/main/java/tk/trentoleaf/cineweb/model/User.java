@@ -111,6 +111,10 @@ public class User implements Serializable {
         return isValid() && StringUtils.isNotEmpty(password);
     }
 
+    public void addCredit(double credit) {
+        this.credit += credit;
+    }
+
     @Override
     public int hashCode() {
         return uid;
