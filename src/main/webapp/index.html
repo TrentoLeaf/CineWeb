@@ -15,6 +15,7 @@
 
     <!-- TODO: move to sass -->
     <link rel="stylesheet" href="css/map.css">
+    <link rel="stylesheet" href="css/me.css">
 
     <!-- JS libs -->
     <script src="lib/jquery-2.1.4.min.js"></script>
@@ -90,7 +91,7 @@
                     <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
                         <li ng-repeat="film in cart track by $index" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
-                                <img class="responsive-img" src="{{film.playbill}}" alt="locandina" />
+                                <img class="responsive-img" ng-src="{{film.playbill}}" alt="locandina" />
                             </div>
                             <div class="item-details col s8 m8 l8"> <!-- titolo, data, doropdowns -->
                                 <div class="row">

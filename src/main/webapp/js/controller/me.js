@@ -13,6 +13,7 @@
                         ctrl.user = data.data;
                     },
                     function () {
+                        // TODO: move this logic in appConfig
                         // on errors -> redirect to login
                         $location.path('/login');
                     }

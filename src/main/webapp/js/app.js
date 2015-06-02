@@ -47,9 +47,13 @@ $(document).ready(function () {
                 controller: 'RegistrationCtrl',
                 controllerAs: 'ctrl'
             }).when('/me', {
-                templateUrl: '../partials/userArea.html',
+                templateUrl: '../partials/me.html',
                 controller: 'MeController',
                 controllerAs: 'ctrl'
+            }).when('/login', {
+                templateUrl: '../partials/login.html',
+                controller: 'LoginController',
+                controllerAs: 'c'
             }).when('/admin/users', {
                 templateUrl: '../partials/admin/users.html',
                 controller: 'AdminUsersController',
