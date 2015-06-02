@@ -18,13 +18,17 @@
 
         $rootScope.total = 0.00;
 
-        this.addToCart = function (film) {
+        this.addToCart = function (film, time_index) {
+            // film: l'oggetto film da acquistare
+            // time_index: l'indice dell'ora (nell' array time di film) da prenotare
+
+
             var duplicate = false;
 
-            // controllo di non inserire dublicati
+            // TODO controllo di non inserire dublicati
            /* for (var i = 0; i< $rootScope.cart.length; i++) {
-                // TODO assicurarsi che film abbia un fid
-                if (film.fid == $rootScope.cart[i].fid) {
+                // TODO assicurarsi che film abbia un fid e che i time siano diversi
+                if (film.fid == $rootScope.cart[i].fid && (film.time[time_index] == $rootScope.cart[i].time)) {
                     duplicate = true;
                     i = $rootScope.cart.length;
                 }
@@ -32,11 +36,14 @@
             }*/
 
             if (! duplicate) {
+                console.log("acqustato.");
+                // copio film per non sporcare i film in programmazione con valori del carrello
+                var newFilm = this.cloneObject(film);
                 // aggiungo un dropdown con tipo e numero di biglietti
-                film['tickets'] = [];
-                film['tickets'].push({ type : $rootScope.tickets[0].type, number : 1});
-
-                $rootScope.cart.push(film);
+                newFilm['tickets'] = [];
+                newFilm['tickets'].push({ type : $rootScope.tickets[0].type, number : 1});
+                newFilm['time'] = film['time'][time_index];
+                $rootScope.cart.push(newFilm);
                 this.updateTotal();
             }
         };
@@ -73,6 +80,15 @@
             }
 
         };
+
+        this.cloneObject = function (obj) {
+            return (JSON.parse(JSON.stringify(obj)));
+        }
+
+
+        this.log = function() {
+            console.log("carrlog");
+        }
 
     }]);
 })();

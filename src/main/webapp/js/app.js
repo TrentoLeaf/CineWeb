@@ -1,9 +1,20 @@
 $(document).ready(function () {
+
     // init the mobile menu sidenav
     $(".button-collapse").sideNav();
 
     // init the dropdown selectors
     $('select').material_select();
+
+    // apre i modal di materialize
+    $('.modal-trigger').leanModal({         // ANDR REMOVE
+        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+        opacity: .5, // Opacity of modal background
+        in_duration: 400, // Transition in duration
+        out_duration: 300, // Transition out duration
+        ready: function() { /*alert('Ready');*/ }, // Callback for Modal open
+        complete: function() { /*alert('Closed');*/ } // Callback for Modal close
+    });
 
 
    /* // intercept all clicks
@@ -42,7 +53,7 @@ function close_Sidediv() {
         }).when('/home', {
             redirectTo: '/today'
         }).when('/today', {
-            templateUrl: '../partials/today.html',
+            templateUrl: '../partials/today2.html',
             controller: 'PlaysController',
             controllerAs: 'ctrl'
         }).when('/soon', {
