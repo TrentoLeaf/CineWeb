@@ -14,9 +14,8 @@
         this.maxTickets = 10;
 
         // carrello che contiene oggetti film modificati
-        $rootScope.cart = [];
-
-        $rootScope.total = 0.00;
+        $rootScope.cart = $rootScope.cart || [];
+        $rootScope.total = $rootScope.total || 0.00;
 
         this.addToCart = function (film, time_index) {
             console.log("Add to cart!!!");
