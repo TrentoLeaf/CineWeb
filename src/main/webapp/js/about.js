@@ -21,9 +21,9 @@ jQuery(document).ready(function($){
 			/* if content is visible above the .cd-gallery - scroll before opening the folding panel */
 			$('body,html').animate({
 				'scrollTop': $('.cd-gallery').offset().top
-			}, 100, function(){ 
+			}, 100, function(){
 	           	toggleContent(url, true);
-	        }); 
+	        });
 
 		} else {
 			toggleContent(url, true);
@@ -40,24 +40,24 @@ jQuery(document).ready(function($){
 					$('.cd-folding-panel').addClass('is-open');
 					$('.cd-main').addClass('fold-is-open');
 				}, 100);
-				
+
 			});
 		} else {
 			/* close the folding panel */
 			var mq = viewportSize();
 			$('.cd-folding-panel').removeClass('is-open');
 			$('.cd-main').removeClass('fold-is-open');
-			
-			(mq == 'mobile' || $('.no-csstransitions').length > 0 ) 
+
+			(mq == 'mobile' || $('.no-csstransitions').length > 0 )
 				/* according to the mq, immediately remove the .overflow-hidden or wait for the end of the animation */
 				? $('body').removeClass('overflow-hidden')
-				
+
 				: $('.cd-main').find('.cd-item').eq(0).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
 					$('body').removeClass('overflow-hidden');
 					$('.cd-main').find('.cd-item').eq(0).off('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend');
 				});
 		}
-		
+
 	}
 
 	function viewportSize() {
