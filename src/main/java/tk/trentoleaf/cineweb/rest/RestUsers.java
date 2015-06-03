@@ -5,6 +5,8 @@ import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.email.EmailSender;
 import tk.trentoleaf.cineweb.exceptions.*;
 import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.rest.annotations.AdminArea;
+import tk.trentoleaf.cineweb.rest.annotations.UserArea;
 import tk.trentoleaf.cineweb.rest.entities.*;
 import tk.trentoleaf.cineweb.rest.exceptions.AuthFailedException;
 import tk.trentoleaf.cineweb.rest.exceptions.BadRequestException;
@@ -89,6 +91,7 @@ public class RestUsers {
     }
 
     @POST
+    @UserArea
     @Path("/logout")
     public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 
@@ -99,6 +102,7 @@ public class RestUsers {
     }
 
     @POST
+    @UserArea
     @Path("/change-password")
     public Response changePassword(ChangePassword change) throws SQLException {
 
@@ -222,6 +226,7 @@ public class RestUsers {
     }
 
     @GET
+    @UserArea
     @Path("/me")
     public UserDetails getUser(@Context HttpServletRequest request) throws NotFoundException {
 
@@ -238,11 +243,13 @@ public class RestUsers {
     }
 
     @GET
+    @AdminArea
     public List<User> getUsers() throws SQLException {
         return db.getUsers();
     }
 
     @GET
+    @AdminArea
     @Path("/{id}")
     public User getUser(@PathParam("id") int uid) throws SQLException {
         try {
@@ -253,6 +260,7 @@ public class RestUsers {
     }
 
     @POST
+    @AdminArea
     public User createUser(@Context HttpServletRequest request, User user) throws SQLException {
 
         // check if user is valid
@@ -272,6 +280,7 @@ public class RestUsers {
     }
 
     @PUT
+    @AdminArea
     @Path("/{id}")
     public User updateUser(@PathParam("id") int id, User user) throws SQLException {
 
@@ -294,6 +303,7 @@ public class RestUsers {
     }
 
     @DELETE
+    @AdminArea
     @Path("/{id}")
     public Response deleteUser(@PathParam("id") int id) throws SQLException {
         try {
