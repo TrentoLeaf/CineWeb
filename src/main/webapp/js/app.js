@@ -71,5 +71,16 @@ $(document).ready(function () {
                 v: '3.17',
                 libraries: 'weather,geometry,visualization'
             });
-        }]);
+        }])
+
+        .directive('loading', function() {
+           return {
+               restrict: 'E',
+               templateUrl: '../partials/directives/loading.html',
+               scope: {
+                   loading: '=loading'
+               }
+           }
+        });
+
 })();

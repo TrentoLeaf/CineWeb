@@ -2,15 +2,17 @@
     'use strict';
 
     angular.module('meModule', ['usersModule'])
-        .controller('MeController', ['$location', 'Auth', function ($location, Auth) {
+        .controller('MeController', ['$timeout', '$location', 'Auth', function ($timeout, $location, Auth) {
 
             var ctrl = this;
             this.user = {};
+            this.loading = true;
 
             this.loadUserData = function () {
                 Auth.me().then(
                     function (data) {
                         ctrl.user = data.data;
+                        ctrl.loading = false;
                     },
                     function () {
                         // TODO: move this logic in appConfig
@@ -21,6 +23,6 @@
             };
 
             // when page loads -> load user info
-            this.loadUserData();
+            $timeout(this.loadUserData, 1500);
         }]);
 })();
