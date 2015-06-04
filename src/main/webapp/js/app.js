@@ -25,7 +25,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule',
-        'tabmodule', 'loginModule', 'registrationModule', 'meModule', 'adminUsers'])
+        'tabmodule', 'loginModule', 'registrationModule', 'meModule', 'adminUsers', 'confirmModule'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -54,6 +54,10 @@ $(document).ready(function () {
                 templateUrl: '../partials/login.html',
                 controller: 'LoginController',
                 controllerAs: 'c'
+            }).when('/confirm', {
+                templateUrl: '../partials/confirm.html',
+                controller: 'ConfirmController',
+                controllerAs: 'ctrl'
             }).when('/admin/users', {
                 templateUrl: '../partials/admin/users.html',
                 controller: 'AdminUsersController',
@@ -73,14 +77,43 @@ $(document).ready(function () {
             });
         }])
 
-        .directive('loading', function() {
-           return {
-               restrict: 'E',
-               templateUrl: '../partials/directives/loading.html',
-               scope: {
-                   loading: '=loading'
-               }
-           }
-        });
+        .directive('loading', function () {
+            return {
+                restrict: 'E',
+                templateUrl: '../partials/directives/loading.html',
+                scope: {
+                    loading: '=loading'
+                }
+            }
+        })
+
+        .run(['$rootScope', '$location', function ($rootScope, $location) {
+
+            // redirect only if needed
+            var redirect = function (path) {
+                if ($location.path() != path) {
+                    $location.path(path);
+                }
+            };
+
+            $rootScope.$on('$routeChangeStart', function (event, next) {
+
+                // check for a c parameter
+                var c = $location.search().c;
+
+                // confirm page
+                if (c != undefined) {
+                    redirect('/confirm');
+                }
+
+                // check for a r parameter
+                var r = $location.search().r;
+
+                if (r != undefined) {
+                    redirect('/reset');
+                }
+
+            });
+        }]);
 
 })();
