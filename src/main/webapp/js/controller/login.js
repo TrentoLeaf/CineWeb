@@ -30,6 +30,7 @@
                         StorageService.login(data);
                         // set logged var
                         ctrl.logged = true;
+                        setError("");
                         // redirect al partial principale
                         $location.path('/today');
 
