@@ -13,11 +13,12 @@
                             <img class="responsive-img plays-locandina" ng-src="{{film.playbill}}" alt="Locandina">
                         </div>
                         <div class="card-content grey-text text-darken-4">
-                            <span class="card-title black-text">{{film.title}}</span>
-
-                            <p>{{film.description}} I am a very simple card. I am good at containing small bits of
-                                information.
-                                I am convenient because I require little markup to use effectively.</p>
+                            <span class="card-title black-text truncate">{{film.title}}</span>
+                            <div style="overflow: hidden; max-height: 100px; height: 100px">
+                                <p>{{film.description}} I am a very simple card. I am good at containing small bits of
+                                    information.
+                                    I am convenient because I require little markup to use effectively.</p>
+                            </div>
                         </div>
                         <div class="card-action center-align">
                             <a ng-click="ctrl.setCurrent($parent.$index, $index)" data-target="modal"
@@ -31,15 +32,16 @@
             </div>
         </ul>
 
+        <!-- Finestrella dei dettagli e acquista -->
         <div id="modal" class="modal modal-fixed-footer grey-text text-darken-4"
              style="max-height: 80%; height: 80%; width: 80%">
             <div class="modal-content">
                 <div class="row">
-                    <div class="col s11 m11 l11">
+                    <i class="btn-flat mdi-navigation-close right small" ng-click="ctrl.closeWindow()" style="padding: 0px"></i>
+                </div>
+                <div class="row">
+                    <div class="col s12 m12 l12">
                         <h4>{{ctrl.current.title}}</h4>
-                    </div>
-                    <div class="col s1 m1 l1">
-                        <i class="mdi-navigation-close right small" ng-click="ctrl.closeWindow()"></i>
                     </div>
                 </div>
                 <div class="row">

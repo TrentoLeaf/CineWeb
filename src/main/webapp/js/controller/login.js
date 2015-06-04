@@ -72,7 +72,7 @@
             };
 
             this.toUserArea = function () {
-                $location.path('/userArea');
+                $location.path('/me');
             };
 
             this.register = function (email) {

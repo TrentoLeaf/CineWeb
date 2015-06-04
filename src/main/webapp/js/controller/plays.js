@@ -13,7 +13,7 @@
                     date: 'Data 1',
                     films: [
                         {
-                            title: "Titolo 1",
+                            title: "Titolo 1sacsdfd ds ssdff dsfdsfsfd",
                             date: "Data 1",
                             time: ["17:00", "21:00"],
                             gender: "Genere 1",
