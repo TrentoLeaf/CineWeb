@@ -45,6 +45,7 @@
                 Auth.logout().then(
                     function () {
                         setData("Logout eseguito con successo.");
+                        setError("");
                         StorageService.logout();
                         ctrl.logged = false;
                         $location.path('/today');
