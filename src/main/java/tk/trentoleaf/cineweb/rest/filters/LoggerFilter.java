@@ -2,6 +2,7 @@ package tk.trentoleaf.cineweb.rest.filters;
 
 import tk.trentoleaf.cineweb.model.User;
 
+import javax.annotation.Priority;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -14,6 +15,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 @Provider
+@Priority(10)
 @PreMatching
 public class LoggerFilter implements ContainerRequestFilter {
     private Logger logger = Logger.getLogger(LoggerFilter.class.getSimpleName());
