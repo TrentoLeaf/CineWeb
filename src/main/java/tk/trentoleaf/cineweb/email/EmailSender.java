@@ -161,15 +161,21 @@ public class EmailSender {
         // create email
         SendGrid.Email email = new SendGrid.Email();
         email.setFrom(FROM);
-        email.addTo("andr35ez@gmail.com"); // replace with user.getEmail()
+        email.addTo(user.getEmail());
         email.setSubject(WE + " - Ticket acquistato");
         email.setText("Ecco a lei il Ticket in allegato in formato PDF!");
         //TODO: optionally add a cute html text
 
         // generate PDF
-        PdfCreator pdf = new PdfCreator();
-        pdf.addTicketToPdf(data);
 
+        // create and open a new pdf file
+        PdfCreator pdf = new PdfCreator();
+        // addTicketToPdf add a ticket to the pdf with data in input
+        pdf.addTicketToPdf(data);
+        // repeat addTicketToPdf to add more ticket to the same pdf
+        pdf.addTicketToPdf(data);
+        pdf.addTicketToPdf(data);
+        // close the creation of the pdf and get the pdf location
         File pdfAttachment = pdf.getFilledPdf();
 
 
