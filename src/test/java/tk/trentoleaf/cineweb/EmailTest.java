@@ -1,25 +1,14 @@
 package tk.trentoleaf.cineweb;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.postgresql.util.PSQLException;
-import tk.trentoleaf.cineweb.db.DB;
-import tk.trentoleaf.cineweb.exceptions.*;
-import tk.trentoleaf.cineweb.model.*;
-
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import com.sendgrid.SendGridException;
+import tk.trentoleaf.cineweb.email.EmailSender;
 import tk.trentoleaf.cineweb.email.EmailUtils;
-import static org.junit.Assert.*;
+import tk.trentoleaf.cineweb.email.pdf.FilmTicketData;
+import tk.trentoleaf.cineweb.model.User;
+
+import java.io.IOException;
+import java.net.URI;
 
 public class EmailTest {
 
@@ -28,6 +17,16 @@ public class EmailTest {
         String s = EmailUtils.registrationText("nome", "cognome", "url");
         String c = EmailUtils.registrationText("Williams", "Rizzi", "www.williams.it");
         String t = EmailUtils.registrationText("Trento", "Leaf+", "www.trentoleaf.tk");
+
+
+        try {
+            EmailSender.sendTicketPDFEmail(URI.create("aaa"),new User(),new FilmTicketData());
+        } catch (SendGridException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         int a=2;
     }

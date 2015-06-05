@@ -5,12 +5,15 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
 import tk.trentoleaf.cineweb.email.pdf.FilmTicketData;
 import tk.trentoleaf.cineweb.email.pdf.FullFillPDF;
+import tk.trentoleaf.cineweb.email.pdf.PdfCreator;
 import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.utils.Utils;
 
+import javax.validation.constraints.Null;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.logging.Logger;
 
 public class EmailSender {
@@ -20,7 +23,7 @@ public class EmailSender {
     public static final String WE = "Cineweb";
     public static final String FROM = "cineweb@trentoleaf.tk";
 
-    private SendGrid sendgrid;
+    private static SendGrid sendgrid;
 
     // singleton
     private static EmailSender sender;
@@ -153,21 +156,38 @@ public class EmailSender {
     }
 
     //send a pdf with the ticket
-    public void sendTicketPDFEmail(URI uri, User user, FilmTicketData data) throws SendGridException, IOException {
+    public static void sendTicketPDFEmail(URI uri, User user, FilmTicketData data) throws SendGridException, IOException {
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
         email.setFrom(FROM);
-        email.addTo(user.getEmail());
+        email.addTo("andr35ez@gmail.com"); // replace with user.getEmail()
         email.setSubject(WE + " - Ticket acquistato");
         email.setText("Ecco a lei il Ticket in allegato in formato PDF!");
         //TODO: optionally add a cute html text
 
-        email.addAttachment("Ticket", new FullFillPDF(data));
+        // generate PDF
+        PdfCreator pdf = new PdfCreator();
+        pdf.addTicketToPdf(data);
+
+        File pdfAttachment = pdf.getFilledPdf();
+
+
+        if (pdfAttachment != null) {
+
+            email.addAttachment("Ticket", pdfAttachment);
+        }
 
         // try to send, log failures
         try {
             sendgrid.send(email);
+
+            try {
+                Files.delete(pdfAttachment.toPath());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
         } catch (SendGridException e) {
             logger.severe(e.toString());
             throw e;
