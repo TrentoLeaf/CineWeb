@@ -9,7 +9,6 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -22,7 +21,7 @@ public class UsersFilter implements ContainerRequestFilter {
     private HttpServletRequest httpRequest;
 
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext) {
 
         // check if a logged user
         final HttpSession session = httpRequest.getSession(false);

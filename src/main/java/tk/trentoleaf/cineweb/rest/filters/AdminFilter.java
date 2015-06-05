@@ -23,7 +23,7 @@ public class AdminFilter implements ContainerRequestFilter {
     private HttpServletRequest httpRequest;
 
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext) {
 
         // check if a logged user
         final HttpSession session = httpRequest.getSession(false);

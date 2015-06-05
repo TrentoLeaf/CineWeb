@@ -12,6 +12,7 @@ import tk.trentoleaf.cineweb.rest.exceptions.AuthFailedException;
 import tk.trentoleaf.cineweb.rest.exceptions.BadRequestException;
 import tk.trentoleaf.cineweb.rest.exceptions.ConflictException;
 import tk.trentoleaf.cineweb.rest.exceptions.NotFoundException;
+import tk.trentoleaf.cineweb.rest.utils.CsrfUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -67,13 +68,15 @@ public class RestUsers {
                 final User user = db.getUser(auth.getEmail());
 
                 // login ok, create session
-                final HttpSession session = request.getSession(false);
-                if (session == null) {
-                    request.getSession(true).setAttribute("user", user);
-                } else {
+                HttpSession session = request.getSession(false);
+                if (session != null) {
                     session.invalidate();
-                    request.getSession(true).setAttribute("user", user);
                 }
+                session = request.getSession(true);
+                session.setAttribute("user", user);
+
+                // csrf cookie
+                CsrfUtils.protect(session, response);
 
                 return Response.ok(new LoginOk(user)).build();
 
