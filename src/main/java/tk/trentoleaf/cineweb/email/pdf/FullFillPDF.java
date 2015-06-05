@@ -28,11 +28,11 @@ public class FullFillPDF extends File{
             AcroFields fields = stamper.getAcroFields();
 
             fields.setField("pdf-title", variables.getTitle());
+            fields.setField("pdf-theatre", variables.getTheatre());
+            fields.setField("pdf-seat", variables.getSeat());
             fields.setField("pdf-date", variables.getDate());
-            fields.setField("pdf-title", variables.getSeat());
-            fields.setField("pdf-title", variables.getTheatre());
-            fields.setField("pdf-title", variables.getType());
-            fields.setField("pdf-title", variables.getType());
+            fields.setField("pdf-time", variables.getTime());
+            fields.setField("pdf-type", variables.getType());
 
             BarcodeQRCode qrcode = new BarcodeQRCode(variables.getQrCode(), 175, 175, null);
 

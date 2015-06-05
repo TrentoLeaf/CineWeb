@@ -10,8 +10,8 @@
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 
     <!-- CSS  -->
-    <link rel="stylesheet" href="css/materialize.css" media="screen,projection">
-    <link rel="stylesheet" href="css/stylesheet.css" media="screen,projection">
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/stylesheet.css">
 
     <!-- TODO: move to sass -->
     <link rel="stylesheet" href="css/map.css">
@@ -50,8 +50,7 @@
             <ul class="left hide-on-med-and-down">
                 <li><a class="yellow-text text-accent-4" href="#today">Oggi al Cinema</a></li>
                 <li><a class="yellow-text text-accent-4" href="#soon">Prossimamente</a></li>
-                <li><a class="yellow-text text-accent-4" href="#info">Info</a></li>
-                <li><a class="yellow-text text-accent-4" href="#me">Me</a></li>
+                <li><a class="yellow-text text-accent-4" href="#info">Informazioni</a></li>
             </ul>
 
             <ul class="right hide-on-med-and-down">
@@ -64,7 +63,6 @@
                 <li><a class="yellow-text text-accent-4" href="#today">Oggi</a></li>
                 <li><a class="yellow-text text-accent-4" href="#soon">Programmazione</a></li>
                 <li><a class="yellow-text text-accent-4" href="#informations">Informazioni</a></li>
-                <li><a class="yellow-text text-accent-4" href="#me">Me</a></li>
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(1)"><i class="mdi-action-shopping-cart left"></i>Carrello</a></li>
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle left"></i>Accedi</a></li>
             </ul>
@@ -75,7 +73,7 @@
 </div>
 
 <!-- here the main content -->
-<main>
+<main class="grey darken-3">
     <div ng-click="tab.setTab(-1)" class="content-div grey darken-3" ng-view>
 
     </div>

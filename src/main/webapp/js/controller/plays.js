@@ -23,7 +23,7 @@
                         {
                             title: "Titolo 2",
                             date: "Data 1",
-                            time: ["17:00", "21:00"],
+                            time: ["17:00", "21:00", "22:00", "23:00", "24:00"],
                             gender: "Genere 2",
                             playbill: "img/temporary/terminator_genisys_ver9-201x298.jpg",
                             description: "Descrizione 2"

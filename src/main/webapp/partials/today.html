@@ -1,7 +1,9 @@
 <div ng-controller="CartController as cc">
     <div ng-repeat="date in ctrl.archive">
         <div class="row">
-            <h1 class="center yellow-text text-accent-4">{{date.date}}</h1>
+            <div class="col s12 m12 l12 center-align">
+                <h2 class="yellow-text text-accent-4">{{date.date}}</h2>
+            </div>
         </div>
 
         <ul class="row">
@@ -14,10 +16,11 @@
                         </div>
                         <div class="card-content grey-text text-darken-4">
                             <span class="card-title black-text truncate">{{film.title}}</span>
-                            <div style="overflow: hidden; max-height: 100px; height: 100px">
-                                <p>{{film.description}} I am a very simple card. I am good at containing small bits of
-                                    information.
-                                    I am convenient because I require little markup to use effectively.</p>
+                            <div style="overflow: auto; max-height: 100px; height: 100px">
+                                <div class="col s12 m12 l12 center-align">
+                                       <span class="btn-flat blue lighten-2 white-text" ng-repeat="time in film.time"
+                                             style="margin: 0em 0.5em 0.5em 0.5em; padding: 0em 1.5em 0em 1.5em">{{time}}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="card-action center-align">

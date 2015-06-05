@@ -123,6 +123,9 @@ main {
       width: 100%;
       overflow-y: auto; } }
 
+footer {
+  margin-top: 0px !important; }
+
 @-webkit-keyframes shake {
   0% {
     -webkit-transform: translate(2px, 1px) rotate(0deg); }
@@ -156,6 +159,3 @@ main {
   -webkit-transform-origin: 50% 50%;
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-timing-function: linear; }
-
-footer {
-  marign-top: 0px; }
