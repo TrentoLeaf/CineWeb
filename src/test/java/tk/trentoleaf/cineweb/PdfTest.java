@@ -20,6 +20,8 @@ public class PdfTest {
         PdfCreator pdf = new PdfCreator();
         boolean res = pdf.addTicketToPdf(new FilmTicketData());
         System.out.println(res);
+        res = pdf.addTicketToPdf(new FilmTicketData());
+        res = pdf.addTicketToPdf(new FilmTicketData());
         File pdfAttachment = pdf.getFilledPdf();
         System.out.println(pdfAttachment);
         System.out.println("FinisheD...");

@@ -12,11 +12,12 @@ public class PdfCreator {
     private static String filePath = "/tmp/pdf-filled.pdf";
     PdfWriter writer = null;
     Document document = null;
-    boolean offset = false;
+    float offset = 0;
     PdfContentByte canvas = null;
 
 
     public PdfCreator () {
+        // init
         document = new Document();
         try {
             writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));
@@ -24,14 +25,15 @@ public class PdfCreator {
             document = null;
             e.printStackTrace();
         }
-
-        offset = false;
+        // set offset of the ticket in the page
+        offset = 0;
 
         document.open();
+        // get a canvas where put the pdf elements
         canvas = writer.getDirectContent();
     }
 
-
+    // add a ticket to the pdf
     public boolean addTicketToPdf (FilmTicketData data) {
 
         if (document == null) {
@@ -66,7 +68,7 @@ public class PdfCreator {
             BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
 
             // add cineweb
-            canvas.beginText();//Font titleFont = new Font(titleBaseFont, 23, Font.BOLD | Font.ITALIC);
+            canvas.beginText();
             canvas.setFontAndSize(baseFont, 23);
             canvas.setTextMatrix(280, tfy(90));
             canvas.showText("CineWeb");
@@ -142,28 +144,43 @@ public class PdfCreator {
             // add qrcode
             BarcodeQRCode qrcode = new BarcodeQRCode(data.getQrCode(), 175, 175, null);
             Image qrImage = qrcode.getImage();
-            qrImage.setAbsolutePosition(340, 550);
+            qrImage.setAbsolutePosition(340, tfy(300));
             canvas.addImage(qrImage);
+
+            // set new postition for a future ticket
+            updateNexTicketPosition();
 
             return true;
 
 
         } catch (Exception e) {
             e.printStackTrace();
+            updateNexTicketPosition();
             return false;
         }
     }
 
+    // set the offset for a new ticket and, if neccessary, create a new page
+    private void updateNexTicketPosition() {
+        if (offset == 0) {
+            offset = 400;
+        } else {
+            document.newPage();
+            offset = 0;
+        }
+    }
 
+    // flip y coordinate of the page, and add an offset
     private float tfy(float y) {
         if (document == null) {
             return -1;
         }
         Rectangle pageSize = document.getPageSize();
-        return pageSize.getTop() - y;
+        return (pageSize.getTop() - y) - offset;
     }
 
 
+    // return to the caller the file where the filled pdf is stored
     public File getFilledPdf () {
 
         if (document == null) {
