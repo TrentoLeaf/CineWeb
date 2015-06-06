@@ -4,8 +4,10 @@ import com.sendgrid.SendGridException;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 import java.util.logging.Logger;
 
+@WebListener
 public class EmailListener implements ServletContextListener {
     private final Logger logger = Logger.getLogger(EmailListener.class.getSimpleName());
 
