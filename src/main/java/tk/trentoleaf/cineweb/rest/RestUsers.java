@@ -68,10 +68,8 @@ public class RestUsers {
 
                 // login ok, save uid
                 // TODO
-                final HttpSession session = request.getSession(false);
-                if (session != null) {
-                    session.setAttribute("user", user);
-                }
+                final HttpSession session = request.getSession(true);
+                session.setAttribute("user", user);
 
                 return Response.ok(new LoginOk(user)).build();
 
