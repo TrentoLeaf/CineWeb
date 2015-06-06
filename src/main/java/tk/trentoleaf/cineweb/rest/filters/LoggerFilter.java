@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 @Provider
-@Priority(10)
 @PreMatching
 public class LoggerFilter implements ContainerRequestFilter {
     private Logger logger = Logger.getLogger(LoggerFilter.class.getSimpleName());
