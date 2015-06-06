@@ -1,65 +1,83 @@
 package tk.trentoleaf.cineweb.pdf;
 
-import com.itextpdf.text.*;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.*;
-import java.io.*;
+import com.itextpdf.text.pdf.BarcodeQRCode;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.net.URL;
 
 public class PdfCreator {
-    // TODO cambiare il path
-    private static String filePath = "/tmp/pdf-filled.pdf";
-    PdfWriter writer = null;
-    Document document = null;
-    float offset = 0;
-    PdfContentByte canvas = null;
 
+    private ByteArrayOutputStream outputStream;
+    private Document document;
 
-    public PdfCreator () {
+    private float offset;
+    private PdfContentByte canvas;
+
+    // constructor
+    public PdfCreator() throws DocumentException {
+
         // init
         document = new Document();
-        try {
-            writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));
-        } catch (Exception e) {
-            document = null;
-            e.printStackTrace();
-        }
+
+        // create in-memory PDF
+        // open output stream
+        outputStream = new ByteArrayOutputStream();
+
+        // open writer
+        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+
         // set offset of the ticket in the page
         offset = 0;
 
+        // open the document
         document.open();
+
         // get a canvas where put the pdf elements
         canvas = writer.getDirectContent();
     }
 
     // add a ticket to the pdf
-    public boolean addTicketToPdf (FilmTicketData data) {
+    public boolean addTicketToPdf(FilmTicketData data) {
 
-        if (document == null) {
-            return false;
+        // load images to put in the PDF
+        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        final URL logoURL = classloader.getResource("pdf/logo.png");
+
+        if (logoURL == null) {
+            throw new RuntimeException("Cannot find file pdf/logo.png");
         }
+
+        // path to logo.png
+        final String logoPath = classloader.getResource("pdf/logo.png").getPath();
 
         try {
 
             // add rectangle
-            Rectangle rect = new Rectangle(70,tfy(55),(70+455),tfy((55 + 255)));
+            Rectangle rect = new Rectangle(70, tfy(55), (70 + 455), tfy((55 + 255)));
             rect.setBorder(Rectangle.BOX);
             rect.setBorderWidth(2);
             canvas.rectangle(rect);
 
             // add line
-            Rectangle line = new Rectangle(91,tfy(132), (91 + 1), tfy((132 + 145)));
+            Rectangle line = new Rectangle(91, tfy(132), (91 + 1), tfy((132 + 145)));
             line.setBorder(Rectangle.BOX);
             line.setBorderWidth(2);
             canvas.rectangle(line);
 
 
             // add logo
-            // TODO cambiare il path
-            Image logo = Image.getInstance("/tmp/logo.png");
+            Image logo = Image.getInstance(logoPath);
 
-            logo.setAbsolutePosition(215, tfy(85+(46/2)));
-            logo.scaleAbsolute(46,46);
+            logo.setAbsolutePosition(215, tfy(85 + (46 / 2)));
+            logo.scaleAbsolute(46, 46);
             canvas.addImage(logo);
 
 
@@ -151,7 +169,6 @@ public class PdfCreator {
 
             return true;
 
-
         } catch (Exception e) {
             e.printStackTrace();
             updateNexTicketPosition();
@@ -179,15 +196,13 @@ public class PdfCreator {
     }
 
 
-    // return to the caller the file where the filled pdf is stored
-    public File getFilledPdf () {
+    // return the pdf as a byte array
+    public byte[] getFilledPdf() {
 
-        if (document == null) {
-            return null;
-        }
-
+        // close pdf
         document.close();
 
-        return (new File(filePath));
+        // return pdf
+        return outputStream.toByteArray();
     }
 }

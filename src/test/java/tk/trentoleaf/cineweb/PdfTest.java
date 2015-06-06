@@ -1,33 +1,51 @@
 package tk.trentoleaf.cineweb;
 
-/**
- * Created by andrea on 6/5/15.
- */
-
 import org.junit.Test;
+import tk.trentoleaf.cineweb.email.EmailSender;
+import tk.trentoleaf.cineweb.model.Role;
+import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.pdf.FilmTicketData;
 import tk.trentoleaf.cineweb.pdf.PdfCreator;
 
-import java.io.File;
-
+import java.io.FileOutputStream;
 
 public class PdfTest {
 
     @Test
-    public void test() {
+    public void generatePDF() throws Exception {
 
+        PdfCreator pdfCreator = new PdfCreator();
 
-        PdfCreator pdf = new PdfCreator();
-        boolean res = pdf.addTicketToPdf(new FilmTicketData());
+        boolean res = pdfCreator.addTicketToPdf(new FilmTicketData());
         System.out.println(res);
-        res = pdf.addTicketToPdf(new FilmTicketData());
-        res = pdf.addTicketToPdf(new FilmTicketData());
-        File pdfAttachment = pdf.getFilledPdf();
-        System.out.println(pdfAttachment);
-        System.out.println("FinisheD...");
 
+        res = pdfCreator.addTicketToPdf(new FilmTicketData());
+        System.out.println(res);
+
+        res = pdfCreator.addTicketToPdf(new FilmTicketData());
+        System.out.println(res);
+
+        // get pdf
+        byte[] pdf = pdfCreator.getFilledPdf();
+
+        // convert array of bytes into file
+        FileOutputStream fileOuputStream = new FileOutputStream("/tmp/cineweb.pdf");
+        fileOuputStream.write(pdf);
+        fileOuputStream.close();
+
+        System.out.println("Finished...");
     }
 
+    // TODO: enable test
+    // @Test
+    public void sendPDF() throws Exception {
 
+        // create user
+        final User user = new User(true, Role.ADMIN, "davide.pedranz@gmail.com", "teo", "Davide", "Pedranz");
+
+        // send email
+        EmailSender sender = EmailSender.instance();
+        sender.sendTicketPDFEmail(user, new FilmTicketData());
+    }
 
 }
