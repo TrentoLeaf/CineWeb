@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -38,7 +39,7 @@ public class UsersFilter implements ContainerRequestFilter {
 
             // TODO: enable
             // return HTTP 401
-            // requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }
 
     }
