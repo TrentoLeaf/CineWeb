@@ -11,7 +11,7 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.After;
 import org.junit.Before;
 import tk.trentoleaf.cineweb.db.DB;
-import tk.trentoleaf.cineweb.rest.utils.GsonJerseyProvider;
+import tk.trentoleaf.cineweb.utils.GsonJerseyProvider;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientBuilder;
@@ -57,9 +57,8 @@ public class MyJerseyTest extends JerseyTest {
                     @Override
                     public void start() {
                         try {
-                            this.server = GrizzlyWebContainerFactory.create(
-                                    baseUri, Collections.singletonMap("jersey.config.server.provider.packages",
-                                            "tk.trentoleaf.cineweb.rest")
+                            this.server = GrizzlyWebContainerFactory.create(baseUri,
+                                    Collections.singletonMap("jersey.config.server.provider.packages", "tk.trentoleaf.cineweb")
                             );
                         } catch (ProcessingException e) {
                             throw new TestContainerException(e);

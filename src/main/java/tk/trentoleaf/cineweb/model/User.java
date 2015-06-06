@@ -1,7 +1,7 @@
 package tk.trentoleaf.cineweb.model;
 
 import org.apache.commons.lang3.StringUtils;
-import tk.trentoleaf.cineweb.rest.entities.Registration;
+import tk.trentoleaf.cineweb.entities.Registration;
 
 import java.io.Serializable;
 

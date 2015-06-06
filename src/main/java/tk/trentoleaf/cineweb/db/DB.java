@@ -2,7 +2,7 @@ package tk.trentoleaf.cineweb.db;
 
 import org.joda.time.DateTime;
 import org.postgresql.util.PSQLException;
-import tk.trentoleaf.cineweb.exceptions.*;
+import tk.trentoleaf.cineweb.exceptions.db.*;
 import tk.trentoleaf.cineweb.model.*;
 
 import org.apache.commons.dbcp2.BasicDataSource;

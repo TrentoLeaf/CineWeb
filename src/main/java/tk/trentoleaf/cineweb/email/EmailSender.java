@@ -3,13 +3,11 @@ package tk.trentoleaf.cineweb.email;
 
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
-import tk.trentoleaf.cineweb.email.pdf.FilmTicketData;
-import tk.trentoleaf.cineweb.email.pdf.FullFillPDF;
-import tk.trentoleaf.cineweb.email.pdf.PdfCreator;
+import tk.trentoleaf.cineweb.pdf.FilmTicketData;
+import tk.trentoleaf.cineweb.pdf.PdfCreator;
 import tk.trentoleaf.cineweb.model.User;
-import tk.trentoleaf.cineweb.rest.utils.Utils;
+import tk.trentoleaf.cineweb.utils.Utils;
 
-import javax.validation.constraints.Null;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;

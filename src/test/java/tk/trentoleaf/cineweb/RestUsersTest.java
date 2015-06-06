@@ -6,11 +6,11 @@ import org.junit.Test;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.rest.RestUsers;
-import tk.trentoleaf.cineweb.rest.entities.*;
-import tk.trentoleaf.cineweb.rest.handlers.BadRequestHandler;
-import tk.trentoleaf.cineweb.rest.handlers.ConflictHandler;
-import tk.trentoleaf.cineweb.rest.handlers.NotFoundHandler;
-import tk.trentoleaf.cineweb.rest.utils.GsonJerseyProvider;
+import tk.trentoleaf.cineweb.entities.*;
+import tk.trentoleaf.cineweb.handlers.BadRequestHandler;
+import tk.trentoleaf.cineweb.handlers.ConflictHandler;
+import tk.trentoleaf.cineweb.handlers.NotFoundHandler;
+import tk.trentoleaf.cineweb.utils.GsonJerseyProvider;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;

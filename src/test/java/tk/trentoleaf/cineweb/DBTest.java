@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.postgresql.util.PSQLException;
 import tk.trentoleaf.cineweb.db.DB;
-import tk.trentoleaf.cineweb.exceptions.*;
+import tk.trentoleaf.cineweb.exceptions.db.*;
 import tk.trentoleaf.cineweb.model.*;
 
 import java.net.URISyntaxException;

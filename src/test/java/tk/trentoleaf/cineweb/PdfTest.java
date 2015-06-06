@@ -5,8 +5,8 @@ package tk.trentoleaf.cineweb;
  */
 
 import org.junit.Test;
-import tk.trentoleaf.cineweb.email.pdf.FilmTicketData;
-import tk.trentoleaf.cineweb.email.pdf.PdfCreator;
+import tk.trentoleaf.cineweb.pdf.FilmTicketData;
+import tk.trentoleaf.cineweb.pdf.PdfCreator;
 
 import java.io.File;
 

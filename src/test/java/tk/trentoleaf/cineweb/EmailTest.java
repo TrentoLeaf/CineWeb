@@ -2,7 +2,7 @@ package tk.trentoleaf.cineweb;
 
 import org.junit.Test;
 import tk.trentoleaf.cineweb.email.EmailSender;
-import tk.trentoleaf.cineweb.email.pdf.FilmTicketData;
+import tk.trentoleaf.cineweb.pdf.FilmTicketData;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 
