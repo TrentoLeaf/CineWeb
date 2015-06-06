@@ -2,10 +2,12 @@ package tk.trentoleaf.cineweb.db;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
+@WebListener
 public class DBListener implements ServletContextListener {
     private final Logger logger = Logger.getLogger(DBListener.class.getSimpleName());
 

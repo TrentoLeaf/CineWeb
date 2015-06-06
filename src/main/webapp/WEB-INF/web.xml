@@ -16,31 +16,4 @@
         </cookie-config>
     </session-config>
 
-    <!-- PostgreSQL -->
-    <listener>
-        <description>ServletContextListener</description>
-        <listener-class>tk.trentoleaf.cineweb.db.DBListener</listener-class>
-    </listener>
-
-    <!-- SendGrid -->
-    <listener>
-        <description>ServletContextListener</description>
-        <listener-class>tk.trentoleaf.cineweb.email.EmailListener</listener-class>
-    </listener>
-
-    <!-- Jersey -->
-    <servlet>
-        <servlet-name>Jersey</servlet-name>
-        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-        <init-param>
-            <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>tk.trentoleaf.cineweb</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Jersey</servlet-name>
-        <url-pattern>/rest/*</url-pattern>
-    </servlet-mapping>
-
 </web-app>
