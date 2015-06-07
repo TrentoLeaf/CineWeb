@@ -2,6 +2,6 @@
     'use strict';
 
     angular.module('constantsModule', [])
-        .constant('BASE', '/rest');
+        .constant('BASE', '/api');
 
 })();

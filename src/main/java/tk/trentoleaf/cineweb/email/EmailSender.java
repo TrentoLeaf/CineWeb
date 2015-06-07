@@ -1,19 +1,16 @@
 package tk.trentoleaf.cineweb.email;
 
-
+import com.itextpdf.text.DocumentException;
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
-import tk.trentoleaf.cineweb.email.pdf.FilmTicketData;
-import tk.trentoleaf.cineweb.email.pdf.FullFillPDF;
-import tk.trentoleaf.cineweb.email.pdf.PdfCreator;
 import tk.trentoleaf.cineweb.model.User;
-import tk.trentoleaf.cineweb.rest.utils.Utils;
+import tk.trentoleaf.cineweb.pdf.FilmTicketData;
+import tk.trentoleaf.cineweb.pdf.PdfCreator;
+import tk.trentoleaf.cineweb.utils.Utils;
 
-import javax.validation.constraints.Null;
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Files;
 import java.util.logging.Logger;
 
 public class EmailSender {
@@ -23,11 +20,13 @@ public class EmailSender {
     public static final String WE = "Cineweb";
     public static final String FROM = "cineweb@trentoleaf.tk";
 
-    private static SendGrid sendgrid;
+    // SendGrid client
+    private SendGrid sendgrid;
 
     // singleton
     private static EmailSender sender;
 
+    // get singleton
     public static EmailSender instance() throws SendGridException {
         if (sender == null) {
             sender = new EmailSender();
@@ -51,7 +50,7 @@ public class EmailSender {
 
         // create url
         final String url = Utils.uriToRoot(uri) + "/#?c=" + verificationCode;
-        final String urlLogo = Utils.uriToRoot(uri)+"/img/logo.png";
+        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo.png";
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
@@ -70,17 +69,17 @@ public class EmailSender {
                 "\n" +
                 "\t<table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\" class=\"table\"><tr><td width=\"600\" class=\"cell\">\n" +
                 "\n" +
-                "\t\t<table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table\"><tr><td width=\"200\" class=\"logocell\"><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"20\" class=\"hide\"/><br class=\"hide\"/><img src=\""+urlLogo+" width=\"70\" height=\"70\" alt=\"Campaign Monitor\" style=\"-ms-interpolation-mode:bicubic;\"/><br/><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"10\" class=\"hide\"/><br class=\"hide\"/></td>\n" +
+                "\t\t<table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table\"><tr><td width=\"200\" class=\"logocell\"><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"20\" class=\"hide\"/><br class=\"hide\"/><img src=\"" + urlLogo + " width=\"70\" height=\"70\" alt=\"Campaign Monitor\" style=\"-ms-interpolation-mode:bicubic;\"/><br/><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"10\" class=\"hide\"/><br class=\"hide\"/></td>\n" +
                 "\t\t\t<td width=\"200\" align=\"center\" style=\"color:#ffea00;font-size:26px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;\">\n" +
                 "\t\t\t\t<span><strong>CineWeb</strong></span>\n" +
                 "\t\t\t</td>\n" +
                 "\t\t\t<td align=\"right\" width=\"200\" class=\"hide\" style=\"color:#ffea00;font-size:12px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;\"><span>HOME </span><strong><span style=\"text-transform:uppercase;\"/></strong> <span>TROVACI </span></td>\n" +
                 "\t\t</tr></table><table width=\"600\" cellpadding=\"25\" cellspacing=\"0\" border=\"0\" class=\"promotable\"><tr><td bgcolor=\"#ffffff\" width=\"600\" class=\"promocell\">\n" +
                 "\n" +
-                "\t\t<multiline label=\"Main feature intro\"><p style=\"font-size: 16px;line-height: 26px;font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;margin-top: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 14px;font-weight: normal\">Gentile "+user.getSecondName()+",<br/>Riceve questa email in quanto ha richiesto di iscriversi al nostro sito, La ringraziamo per la sua richiesta e nel farlo le proponiamo una selezione aggiornata dei nostri film in programmazione.<br/>Rinnoavandole i nostri ringraziamenti per la Sua registrazione le ricordiamo che il nostro team è a sua disposizione per qualsiasi dubbio o necessita.<br/>Cordiali Saluti,<br/>Il team di TrentoLeaf+</p></multiline></td>\n" +
+                "\t\t<multiline label=\"Main feature intro\"><p style=\"font-size: 16px;line-height: 26px;font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;margin-top: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 14px;font-weight: normal\">Gentile " + user.getSecondName() + ",<br/>Riceve questa email in quanto ha richiesto di iscriversi al nostro sito, La ringraziamo per la sua richiesta e nel farlo le proponiamo una selezione aggiornata dei nostri film in programmazione.<br/>Rinnoavandole i nostri ringraziamenti per la Sua registrazione le ricordiamo che il nostro team è a sua disposizione per qualsiasi dubbio o necessita.<br/>Cordiali Saluti,<br/>Il team di TrentoLeaf+</p></multiline></td>\n" +
                 "\t</tr></table><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"15\" class=\"divider\"/><br/><table width=\"600\" cellpadding=\"25\" cellspacing=\"0\" border=\"0\" class=\"promotable\"><tr><td bgcolor=\"#ffffff\" width=\"600\" class=\"promocell\">\n" +
                 "\n" +
-                "\t\t<multiline label=\"Main feature intro\"><p style=\"font-size: 16px;line-height: 26px;font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;margin-top: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 14px;font-weight: normal\">Riepilogo dati inseriti:<br/>Firstname: "+user.getFirstName()+",<br/>Secondname:"+user.getSecondName()+"<br/>Email:"+user.getEmail()+"<br/>Clicca il link qui sotto per finalizzare la tua iscrizione<br/>"+url+"</p></multiline></td>\n" +
+                "\t\t<multiline label=\"Main feature intro\"><p style=\"font-size: 16px;line-height: 26px;font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;margin-top: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 14px;font-weight: normal\">Riepilogo dati inseriti:<br/>Firstname: " + user.getFirstName() + ",<br/>Secondname:" + user.getSecondName() + "<br/>Email:" + user.getEmail() + "<br/>Clicca il link qui sotto per finalizzare la tua iscrizione<br/>" + url + "</p></multiline></td>\n" +
                 "\t</tr></table><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"15\" class=\"divider\"/><br/><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"15\" class=\"divider\"/><br/><layout label=\"Gallery highlights\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td bgcolor=\"#ffea00\" nowrap=\"nowrap\"><img border=\"0\" src=\"images/spacer.gif\" width=\"5\" height=\"1\"/></td>\n" +
                 "\t\t<td width=\"100%\" bgcolor=\"#ffffff\">\n" +
                 "\n" +
@@ -156,7 +155,7 @@ public class EmailSender {
     }
 
     //send a pdf with the ticket
-    public static void sendTicketPDFEmail(URI uri, User user, FilmTicketData data) throws SendGridException, IOException {
+    public void sendTicketPDFEmail(User user, FilmTicketData data) throws SendGridException, IOException, DocumentException {
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
@@ -164,35 +163,38 @@ public class EmailSender {
         email.addTo(user.getEmail());
         email.setSubject(WE + " - Ticket acquistato");
         email.setText("Ecco a lei il Ticket in allegato in formato PDF!");
-        //TODO: optionally add a cute html text
+
+        // TODO: optionally add a cute html text
 
         // generate PDF
+        try {
 
-        // create and open a new pdf file
-        PdfCreator pdf = new PdfCreator();
-        // addTicketToPdf add a ticket to the pdf with data in input
-        pdf.addTicketToPdf(data);
-        // repeat addTicketToPdf to add more ticket to the same pdf
-        pdf.addTicketToPdf(data);
-        pdf.addTicketToPdf(data);
-        // close the creation of the pdf and get the pdf location
-        File pdfAttachment = pdf.getFilledPdf();
+            // create and open a new pdf file
+            final PdfCreator pdfCreator = new PdfCreator();
 
+            // addTicketToPdf add a ticket to the pdf with data in input
+            pdfCreator.addTicketToPdf(data);
 
-        if (pdfAttachment != null) {
+            // repeat addTicketToPdf to add more ticket to the same pdf
+            pdfCreator.addTicketToPdf(data);
+            pdfCreator.addTicketToPdf(data);
 
-            email.addAttachment("Ticket", pdfAttachment);
+            // close the creation of the pdf and get the pdf
+            byte[] pdf = pdfCreator.getFilledPdf();
+
+            // add pdf as attachment
+            email.addAttachment("ticket.pdf", new ByteArrayInputStream(pdf));
+
+        } catch (DocumentException | IOException e) {
+            logger.severe(e.toString());
+            throw e;
         }
 
         // try to send, log failures
         try {
-            sendgrid.send(email);
 
-            try {
-                Files.delete(pdfAttachment.toPath());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            // send email
+            sendgrid.send(email);
 
         } catch (SendGridException e) {
             logger.severe(e.toString());

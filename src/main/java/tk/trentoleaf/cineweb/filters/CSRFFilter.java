@@ -1,5 +1,7 @@
 package tk.trentoleaf.cineweb.filters;
 
+import tk.trentoleaf.cineweb.utils.CsrfUtils;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;

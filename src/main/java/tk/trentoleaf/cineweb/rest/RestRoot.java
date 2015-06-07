@@ -2,7 +2,7 @@ package tk.trentoleaf.cineweb.rest;
 
 import org.joda.time.DateTime;
 import tk.trentoleaf.cineweb.db.DB;
-import tk.trentoleaf.cineweb.exceptions.AnotherFilmScheduledException;
+import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
 import tk.trentoleaf.cineweb.model.Film;
 import tk.trentoleaf.cineweb.model.Play;
 import tk.trentoleaf.cineweb.model.Room;
