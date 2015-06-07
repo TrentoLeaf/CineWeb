@@ -49,6 +49,19 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Dependencies for Servlet 3.0 annotations -->
+        <!-- http://www.eclipse.org/jetty/documentation/current/using-annotations-embedded.html -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-annotations</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-plus</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+
         <!-- GSON - parse JSON to classes - replaces JACKSON -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
