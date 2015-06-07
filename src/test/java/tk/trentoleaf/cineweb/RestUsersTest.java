@@ -6,6 +6,7 @@ import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -18,67 +19,130 @@ import static org.junit.Assert.assertTrue;
 public class RestUsersTest extends MyJerseyTest {
 
     @Test
-    public void getUsers() throws Exception {
-        final Response response = getTarget().path("/users").request(MediaType.APPLICATION_JSON_TYPE).get();
-        assertEquals(200, response.getStatus());
-    }
-
-    @Test
     public void getUserSuccess() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
 
         // create a user
         final User u = new User(true, Role.CLIENT, "email@email.com", "pass", "name", "name");
         db.createUser(u);
 
         // search the user
-        final Response r1 = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        final Response r1 = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).cookie(c).get();
         assertEquals(200, r1.getStatus());
         assertEquals(u, r1.readEntity(User.class));
     }
 
     @Test
-    public void getUserFail() throws Exception {
-        final Response r1 = getTarget().path("/users/" + 34).request(MediaType.APPLICATION_JSON_TYPE).get();
+    public void getUserFail1() throws Exception {
+
+        // create a user
+        final User u = new User(true, Role.CLIENT, "email@email.com", "pass", "name", "name");
+        db.createUser(u);
+
+        // no admin
+        final Response r1 = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        assertEquals(401, r1.getStatus());
+    }
+
+    @Test
+    public void getUserFail2() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // no user found
+        final Response r1 = getTarget().path("/users/" + 34).request(MediaType.APPLICATION_JSON_TYPE).cookie(c).get();
         assertEquals(404, r1.getStatus());
+    }
+
+    @Test
+    public void getUsersSuccess() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        final Response response = getTarget().path("/users").request(MediaType.APPLICATION_JSON_TYPE).cookie(c).get();
+        assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    public void getUsersFail1() throws Exception {
+
+        // FAIL -> not logged as ADMIN
+        final Response response = getTarget().path("/users").request(MediaType.APPLICATION_JSON_TYPE).get();
+        assertEquals(401, response.getStatus());
+    }
+
+    @Test
+    public void getUsersFail2() throws Exception {
+
+        // FAIL -> logged as CLIENT
+        final Cookie c = loginClient();
+
+        final Response response = getTarget().path("/users").request(MediaType.APPLICATION_JSON_TYPE).cookie(c).get();
+        assertEquals(401, response.getStatus());
     }
 
     @Test
     public void createUserSuccess() throws Exception {
 
+        // login as admin
+        final Cookie c = loginAdmin();
+
         // create a user
-        final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.json(new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni")));
+        final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE).cookie(c)
+                .post(Entity.json(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni")));
         assertEquals(200, response.getStatus());
 
         // test
-        final List<User> expected = new ArrayList<>();
-        expected.add(response.readEntity(User.class));
+        final User expected = response.readEntity(User.class);
 
         // current
-        final List<User> current = db.getUsers();
+        final User current = db.getUser(expected.getUid());
 
         // test
-        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+        assertEquals(expected, current);
     }
 
     @Test
     public void createUserFail1() throws Exception {
 
-        // create a user
-        getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.json(new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni")));
+        // login as client
+        final Cookie c = loginClient();
 
-        // create a user -_> should fail
-        final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.json(new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni")));
-        assertEquals(409, response.getStatus());
+        // create a user -> DENIED (client)
+        final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE).cookie(c)
+                .post(Entity.json(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni")));
+        assertEquals(401, response.getStatus());
     }
 
     @Test
     public void createUserFail2() throws Exception {
 
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // create a user
+        final Response r1 = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE).cookie(c)
+                .post(Entity.json(new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni")));
+        assertEquals(200, r1.getStatus());
+
         // create a user -_> should fail
-        final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE)
+        final Response r2 = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE).cookie(c)
+                .post(Entity.json(new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni")));
+        assertEquals(409, r2.getStatus());
+    }
+
+    @Test
+    public void createUserFail3() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // create a user -> bad request
+        final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE).cookie(c)
                 .post(Entity.json(new User(true, Role.ADMIN, "sdf2", null, "Matteo", "Zeni")));
         assertEquals(400, response.getStatus());
     }
@@ -86,78 +150,158 @@ public class RestUsersTest extends MyJerseyTest {
     @Test
     public void updateUserSuccess() throws Exception {
 
-        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        // login as ADMIN
+        final Cookie c = loginAdmin();
+
+        // user to update
+        final User u1 = new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni");
         db.createUser(u1);
 
+        // try update
         final Response r1 = getTarget().path("/users/" + u1.getUid()).request(MediaType.APPLICATION_JSON_TYPE)
-                .put(Entity.json(new User(true, Role.ADMIN, "a@a.com", null, "Matteo", "Zeni")));
+                .cookie(c).put(Entity.json(new User(true, Role.CLIENT, "a@a.com", null, "Matteo", "Zeni")));
         assertEquals(200, r1.getStatus());
 
+        // check
         final User current = db.getUser("a@a.com");
-        final User expected = new User(true, Role.ADMIN, "a@a.com", null, "Matteo", "Zeni");
+        final User expected = new User(true, Role.CLIENT, "a@a.com", null, "Matteo", "Zeni");
         expected.setUid(current.getUid());
-
-        // test
         assertEquals(expected, current);
     }
 
     @Test
     public void updateUserFail1() throws Exception {
 
+        // login as CLIENT
+        final Cookie c = loginClient();
+
+        // user to update
+        final User u1 = new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni");
+        db.createUser(u1);
+
+        // try update
+        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(MediaType.APPLICATION_JSON_TYPE)
+                .cookie(c).put(Entity.json(new User(true, Role.CLIENT, "a@a.com", null, "Matteo", "Zeni")));
+        assertEquals(401, r1.getStatus());
+    }
+
+    @Test
+    public void updateUserFail2() throws Exception {
+
+        // user to update
+        final User u1 = new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni");
+        db.createUser(u1);
+
+        // try update (FAIL - no session)
+        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(MediaType.APPLICATION_JSON_TYPE)
+                .put(Entity.json(new User(true, Role.CLIENT, "a@a.com", null, "Matteo", "Zeni")));
+        assertEquals(401, r1.getStatus());
+    }
+
+    @Test
+    public void updateUserFail3() throws Exception {
+
+        // wrong path1
         final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE)
                 .put(Entity.json(new User(true, Role.ADMIN, "sdf2", null, "Matteo", "Zeni")));
         assertEquals(405, response.getStatus());
     }
 
     @Test
-    public void updateUserFail2() throws Exception {
+    public void updateUserFail4() throws Exception {
 
+        // login as ADMIN
+        final Cookie c = loginAdmin();
+
+        // user not found
         final Response r1 = getTarget().path("/users/" + 2345).request(MediaType.APPLICATION_JSON_TYPE)
-                .put(Entity.json(new User(true, Role.ADMIN, "sdf2", null, "Matteo", "Zeni")));
+                .cookie(c).put(Entity.json(new User(true, Role.ADMIN, "sdf2", null, "Matteo", "Zeni")));
         assertEquals(404, r1.getStatus());
     }
 
     @Test
-    public void updateUserFail3() throws Exception {
+    public void updateUserFail5() throws Exception {
 
+        // login as ADMIN
+        final Cookie c = loginAdmin();
+
+        // user to edit
         final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         db.createUser(u1);
 
+        // bad request
         final Response r1 = getTarget().path("/users/" + u1.getUid()).request(MediaType.APPLICATION_JSON_TYPE)
-                .put(Entity.json(new User(true, Role.ADMIN, "sdf2", null, null, "Zeni")));
+                .cookie(c).put(Entity.json(new User(true, Role.ADMIN, "sdf2", null, null, "Zeni")));
         assertEquals(400, r1.getStatus());
     }
 
     @Test
-    public void updateUserFail4() throws Exception {
+    public void updateUserFail6() throws Exception {
+
+        // login as ADMIN
+        final Cookie c = loginAdmin();
 
         final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         final User u2 = new User(true, Role.ADMIN, "aaaaa@aaa.com", "safdsd", "sdfsdf", "sdfsdfsdf");
         db.createUser(u1);
         db.createUser(u2);
 
+        // conflict on update
         final Response r1 = getTarget().path("/users/" + u1.getUid()).request(MediaType.APPLICATION_JSON_TYPE)
-                .put(Entity.json(new User(true, Role.ADMIN, "aaaaa@aaa.com", null, "Matteo", "Zeni")));
+                .cookie(c).put(Entity.json(new User(true, Role.ADMIN, "aaaaa@aaa.com", null, "Matteo", "Zeni")));
         assertEquals(409, r1.getStatus());
     }
 
     @Test
     public void deleteUserSuccess() throws Exception {
 
+        // login as ADMIN
+        final Cookie c = loginAdmin();
+
         // create a user
         final User u = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         db.createUser(u);
 
         // try delete
-        final Response response = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).delete();
+        final Response response = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).cookie(c).delete();
         assertEquals(200, response.getStatus());
     }
 
     @Test
-    public void deleteUserFail() throws Exception {
+    public void deleteUserFail1() throws Exception {
+
+        // login as CLIENT
+        final Cookie c = loginClient();
+
+        // create a user
+        final User u = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        db.createUser(u);
 
         // try delete
-        final Response response = getTarget().path("/users/" + 35234).request(MediaType.APPLICATION_JSON_TYPE).delete();
+        final Response response = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).cookie(c).delete();
+        assertEquals(401, response.getStatus());
+    }
+
+    @Test
+    public void deleteUserFail2() throws Exception {
+
+        // create a user
+        final User u = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
+        db.createUser(u);
+
+        // try delete (no session)
+        final Response response = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).delete();
+        assertEquals(401, response.getStatus());
+    }
+
+    @Test
+    public void deleteUserFail3() throws Exception {
+
+        // login as CLIENT
+        final Cookie c = loginAdmin();
+
+        // try delete (not found)
+        final Response response = getTarget().path("/users/" + 35234).request(MediaType.APPLICATION_JSON_TYPE).cookie(c).delete();
         assertEquals(404, response.getStatus());
     }
 

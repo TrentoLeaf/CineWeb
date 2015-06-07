@@ -37,7 +37,6 @@ public class UsersFilter implements ContainerRequestFilter {
             // log
             logger.info("REJECTED - REQUEST at " + new Date() + ": " + requestContext.getMethod() + " " + requestContext.getUriInfo().getRequestUri());
 
-            // TODO: enable
             // return HTTP 401
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }

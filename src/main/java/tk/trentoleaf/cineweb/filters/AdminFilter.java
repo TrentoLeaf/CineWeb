@@ -1,13 +1,14 @@
 package tk.trentoleaf.cineweb.filters;
 
-import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.annotations.AdminArea;
+import tk.trentoleaf.cineweb.model.Role;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -31,15 +32,14 @@ public class AdminFilter implements ContainerRequestFilter {
         final Role role = (user != null) ? user.getRole() : null;
         final Integer uid = (user != null) ? user.getUid() : null;
 
-        // if no role -> drop request
-        if (role == null) {
+        // if not admin -> drop request
+        if (role != Role.ADMIN) {
 
             // log
             logger.info("REJECTED (must be admin) - REQUEST at " + new Date() + " (uid = " + uid + "): " + requestContext.getMethod() + " " + requestContext.getUriInfo().getRequestUri());
 
-            // TODO: enable
             // return HTTP 401
-            // requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }
 
     }

@@ -143,4 +143,24 @@ public class MyJerseyTest extends JerseyTest {
         return loginClient(email, password);
     }
 
+    // create user with ROLE.admin and login
+    protected final Cookie loginAdmin(String email, String password) throws Exception {
+
+        // create a user
+        db.createUser(new User(true, Role.ADMIN, email, password, "Normal", "User"));
+
+        // login
+        return login(email, password);
+    }
+
+    // create user with ROLE.admin and login
+    protected final Cookie loginAdmin() throws Exception {
+
+        // credentials
+        final String email = "admin@email.com";
+        final String password = "password";
+
+        return loginAdmin(email, password);
+    }
+
 }
