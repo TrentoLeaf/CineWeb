@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb;
+package tk.trentoleaf.cineweb.rest;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.client.ClientConfig;
@@ -18,7 +18,6 @@ import tk.trentoleaf.cineweb.handlers.ConflictHandler;
 import tk.trentoleaf.cineweb.handlers.NotFoundHandler;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
-import tk.trentoleaf.cineweb.rest.RestUsers;
 import tk.trentoleaf.cineweb.utils.GsonJerseyProvider;
 
 import javax.ws.rs.ProcessingException;

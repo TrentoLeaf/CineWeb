@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb;
+package tk.trentoleaf.cineweb.rest;
 
 import org.junit.Test;
 import tk.trentoleaf.cineweb.model.Role;

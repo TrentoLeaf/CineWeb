@@ -1,8 +1,7 @@
-package tk.trentoleaf.cineweb;
+package tk.trentoleaf.cineweb.rest;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Test;
-import tk.trentoleaf.cineweb.rest.RestRoot;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;

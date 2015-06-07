@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb;
+package tk.trentoleaf.cineweb.db;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.postgresql.util.PSQLException;
-import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.exceptions.db.*;
 import tk.trentoleaf.cineweb.model.*;
 
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 
 public class DBTest {
 
@@ -1116,16 +1114,16 @@ public class DBTest {
         db.createPlay(p1);
 
         // create bookings  int rid, int x, int y, int uid, int pid, double price
-        final Booking b1 = db.createBookings(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
-        final Booking b2 = db.createBookings(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
+        db.createBookings(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
+        db.createBookings(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
 
         // expected
         List<SeatReserved> expected = new ArrayList<>();
         //expected.add(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(),true) );
         //expected.add(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(),true) );
 
-        for (int i = 0; i < s1.size(); i++) {
-            expected.add(new SeatReserved(s1.get(i).getRid(), s1.get(i).getX(), s1.get(i).getY(), false));
+        for (Seat seat : s1) {
+            expected.add(new SeatReserved(seat.getRid(), seat.getX(), seat.getY(), false));
         }
         expected.remove(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), false));
         expected.remove(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), false));
