@@ -1,19 +1,14 @@
 package tk.trentoleaf.cineweb;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 // TODO: admin areas
 public class RestUsersTest extends MyJerseyTest {
@@ -29,7 +24,7 @@ public class RestUsersTest extends MyJerseyTest {
         db.createUser(u);
 
         // search the user
-        final Response r1 = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).cookie(c).get();
+        final Response r1 = getTarget().path("/users/" + u.getUid()).request(JSON).cookie(c).get();
         assertEquals(200, r1.getStatus());
         assertEquals(u, r1.readEntity(User.class));
     }
@@ -42,7 +37,7 @@ public class RestUsersTest extends MyJerseyTest {
         db.createUser(u);
 
         // no admin
-        final Response r1 = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        final Response r1 = getTarget().path("/users/" + u.getUid()).request(JSON).get();
         assertEquals(401, r1.getStatus());
     }
 
@@ -53,7 +48,7 @@ public class RestUsersTest extends MyJerseyTest {
         final Cookie c = loginAdmin();
 
         // no user found
-        final Response r1 = getTarget().path("/users/" + 34).request(MediaType.APPLICATION_JSON_TYPE).cookie(c).get();
+        final Response r1 = getTarget().path("/users/" + 34).request(JSON).cookie(c).get();
         assertEquals(404, r1.getStatus());
     }
 
@@ -63,7 +58,7 @@ public class RestUsersTest extends MyJerseyTest {
         // login as admin
         final Cookie c = loginAdmin();
 
-        final Response response = getTarget().path("/users").request(MediaType.APPLICATION_JSON_TYPE).cookie(c).get();
+        final Response response = getTarget().path("/users").request(JSON).cookie(c).get();
         assertEquals(200, response.getStatus());
     }
 
@@ -71,7 +66,7 @@ public class RestUsersTest extends MyJerseyTest {
     public void getUsersFail1() throws Exception {
 
         // FAIL -> not logged as ADMIN
-        final Response response = getTarget().path("/users").request(MediaType.APPLICATION_JSON_TYPE).get();
+        final Response response = getTarget().path("/users").request(JSON).get();
         assertEquals(401, response.getStatus());
     }
 
@@ -81,7 +76,7 @@ public class RestUsersTest extends MyJerseyTest {
         // FAIL -> logged as CLIENT
         final Cookie c = loginClient();
 
-        final Response response = getTarget().path("/users").request(MediaType.APPLICATION_JSON_TYPE).cookie(c).get();
+        final Response response = getTarget().path("/users").request(JSON).cookie(c).get();
         assertEquals(401, response.getStatus());
     }
 
@@ -92,7 +87,7 @@ public class RestUsersTest extends MyJerseyTest {
         final Cookie c = loginAdmin();
 
         // create a user
-        final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE).cookie(c)
+        final Response response = getTarget().path("/users/").request(JSON).cookie(c)
                 .post(Entity.json(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni")));
         assertEquals(200, response.getStatus());
 
@@ -113,7 +108,7 @@ public class RestUsersTest extends MyJerseyTest {
         final Cookie c = loginClient();
 
         // create a user -> DENIED (client)
-        final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE).cookie(c)
+        final Response response = getTarget().path("/users/").request(JSON).cookie(c)
                 .post(Entity.json(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni")));
         assertEquals(401, response.getStatus());
     }
@@ -125,12 +120,12 @@ public class RestUsersTest extends MyJerseyTest {
         final Cookie c = loginAdmin();
 
         // create a user
-        final Response r1 = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE).cookie(c)
+        final Response r1 = getTarget().path("/users/").request(JSON).cookie(c)
                 .post(Entity.json(new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni")));
         assertEquals(200, r1.getStatus());
 
         // create a user -_> should fail
-        final Response r2 = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE).cookie(c)
+        final Response r2 = getTarget().path("/users/").request(JSON).cookie(c)
                 .post(Entity.json(new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni")));
         assertEquals(409, r2.getStatus());
     }
@@ -142,7 +137,7 @@ public class RestUsersTest extends MyJerseyTest {
         final Cookie c = loginAdmin();
 
         // create a user -> bad request
-        final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE).cookie(c)
+        final Response response = getTarget().path("/users/").request(JSON).cookie(c)
                 .post(Entity.json(new User(true, Role.ADMIN, "sdf2", null, "Matteo", "Zeni")));
         assertEquals(400, response.getStatus());
     }
@@ -158,7 +153,7 @@ public class RestUsersTest extends MyJerseyTest {
         db.createUser(u1);
 
         // try update
-        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(MediaType.APPLICATION_JSON_TYPE)
+        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(JSON)
                 .cookie(c).put(Entity.json(new User(true, Role.CLIENT, "a@a.com", null, "Matteo", "Zeni")));
         assertEquals(200, r1.getStatus());
 
@@ -180,7 +175,7 @@ public class RestUsersTest extends MyJerseyTest {
         db.createUser(u1);
 
         // try update
-        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(MediaType.APPLICATION_JSON_TYPE)
+        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(JSON)
                 .cookie(c).put(Entity.json(new User(true, Role.CLIENT, "a@a.com", null, "Matteo", "Zeni")));
         assertEquals(401, r1.getStatus());
     }
@@ -193,7 +188,7 @@ public class RestUsersTest extends MyJerseyTest {
         db.createUser(u1);
 
         // try update (FAIL - no session)
-        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(MediaType.APPLICATION_JSON_TYPE)
+        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(JSON)
                 .put(Entity.json(new User(true, Role.CLIENT, "a@a.com", null, "Matteo", "Zeni")));
         assertEquals(401, r1.getStatus());
     }
@@ -202,7 +197,7 @@ public class RestUsersTest extends MyJerseyTest {
     public void updateUserFail3() throws Exception {
 
         // wrong path1
-        final Response response = getTarget().path("/users/").request(MediaType.APPLICATION_JSON_TYPE)
+        final Response response = getTarget().path("/users/").request(JSON)
                 .put(Entity.json(new User(true, Role.ADMIN, "sdf2", null, "Matteo", "Zeni")));
         assertEquals(405, response.getStatus());
     }
@@ -214,7 +209,7 @@ public class RestUsersTest extends MyJerseyTest {
         final Cookie c = loginAdmin();
 
         // user not found
-        final Response r1 = getTarget().path("/users/" + 2345).request(MediaType.APPLICATION_JSON_TYPE)
+        final Response r1 = getTarget().path("/users/" + 2345).request(JSON)
                 .cookie(c).put(Entity.json(new User(true, Role.ADMIN, "sdf2", null, "Matteo", "Zeni")));
         assertEquals(404, r1.getStatus());
     }
@@ -230,7 +225,7 @@ public class RestUsersTest extends MyJerseyTest {
         db.createUser(u1);
 
         // bad request
-        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(MediaType.APPLICATION_JSON_TYPE)
+        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(JSON)
                 .cookie(c).put(Entity.json(new User(true, Role.ADMIN, "sdf2", null, null, "Zeni")));
         assertEquals(400, r1.getStatus());
     }
@@ -247,7 +242,7 @@ public class RestUsersTest extends MyJerseyTest {
         db.createUser(u2);
 
         // conflict on update
-        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(MediaType.APPLICATION_JSON_TYPE)
+        final Response r1 = getTarget().path("/users/" + u1.getUid()).request(JSON)
                 .cookie(c).put(Entity.json(new User(true, Role.ADMIN, "aaaaa@aaa.com", null, "Matteo", "Zeni")));
         assertEquals(409, r1.getStatus());
     }
@@ -263,7 +258,7 @@ public class RestUsersTest extends MyJerseyTest {
         db.createUser(u);
 
         // try delete
-        final Response response = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).cookie(c).delete();
+        final Response response = getTarget().path("/users/" + u.getUid()).request(JSON).cookie(c).delete();
         assertEquals(200, response.getStatus());
     }
 
@@ -278,7 +273,7 @@ public class RestUsersTest extends MyJerseyTest {
         db.createUser(u);
 
         // try delete
-        final Response response = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).cookie(c).delete();
+        final Response response = getTarget().path("/users/" + u.getUid()).request(JSON).cookie(c).delete();
         assertEquals(401, response.getStatus());
     }
 
@@ -290,7 +285,7 @@ public class RestUsersTest extends MyJerseyTest {
         db.createUser(u);
 
         // try delete (no session)
-        final Response response = getTarget().path("/users/" + u.getUid()).request(MediaType.APPLICATION_JSON_TYPE).delete();
+        final Response response = getTarget().path("/users/" + u.getUid()).request(JSON).delete();
         assertEquals(401, response.getStatus());
     }
 
@@ -301,7 +296,7 @@ public class RestUsersTest extends MyJerseyTest {
         final Cookie c = loginAdmin();
 
         // try delete (not found)
-        final Response response = getTarget().path("/users/" + 35234).request(MediaType.APPLICATION_JSON_TYPE).cookie(c).delete();
+        final Response response = getTarget().path("/users/" + 35234).request(JSON).cookie(c).delete();
         assertEquals(404, response.getStatus());
     }
 

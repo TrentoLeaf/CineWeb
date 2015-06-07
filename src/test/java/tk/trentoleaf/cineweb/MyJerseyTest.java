@@ -38,6 +38,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class MyJerseyTest extends JerseyTest {
 
+    protected static final String JSON = MediaType.APPLICATION_JSON;
     protected static final String COOKIE_NAME = "JSESSIONID";
     protected final DB db = DB.instance();
 
@@ -111,7 +112,7 @@ public class MyJerseyTest extends JerseyTest {
     protected final Cookie login(String email, String password) {
 
         // login
-        final Response response = getTarget().path("/users/login").request(MediaType.APPLICATION_JSON_TYPE)
+        final Response response = getTarget().path("/users/login").request(JSON)
                 .post(Entity.json(new Auth(email, password)));
         assertEquals(200, response.getStatus());
 
