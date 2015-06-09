@@ -11,6 +11,11 @@ import java.util.logging.Logger;
 public class SSLFilter implements Filter {
     private Logger logger = Logger.getLogger(SSLFilter.class.getSimpleName());
 
+    // heroku compatibility
+    // heroku router handles SSL, communication between heroku router and this app is always in HTTPS
+    // heroku set this HTTP header to give the original used protocol
+    private static final String X_FORWARDED_PROTO = "x-forwarded-proto";
+
     // is this filter enabled?
     private boolean enabled = false;
 
@@ -27,8 +32,12 @@ public class SSLFilter implements Filter {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        // check if force https
-        if (enabled && !request.isSecure()) {
+        // check header
+        final String protocol = request.getHeader(X_FORWARDED_PROTO);
+        final boolean xForwarded = (protocol != null && protocol.contains("https"));
+
+        // check if to force https
+        if (enabled && (xForwarded || (protocol == null && !request.isSecure()))) {
 
             // get requested url
             final String url = request.getRequestURL().toString()
