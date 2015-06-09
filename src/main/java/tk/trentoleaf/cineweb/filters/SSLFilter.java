@@ -33,11 +33,10 @@ public class SSLFilter implements Filter {
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         // check header
-        final String protocol = request.getHeader(X_FORWARDED_PROTO);
-        final boolean xForwarded = (protocol != null && protocol.contains("https"));
+        final String xForwarded = request.getHeader(X_FORWARDED_PROTO);
 
         // check if to force https
-        if (enabled && (xForwarded || (protocol == null && !request.isSecure()))) {
+        if (enabled && (xForwarded != null && xForwarded.equals("http") || (xForwarded == null && !request.isSecure()))) {
 
             // get requested url
             final String url = request.getRequestURL().toString()
@@ -45,7 +44,7 @@ public class SSLFilter implements Filter {
                     .replaceFirst(":8080", ":8443");
 
             // log
-            logger.info("FORCE SSL FROM: " + request.getRequestURL() + " + TO: " + url);
+            logger.info("FORCE SSL -> xForwarded: " + xForwarded + " FROM: " + request.getRequestURL() + " TO: " + url);
 
             // redirect
             response.reset();
