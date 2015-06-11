@@ -384,5 +384,58 @@ public class AuthUsersTest extends MyJerseyTest {
         assertEquals(401, r2.getStatus());
     }
 
+    @Test
+    public void changePermissions() throws Exception {
+
+        final String email = "xxx@xxx.xx";
+        final String password = "password";
+
+        // create 1 admin
+        final User u1 = new User(true, Role.ADMIN, email, password, "Test", "User");
+        db.createUser(u1);
+
+        // login as the new user
+        final Cookie cookieU1 = login(email, password);
+
+        // try to add user -> should pass
+        final Response r0 = getTarget().path("/users/").request(JSON).cookie(cookieU1)
+                .post(Entity.json(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni")));
+        assertEquals(200, r0.getStatus());
+
+        // disable user
+        u1.setEnabled(false);
+        db.updateUser(u1);
+
+        // try to add user -> should fail
+        final Response r1 = getTarget().path("/users/").request(JSON).cookie(cookieU1)
+                .post(Entity.json(new User(true, Role.CLIENT, "bbb@bbb.bb", "bb", "bb", "bb")));
+        assertEquals(401, r1.getStatus());
+
+        // enable user
+        u1.setEnabled(true);
+        db.updateUser(u1);
+
+        // change u1 permissions
+        u1.setRole(Role.CLIENT);
+        db.updateUser(u1);
+
+        // try to add another user -> should now fail!
+        final Response r2 = getTarget().path("/users/").request(JSON).cookie(cookieU1)
+                .post(Entity.json(new User(true, Role.CLIENT, "aaa@aaa.aa", "aa", "aa", "aa")));
+        assertEquals(401, r2.getStatus());
+
+        // try to see the me area
+        final Response r3 = getTarget().path("/users/me").request(JSON).cookie(cookieU1).get();
+        assertEquals(200, r3.getStatus());
+
+        // disable user
+        u1.setEnabled(false);
+        db.updateUser(u1);
+
+        // try to see the me area -> should fail
+        final Response r4 = getTarget().path("/users/me").request(JSON).cookie(cookieU1).get();
+        assertEquals(401, r4.getStatus());
+    }
+
 }
 

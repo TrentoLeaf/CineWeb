@@ -67,9 +67,8 @@ public class RestUsers {
                 final User user = db.getUser(auth.getEmail());
 
                 // login ok, save uid
-                // TODO
                 final HttpSession session = request.getSession(true);
-                session.setAttribute("user", user);
+                session.setAttribute("uid", user.getUid());
 
                 return Response.ok(new LoginOk(user)).build();
 
@@ -224,13 +223,18 @@ public class RestUsers {
     @GET
     @UserArea
     @Path("/me")
-    public UserDetails getUser(@Context HttpServletRequest request) throws NotFoundException {
+    public UserDetails getUser(@Context HttpServletRequest request) throws NotFoundException, SQLException {
 
         final HttpSession session = request.getSession(false);
         if (session != null) {
-            final User current = (User) session.getAttribute("user");
-            if (current != null) {
-                return new UserDetails(current);
+            final Integer uid = (Integer) session.getAttribute("uid");
+            try {
+                final User current = (uid != null) ? db.getUser(uid) : null;
+                if (current != null) {
+                    return new UserDetails(current);
+                }
+            } catch (UserNotFoundException e) {
+                // nothing, see later
             }
         }
 

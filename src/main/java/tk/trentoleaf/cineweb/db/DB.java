@@ -267,6 +267,7 @@ public class DB {
         }
     }
 
+    // TODO -> serve?
     // TODO -> test!
     // enable or disable a user
     public void changeUserStatus(int uid, boolean enable) throws SQLException, UserNotFoundException {
@@ -322,15 +323,16 @@ public class DB {
 
     // update a user -> NB: does not change the password
     public void updateUser(User user) throws SQLException, UserNotFoundException, ConstrainException {
-        final String query = "UPDATE users SET roleid = ?, email = ?, first_name = ?, second_name = ?, credit = ? WHERE uid = ?";
+        final String query = "UPDATE users SET enabled = ?, roleid = ?, email = ?, first_name = ?, second_name = ?, credit = ? WHERE uid = ?";
 
         try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setString(1, user.getRole().getRoleID());
-            stm.setString(2, user.getEmail());
-            stm.setString(3, user.getFirstName());
-            stm.setString(4, user.getSecondName());
-            stm.setDouble(5, user.getCredit());
-            stm.setInt(6, user.getUid());
+            stm.setBoolean(1, user.isEnabled());
+            stm.setString(2, user.getRole().getRoleID());
+            stm.setString(3, user.getEmail());
+            stm.setString(4, user.getFirstName());
+            stm.setString(5, user.getSecondName());
+            stm.setDouble(6, user.getCredit());
+            stm.setInt(7, user.getUid());
             int rows = stm.executeUpdate();
             if (rows != 1) {
                 throw new UserNotFoundException();
@@ -429,6 +431,21 @@ public class DB {
 
             // if here -> no such user
             throw new UserNotFoundException();
+        }
+    }
+
+    public Role getUserRoleIfEnabled(int uid) throws SQLException {
+        final String query = "SELECT roleid FROM users WHERE uid = ? AND enabled = TRUE;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, uid);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return Role.fromID(rs.getString("roleid"));
+            } else {
+                return null;
+            }
         }
     }
 
@@ -783,21 +800,19 @@ public class DB {
             stm.setInt(1, pid);
             ResultSet rs = stm.executeQuery();
 
-            int ridCheck=-1;
+            int ridCheck = -1;
             while (rs.next()) {
                 int rid = rs.getInt("rid");
 
                 // check if all seats find are part of the same room
-                if(ridCheck==rid ||ridCheck==-1)
-                {
-                    ridCheck=rid;
-                }
-                else
+                if (ridCheck == rid || ridCheck == -1) {
+                    ridCheck = rid;
+                } else
                     throw new WrongCodeException();
 
                 int x = rs.getInt("x");
                 int y = rs.getInt("y");
-                seatsReserved.add(new SeatReserved(rid, x, y,true));
+                seatsReserved.add(new SeatReserved(rid, x, y, true));
             }
 
         }
@@ -817,23 +832,17 @@ public class DB {
         final List<SeatReserved> seatReserved = getSeatsReservedByPlay(pid);
 
         //list of all seat in the room
-        final List<Seat> allSeat=getSeatsByRoom(seatReserved.get(1).getRid());
+        final List<Seat> allSeat = getSeatsByRoom(seatReserved.get(1).getRid());
 
         //list of all seatReserved in the room
-        final List<SeatReserved> seat =new ArrayList<>();
+        final List<SeatReserved> seat = new ArrayList<>();
 
-        for(int i=0;i<allSeat.size();i++)
-        {
-            if(seatReserved.contains(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), true)))
-            {
+        for (int i = 0; i < allSeat.size(); i++) {
+            if (seatReserved.contains(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), true))) {
                 seat.add(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), true));
-            }
-            else
-                seat.add(new SeatReserved(allSeat.get(i).getRid(),allSeat.get(i).getX(),allSeat.get(i).getY(),false));
+            } else
+                seat.add(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), false));
         }
-
-
-
 
 
         return seat;
@@ -1082,7 +1091,7 @@ public class DB {
     // check if is older play
     public boolean isOlderPlay(int pid, DateTime time) throws SQLException {
 
-        boolean isOlderPlay=false;
+        boolean isOlderPlay = false;
         final String query = "SELECT time FROM plays " +
                 "WHERE pid = ? ;";
 
@@ -1094,9 +1103,7 @@ public class DB {
             rs.next();
 
 
-
-            if(rs.getTimestamp(1).before(new Timestamp(time.toDate().getTime())))
-            {
+            if (rs.getTimestamp(1).before(new Timestamp(time.toDate().getTime()))) {
                 isOlderPlay = true;
             }
         }
@@ -1143,10 +1150,8 @@ public class DB {
     }
 
     // create table books
-    private void createTableBookings() throws SQLException
-    {
-        try (Connection connection = getConnection(); Statement stm = connection.createStatement())
-        {
+    private void createTableBookings() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS bookings (" +
                     "bid SERIAL," +
                     "uid INTEGER," +
@@ -1165,28 +1170,23 @@ public class DB {
     }
 
     // drop table booking
-    private void dropTableBookings() throws SQLException
-    {
-        try (Connection connection = getConnection(); Statement stm = connection.createStatement())
-        {
+    private void dropTableBookings() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("DROP TABLE IF EXISTS bookings;");
         }
     }
 
-    public Booking createBookings(int rid, int x, int y, int uid, int pid, double price)  throws SQLException, FilmAlreadyGoneException
-    {
+    public Booking createBookings(int rid, int x, int y, int uid, int pid, double price) throws SQLException, FilmAlreadyGoneException {
         final String query = "INSERT INTO bookings (bid, uid, pid, rid, x, y, time_booking, price) VALUES " +
                 "(DEFAULT, ?, ?, ?, ?, ?, ?, ?) RETURNING bid";
 
 
         final DateTime timeBooking = new DateTime(System.currentTimeMillis());
-        if(isOlderPlay( pid,  timeBooking))
-        {
-            throw  new FilmAlreadyGoneException();
+        if (isOlderPlay(pid, timeBooking)) {
+            throw new FilmAlreadyGoneException();
         }
 
-        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query))
-        {
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
 
             final Booking booking = new Booking(rid, x, y, uid, pid, timeBooking, price);
 
@@ -1237,7 +1237,7 @@ public class DB {
             stm.setInt(1, bookingId);
             ResultSet rs = stm.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 int uid = rs.getInt("uid");
                 int pid = rs.getInt("pid");
                 int rid = rs.getInt("rid");
@@ -1255,7 +1255,7 @@ public class DB {
     }
 
     //delete booking
-    public void deleteBooking(Booking booking) throws SQLException, UserNotFoundException, EntryNotFoundException{
+    public void deleteBooking(Booking booking) throws SQLException, UserNotFoundException, EntryNotFoundException {
 
         final String query = "DELETE FROM bookings WHERE bid = ?";
         final User user;
@@ -1268,8 +1268,7 @@ public class DB {
 
                 int n = stm.executeUpdate();
 
-                if(n==0)
-                {
+                if (n == 0) {
                     throw new EntryNotFoundException();
                 }
 

@@ -1,6 +1,7 @@
 package tk.trentoleaf.cineweb.filters;
 
 import tk.trentoleaf.cineweb.annotations.AdminArea;
+import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.model.Role;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -17,6 +19,9 @@ import java.util.logging.Logger;
 @Provider
 public class AdminFilter implements ContainerRequestFilter {
     private Logger logger = Logger.getLogger(AdminFilter.class.getSimpleName());
+
+    // database
+    private DB db = DB.instance();
 
     @Context
     private HttpServletRequest httpRequest;
@@ -26,11 +31,15 @@ public class AdminFilter implements ContainerRequestFilter {
 
         // check if a logged user
         final HttpSession session = httpRequest.getSession(false);
-        final tk.trentoleaf.cineweb.model.User user = (session != null) ? (tk.trentoleaf.cineweb.model.User) session.getAttribute("user") : null;
+        final Integer uid = (session != null) ? (Integer) session.getAttribute("uid") : null;
 
-        // check the role and uid
-        final Role role = (user != null) ? user.getRole() : null;
-        final Integer uid = (user != null) ? user.getUid() : null;
+        // check the role
+        Role role = null;
+        try {
+            role = (uid != null) ? db.getUserRoleIfEnabled(uid) : null;
+        } catch (SQLException e) {
+            logger.severe(e.toString());
+        }
 
         // if not admin -> drop request
         if (role != Role.ADMIN) {
@@ -41,6 +50,5 @@ public class AdminFilter implements ContainerRequestFilter {
             // return HTTP 401
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }
-
     }
 }
