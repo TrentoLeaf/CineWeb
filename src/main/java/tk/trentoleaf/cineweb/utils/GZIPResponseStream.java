@@ -53,6 +53,7 @@ public class GZIPResponseStream extends ServletOutputStream {
 
         // add encoding type
         response.addHeader("Content-Encoding", "gzip");
+        response.addHeader("Vary", "Accept-Encoding");
 
         // flush and close
         outputStream.write(bytes);
