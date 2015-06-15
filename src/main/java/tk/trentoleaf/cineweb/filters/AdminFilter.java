@@ -3,6 +3,7 @@ package tk.trentoleaf.cineweb.filters;
 import tk.trentoleaf.cineweb.annotations.AdminArea;
 import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.model.Role;
+import tk.trentoleaf.cineweb.utils.Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -31,7 +32,7 @@ public class AdminFilter implements ContainerRequestFilter {
 
         // check if a logged user
         final HttpSession session = httpRequest.getSession(false);
-        final Integer uid = (session != null) ? (Integer) session.getAttribute("uid") : null;
+        final Integer uid = (session != null) ? (Integer) session.getAttribute(Utils.UID) : null;
 
         // check the role
         Role role = null;

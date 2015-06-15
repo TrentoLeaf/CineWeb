@@ -9,6 +9,8 @@ import java.net.URL;
 
 public class Utils {
 
+    public static final String UID = "uid";
+
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 

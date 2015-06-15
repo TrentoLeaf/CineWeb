@@ -13,6 +13,7 @@ import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
 import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.utils.CSRFUtils;
+import tk.trentoleaf.cineweb.utils.Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,8 +70,7 @@ public class RestUsers {
 
                 // login ok, save uid
                 final HttpSession session = request.getSession(true);
-                session.setAttribute("uid", user.getUid());
-                // TODO: constant UID
+                session.setAttribute(Utils.UID, user.getUid());
 
                 return Response.ok(new LoginOk(user)).build();
 
@@ -206,7 +206,7 @@ public class RestUsers {
 
         final HttpSession session = request.getSession(false);
         if (session != null) {
-            final Integer uid = (Integer) session.getAttribute("uid");
+            final Integer uid = (Integer) session.getAttribute(Utils.UID);
             try {
                 final User current = (uid != null) ? db.getUser(uid) : null;
                 if (current != null) {
