@@ -1,14 +1,18 @@
 package tk.trentoleaf.cineweb.entities;
 
-import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 
 public class Auth implements Serializable {
 
+    @NotEmpty(message = "Email cannot be null")
     private String email;
+
+    @NotEmpty(message = "Password cannot be null")
     private String password;
 
+    @SuppressWarnings("unused")
     public Auth() {
     }
 
@@ -23,9 +27,5 @@ public class Auth implements Serializable {
 
     public String getPassword() {
         return password;
-    }
-
-    public boolean isValid() {
-        return StringUtils.isNotEmpty(email) && StringUtils.isNotEmpty(password);
     }
 }

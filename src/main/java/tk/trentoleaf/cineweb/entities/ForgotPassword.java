@@ -1,13 +1,15 @@
 package tk.trentoleaf.cineweb.entities;
 
-import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 
 public class ForgotPassword implements Serializable {
 
+    @NotEmpty(message = "Email cannot be null")
     private String email;
 
+    @SuppressWarnings("unused")
     public ForgotPassword() {
     }
 
@@ -19,14 +21,4 @@ public class ForgotPassword implements Serializable {
         return email;
     }
 
-    public boolean isValid() {
-        return StringUtils.isNotEmpty(email);
-    }
-
-    @Override
-    public String toString() {
-        return "ForgotPassword{" +
-                "email='" + email + '\'' +
-                '}';
-    }
 }

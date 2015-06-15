@@ -7,7 +7,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.*;
 
-@WebFilter(urlPatterns = "/*")
+@WebFilter(urlPatterns = {"*.html", "*.css", "*.js", "*.svg", "*.eot", "*.ttf"})
 public class GZIPFilter implements Filter {
 
     public void init(FilterConfig filterConfig) {

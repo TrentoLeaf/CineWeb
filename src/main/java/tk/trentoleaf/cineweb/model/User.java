@@ -1,19 +1,36 @@
 package tk.trentoleaf.cineweb.model;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import tk.trentoleaf.cineweb.entities.Registration;
+import tk.trentoleaf.cineweb.utils.Utils;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class User implements Serializable {
 
     private int uid;
     private boolean enabled;
+
+    @NotNull
     private Role role;
+
+    @Email(message = "Email must be a valid email")
+    @NotEmpty(message = "Email cannot be null")
     private String email;
+
     private String password;
+
+    @NotEmpty(message = "FirstName cannot be null")
     private String firstName;
+
+    @NotEmpty(message = "SecondName cannot be null")
     private String secondName;
+
+    @Min(value = 0, message = "Credit must be >= 0")
     private double credit;
 
     public static User FIRST_ADMIN = new User(true, Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin");
@@ -103,8 +120,9 @@ public class User implements Serializable {
     }
 
     public boolean isValid() {
-        return role != null && StringUtils.isNotEmpty(email) && StringUtils.isNotEmpty(firstName)
-                && StringUtils.isNotEmpty(secondName) && credit >= 0;
+//        return role != null && StringUtils.isNotEmpty(email) && StringUtils.isNotEmpty(firstName)
+//                && StringUtils.isNotEmpty(secondName) && credit >= 0;
+        return Utils.isValid(this);
     }
 
     public boolean isValidWithPassword() {

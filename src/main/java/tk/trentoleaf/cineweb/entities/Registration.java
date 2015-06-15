@@ -1,17 +1,26 @@
 package tk.trentoleaf.cineweb.entities;
 
-import org.apache.commons.lang3.StringUtils;
-import tk.trentoleaf.cineweb.utils.Utils;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 
 public class Registration implements Serializable {
 
+    @NotEmpty(message = "Email cannot be null")
+    @Email(message = "Email must be a valid email")
     private String email;
+
+    @NotEmpty(message = "Password cannot be null")
     private String password;
+
+    @NotEmpty(message = "FirstName cannot be null")
     private String firstName;
+
+    @NotEmpty(message = "SecondName cannot be null")
     private String secondName;
 
+    @SuppressWarnings("unused")
     public Registration() {
     }
 
@@ -38,8 +47,4 @@ public class Registration implements Serializable {
         return secondName;
     }
 
-    public boolean isValid() {
-        return Utils.isValidEmail(email) && StringUtils.isNotEmpty(password)
-                && StringUtils.isNotEmpty(firstName) && StringUtils.isNotEmpty(secondName);
-    }
 }
