@@ -35,6 +35,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Jersey Hibernate Validation Support -->
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-bean-validation</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
         <!-- Jetty (Heroku) -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
