@@ -1,13 +1,15 @@
 package tk.trentoleaf.cineweb.entities;
 
-import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 
 public class ConfirmCode implements Serializable {
 
+    @NotEmpty(message = "Code cannot be null")
     private String code;
 
+    @SuppressWarnings("unused")
     public ConfirmCode() {
     }
 
@@ -19,7 +21,4 @@ public class ConfirmCode implements Serializable {
         return code;
     }
 
-    public boolean isValid() {
-        return StringUtils.isNotEmpty(code);
-    }
 }

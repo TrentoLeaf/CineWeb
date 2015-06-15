@@ -16,7 +16,7 @@ public class BeanValidationHandler implements ExceptionMapper<ConstraintViolatio
 
         // calculate message to display
         final StringBuilder sb = new StringBuilder();
-        for(ConstraintViolation<?> v : ex.getConstraintViolations()) {
+        for (ConstraintViolation<?> v : ex.getConstraintViolations()) {
             sb.append(v.getMessage());
             sb.append(", ");
         }

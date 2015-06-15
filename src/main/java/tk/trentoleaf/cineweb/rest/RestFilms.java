@@ -37,7 +37,7 @@ public class RestFilms {
     @POST
     public Film addFilm(Film film) throws SQLException {
 
-        // validate
+        // isValid
         if (film == null || !film.isValid()) {
             throw BadRequestException.BAD_FILM;
         }

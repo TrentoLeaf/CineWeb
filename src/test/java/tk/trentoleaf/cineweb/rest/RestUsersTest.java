@@ -210,7 +210,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // user not found
         final Response r1 = getTarget().path("/users/" + 2345).request(JSON)
-                .cookie(c).put(Entity.json(new User(true, Role.ADMIN, "sdf2", null, "Matteo", "Zeni")));
+                .cookie(c).put(Entity.json(new User(true, Role.ADMIN, "sdf2@aaa.com", null, "Matteo", "Zeni")));
         assertEquals(404, r1.getStatus());
     }
 

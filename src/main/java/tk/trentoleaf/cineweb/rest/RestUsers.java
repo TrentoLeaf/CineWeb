@@ -1,22 +1,23 @@
 package tk.trentoleaf.cineweb.rest;
 
 import com.sendgrid.SendGridException;
-import tk.trentoleaf.cineweb.db.DB;
-import tk.trentoleaf.cineweb.email.EmailSender;
-import tk.trentoleaf.cineweb.exceptions.db.*;
-import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.annotations.AdminArea;
 import tk.trentoleaf.cineweb.annotations.UserArea;
+import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.email.EmailSender;
 import tk.trentoleaf.cineweb.entities.*;
+import tk.trentoleaf.cineweb.exceptions.db.*;
 import tk.trentoleaf.cineweb.exceptions.rest.AuthFailedException;
 import tk.trentoleaf.cineweb.exceptions.rest.BadRequestException;
 import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
+import tk.trentoleaf.cineweb.model.User;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -32,31 +33,26 @@ public class RestUsers {
     // db singleton
     private DB db = DB.instance();
 
-    // remove a given cookie
-    private void removeCookie(HttpServletResponse response, String name) {
-        Cookie cookie = new Cookie(name, null);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-        cookie.setHttpOnly(true);
-        response.addCookie(cookie);
+    // remove all session cookies
+    private void invalidateSession(HttpSession session, HttpServletResponse response) {
+        session.invalidate();
+        // TODO: add CSRF
+        // TODO: move to utils
     }
 
-    // remove all session cookies
-    private void removeSession(HttpSession session, HttpServletResponse response) {
-        session.invalidate();
-        removeCookie(response, "JSESSIONID");
-        removeCookie(response, "popcorn");
-    }
+    @Context
+    private HttpServletRequest request;
+
+    @Context
+    private HttpServletResponse response;
+
+    @Context
+    private UriInfo uriInfo;
 
     // rest function to do a login
     @POST
     @Path("/login")
-    public Response login(@Context HttpServletRequest request, @Context HttpServletResponse response, Auth auth) throws SQLException {
-
-        // check payload
-        if (auth == null || !auth.isValid()) {
-            throw new BadRequestException("Missing email or password");
-        }
+    public Response login(@NotNull(message = "Missing email, password") @Valid Auth auth) throws SQLException {
 
         // try authentication
         boolean success = db.authenticate(auth.getEmail(), auth.getPassword());
@@ -69,18 +65,19 @@ public class RestUsers {
                 // login ok, save uid
                 final HttpSession session = request.getSession(true);
                 session.setAttribute("uid", user.getUid());
+                // TODO: constant UID
 
                 return Response.ok(new LoginOk(user)).build();
 
             } catch (UserNotFoundException e) {
-                removeSession(request.getSession(), response);
+                invalidateSession(request.getSession(), response);
                 throw new AuthFailedException();
             }
         }
 
         // login failed
         else {
-            removeSession(request.getSession(), response);
+            invalidateSession(request.getSession(), response);
             throw new AuthFailedException();
         }
     }
@@ -88,10 +85,10 @@ public class RestUsers {
     @POST
     @UserArea
     @Path("/logout")
-    public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+    public Response logout() {
 
-        // invalidate session and remove cookies
-        removeSession(request.getSession(), response);
+        // invalidate session
+        invalidateSession(request.getSession(), response);
 
         return Response.ok().build();
     }
@@ -99,11 +96,7 @@ public class RestUsers {
     @POST
     @UserArea
     @Path("/change-password")
-    public Response changePassword(ChangePassword change) throws SQLException {
-
-        if (change == null || !change.isValid()) {
-            throw new BadRequestException("Missing email, oldPassword or newPassword");
-        }
+    public Response changePassword(@NotNull(message = "Missing email, oldPassword, newPassword") @Valid ChangePassword change) throws SQLException {
 
         // try to change the password
         try {
@@ -116,12 +109,7 @@ public class RestUsers {
 
     @POST
     @Path("/registration")
-    public Response registration(@Context UriInfo uriInfo, Registration registration) throws SQLException {
-
-        // validate registration
-        if (registration == null || !registration.isValid()) {
-            throw new BadRequestException("Bad registration request");
-        }
+    public Response registration(@NotNull(message = "Bad registration request") @Valid Registration registration) throws SQLException {
 
         // try to add the user
         try {
@@ -149,12 +137,7 @@ public class RestUsers {
 
     @POST
     @Path("/confirm")
-    public ActivateUser confirmUser(ConfirmCode confirmCode) throws SQLException {
-
-        // validate code
-        if (confirmCode == null || !confirmCode.isValid()) {
-            throw new BadRequestException("Bad confirmation code");
-        }
+    public ActivateUser confirmUser(@NotNull(message = "Missing code") @Valid ConfirmCode confirmCode) throws SQLException {
 
         // try to confirm the user
         try {
@@ -169,12 +152,7 @@ public class RestUsers {
 
     @POST
     @Path("/forgot-password")
-    public Response forgotPassword(@Context UriInfo uriInfo, ForgotPassword forgotPassword) throws SQLException {
-
-        // validate email
-        if (forgotPassword == null || !forgotPassword.isValid()) {
-            throw new BadRequestException("Missing email");
-        }
+    public Response forgotPassword(@NotNull(message = "Missing email") @Valid ForgotPassword forgotPassword) throws SQLException {
 
         // check if user exists
         try {
@@ -205,11 +183,7 @@ public class RestUsers {
 
     @POST
     @Path("/change-password-code")
-    public Response changePasswordWithCode(ChangePasswordWithCode change) throws SQLException {
-
-        if (change == null || !change.isValid()) {
-            throw new BadRequestException("Missing email, code or newPassword");
-        }
+    public Response changePasswordWithCode(@NotNull(message = "Bad changePassword") @Valid ChangePasswordWithCode change) throws SQLException {
 
         // try to change the password
         try {
@@ -223,7 +197,7 @@ public class RestUsers {
     @GET
     @UserArea
     @Path("/me")
-    public UserDetails getUser(@Context HttpServletRequest request) throws NotFoundException, SQLException {
+    public UserDetails getUser() throws NotFoundException, SQLException {
 
         final HttpSession session = request.getSession(false);
         if (session != null) {
@@ -261,10 +235,10 @@ public class RestUsers {
 
     @POST
     @AdminArea
-    public User createUser(@Context HttpServletRequest request, User user) throws SQLException {
+    public User createUser(@NotNull(message = "Missing user object") User user) throws SQLException {
 
         // check if user is valid
-        if (user == null || !user.isValidWithPassword()) {
+        if (!user.isValidWithPassword()) {
             throw BadRequestException.BAD_USER;
         }
 
@@ -282,12 +256,7 @@ public class RestUsers {
     @PUT
     @AdminArea
     @Path("/{id}")
-    public User updateUser(@PathParam("id") int id, User user) throws SQLException {
-
-        // check if user is valid
-        if (user == null || !user.isValid()) {
-            throw BadRequestException.BAD_USER;
-        }
+    public User updateUser(@PathParam("id") int id, @NotNull(message = "Missing user object") @Valid User user) throws SQLException {
 
         // create user
         try {
