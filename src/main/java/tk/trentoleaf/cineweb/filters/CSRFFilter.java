@@ -1,6 +1,6 @@
 package tk.trentoleaf.cineweb.filters;
 
-import tk.trentoleaf.cineweb.utils.CsrfUtils;
+import tk.trentoleaf.cineweb.utils.CSRFUtils;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -55,17 +55,17 @@ public class CSRFFilter implements Filter {
 
             // get CSRF cookie
             for (Cookie c : cookies) {
-                if (c.getName().equals(CsrfUtils.COOKIE)) {
+                if (c.getName().equals(CSRFUtils.COOKIE)) {
                     csrfCookie = c.getValue();
                     break;
                 }
             }
 
             // csrf header
-            final String csrfHeader = request.getHeader(CsrfUtils.HEADER);
+            final String csrfHeader = request.getHeader(CSRFUtils.HEADER);
 
             // expected value
-            final String expected = (String) session.getAttribute(CsrfUtils.SESSION);
+            final String expected = (String) session.getAttribute(CSRFUtils.SESSION);
 
             // check CSRF
             if (csrfCookie == null || csrfHeader == null || expected == null || !csrfCookie.equals(csrfHeader) || !csrfHeader.equals(expected)) {

@@ -12,6 +12,7 @@ import tk.trentoleaf.cineweb.exceptions.rest.BadRequestException;
 import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
 import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.utils.CSRFUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,11 +34,15 @@ public class RestUsers {
     // db singleton
     private DB db = DB.instance();
 
-    // remove all session cookies
-    private void invalidateSession(HttpSession session, HttpServletResponse response) {
+    // invalidate session
+    private void invalidateSession() {
+
+        // invalidate session
+        final HttpSession session = request.getSession();
         session.invalidate();
-        // TODO: add CSRF
-        // TODO: move to utils
+
+        // re-init CSRF protection
+        CSRFUtils.addCSRFToken(request, response);
     }
 
     @Context
@@ -70,14 +75,14 @@ public class RestUsers {
                 return Response.ok(new LoginOk(user)).build();
 
             } catch (UserNotFoundException e) {
-                invalidateSession(request.getSession(), response);
+                invalidateSession();
                 throw new AuthFailedException();
             }
         }
 
         // login failed
         else {
-            invalidateSession(request.getSession(), response);
+            invalidateSession();
             throw new AuthFailedException();
         }
     }
@@ -88,7 +93,7 @@ public class RestUsers {
     public Response logout() {
 
         // invalidate session
-        invalidateSession(request.getSession(), response);
+        invalidateSession();
 
         return Response.ok().build();
     }
