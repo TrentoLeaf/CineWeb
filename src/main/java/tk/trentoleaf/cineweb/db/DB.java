@@ -1041,8 +1041,9 @@ public class DB {
     }
 
     // create play
-    public void createPlay(Play play) throws SQLException, AnotherFilmScheduledException {
+    public void createPlay(Play play) throws SQLException, ConstrainException, AnotherFilmScheduledException {
 
+        // TODO: transaction
         boolean another = isAlreadyPlay(play.getRid(), play.getTime());
         if (another) {
             throw new AnotherFilmScheduledException();
@@ -1061,6 +1062,8 @@ public class DB {
             // if here -> no error
             rs.next();
             play.setPid(rs.getInt("pid"));
+        } catch (PSQLException e) {
+            throw new ConstrainException(e);
         }
     }
 
@@ -1128,6 +1131,27 @@ public class DB {
         }
 
         return plays;
+    }
+
+    // get a play by id
+    public Play getPlay(int pid) throws SQLException, EntryNotFoundException {
+        final String query = "SELECT fid, rid, time, _3d FROM plays WHERE pid = ?;";
+
+        try (Connection connection = getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, pid);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                int fid = rs.getInt("fid");
+                int rid = rs.getInt("rid");
+                DateTime time = new DateTime(rs.getTimestamp("time").getTime());
+                boolean _3d = rs.getBoolean("_3d");
+
+                return new Play(pid, fid, rid, time, _3d);
+            }
+
+            throw new EntryNotFoundException();
+        }
     }
 
     // delete a play
