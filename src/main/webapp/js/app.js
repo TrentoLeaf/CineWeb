@@ -46,6 +46,10 @@ $(document).ready(function () {
                 templateUrl: '../partials/registration.html',
                 controller: 'RegistrationCtrl',
                 controllerAs: 'ctrl'
+            }).when('/password_recovery', {
+                templateUrl: '../partials/password_recovery.html',
+                controller: 'LoginController',
+                controllerAs: 'ctrl'
             }).when('/me', {
                 templateUrl: '../partials/me.html',
                 controller: 'MeController',
