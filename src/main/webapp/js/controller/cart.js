@@ -87,9 +87,5 @@
                 return (JSON.parse(JSON.stringify(obj)));
             };
 
-            this.log = function () {
-                console.log("carrlog");
-            };
-
         }]);
 })();

@@ -10,7 +10,6 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.net.URL;
 
 public class PdfCreator {
@@ -120,7 +119,7 @@ public class PdfCreator {
             canvas.beginText();
             canvas.setFontAndSize(baseFont, 16);
             canvas.setTextMatrix(97, tfy(147));
-            canvas.showText(data.getTitle());
+            canvas.showText(data.getFilmTitle());
             canvas.endText();
 
             // theatre
@@ -159,7 +158,7 @@ public class PdfCreator {
             canvas.endText();
 
             // add qrcode
-            BarcodeQRCode qrcode = new BarcodeQRCode(data.getQrCode(), 175, 175, null);
+            BarcodeQRCode qrcode = new BarcodeQRCode(data.generateQrCodeDataString(), 175, 175, null);
             Image qrImage = qrcode.getImage();
             qrImage.setAbsolutePosition(340, tfy(300));
             canvas.addImage(qrImage);

@@ -126,6 +126,21 @@ main {
 footer {
   margin-top: 0px !important; }
 
+.priceTable tr:nth-child(odd) {
+  background-color: #e6e6e6;
+  color: #282828; }
+.priceTable tr:nth-child(even) {
+  background-color: #282828; }
+.priceTable td {
+  border-radius: 0px;
+  height: 1.5em;
+  max-height: 1.5em;
+  padding: 0px; }
+.priceTable tr td:nth-child(1) {
+  padding-left: 1em; }
+.priceTable tr td:nth-child(2) {
+  padding-right: 1em; }
+
 @-webkit-keyframes shake {
   0% {
     -webkit-transform: translate(2px, 1px) rotate(0deg); }

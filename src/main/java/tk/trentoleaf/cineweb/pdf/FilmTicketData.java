@@ -1,55 +1,42 @@
 package tk.trentoleaf.cineweb.pdf;
 
-/**
- * Created by koen on 9-06-14.
- */
+
 public class FilmTicketData {
-    /**/
-    //Nuovi dati
-    /**/
-    private String title;
+
+    private String username;
+    private String filmTitle;
     private String theatre;
     private String seat;
     private String date;
     private String time;
     private String type;
-    private String qrCode;
+    private String price;
 
-    public FilmTicketData(){
-        title = "Titolo 1";
+    public FilmTicketData() {
+        username = "mario@srv.com";
+        filmTitle = "Titolo 1";
         theatre = "Cinema 1";
         seat = "Posto 1";
         date = "Data 1";
         time = "Orario 1";
         type = "Tipo 1";
-        qrCode = "qrCode 1";
+        price = "5.00";
     }
 
-    /**/
-    //new getters and setters
-    /**/
-    public String getQrCode() {
-        return qrCode;
+    public String getUsername() {
+        return username;
     }
 
-    public void setQrCode(String qrCode) {
-        this.qrCode = qrCode;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getDate() {
-        return date;
+    public String getFilmTitle() {
+        return filmTitle;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setFilmTitle(String filmTitle) {
+        this.filmTitle = filmTitle;
     }
 
     public String getTheatre() {
@@ -68,6 +55,14 @@ public class FilmTicketData {
         this.seat = seat;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     public String getTime() {
         return time;
     }
@@ -83,4 +78,21 @@ public class FilmTicketData {
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = String.format("%.2f", price);
+    }
+
+
+    public String generateQrCodeDataString () {
+        return username+"\n"+filmTitle+"\n"+theatre+" "+seat+"\n"+date+" "+time+"\n"+type+"\n"+price;
+    }
+
+
 }
+
+

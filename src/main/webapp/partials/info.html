@@ -5,15 +5,22 @@
 </div>
 
 <div class="row white-text">
-    <div class="col s12 m12 offset-l1 l4">
-        <h3>Orari d'apertura:</h3>
-        <ul>
-            <li><h5 class="grey-text text-lighten-3">Lunedì - Mercoledì: 16:00 - 23:00</h5></li>
-            <li><h5 class="grey-text text-lighten-3">Giovedì chiuso.</h5></li>
-            <li><h5 class="grey-text text-lighten-3">Venerdì - Domenica: 16:00 - 01:00</h5></li>
-        </ul>
+    <div class="col s12 m6 offset-l1 l4">
+        <div class="row">
+            <h3>Orari d'apertura</h3>
+            <ul>
+                <li><h5 class="grey-text text-lighten-3">Lunedì - Mercoledì: 16:00 - 23:00</h5></li>
+                <li><h5 class="grey-text text-lighten-3">Giovedì chiuso.</h5></li>
+                <li><h5 class="grey-text text-lighten-3">Venerdì - Domenica: 16:00 - 01:00</h5></li>
+            </ul>
+        </div>
+        <div class="row">
+            <h3>Telefono</h3>
+            <h5><i>per informazioni:</i> 0461 63 7231</h5>
+        </div>
     </div>
-    <div class="col s12 m12 offset-l1 l5">
+    <div class="col s12 m6 offset-l1 l5">
+        <h3>Dove siamo</h3>
         <ui-gmap-google-map center='{latitude: 46.066500, longitude: 11.150469}' zoom='16'>
             <ui-gmap-marker idKey='0' coords='{latitude: 46.066500, longitude: 11.150469}'></ui-gmap-marker>
         </ui-gmap-google-map>
@@ -21,11 +28,25 @@
 </div>
 
 <div class="row white-text">
-    <div class="col s12 offset-m1 m10 offset-l1 l10">
-        <p>Altre informazioni utili.</p>
+    <div class="col s12 m6 offset-l1 l4">
+        <h3>Prezzi</h3>
+        <table ng-controller="CartController as cc" class="priceTable">
+            <tbody>
+            <tr ng-repeat="ticket in tickets">
+                <td>
+                    <h5>{{ticket.name}}</h5>
+                </td>
+                <td>
+                    <h5 class="right-align">{{ticket.price | currency:"€ "}}</h5>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col s12 m6 offset-l1 l5">
 
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <h3>Altre informazioni</h3>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent imperdiet neque a neque pharetra eleifend. Vestibulum et arcu semper diam interdum tincidunt. Nulla eu tellus in quam pretium interdum eu in odio. Curabitur in dui nec ante aliquam ornare sollicitudin nec libero. Vestibulum id velit quis nisl bibendum malesuada quis sed tellus. Ut egestas metus ac nibh consectetur cursus. In hac habitasse platea dictumst. Morbi in dignissim tellus, eget tincidunt mi. Morbi aliquam sed mi sit amet scelerisque. Maecenas pretium risus vitae elit fringilla, vitae varius turpis vulputate. Phasellus ac magna orci. Integer quis luctus nunc, et facilisis est. Quisque venenatis nec ante a malesuada. Vivamus quis consequat est. Aliquam erat volutpat.</p>
     </div>
 </div>
