@@ -808,7 +808,7 @@ public class DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
-    @Test(expected = PSQLException.class)
+    @Test(expected = ConstrainException.class)
     public void createPlayFailure1() throws Exception {
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         db.createFilm(f1);
@@ -817,7 +817,7 @@ public class DBTest {
         db.createPlay(p1);
     }
 
-    @Test(expected = PSQLException.class)
+    @Test(expected = ConstrainException.class)
     public void createPlayFailure2() throws Exception {
         final Room r1 = db.createRoom(23, 12);
 

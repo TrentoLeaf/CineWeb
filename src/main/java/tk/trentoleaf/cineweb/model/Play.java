@@ -2,14 +2,24 @@ package tk.trentoleaf.cineweb.model;
 
 import org.joda.time.DateTime;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+// TODO: transient film and room???
 public class Play implements Serializable {
 
     private int pid;
+
+    @Min(value = 1, message = "Fid must be valid")
     private int fid;
+
+    @Min(value = 1, message = "Rid must be valid")
     private int rid;
+
+    @NotNull(message = "Time cannot be null")
     private DateTime time;
+
     private boolean _3d;
 
     private transient Film film;
