@@ -2,9 +2,7 @@ package tk.trentoleaf.cineweb.rest;
 
 import tk.trentoleaf.cineweb.annotations.AdminArea;
 import tk.trentoleaf.cineweb.db.DB;
-import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
 import tk.trentoleaf.cineweb.model.Film;
 
