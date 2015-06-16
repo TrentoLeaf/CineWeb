@@ -6,7 +6,13 @@ import tk.trentoleaf.cineweb.model.Film;
 import tk.trentoleaf.cineweb.model.Play;
 import tk.trentoleaf.cineweb.model.Room;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,118 +36,138 @@ public class RestPlayTest extends MyJerseyTest {
         assertEquals(p1, r1.readEntity(Play.class));
     }
 
-//    @Test
-//    public void getFilmFail() throws Exception {
-//
-//        // get film by id
-//        final Response r1 = getTarget().path("/films/" + 98798).request(JSON).get();
-//        assertEquals(404, r1.getStatus());
-//    }
-//
-//    @Test
-//    public void getFilms() throws Exception {
-//
-//        // create a film
-//        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-//        db.createFilm(f1);
-//
-//        // list of films
-//        final List<Film> films = new ArrayList<>();
-//        films.add(f1);
-//
-//        // get films
-//        final Response r1 = getTarget().path("/films").request(JSON).get();
-//        assertEquals(200, r1.getStatus());
-//        assertEquals(films, r1.readEntity(new GenericType<List<Film>>() {
-//        }));
-//
-//        // create film 2
-//        final Film f2 = new Film("sdofijoisdf", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-//        db.createFilm(f2);
-//        films.add(f2);
-//
-//        // get films
-//        final Response r2 = getTarget().path("/films").request(JSON).get();
-//        assertEquals(200, r2.getStatus());
-//        assertEquals(films, r2.readEntity(new GenericType<List<Film>>() {
-//        }));
-//    }
-//
-//    @Test
-//    public void addFilmSuccess() throws Exception {
-//
-//        // login as admin
-//        final Cookie c = loginAdmin();
-//
-//        // film to create
-//        final Film toCreate = new Film("sdofijoisdf", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-//
-//        // create film
-//        final Response r1 = getTarget().path("/films").request(JSON).cookie(c).post(Entity.json(toCreate));
-//        assertEquals(200, r1.getStatus());
-//
-//        // get created film
-//        final Film created = r1.readEntity(Film.class);
-//        toCreate.setFid(created.getFid());
-//
-//        // compare
-//        assertEquals(toCreate, created);
-//    }
-//
-//    @Test
-//    public void addFilmFail1() throws Exception {
-//
-//        // login as admin
-//        final Cookie c = loginClient();
-//
-//        // film to create
-//        final Film toCreate = new Film("sdofijoisdf", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-//
-//        // create film
-//        final Response r1 = getTarget().path("/films").request(JSON).cookie(c).post(Entity.json(toCreate));
-//        assertEquals(401, r1.getStatus());
-//    }
-//
-//    @Test
-//    public void addFilmFail2() throws Exception {
-//
-//        // no login
-//
-//        // film to create
-//        final Film toCreate = new Film("sdofijoisdf", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-//
-//        // create film
-//        final Response r1 = getTarget().path("/films").request(JSON).post(Entity.json(toCreate));
-//        assertEquals(401, r1.getStatus());
-//    }
-//
-//    @Test
-//    public void addFilmFail3() throws Exception {
-//
-//        // login as admin
-//        final Cookie c = loginAdmin();
-//
-//        // film to create
-//        // bad film
-//        final Film toCreate = new Film(null, "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-//
-//        // create film
-//        final Response r1 = getTarget().path("/films").request(JSON).cookie(c).post(Entity.json(toCreate));
-//        assertEquals(400, r1.getStatus());
-//    }
-//
-//    @Test
-//    public void addFilmFail4() throws Exception {
-//
-//        // login as admin
-//        final Cookie c = loginAdmin();
-//
-//        // no film provided
-//        // create film
-//        final Response r1 = getTarget().path("/films").request(JSON).cookie(c).post(null);
-//        assertEquals(400, r1.getStatus());
-//    }
-//
+    @Test
+    public void getPlayFail() throws Exception {
+
+        // get film by id
+        final Response r1 = getTarget().path("/plays/" + 98798).request(JSON).get();
+        assertEquals(404, r1.getStatus());
+    }
+
+    @Test
+    public void getPlays() throws Exception {
+
+        // create a play
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        db.createFilm(f1);
+        final Room room = db.createRoom(3, 4);
+        final Play p1 = new Play(f1, room, DateTime.now(), true);
+        db.createPlay(p1);
+
+        // list of films
+        final List<Play> plays = new ArrayList<>();
+        plays.add(p1);
+
+        // get films
+        final Response r1 = getTarget().path("/plays").request(JSON).get();
+        assertEquals(200, r1.getStatus());
+        assertEquals(plays, r1.readEntity(new GenericType<List<Play>>() {
+        }));
+    }
+
+    @Test
+    public void addPlaySuccess() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // film and room
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        db.createFilm(f1);
+        final Room room = db.createRoom(3, 4);
+
+        // play to create
+        final Play p1 = new Play(f1, room, DateTime.now(), true);
+
+        // create film
+        final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
+        assertEquals(200, r1.getStatus());
+
+        // get created play
+        final Play created = r1.readEntity(Play.class);
+        p1.setPid(created.getPid());
+
+        // compare
+        assertEquals(p1, created);
+    }
+
+    @Test
+    public void addPlayFail1() throws Exception {
+
+        // login as admin
+        final Cookie c = loginClient();
+
+        // film and room
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        db.createFilm(f1);
+        final Room room = db.createRoom(3, 4);
+
+        // play to create
+        final Play p1 = new Play(f1, room, DateTime.now(), true);
+
+        // create film
+        final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
+        assertEquals(401, r1.getStatus());
+    }
+
+    @Test
+    public void addPlayFail2() throws Exception {
+
+        // no login
+
+        // film and room
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        db.createFilm(f1);
+        final Room room = db.createRoom(3, 4);
+
+        // play to create
+        final Play p1 = new Play(f1, room, DateTime.now(), true);
+
+        // create film
+        final Response r1 = getTarget().path("/plays").request(JSON).post(Entity.json(p1));
+        assertEquals(401, r1.getStatus());
+    }
+
+    @Test
+    public void addPlayFail3() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // film and room
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        db.createFilm(f1);
+        db.createRoom(3, 4);
+
+        // play to create
+        final Play p1 = new Play(f1.getFid(), 0, DateTime.now(), true);
+
+        // create film
+        final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
+        assertEquals(400, r1.getStatus());
+    }
+
+    @Test
+    public void addPlayFail4() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // film and room
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        db.createFilm(f1);
+        final Room room = db.createRoom(3, 4);
+
+        // play to create
+        final Play p1 = new Play(f1, room, DateTime.now(), true);
+        db.createPlay(p1);
+        final Play p2 = new Play(f1, room, DateTime.now().plusMinutes(40), true);
+
+        // create film
+        final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p2));
+        assertEquals(409, r1.getStatus());
+    }
+
 //    @Test
 //    public void editFilmSuccess() throws Exception {
 //
