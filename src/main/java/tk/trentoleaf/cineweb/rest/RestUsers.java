@@ -263,7 +263,7 @@ public class RestUsers {
     @Path("/{id}")
     public User updateUser(@PathParam("id") int id, @NotNull(message = "Missing user object") @Valid User user) throws SQLException {
 
-        // create user
+        // update user
         try {
             user.setUid(id);
             db.updateUser(user);

@@ -1,17 +1,33 @@
 package tk.trentoleaf.cineweb.model;
 
-import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.URL;
 
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 public class Film implements Serializable {
 
     private int fid;
+
+    @NotEmpty(message = "Title cannot be null")
     private String title;
+
+    @NotEmpty(message = "Genre cannot be null")
     private String genre;
+
+    @NotEmpty(message = "Trailer cannot be null")
+    @URL(message = "Trailer must be a valid URL")
     private String trailer;
+
+    @NotEmpty(message = "Playbill cannot be null")
+    @URL(message = "Playbill must be a valid URL")
     private String playbill;
+
+    @NotEmpty(message = "Plot cannot be null")
     private String plot;
+
+    @Min(value = 0, message = "Duration must be >= 0 minutes")
     private int duration;
 
     public Film() {
@@ -80,12 +96,6 @@ public class Film implements Serializable {
 
     public void setDuration(int duration) {
         this.duration = duration;
-    }
-
-    // TODO
-    public boolean isValid() {
-        return StringUtils.isNotEmpty(title) && StringUtils.isNotEmpty(genre) && StringUtils.isNotEmpty(trailer)
-                && StringUtils.isNotEmpty(playbill) && StringUtils.isNotEmpty(plot) && duration > 0;
     }
 
     @Override

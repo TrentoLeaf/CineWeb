@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 
-// TODO: admin areas
 public class RestUsersTest extends MyJerseyTest {
 
     @Test
