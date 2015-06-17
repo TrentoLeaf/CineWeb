@@ -1,0 +1,42 @@
+<!-- stylesheet for the svg -->
+<link type="text/css" rel="stylesheet" href="../css/svg-theatre.css">
+
+<div class="row white-text">
+    <h5>Seleziona i posti che vuoi riservare per questo film. Quando hai finito, clicca sul bottone avanti.</h5>
+</div>
+
+<div  ng-controller="BuyController as ctrl">
+    <div class="row white-text">
+        <div class="col s12 m6 l8"> <!-- mappa sala -->
+            <div id="svg-container">
+                <svg id="svg-theatre">
+                    <!-- will be filled by js -->
+                </svg>
+            </div>
+        </div>
+        <div class="col s12 m6 l4 center"> <!-- info biglietto -->
+            <div class="item-image col offset-1 s10 offset-m2 m8 offset-l2 l8">
+                <img class="responsive-img center" ng-src="{{ctrl.film.playbill}}" alt="locandina" />
+            </div>
+            <h5>{{ctrl.film.title}}</h5>
+            <h6>{{ctrl.film.date}} {{ctrl.film.time}}</h6>
+            <p>Posti rimasti da selezionare: <i ng-model="ctrl.film.seats"></i></p>
+        </div>
+    </div>
+    <div class="row"> <!-- bottoni -->
+        <div class="col s12 offset-m1 m3 offset-l1 l3">
+            <button class="btn red white-text waves-effect waves-light center" type="submit" name="next">Annulla
+                <i class="mdi-navigation-cancel right"></i>
+            </button>
+        </div>
+        <div class="col hide-on-small-only m4 l4">
+        </div>
+        <div class="col s12 m3 l3">
+            <button class="btn green white-text waves-effect waves-light center" type="submit" name="next">Avanti
+                <i class="mdi-content-send white-text right"></i>
+            </button>
+        </div>
+    </div>
+
+</div>
+</div>

@@ -25,7 +25,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule',
-        'tabmodule', 'loginModule', 'registrationModule', 'meModule', 'adminUsers', 'confirmModule'])
+        'tabmodule', 'loginModule', 'registrationModule', 'meModule', 'adminUsers', 'confirmModule', 'buyModule'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -65,6 +65,10 @@ $(document).ready(function () {
             }).when('/admin/users', {
                 templateUrl: '../partials/admin/users.html',
                 controller: 'AdminUsersController',
+                controllerAs: 'ctrl'
+            }).when('/buy', {
+                templateUrl: '../partials/buy_seats.html',
+                controller: 'BuyController',
                 controllerAs: 'ctrl'
             }).when('/error', {
                 templateUrl: '../partials/error.html'

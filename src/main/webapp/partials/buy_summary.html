@@ -1,0 +1,93 @@
+<div class="row">
+    <div class="col s12 m12 l12 center-align">
+        <h2 class="yellow-text text-accent-4">Riepilogo e conferma</h2>
+    </div>
+</div>
+
+<div  ng-controller="BuyController as ctrl">
+    <div class="row white-text"> <!-- tabella riepilogo acquisti -->
+        <div class="row">
+            <h4>Biglietti acquistati</h4>
+            <div class="row" ng-repeat = "play in ctrl.nonsodove">
+                <div class="col s12 offset-m1 m10 offset-l2 l8">
+                    <h5>{{ctrl.play.title}}</h5>
+                    <h6>{{ctrl.play.date}} {{ctrl.play.time}}</h6>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Tipologia</th>
+                            <th>Quantità</th>
+                            <th>Prezzo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="ticket in nonsodove2">
+                            <td>{{tiket.type}}</td>
+                            <td>{{ticket.number}}</td>
+                            <td>{{tiket.price}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row white-text"> <!-- informazioni carta di credito -->
+        <h4>Metodo di pagamento</h4>
+        <div class="row"> <!-- messaggio d'errore -->
+            <i class="mdi-alert-error"></i>
+            <p class="red-text">I dati inseriti sembrano non essere validi. Controlla.</p>
+        </div>
+        <div class="row">
+            <div class="col s12 offset-m1 m4 offset-l1 l4">
+                <div class="input-field">
+                    <input id="credit_card" type="text" class="validate" length="16">
+                    <label for="credit_card">Carta di credito</label>
+                </div>
+            </div>
+            <div class="col s12 offset-m3 m3 offset-l3 l3">
+                <div class="input-field">
+                    <input id="date" type="text" class="validate" length="7">
+                    <label for="date">Data di scadenza (mm/yyyy)</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 offset-m1 m4 offset-l1 l4">
+                <div class="input-field">
+                    <input id="holder" type="text" class="validate">
+                    <label for="holder">Intestatario</label>
+                </div>
+            </div>
+            <div class="col s12 offset-m3 m3 offset-l3 l3">
+                <div class="input-field">
+                    <input id="cvv" type="number">
+                    <label for="cvv">CVV</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row white-text"> <!-- totale -->
+        <div class="row">
+            <h4 class="col s7 m7 l7">Totale:</h4>
+            <h4 class="total col s5 m5 l5 right-align">{{nonsodove3.total | currency:"€ "}}</h4>
+        </div>
+        <div class="row"> <!-- nota credito accumulato -->
+            <p>Nota: Attualmente hai a disposizione {{user.credito}} € di credito. Il totale è stato calcolato tenendo conto del tuo credito accumulato.</p>
+        </div>
+    </div>
+    <div class="row"> <!-- bottoni -->
+        <div class="col s12 offset-m1 m3 offset-l1 l3">
+            <button class="btn red white-text waves-effect waves-light center" type="submit" name="next">Annulla
+                <i class="mdi-navigation-cancel right"></i>
+            </button>
+        </div>
+        <div class="col hide-on-small-only m4 l4">
+        </div>
+        <div class="col s12 m3 l3">
+            <button class="btn green white-text waves-effect waves-light center" type="submit" name="next">Paga
+                <i class="mdi-content-send white-text right"></i>
+            </button>
+        </div>
+    </div>
+</div>

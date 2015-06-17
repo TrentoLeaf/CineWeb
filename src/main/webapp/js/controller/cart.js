@@ -19,7 +19,6 @@
             $rootScope.total = $rootScope.total || 0.00;
 
             this.addToCart = function (film, time_index) {
-                console.log("Add to cart!!!");
 
                 // film: l'oggetto film da acquistare
                 // time_index: l'indice dell'ora (nell' array time di film) da prenotare
@@ -37,7 +36,6 @@
                  }*/
 
                 if (!duplicate) {
-                    console.log("acqustato.");
                     // copio film per non sporcare i film in programmazione con valori del carrello
                     var newFilm = this.cloneObject(film);
                     // aggiungo un dropdown con tipo e numero di biglietti
