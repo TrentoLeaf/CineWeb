@@ -70,6 +70,10 @@ $(document).ready(function () {
                 templateUrl: '../partials/buy_seats.html',
                 controller: 'BuyController',
                 controllerAs: 'ctrl'
+            }).when('/buy_last_step', {
+                templateUrl: '../partials/buy_summary.html',
+                controller: 'BuyController',
+                controllerAs: 'ctrl'
             }).when('/error', {
                 templateUrl: '../partials/error.html'
             }).otherwise({

@@ -42,6 +42,7 @@
     <script src="js/controller/me.js"></script>
     <script src="js/controller/adminUsers.js"></script>
     <script src="js/controller/confirm.js"></script>
+    <script src="js/controller/buy.js"></script>
 </head>
 
 <body ng-controller="TabController as tab">
@@ -141,7 +142,9 @@
                         <h5 class="col s7 m7 l7">Totale:</h5>
                         <h5 class="total col s5 m5 l5 right-align">{{total | currency:"€ "}}</h5>
                     </div>
-                    <button class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
+                    <div ng-controller="BuyController as b">
+                        <button ng-click="b.start_buy()" class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
+                    </div>
                 </div>
             </li>
             <li class="side-login side-nav-element" ng-show="tab.isSet(2)">

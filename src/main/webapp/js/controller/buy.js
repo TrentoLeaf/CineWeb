@@ -13,7 +13,8 @@ var SEAT_UNAVAILABLE = 2;
     'use strict';
 
     angular.module('buyModule', ['usersModule', 'storageModule', 'constantsModule'])
-        .controller('BuyController', [ function () {
+        .controller('BuyController', ['$location', function ($location) {
+
 
             this.data_from_server = [];
             this.data_from_server_index = -1;
@@ -23,18 +24,29 @@ var SEAT_UNAVAILABLE = 2;
             this.selected_seats = []; /* array di oggetti. Gli oggetti sono i posti selezionati */
             this.error_msg = "";
 
+            /* chiamata dal carrello quando l'utente vuole procedere con l'acquisto*/
             this.start_buy = function () {
+                this.film = {};
+                this.selected_seats = [];
+                this.data_to_server = [];
+                this.data_from_server_index = -1;
+
                 // TODO controlla se è loggato
                 /* se loggato prosegui col codice, altrimenti redirect alla pagina di login*/
 
                 // TODO chiamata AJAX per inivare dati di acquisto e poter procedere
                 // TODO callback
+                // TODO salva i dati ricevuti dal server in data_from_server
+                // lancia procedura scelta biglietti
                 this.next_buy();
                 // TODO errore
                 /* redirect pagina d'errore */
             };
 
+            /* per ogni spettacolo acquistato presenta la pagina di scelta dei posti. Rimanda poi alla pagina di riepilogo*/
             this.next_buy = function () {
+
+                this.selected_seats = [];
                 // next film in cart
                 this.data_from_server_index ++;
                 if (this.data_from_server_index < this.data_from_server.length) {
@@ -43,17 +55,27 @@ var SEAT_UNAVAILABLE = 2;
                     // generate svg seats
                     generateSvg(this.data_from_server[this.data_from_server_index].seats, this.selected_seats, this.film);
                 }
-                else {
-                    // alla pagina di riepilogo
+                else { // scelta dei posti terminata
+                    // TODO chiamata AJAX con invio di data_to_server
+                    // TODO se il server risponde 'tutto ok'
+                    // Redirect alla pagina di riepilogo
+                    $location.path('/buy_last_step');
+                    // TODO server risponde errore --> gestire il tipo  di errore
                 }
             };
 
-            this.save_seats = function () { /* chiamata da bottone avanti */
+            /* chiamata da bottone avanti nella scelta posti */
+            this.save_seats = function () {
+                // creo un nuovo oggetto
                 this.ff = this.cloneObject(film);
+                // aggiungo allo spettacolo i posti selezionati
                 this.ff.selected_seats = this.selected_seats;
+                // salvo l'oggetto nell'array che inverò al server una volta completate le scelte dei posti di tutti gli spettacoli
                 data_to_server.push(this.ff);
                 this.next_buy();
             };
+
+
 
 
 
@@ -63,7 +85,6 @@ var SEAT_UNAVAILABLE = 2;
 
 
         }]);
-
 })();
 
 
