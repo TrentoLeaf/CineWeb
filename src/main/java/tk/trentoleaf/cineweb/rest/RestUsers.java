@@ -240,7 +240,7 @@ public class RestUsers {
 
     @POST
     @AdminArea
-    public User createUser(@NotNull(message = "Missing user object") User user) throws SQLException {
+    public User createUser(@NotNull(message = "Missing user object") @Valid User user) throws SQLException {
 
         // check if user is valid
         if (!user.isValidWithPassword()) {

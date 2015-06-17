@@ -3,6 +3,7 @@ package tk.trentoleaf.cineweb.model;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import tk.trentoleaf.cineweb.annotations.SafeString;
 import tk.trentoleaf.cineweb.entities.Registration;
 import tk.trentoleaf.cineweb.utils.Utils;
 
@@ -15,7 +16,7 @@ public class User implements Serializable {
     private int uid;
     private boolean enabled;
 
-    @NotNull
+    @NotNull(message = "Role cannot be null")
     private Role role;
 
     @Email(message = "Email must be a valid email")
@@ -24,10 +25,10 @@ public class User implements Serializable {
 
     private String password;
 
-    @NotEmpty(message = "FirstName cannot be null")
+    @SafeString(message = "FirstName cannot be null")
     private String firstName;
 
-    @NotEmpty(message = "SecondName cannot be null")
+    @SafeString(message = "SecondName cannot be null")
     private String secondName;
 
     @Min(value = 0, message = "Credit must be >= 0")
