@@ -13,6 +13,7 @@
     <session-config>
         <cookie-config>
             <name>popcorn</name>
+            <http-only>true</http-only>
         </cookie-config>
     </session-config>
 
