@@ -47,9 +47,7 @@ public class SSLFilter implements Filter {
         }
 
         // if already https -> process request
-        else {
-            filterChain.doFilter(servletRequest, servletResponse);
-        }
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
