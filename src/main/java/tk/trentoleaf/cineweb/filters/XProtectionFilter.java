@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebFilter(urlPatterns = "/*")
-public class XFrameFilter implements Filter {
+public class XProtectionFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -20,6 +20,8 @@ public class XFrameFilter implements Filter {
 
         // add header
         response.addHeader("X-Frame-Options", "DENY");
+        response.addHeader("X-Content-Type-Options", "nosniff");
+        response.addHeader("X-XSS-Protection", "1; mode=block");
 
         // process request
         filterChain.doFilter(servletRequest, servletResponse);
