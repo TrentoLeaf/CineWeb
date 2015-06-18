@@ -23,6 +23,7 @@ public class Main {
         // create a server that handles X-Forwarded-Proto
         final Server server = new Server();
         HttpConfiguration httpConfiguration = new HttpConfiguration();
+        httpConfiguration.setSendServerVersion(false);
         httpConfiguration.addCustomizer(new ForwardedRequestCustomizer());
         ServerConnector serverConnector = new ServerConnector(server, new HttpConnectionFactory(httpConfiguration));
         serverConnector.setPort(Integer.valueOf(webPort));
