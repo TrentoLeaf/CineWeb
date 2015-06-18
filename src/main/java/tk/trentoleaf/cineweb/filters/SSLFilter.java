@@ -11,10 +11,7 @@ import java.util.logging.Logger;
 public class SSLFilter implements Filter {
     private Logger logger = Logger.getLogger(SSLFilter.class.getSimpleName());
 
-    // heroku compatibility
-    // heroku router handles SSL, communication between heroku router and this app is always in HTTPS
-    // heroku set this HTTP header to give the original used protocol
-    private static final String X_FORWARDED_PROTO = "x-forwarded-proto";
+    // NB: heroku compatibility handled in Jetty configuration (heroku/Main.java)
 
     // is this filter enabled?
     private boolean enabled = false;
@@ -32,11 +29,8 @@ public class SSLFilter implements Filter {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        // check header
-        final String xForwarded = request.getHeader(X_FORWARDED_PROTO);
-
         // check if to force https
-        if (enabled && (xForwarded != null && xForwarded.equals("http") || (xForwarded == null && !request.isSecure()))) {
+        if (enabled && !request.isSecure()) {
 
             // get requested url
             final String url = request.getRequestURL().toString()
@@ -44,7 +38,7 @@ public class SSLFilter implements Filter {
                     .replaceFirst(":8080", ":8443");
 
             // log
-            logger.info("FORCE SSL -> xForwarded: " + xForwarded + " FROM: " + request.getRequestURL() + " TO: " + url);
+            logger.info("FORCE SSL -> FROM: " + request.getRequestURL() + " TO: " + url);
 
             // redirect
             response.reset();
@@ -52,8 +46,10 @@ public class SSLFilter implements Filter {
             return;
         }
 
-        // process request
-        filterChain.doFilter(servletRequest, servletResponse);
+        // if already https -> process request
+        else {
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
     }
 
     @Override
