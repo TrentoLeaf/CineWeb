@@ -33,6 +33,13 @@ public class CSRFUtils {
             // if no CSRF cookie
             final Cookie csrfCookie = new Cookie(CSRFUtils.COOKIE, csrfValue);
             csrfCookie.setPath("/");
+
+            // check if request over https
+            if (request.isSecure()) {
+                csrfCookie.setSecure(true);
+            }
+
+            // add cookie
             response.addCookie(csrfCookie);
 
             // save value in session
