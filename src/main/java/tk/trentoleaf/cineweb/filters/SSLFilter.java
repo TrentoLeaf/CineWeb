@@ -46,6 +46,11 @@ public class SSLFilter implements Filter {
             return;
         }
 
+        // add Strict-Transport-Security header
+        if (enabled) {
+            response.addHeader("Strict-Transport-Security", "max-age=31536000");
+        }
+
         // if already https -> process request
         filterChain.doFilter(servletRequest, servletResponse);
     }
