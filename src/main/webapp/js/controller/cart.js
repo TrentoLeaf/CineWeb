@@ -43,12 +43,18 @@
                     newFilm['tickets'].push({type: $rootScope.tickets[0].type, number: 1});
                     newFilm['time'] = film['time'][time_index];
                     $rootScope.cart.push(newFilm);
+                    // abilita il pulsante 'prosegui'
+                    $('#btn-go-to-buy').removeClass('hide');
                     this.updateTotal();
                 }
             };
 
             this.removeFromCart = function (film) {
                 $rootScope.cart.splice(film, 1); // rimuove 1 elemento a partire da 'film'
+                // se il carrello è vuoto, tolgo il pulsante 'prosegui'
+                if ( $rootScope.cart.length == 0) {
+                    $('#btn-go-to-buy').addClass('hide');
+                }
                 this.updateTotal();
             };
 

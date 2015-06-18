@@ -16,15 +16,16 @@ var SEAT_UNAVAILABLE = 2;
         .controller('BuyController', ['$location', function ($location) {
 
 
-            this.data_from_server = [];
+            this.data_from_server = [{title:"titolo", date:"data", time:"ora", playbill:"img/temporary/mad-max-fury-road-locandina-400x250.jpg", seats:[[1,1,1,0,1,1,1],[1,0,1,2,0,1,1],[1,2,1,2,1,2,1],[1,1,1,1,1,2,0]], seats_selected: 4},
+                {title:"titolo2", date:"data2", time:"ora2", playbill:"img/temporary/mad-max-fury-road-locandina-400x250.jpg", seats:[[1,1,1,0,1,1,1],[1,0,1,2,0,1,1],[1,2,1,2,1,2,1],[1,1,1,1,1,2,0]], seats_selected: 4}];
             this.data_from_server_index = -1;
             this.data_to_server = [];
-            this.seats = [[1,1,1,0,1,1,1],[1,0,1,2,0,1,1],[1,2,1,2,1,2,1],[1,1,1,1,1,2,0]]; /* remove */
+            this.seats2 = [[1,1,1,0,1,1,1],[1,0,1,2,0,1,1],[1,2,1,2,1,2,1],[1,1,1,1,1,2,0]]; /* remove */
             this.film = {}; /* film di cui si stanno attualmente selezionando i posti, contiene id, locandina, titolo, data-ora, num_posti */
             this.selected_seats = []; /* array di oggetti. Gli oggetti sono i posti selezionati */
             this.error_msg = "";
 
-            /* chiamata dal carrello quando l'utente vuole procedere con l'acquisto*/
+            /* chiamata dal carrello quando l'utente vuole procedere con l'acquisto (pulsante procedi del carrello)*/
             this.start_buy = function () {
                 this.film = {};
                 this.selected_seats = [];
@@ -52,8 +53,10 @@ var SEAT_UNAVAILABLE = 2;
                 if (this.data_from_server_index < this.data_from_server.length) {
                     $location.path('/buy');
                     this.film = this.data_from_server[this.data_from_server_index];
+                    console.log("film "+this.film+ "  index  "+this.data_from_server_index);
                     // generate svg seats
                     generateSvg(this.data_from_server[this.data_from_server_index].seats, this.selected_seats, this.film);
+                    //$location.hash('header-navbar');
                 }
                 else { // scelta dei posti terminata
                     // TODO chiamata AJAX con invio di data_to_server
@@ -91,141 +94,154 @@ var SEAT_UNAVAILABLE = 2;
 /*  functions to manage the svg */
 
 function generateSvg (posti, posti_selezionati, film) {
-    var rows = posti.length;
-    var columns = posti[0].length;
+    // aspetta che il dom sia pronto
+    $(document).ready(function() {
 
-    // calculate dimensions
+        var rows = posti.length;
+        var columns = posti[0].length;
+        // calculate dimensions
 
-    // theatre diimensions
-    var theatre_w = 50+(55*columns)+50;
-    var theatre_h = 60+(55*rows)+50;
-    // stage dimensions
-    var stage_w = (680*theatre_w)/650;
-    var stage_h = 165;
-    // theatre positions
-    var theatre_x = ((15*stage_w)/680);
-    var theatre_y = 165;
-    // set viewbox dimensions
-    $("#svg-theatre")[0].setAttribute("viewBox", '0 0 '+stage_w+' '+(stage_h+theatre_h)); // leave has it is due to a jQuery/SnapSVG bug
-    $("#svg-theatre").attr({width: "100%", height: "100%"});
+        // theatre diimensions
+        var theatre_w = 50 + (55 * columns) + 50;
+        var theatre_h = 60 + (55 * rows) + 50;
+        // stage dimensions
+        var stage_w = (680 * theatre_w) / 650;
+        var stage_h = 165;
+        // theatre positions
+        var theatre_x = ((15 * stage_w) / 680);
+        var theatre_y = 165;
+        // set viewbox dimensions
 
-    // init snap
-    var snap = Snap("#svg-theatre");
+        // $("#svg-theatre")[0].setAttribute("viewBox", '0 0 '+stage_w+' '+(stage_h+theatre_h)); // leave has it is due to a jQuery/SnapSVG bug
+        $("#svg-theatre").attr({width: "100%", height: "100%"});
+        // init snap
+        var snap = Snap("#svg-theatre");
 
-    // load SVG objects fragments
-    var fragment_stage = Snap.fragment(svg_string_stage);
-    var fragment_theatre = Snap.fragment(svg_string_theatre);
-    var fragment_seat = Snap.fragment(svg_string_seat);
-    var fragment_row_header = Snap.fragment(svg_string_row_headers);
-    var fragment_column_header = Snap.fragment(svg_string_column_headers);
+        console.log($("#svg-theatre"));
+        console.log(Snap("#svg-theatre"));
 
-    // set the objects variables
-    var stage = fragment_stage.select(".stage");
-    var theatre = fragment_theatre.select(".theatre");
-    var seat = fragment_seat.select(".seat");
-    var row_header = fragment_row_header.select(".theatre_row_header");
-    var column_header = fragment_column_header.select(".theatre_column_header");
 
-    // set dimensions of theatre and append to snap
-    stage.transform('s'+(stage_w/680)+',1'); // scale the stage
-    theatre.attr({ width:theatre_w,height:theatre_h,x:theatre_x,y:theatre_y});
-    snap.append(stage);
-    snap.append(theatre);
+        snap.attr({viewBox: '0 0 '+stage_w+' '+(stage_h+theatre_h)});
 
-    // variable for seats and headings postioning
-    var i_index = theatre_x;
-    var j_index = theatre_y + 60;
-    var c = String.fromCharCode('A'.charCodeAt()-1);
-    var num = 0;
+        // load SVG objects fragments
+        var fragment_stage = Snap.fragment(svg_string_stage);
+        var fragment_theatre = Snap.fragment(svg_string_theatre);
+        var fragment_seat = Snap.fragment(svg_string_seat);
+        var fragment_row_header = Snap.fragment(svg_string_row_headers);
+        var fragment_column_header = Snap.fragment(svg_string_column_headers);
 
-    // set all the seats
-    for (var i=0; i<rows; i++) {
+        // set the objects variables
+        var stage = fragment_stage.select(".stage");
+        var theatre = fragment_theatre.select(".theatre");
+        var seat = fragment_seat.select(".seat");
+        var row_header = fragment_row_header.select(".theatre_row_header");
+        var column_header = fragment_column_header.select(".theatre_column_header");
 
-        // print row header
-        var rr = row_header.clone();
-        rr.transform('t'+i_index+','+j_index); // set traslation
-        c = nextChar(c);
-        rr.select('text').attr({ text: c}); // set letter
-        snap.append(rr);
+        // set dimensions of theatre and append to snap
+        stage.transform('s' + (stage_w / 680) + ',1'); // scale the stage
+        theatre.attr({width: theatre_w, height: theatre_h, x: theatre_x, y: theatre_y});
+        snap.append(stage);
+        snap.append(theatre);
 
-        // transalte to next column
-        i_index += 50;
+        // variable for seats and headings postioning
+        var i_index = theatre_x;
+        var j_index = theatre_y + 60;
+        var c = String.fromCharCode('A'.charCodeAt() - 1);
+        var num = 0;
 
-        // print the seats in row
-        for (var j=0; j<columns; j++) {
-            // check if seat exist
-            if (posti[i][j] != SEAT_NOT_EXIST) {
+        // set all the seats
+        for (var i = 0; i < rows; i++) {
 
-                // get a seat
-                var pp = seat.clone();
-                pp.transform('t'+i_index+','+j_index); // set traslation
-                pp.setAttribute("row", i.toString());
-                pp.setAttribute("col", j.toString());
+            // print row header
+            var rr = row_header.clone();
+            rr.transform('t' + i_index + ',' + j_index); // set traslation
+            c = nextChar(c);
+            rr.select('text').attr({text: c}); // set letter
+            snap.append(rr);
 
-                switch (posti[i][j]) {
+            // transalte to next column
+            i_index += 50;
 
-                    case SEAT_AVAILABLE:
-                        // set hover colors
-                        pp.hover(seatHoverIn, seatHoverOut);
+            // print the seats in row
+            for (var j = 0; j < columns; j++) {
+                // check if seat exist
+                if (posti[i][j] != SEAT_NOT_EXIST) {
 
-                        // set click handler
-                        pp.click(function() {
-                            if (this.hasClass('seat-selected')) {
-                                this.removeClass('seat-selected');
-                                this.hover(seatHoverIn, seatHoverOut);
-                                // TODO remove the id from list of selected seats
-                                posti_selezionati.splice({row: pp.getAttribute("row"),
-                                    col: pp.getAttribute("col")}, 1);
-                                film.seats ++;
-                            }
-                            else {
-                                // TODO check if can be selected (eg: no more seat selactable)
-                                if (film.seats > 0) {
-                                    this.addClass('seat-selected');
-                                    this.removeClass('seat-hover');
-                                    this.unhover(seatHoverIn, seatHoverOut);
-                                    // TODO add the id to list of selected seats
-                                    posti_selezionati.push({row: pp.getAttribute("row"),
-                                        col: pp.getAttribute("col")});
-                                    film.seats --;
+                    // get a seat
+                    var pp = seat.clone();
+                    pp.transform('t' + i_index + ',' + j_index); // set traslation
+                    pp.attr({row: i.toString()});
+                    pp.attr({col: j.toString()});
+
+                    switch (posti[i][j]) {
+
+                        case SEAT_AVAILABLE:
+                            // set hover colors
+                            pp.hover(seatHoverIn, seatHoverOut);
+
+                            // set click handler
+                            pp.click(function () {
+                                if (this.hasClass('seat-selected')) {
+                                    this.removeClass('seat-selected');
+                                    this.hover(seatHoverIn, seatHoverOut);
+                                    // TODO remove the id from list of selected seats
+                                    posti_selezionati.splice({
+                                        row: pp.attr('row'),
+                                        col: pp.attr('col')
+                                    }, 1);
+                                    film.seats_selected++;
                                 }
-                            }
-                        });
-                        break;
-                    case SEAT_UNAVAILABLE:
-                        // set color
-                        pp.addClass('seat-unavailable');
-                        break;
+                                else {
+                                    // TODO check if can be selected (eg: no more seat selactable)
+                                    if (film.seats_selected > 0) {
+                                        this.addClass('seat-selected');
+                                        this.removeClass('seat-hover');
+                                        this.unhover(seatHoverIn, seatHoverOut);
+                                        // TODO add the id to list of selected seats
+                                        posti_selezionati.push({
+                                            row: pp.attr('row'),
+                                            col: pp.attr('col')
+                                        });
+                                        film.seats_selected--;
+                                    }
+                                }
+                            });
+                            break;
+                        case SEAT_UNAVAILABLE:
+                            // set color
+                            pp.addClass('seat-unavailable');
+                            break;
+                    }
+
+                    snap.append(pp);
                 }
 
-                snap.append(pp);
+                // next seat
+                i_index += 55;
             }
 
-            // next seat
+            // move to next row
+            j_index += 55;
+            i_index = theatre_x;
+        }
+
+        // print column headers
+
+        // traslate to first seat column
+        i_index += 50;
+
+        for (var i = 0; i < columns; i++) {
+            // print column header
+            var cc = column_header.clone();
+            cc.transform('t' + i_index + ',' + j_index); // set traslation
+            num++;
+            cc.select('text').attr({text: num}); // set number
+            snap.append(cc);
+            // next header
             i_index += 55;
         }
 
-        // move to next row
-        j_index += 55;
-        i_index = theatre_x;
-    }
-
-    // print column headers
-
-    // traslate to first seat column
-    i_index += 50;
-
-    for (var i=0; i<columns; i++) {
-        // print column header
-        var cc = column_header.clone();
-        cc.transform('t'+i_index+','+j_index); // set traslation
-        num++;
-        cc.select('text').attr({text:num}); // set number
-        snap.append(cc);
-        // next header
-        i_index += 55;
-    }
-
+    });
 }
 
 /* return the next character in aphabet relative to char input */

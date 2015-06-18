@@ -11,7 +11,7 @@
                 <h4>Biglietti acquistati</h4>
                 <div class="row" ng-repeat = "play in ctrl.nonsodove">
                     <div>
-                        <h5>{{ctrl.play.title}}</h5>
+                        <h5 class="yellow-text text-accent-4">{{ctrl.play.title}}</h5>
                         <h6>{{ctrl.play.date}} {{ctrl.play.time}}</h6>
                         <table class="summaryTable">
                             <thead>
@@ -147,7 +147,7 @@
         </div>
     </div>
     <div class="row white-text"> <!-- totale -->
-        <div class="row">
+        <div class="row" style="margin-bottom: 0px;">
             <div class="col s12 offset-m1 m10 offset-l1 l10">
                 <h4 class="col s7 m7 l7">Totale:</h4>
                 <h4 class="total col s5 m5 l5 right-align">{{nonsodove3.total | currency:"€ "}}€ 34.00</h4>
