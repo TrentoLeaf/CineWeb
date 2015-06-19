@@ -10,7 +10,4 @@ public class ErrorResponse implements Serializable {
         this.error = error;
     }
 
-    public String getError() {
-        return error;
-    }
 }

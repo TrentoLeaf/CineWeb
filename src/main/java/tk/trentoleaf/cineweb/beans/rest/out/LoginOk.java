@@ -20,13 +20,4 @@ public class LoginOk implements Serializable {
     public LoginOk(User user) {
         this(user.getEmail(), user.getSecondName() + " " + user.getFirstName(), user.getRole());
     }
-
-    @Override
-    public String toString() {
-        return "LoginOk{" +
-                "email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", role=" + role +
-                '}';
-    }
 }
