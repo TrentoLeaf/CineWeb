@@ -1,5 +1,6 @@
 package tk.trentoleaf.cineweb.rest;
 
+import org.glassfish.grizzly.compression.zip.GZipEncoder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.grizzly2.servlet.GrizzlyWebContainerFactory;
@@ -11,11 +12,9 @@ import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.After;
 import org.junit.Before;
+import tk.trentoleaf.cineweb.MyApplication;
 import tk.trentoleaf.cineweb.db.*;
 import tk.trentoleaf.cineweb.entities.Auth;
-import tk.trentoleaf.cineweb.handlers.BadRequestHandler;
-import tk.trentoleaf.cineweb.handlers.ConflictHandler;
-import tk.trentoleaf.cineweb.handlers.NotFoundHandler;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.utils.GsonJerseyProvider;
@@ -60,11 +59,7 @@ public class MyJerseyTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(RestUsers.class)
-                .register(GsonJerseyProvider.class)
-                .register(BadRequestHandler.class)
-                .register(ConflictHandler.class)
-                .register(NotFoundHandler.class);
+        return new ResourceConfig().packages(MyApplication.class.getPackage().toString());
     }
 
     @Override
@@ -109,6 +104,7 @@ public class MyJerseyTest extends JerseyTest {
     protected final WebTarget getTarget() {
         return ClientBuilder.newClient()
                 .register(GsonJerseyProvider.class)
+                .register(GZipEncoder.class)
                 .target(getBaseUri());
     }
 
