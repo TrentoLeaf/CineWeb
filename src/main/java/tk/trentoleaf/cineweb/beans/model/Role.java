@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Enumeration that represent a user role.
+ */
 public enum Role {
 
     @SerializedName("admin")
@@ -38,14 +41,17 @@ public enum Role {
         return roles;
     }
 
+    // map to convert a String to the corresponding role
     private static final Map<String, Role> map;
+
     static {
         map = new HashMap<>();
-        for(Role r : Role.values()) {
+        for (Role r : Role.values()) {
             map.put(r.roleID, r);
         }
     }
 
+    // convert a string to a role
     public static Role fromID(String id) {
         // NB: id can contains some spaces at the end since saved as CHAR(8)
         return map.get(id.trim());

@@ -4,8 +4,11 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
-public class Booking implements Serializable
-{
+/**
+ * Booking bean: represent a reservation for 1 seat for a given play.
+ */
+public class Booking implements Serializable {
+
     private int bid;
     private int rid;
     private int x;
@@ -15,11 +18,7 @@ public class Booking implements Serializable
     private DateTime timeBooking;
     private double price;
 
-    public Booking()
-    {}
-
-    public Booking(Seat seat, User user, Play play, DateTime timeBooking, double price) {
-        this(seat.getRid(), seat.getX(), seat.getY(), user.getUid(), play.getPid(), timeBooking, price);
+    public Booking() {
     }
 
     public Booking(int rid, int x, int y, int uid, int pid, DateTime timeBooking, double price) {
@@ -127,19 +126,5 @@ public class Booking implements Serializable
         if (pid != booking.pid) return false;
         if (Double.compare(booking.price, price) != 0) return false;
         return timeBooking.equals(booking.timeBooking);
-    }
-
-    @Override
-    public String toString() {
-        return "Booking{" +
-                "bid=" + bid +
-                ", rid=" + rid +
-                ", x=" + x +
-                ", y=" + y +
-                ", uid=" + uid +
-                ", pid=" + pid +
-                ", timeBooking=" + timeBooking +
-                ", price=" + price +
-                '}';
     }
 }
