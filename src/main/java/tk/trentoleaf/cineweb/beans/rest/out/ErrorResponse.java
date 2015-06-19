@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb.beans.rest;
+package tk.trentoleaf.cineweb.beans.rest.out;
 
 import java.io.Serializable;
 

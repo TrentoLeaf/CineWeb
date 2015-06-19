@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb.beans.rest;
+package tk.trentoleaf.cineweb.beans.rest.out;
 
 import java.io.Serializable;
 
@@ -16,11 +16,4 @@ public class ActivateUser implements Serializable {
         return code;
     }
 
-    @Override
-    public String toString() {
-        return "ActivateUser{" +
-                "code=" + code +
-                ", msg='" + msg + '\'' +
-                '}';
-    }
 }

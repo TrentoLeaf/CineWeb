@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb.beans.rest;
+package tk.trentoleaf.cineweb.beans.rest.in;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;

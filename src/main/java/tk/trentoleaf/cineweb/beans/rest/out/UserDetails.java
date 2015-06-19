@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb.beans.rest;
+package tk.trentoleaf.cineweb.beans.rest.out;
 
 import tk.trentoleaf.cineweb.beans.model.User;
 
@@ -18,19 +18,4 @@ public class UserDetails implements Serializable {
         this.credit = user.getCredit();
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public double getCredit() {
-        return credit;
-    }
 }

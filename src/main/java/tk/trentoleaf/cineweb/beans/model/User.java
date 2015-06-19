@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import tk.trentoleaf.cineweb.annotations.hibernate.SafeString;
-import tk.trentoleaf.cineweb.beans.rest.Registration;
+import tk.trentoleaf.cineweb.beans.rest.in.Registration;
 import tk.trentoleaf.cineweb.utils.Utils;
 
 import javax.validation.constraints.Min;

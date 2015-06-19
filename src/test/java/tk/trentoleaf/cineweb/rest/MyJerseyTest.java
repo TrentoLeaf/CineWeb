@@ -14,7 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import tk.trentoleaf.cineweb.MyApplication;
 import tk.trentoleaf.cineweb.db.*;
-import tk.trentoleaf.cineweb.beans.rest.Auth;
+import tk.trentoleaf.cineweb.beans.rest.in.Auth;
 import tk.trentoleaf.cineweb.beans.model.Role;
 import tk.trentoleaf.cineweb.beans.model.User;
 import tk.trentoleaf.cineweb.utils.GsonJerseyProvider;

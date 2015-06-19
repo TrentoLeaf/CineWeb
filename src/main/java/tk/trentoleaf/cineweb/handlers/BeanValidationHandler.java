@@ -1,6 +1,6 @@
 package tk.trentoleaf.cineweb.handlers;
 
-import tk.trentoleaf.cineweb.beans.rest.ErrorResponse;
+import tk.trentoleaf.cineweb.beans.rest.out.ErrorResponse;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;

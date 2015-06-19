@@ -1,9 +1,11 @@
 package tk.trentoleaf.cineweb.rest;
 
 import org.junit.Test;
-import tk.trentoleaf.cineweb.beans.rest.*;
 import tk.trentoleaf.cineweb.beans.model.Role;
 import tk.trentoleaf.cineweb.beans.model.User;
+import tk.trentoleaf.cineweb.beans.rest.in.*;
+import tk.trentoleaf.cineweb.beans.rest.out.ActivateUser;
+import tk.trentoleaf.cineweb.beans.rest.out.UserDetails;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;

@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb.beans.rest;
+package tk.trentoleaf.cineweb.beans.rest.out;
 
 import tk.trentoleaf.cineweb.beans.model.Role;
 import tk.trentoleaf.cineweb.beans.model.User;
