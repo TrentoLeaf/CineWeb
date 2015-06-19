@@ -87,21 +87,19 @@
             /* recovery password functions */
 
             this.rec_pass_msg = "";
-            this.mailForPassRecovery = "ds";
+            this.mailForPassRecovery = "";
             var REC_PASS_SUCCESS = 0;
             var REC_PASS_MAIL_NOT_EXIST = 1;
             var REC_PASS_MAIL_NOT_VALID = 2
             var REC_PASS_REQUEST_FAIL = -1;
 
             this.sendPassRecoveryRequest = function () {
-                console.log("recovery");
 
                 $('#pass_recovery_message').removeClass("green-text red-text");
                 $('#pass_recovery_message').addClass("white-text");
                 ctrl.rec_pass_msg = "Un momento...";
 
-                console.log("insert mail: " + this.mailForPassRecovery);
-                if (! validateEmail(this.mailForPassRecovery)) {
+                if ((this.mailForPassRecovery == undefined) || (! validateEmail(this.mailForPassRecovery))) {
                     ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_VALID);
                 } else {
                     // TODO invia richiesta ajax
@@ -139,7 +137,7 @@
 
 
 function validateEmail(mail) {
-    console.log(mail);
+
     var atposition=mail.indexOf("@");
     var dotposition=mail.lastIndexOf(".");
     if (atposition<1 || dotposition<atposition+2 || dotposition+2>=mail.length){

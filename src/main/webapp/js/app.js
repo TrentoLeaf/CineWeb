@@ -49,7 +49,7 @@ $(document).ready(function () {
             }).when('/password_recovery', {
                 templateUrl: '../partials/password_recovery.html',
                 controller: 'LoginController',
-                controllerAs: 'ctrl'
+                controllerAs: 'c'
             }).when('/me', {
                 templateUrl: '../partials/me.html',
                 controller: 'MeController',
