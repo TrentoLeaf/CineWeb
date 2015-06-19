@@ -23,6 +23,7 @@ public class EmailTest {
         // send email
         EmailSender sender = EmailSender.instance();
         SendGrid.Response res = sender.sendRegistrationEmail(new URI("https://cineweb.herokuapp.com"), user, "stringaDiTest");
+
         System.out.println("Registration mail test: " + res.getMessage());
         System.out.println("Registration mail test: " + res.getCode());
         System.out.println("Registration mail test: " + res.getStatus());

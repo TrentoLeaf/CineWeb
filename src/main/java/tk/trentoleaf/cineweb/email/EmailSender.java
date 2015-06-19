@@ -89,10 +89,10 @@ public class EmailSender {
 
     // send an email to confirm the registration
     public SendGrid.Response sendRegistrationEmail(URI uri, User user, String verificationCode) throws SendGridException {
-        System.out.println(uri);
+
         // create url
         final String url = Utils.uriToRoot(uri) + "/#?c=" + verificationCode;
-        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo.png";
+        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
 
         // get the html mail
         final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
@@ -140,7 +140,7 @@ public class EmailSender {
 
         // create url
         final String url = Utils.uriToRoot(uri) + "/#?r=" + code;
-        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo.png";
+        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
 
         // get the html mail
         final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
@@ -185,7 +185,7 @@ public class EmailSender {
     public SendGrid.Response sendTicketPDFEmail(URI uri, User user, ArrayList<FilmTicketData> data) throws SendGridException, IOException, DocumentException {
 
         // url logo
-        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo.png";
+        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
