@@ -375,7 +375,7 @@ public class AuthUsersTest extends MyJerseyTest {
     }
 
     @Test
-    public void testMeFail() throws Exception {
+    public void testMeFail1() throws Exception {
 
         // ask me page (NOT LOGGED-IN)
         final Response r1 = getTarget().path("/users/me").request(JSON).get();

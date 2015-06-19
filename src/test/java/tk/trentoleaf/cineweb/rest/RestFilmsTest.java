@@ -153,7 +153,7 @@ public class RestFilmsTest extends MyJerseyTest {
         // login as admin
         final Cookie c = loginAdmin();
 
-        // update user
+        // update film
         final Response r1 = getTarget().path("/films/" + f1.getFid()).request(JSON).cookie(c).put(Entity.json(f2));
         assertEquals(200, r1.getStatus());
 
@@ -170,7 +170,7 @@ public class RestFilmsTest extends MyJerseyTest {
         // login as client
         final Cookie c = loginClient();
 
-        // update user
+        // update film
         final Response r1 = getTarget().path("/films/" + 343).request(JSON).cookie(c).put(Entity.json(f2));
         assertEquals(401, r1.getStatus());
     }
@@ -183,7 +183,7 @@ public class RestFilmsTest extends MyJerseyTest {
 
         // no login
 
-        // update user
+        // update film
         final Response r1 = getTarget().path("/films/" + 343).request(JSON).put(Entity.json(f2));
         assertEquals(401, r1.getStatus());
     }
@@ -199,9 +199,23 @@ public class RestFilmsTest extends MyJerseyTest {
         // login as admin
         final Cookie c = loginAdmin();
 
-        // update user
+        // update film
         final Response r1 = getTarget().path("/films/" + f1.getFid()).request(JSON).cookie(c).put(Entity.json(f2));
         assertEquals(400, r1.getStatus());
+    }
+
+    @Test
+    public void editFilmFail4() throws Exception {
+
+        // film to edit
+        final Film film = new Film("Davide amicone", "sfdsf", "http://www.url.com", "http://aaaa.org", "trama moltooo lunga", 120);
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // update film -> should fail (not found)
+        final Response r1 = getTarget().path("/films/" + 453).request(JSON).cookie(c).put(Entity.json(film));
+        assertEquals(404, r1.getStatus());
     }
 
     @Test(expected = EntryNotFoundException.class)

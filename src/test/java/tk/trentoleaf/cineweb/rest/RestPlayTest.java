@@ -80,7 +80,7 @@ public class RestPlayTest extends MyJerseyTest {
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
 
-        // create film
+        // create play
         final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
         assertEquals(200, r1.getStatus());
 
@@ -106,7 +106,7 @@ public class RestPlayTest extends MyJerseyTest {
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
 
-        // create film
+        // create play
         final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
         assertEquals(401, r1.getStatus());
     }
@@ -124,7 +124,7 @@ public class RestPlayTest extends MyJerseyTest {
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
 
-        // create film
+        // create play
         final Response r1 = getTarget().path("/plays").request(JSON).post(Entity.json(p1));
         assertEquals(401, r1.getStatus());
     }
@@ -143,7 +143,7 @@ public class RestPlayTest extends MyJerseyTest {
         // play to create
         final Play p1 = new Play(f1.getFid(), 0, DateTime.now(), true);
 
-        // create film
+        // create play
         final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
         assertEquals(400, r1.getStatus());
     }
@@ -164,9 +164,44 @@ public class RestPlayTest extends MyJerseyTest {
         playsDB.createPlay(p1);
         final Play p2 = new Play(f1, room, DateTime.now().plusMinutes(40), true);
 
-        // create film
+        // create play
         final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p2));
         assertEquals(409, r1.getStatus());
+    }
+
+    @Test
+    public void addPlayFail5() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // film
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        filmsDB.createFilm(f1);
+
+        // play to create
+        final Play p1 = new Play(f1.getFid(), 453, DateTime.now(), true);
+
+        // create play -> should fail (missing fid)
+        final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
+        assertEquals(400, r1.getStatus());
+    }
+
+    @Test
+    public void addPlayFail6() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // room
+        final Room room = roomsDB.createRoom(3, 4);
+
+        // play to create
+        final Play p1 = new Play(453, room.getRid(), DateTime.now(), true);
+
+        // create play -> should fail (missing rid)
+        final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
+        assertEquals(400, r1.getStatus());
     }
 
     @Test(expected = EntryNotFoundException.class)

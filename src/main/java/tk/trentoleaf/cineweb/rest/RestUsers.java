@@ -209,23 +209,23 @@ public class RestUsers {
     @GET
     @UserArea
     @Path("/me")
-    public UserDetails getUser() throws NotFoundException, SQLException {
+    public UserDetails getUser() throws SQLException {
 
+        // get current session
         final HttpSession session = request.getSession(false);
-        if (session != null) {
-            final Integer uid = (Integer) session.getAttribute(Utils.UID);
-            try {
-                final User current = (uid != null) ? usersDB.getUser(uid) : null;
-                if (current != null) {
-                    return new UserDetails(current);
-                }
-            } catch (UserNotFoundException e) {
-                // nothing, see later
-            }
-        }
+        assert session != null;
 
-        // if here -> no user logged in
-        throw NotFoundException.USER_NOT_FOUND;
+        // get logged user
+        final Integer uid = (Integer) session.getAttribute(Utils.UID);
+        assert uid != null;
+
+        // return the current user
+        try {
+            final User current = usersDB.getUser(uid);
+            return new UserDetails(current);
+        } catch (UserNotFoundException e) {
+            throw NotFoundException.USER_NOT_FOUND;
+        }
     }
 
     @GET
