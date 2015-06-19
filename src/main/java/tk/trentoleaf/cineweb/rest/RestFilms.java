@@ -14,6 +14,9 @@ import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Films end point. Implements CRUD operations on the films.
+ */
 @Path("/films")
 public class RestFilms {
 

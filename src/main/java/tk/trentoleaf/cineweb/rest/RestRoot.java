@@ -18,6 +18,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
+// TODO
+
+/**
+ * Resources root.
+ */
 @Path("/")
 public class RestRoot {
 
@@ -41,14 +46,14 @@ public class RestRoot {
         // films
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         final Film f2 = new Film("Marcof e PoketMine", "horror", "http://bbb.com", "http://ccc.org", "trama", 30);
-        final Film f3 = new Film("Titolo 1", "Genere 1",  "http://bbb.com", "../webapp/img/temporary/img1.jpg", "Descrizione 1", 123);
+        final Film f3 = new Film("Titolo 1", "Genere 1", "http://bbb.com", "../webapp/img/temporary/img1.jpg", "Descrizione 1", 123);
         final Film f4 = new Film("Titolo 2", "Genere 2", "http://asdf.com", "../webapp/img/temporary/img2.jpg", "Descrizione 2", 234);
         final Film f5 = new Film("Titolo 3", "Genere 3", "http://asdfasdf.com", "../webapp/img/temporary/img3.jpg", "Descrizione 3", 233);
         final Film f6 = new Film("Titolo 4", "Genere 4", "http://asdfdsa.it", "../webapp/img/temporary/img4.jpg", "Descrizione 4", 332);
         final Film f7 = new Film("Titolo 5", "Genere 5", "http://asdfdds.org", "../webapp/img/temporary/img5.jpg", "Descrizione 5", 331);
         final Film f8 = new Film("Titolo 6", "Genere 6", "asdfdsafd", "../webapp/img/temporary/img6.jpg", "Descrizione 6", 555);
         final Film f9 = new Film("Titolo 7", "Genere 7", "asdfFDsa", "../webapp/img/temporary/img7.jpg", "Descrizione 7", 322);
-        final Film f10 = new Film( "Titolo 8", "Genere 8", "Asdfds", "../webapp/img/temporary/img8.jpg", "Descrizione 8", 221);
+        final Film f10 = new Film("Titolo 8", "Genere 8", "Asdfds", "../webapp/img/temporary/img8.jpg", "Descrizione 8", 221);
         final Film f11 = new Film("Titolo 9", "Genere 9", "asdffdd", "../webapp/img/temporary/img9.jpg", "Descrizione 9", 227);
 
         filmsDB.createFilm(f1);

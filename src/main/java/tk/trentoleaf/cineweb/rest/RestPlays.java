@@ -18,6 +18,9 @@ import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Plays end point. Implements CRUD operations on the plays.
+ */
 @Path("/plays")
 public class RestPlays {
 

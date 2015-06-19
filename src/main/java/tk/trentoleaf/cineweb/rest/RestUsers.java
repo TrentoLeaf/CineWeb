@@ -29,6 +29,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Users end point. Handles users registration, password resets, authentication. Implements CRUD operations on the users.
+ */
 @Path("/users")
 public class RestUsers {
     private Logger logger = Logger.getLogger(RestUsers.class.getSimpleName());
@@ -257,7 +260,6 @@ public class RestUsers {
         } catch (ConstrainException e) {
             throw ConflictException.EMAIL_IN_USE;
         }
-
     }
 
     @PUT
@@ -275,7 +277,6 @@ public class RestUsers {
         } catch (UserNotFoundException ex) {
             throw NotFoundException.USER_NOT_FOUND;
         }
-
     }
 
     @DELETE
