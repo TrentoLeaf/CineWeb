@@ -13,7 +13,10 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.logging.Logger;
 
-// TODO: create indexes!!!
+/**
+ * This is the base class for the Database. It handles the Connections Pool, load the needed Postgres
+ * module, create the tables and indexes, drop tables (used for tests).
+ */
 public class DB {
     private final Logger logger = Logger.getLogger(DB.class.getSimpleName());
 
@@ -198,6 +201,7 @@ public class DB {
                     "second_name VARCHAR(100)," +
                     "credit DOUBLE PRECISION DEFAULT 0);");
             stm.execute("CREATE INDEX ON users (email);");
+            stm.execute("CREATE INDEX ON users (uid, roleid);");
         }
     }
 
@@ -216,9 +220,11 @@ public class DB {
     private void createTablePasswordResets() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS resets (" +
-                    "code CHAR(64) PRIMARY KEY," +
-                    "uid INTEGER REFERENCES users(uid) ON DELETE CASCADE," +
-                    "expiration TIMESTAMP NOT NULL);");
+                    "code CHAR(64)," +
+                    "uid INTEGER," +
+                    "expiration TIMESTAMP NOT NULL," +
+                    "PRIMARY KEY(code)," +
+                    "FOREIGN KEY(uid) REFERENCES users(uid) ON DELETE CASCADE);");
         }
     }
 
