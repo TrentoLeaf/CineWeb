@@ -47,7 +47,7 @@ public class RestPrices {
     @PUT
     @Path("/{type}")
     @AdminArea
-    public Price editPrice(@PathParam("type") String type, @NotNull(message = "Missing price") @Valid Price price) {
+    public Price editPrice(@PathParam("type") String type, @NotNull(message = "Missing price") @Valid Price price) throws SQLException {
 
         // make price case insensitive
         price.setType(type.toLowerCase());
@@ -58,8 +58,6 @@ public class RestPrices {
             return price;
         } catch (EntryNotFoundException e) {
             throw new NotFoundException("Price not found");
-        } catch (SQLException e) {
-            throw new ConflictException("Price already exists");
         }
     }
 

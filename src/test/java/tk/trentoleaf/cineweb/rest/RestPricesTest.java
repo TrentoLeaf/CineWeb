@@ -57,9 +57,25 @@ public class RestPricesTest extends MyJerseyTest {
     }
 
     @Test
-    public void addPriceFail1() throws Exception {
+    public void addPriceFail0() throws Exception {
 
         // login as admin
+        final Cookie c = loginAdmin();
+
+        // price to create
+        final Price price = new Price("aa", 1);
+
+        // create price
+        final Response r1 = getTarget().path("/prices").request(JSON).cookie(c).post(Entity.json(price));
+        final Response r2 = getTarget().path("/prices").request(JSON).cookie(c).post(Entity.json(price));
+        assertEquals(200, r1.getStatus());
+        assertEquals(409, r2.getStatus());
+    }
+
+    @Test
+    public void addPriceFail1() throws Exception {
+
+        // login as client
         final Cookie c = loginClient();
 
         // price to create
