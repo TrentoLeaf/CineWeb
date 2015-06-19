@@ -87,28 +87,30 @@
             /* recovery password functions */
 
             this.rec_pass_msg = "";
-            this.mailForPassRecovery = "";
+            this.mailForPassRecovery = "ds";
             var REC_PASS_SUCCESS = 0;
             var REC_PASS_MAIL_NOT_EXIST = 1;
+            var REC_PASS_MAIL_NOT_VALID = 2
             var REC_PASS_REQUEST_FAIL = -1;
 
-
             this.sendPassRecoveryRequest = function () {
+                console.log("recovery");
+
                 $('#pass_recovery_message').removeClass("green-text red-text");
                 $('#pass_recovery_message').addClass("white-text");
                 ctrl.rec_pass_msg = "Un momento...";
 
-                // TODO validare l'email
-                if (false)
-                {
-                    ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_EXIST);
+                console.log("insert mail: " + this.mailForPassRecovery);
+                if (! validateEmail(this.mailForPassRecovery)) {
+                    ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_VALID);
                 } else {
                     // TODO invia richiesta ajax
                     // TODO attendi la risposta (successo/mail_non_registrata/fail)
                     // TODO callback:  ctrl.set_rec_pass_msg(response);
                 }
             }
-            
+
+            /* setta l'errore o il messaggio per il recupero della password */
             this.set_rec_pass_msg = function (result) {
 
                 $('#pass_recovery_message').removeClass("white-text");
@@ -117,17 +119,33 @@
                     ctrl.rec_pass_msg = "Richiesta effettuata. Controlla la tua casella di posta.";
                 } else if (result == REC_PASS_MAIL_NOT_EXIST) { // mail inexistent
                     $('#pass_recovery_message').addClass("red-text");
-                    ctrl.rec_pass_msg = "L'indirizzo mail inserito non è corretto o non risulta registrato. Riprova.";
+                    ctrl.rec_pass_msg = "L'indirizzo mail inserito non risulta registrato. Riprova.";
+                } else if (result == REC_PASS_MAIL_NOT_VALID) {
+                    $('#pass_recovery_message').addClass("red-text");
+                    ctrl.rec_pass_msg = "L'indirizzo mail inserito non è corretto. Riprova.";
                 } else {    // request error
                     $('#pass_recovery_message').addClass("red-text");
                     ctrl.rec_pass_msg = "La richiesta non è andata a buon fine. Riprova.";
                 }
 
             }
-            
-            
-            
+
+
+
 
         }]);
 
 })();
+
+
+function validateEmail(mail) {
+    console.log(mail);
+    var atposition=mail.indexOf("@");
+    var dotposition=mail.lastIndexOf(".");
+    if (atposition<1 || dotposition<atposition+2 || dotposition+2>=mail.length){
+        return false;
+    } else {
+        return true;
+    }
+}
+

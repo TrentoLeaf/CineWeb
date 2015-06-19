@@ -17,7 +17,7 @@ var SEAT_UNAVAILABLE = 2;
 
 
             this.data_from_server = [{title:"titolo", date:"data", time:"ora", playbill:"img/temporary/mad-max-fury-road-locandina-400x250.jpg", seats:[[1,1,1,0,1,1,1],[1,0,1,2,0,1,1],[1,2,1,2,1,2,1],[1,1,1,1,1,2,0]], seats_selected: 4},
-                {title:"titolo2", date:"data2", time:"ora2", playbill:"img/temporary/mad-max-fury-road-locandina-400x250.jpg", seats:[[1,1,1,0,1,1,1],[1,0,1,2,0,1,1],[1,2,1,2,1,2,1],[1,1,1,1,1,2,0]], seats_selected: 4}];
+                {title:"titolo2", date:"data2", time:"ora2", playbill:"img/temporary/mad-max-fury-road-locandina-400x250.jpg", seats:[[1,1,1,0,1,1,1,0],[1,0,1,2,0,1,1,1],[1,2,1,2,1,2,1,0],[1,1,1,1,2,2,0,0],[1,0,1,2,0,1,1,1]], seats_selected: 6}];
             this.data_from_server_index = -1;
             this.data_to_server = [];
             this.seats2 = [[1,1,1,0,1,1,1],[1,0,1,2,0,1,1],[1,2,1,2,1,2,1],[1,1,1,1,1,2,0]]; /* remove */
@@ -31,6 +31,9 @@ var SEAT_UNAVAILABLE = 2;
                 this.selected_seats = [];
                 this.data_to_server = [];
                 this.data_from_server_index = -1;
+
+                console.log("start index: "+ this.data_from_server_index);
+                console.log(this.film);
 
                 // TODO controlla se è loggato
                 /* se loggato prosegui col codice, altrimenti redirect alla pagina di login*/
@@ -49,13 +52,19 @@ var SEAT_UNAVAILABLE = 2;
 
                 this.selected_seats = [];
                 // next film in cart
+                console.log("here1: "+ this.data_from_server_index);
                 this.data_from_server_index ++;
+                console.log("here2: "+ this.data_from_server_index);
                 if (this.data_from_server_index < this.data_from_server.length) {
                     $location.path('/buy');
                     this.film = this.data_from_server[this.data_from_server_index];
-                    console.log("film "+this.film+ "  index  "+this.data_from_server_index);
+
+                    console.log("next index: "+ this.data_from_server_index);
+                    console.log(this.film);
+
                     // generate svg seats
                     generateSvg(this.data_from_server[this.data_from_server_index].seats, this.selected_seats, this.film);
+                    // tornare in cima
                     //$location.hash('header-navbar');
                 }
                 else { // scelta dei posti terminata
@@ -77,10 +86,6 @@ var SEAT_UNAVAILABLE = 2;
                 data_to_server.push(this.ff);
                 this.next_buy();
             };
-
-
-
-
 
             this.cloneObject = function (obj) {
                 return (JSON.parse(JSON.stringify(obj)));
