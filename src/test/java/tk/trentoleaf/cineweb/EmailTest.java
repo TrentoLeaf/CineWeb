@@ -1,5 +1,6 @@
 package tk.trentoleaf.cineweb;
 
+import com.sendgrid.SendGrid;
 import org.junit.Ignore;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.email.EmailSender;
@@ -21,7 +22,10 @@ public class EmailTest {
 
         // send email
         EmailSender sender = EmailSender.instance();
-        sender.sendRegistrationEmail(new URI("http://www.cineweb.herokuapp.com"), user, "stringaDiTest");
+        SendGrid.Response res = sender.sendRegistrationEmail(new URI("https://cineweb.herokuapp.com"), user, "stringaDiTest");
+        System.out.println("Registration mail test: " + res.getMessage());
+        System.out.println("Registration mail test: " + res.getCode());
+        System.out.println("Registration mail test: " + res.getStatus());
     }
 
 
@@ -33,7 +37,11 @@ public class EmailTest {
 
         // send email
         EmailSender sender = EmailSender.instance();
-        sender.sendRecoverPasswordEmail(new URI("http://www.cineweb.herokuapp.com"), user, "stringaDiTest");
+        SendGrid.Response res = sender.sendRecoverPasswordEmail(new URI("https://cineweb.herokuapp.com"), user, "stringaDiTest");
+
+        System.out.println("Password recovery mail test: " + res.getMessage());
+        System.out.println("Password recovery mail test: " + res.getCode());
+        System.out.println("Registration mail test: " + res.getStatus());
     }
 
 
@@ -51,6 +59,11 @@ public class EmailTest {
 
         // send email
         EmailSender sender = EmailSender.instance();
-        sender.sendTicketPDFEmail(new URI("http://www.cineweb.herokuapp.com"), user, plays);
+        SendGrid.Response res = sender.sendTicketPDFEmail(new URI("https://cineweb.herokuapp.com"), user, plays);
+
+        System.out.println("Tickets mail test: " + res.getMessage());
+        System.out.println("Tickets mail test: " + res.getCode());
+        System.out.println("Tickets mail test: " + res.getStatus());
     }
+
 }

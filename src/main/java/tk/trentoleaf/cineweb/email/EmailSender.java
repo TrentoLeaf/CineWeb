@@ -77,7 +77,10 @@ public class EmailSender {
 
         // try to send, log failures
         try {
+            SendGrid.Response response = sendgrid.send(email);
+
             sendgrid.send(email);
+
         } catch (SendGridException e) {
             logger.severe(e.toString());
             throw e;
@@ -85,8 +88,8 @@ public class EmailSender {
     }
 
     // send an email to confirm the registration
-    public void sendRegistrationEmail(URI uri, User user, String verificationCode) throws SendGridException {
-
+    public SendGrid.Response sendRegistrationEmail(URI uri, User user, String verificationCode) throws SendGridException {
+        System.out.println(uri);
         // create url
         final String url = Utils.uriToRoot(uri) + "/#?c=" + verificationCode;
         final String urlLogo = Utils.uriToRoot(uri) + "/img/logo.png";
@@ -105,7 +108,7 @@ public class EmailSender {
         // modify the html mail
         String theString = writer.toString();
         theString = theString.replace("{{logo_img}}", urlLogo);
-        theString = theString.replace("{{sito}}", "www.cineweb.herokuapp.com");
+        theString = theString.replace("{{sito}}", Utils.uriToRoot(uri));
         theString = theString.replace("{{nome}}", user.getFirstName());
         theString = theString.replace("{{cognome}}", user.getSecondName());
         theString = theString.replace("{{email}}", user.getEmail());
@@ -122,16 +125,18 @@ public class EmailSender {
         email.setHtml(theString);
 
         // try to send, log failures
+        SendGrid.Response response;
         try {
-            sendgrid.send(email);
+            response = sendgrid.send(email);
         } catch (SendGridException e) {
             logger.severe(e.toString());
             throw e;
         }
+        return response;
     }
 
     // send a password recover
-    public void sendRecoverPasswordEmail(URI uri, User user, String code) throws SendGridException {
+    public SendGrid.Response sendRecoverPasswordEmail(URI uri, User user, String code) throws SendGridException {
 
         // create url
         final String url = Utils.uriToRoot(uri) + "/#?r=" + code;
@@ -151,7 +156,7 @@ public class EmailSender {
         // modify the html mail
         String theString = writer.toString();
         theString = theString.replace("{{logo_img}}", urlLogo);
-        theString = theString.replace("{{sito}}", "www.cineweb.herokuapp.com");
+        theString = theString.replace("{{sito}}", Utils.uriToRoot(uri));
         theString = theString.replace("{{nome}}", user.getFirstName());
         theString = theString.replace("{{url_address}}", url);
 
@@ -166,16 +171,18 @@ public class EmailSender {
         email.setHtml(theString);
 
         // try to send, log failures
+        SendGrid.Response response;
         try {
-            sendgrid.send(email);
+            response = sendgrid.send(email);
         } catch (SendGridException e) {
             logger.severe(e.toString());
             throw e;
         }
+        return response;
     }
 
     //send a pdf with the ticket
-    public void sendTicketPDFEmail(URI uri, User user, ArrayList<FilmTicketData> data) throws SendGridException, IOException, DocumentException {
+    public SendGrid.Response sendTicketPDFEmail(URI uri, User user, ArrayList<FilmTicketData> data) throws SendGridException, IOException, DocumentException {
 
         // url logo
         final String urlLogo = Utils.uriToRoot(uri) + "/img/logo.png";
@@ -236,7 +243,7 @@ public class EmailSender {
         String theString = writer.toString();
         String theStringSummary = writerSummary.toString();
         theString = theString.replace("{{logo_img}}", urlLogo);
-        theString = theString.replace("{{sito}}", "www.cineweb.herokuapp.com");
+        theString = theString.replace("{{sito}}", Utils.uriToRoot(uri));
         theString = theString.replace("{{nome}}", user.getFirstName());
 
         // add the plays summary in the mail
@@ -263,14 +270,13 @@ public class EmailSender {
         email.setHtml(theString);
 
         // try to send, log failures
+        SendGrid.Response response;
         try {
-
-            // send email
-            sendgrid.send(email);
-
+            response = sendgrid.send(email);
         } catch (SendGridException e) {
             logger.severe(e.toString());
             throw e;
         }
+        return response;
     }
 }
