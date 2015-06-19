@@ -1,6 +1,7 @@
-package tk.trentoleaf.cineweb.email;
+package tk.trentoleaf.cineweb.listeners;
 
 import com.sendgrid.SendGridException;
+import tk.trentoleaf.cineweb.email.EmailSender;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
