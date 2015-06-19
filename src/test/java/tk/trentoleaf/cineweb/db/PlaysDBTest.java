@@ -36,6 +36,8 @@ public class PlaysDBTest extends DBTest {
         final Play p2 = new Play(f2, r2, DateTime.now().plusMinutes(121), false);
         final Play p3 = new Play(f1, r1, DateTime.now().plusMinutes(2), false);
         final Play p4 = new Play(f2, r1, DateTime.now().plusMinutes(150), false);
+        p4.set_3d(true);
+        p4.setFid(f1.getFid());
 
         // insert
         playsDB.createPlay(p1);

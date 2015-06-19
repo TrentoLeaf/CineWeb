@@ -58,8 +58,6 @@ public class RestPlays {
         }
     }
 
-    // TODO: cannot edit play --> OK?
-
     @DELETE
     @Path("/{id}")
     @AdminArea

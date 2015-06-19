@@ -6,6 +6,9 @@ import org.hibernate.validator.constraints.URL;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 
+/**
+ * Film bean: represent a film.
+ */
 public class Film implements Serializable {
 
     private int fid;
@@ -30,9 +33,22 @@ public class Film implements Serializable {
     @Min(value = 0, message = "Duration must be >= 0 minutes")
     private int duration;
 
+    /**
+     * Construct an empty Film.
+     */
     public Film() {
     }
 
+    /**
+     * Construct a Film.
+     *
+     * @param title    Film title.
+     * @param genre    Film genre.
+     * @param trailer  Film trailer absolute URL.
+     * @param playbill Film playbill absolute URL.
+     * @param plot     Film plot.
+     * @param duration Film duration (in minutes).
+     */
     public Film(String title, String genre, String trailer, String playbill, String plot, int duration) {
         this.title = title;
         this.genre = genre;
@@ -117,18 +133,5 @@ public class Film implements Serializable {
         if (trailer != null ? !trailer.equals(film.trailer) : film.trailer != null) return false;
         if (playbill != null ? !playbill.equals(film.playbill) : film.playbill != null) return false;
         return !(plot != null ? !plot.equals(film.plot) : film.plot != null);
-    }
-
-    @Override
-    public String toString() {
-        return "Film{" +
-                "fid=" + fid +
-                ", title='" + title + '\'' +
-                ", genre='" + genre + '\'' +
-                ", trailer='" + trailer + '\'' +
-                ", playbill='" + playbill + '\'' +
-                ", plot='" + plot + '\'' +
-                ", duration=" + duration +
-                '}';
     }
 }

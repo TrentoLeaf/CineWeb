@@ -6,7 +6,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-// TODO: transient film and room???
+/**
+ * Play bean: represent a Play (a certain film is played in a certain room at a certain time).
+ */
 public class Play implements Serializable {
 
     private int pid;
@@ -20,20 +22,35 @@ public class Play implements Serializable {
     @NotNull(message = "Time cannot be null")
     private DateTime time;
 
-    private boolean _3d;
+    @NotNull(message = "_3d cannot be null")
+    private Boolean _3d;
 
-    private transient Film film;
-    private transient Room room;
-
-    public Play(Film film, Room room, DateTime time, boolean _3d) {
-        this.fid = film.getFid();
-        this.rid = room.getRid();
-        this.time = time;
-        this._3d = _3d;
-        this.film = film;
-        this.room = room;
+    /**
+     * Construct an empty play.
+     */
+    public Play() {
     }
 
+    /**
+     * Construct a play.
+     *
+     * @param film The played Film.
+     * @param room The room in which the film is played.
+     * @param time When the film is played.
+     * @param _3d  True if the film is in 3D.
+     */
+    public Play(Film film, Room room, DateTime time, boolean _3d) {
+        this(film.getFid(), room.getRid(), time, _3d);
+    }
+
+    /**
+     * Construct a play.
+     *
+     * @param fid  The played Film ID.
+     * @param rid  The room ID in which the film is played.
+     * @param time When the film is played.
+     * @param _3d  True if the film is in 3D.
+     */
     public Play(int fid, int rid, DateTime time, boolean _3d) {
         this.fid = fid;
         this.rid = rid;
@@ -41,6 +58,15 @@ public class Play implements Serializable {
         this._3d = _3d;
     }
 
+    /**
+     * Construct a play.
+     *
+     * @param pid  The Play ID.
+     * @param fid  The played Film ID.
+     * @param rid  The room ID in which the film is played.
+     * @param time When the film is played.
+     * @param _3d  True if the film is in 3D.
+     */
     public Play(int pid, int fid, int rid, DateTime time, boolean _3d) {
         this.pid = pid;
         this.fid = fid;
@@ -89,22 +115,6 @@ public class Play implements Serializable {
         this._3d = _3d;
     }
 
-    public Film getFilm() {
-        return film;
-    }
-
-    public void setFilm(Film film) {
-        this.film = film;
-    }
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     @Override
     public int hashCode() {
         return pid;
@@ -122,19 +132,5 @@ public class Play implements Serializable {
         if (rid != play.rid) return false;
         if (_3d != play._3d) return false;
         return time.equals(play.time);
-
-    }
-
-    @Override
-    public String toString() {
-        return "Play{" +
-                "pid=" + pid +
-                ", fid=" + fid +
-                ", rid=" + rid +
-                ", time=" + time +
-                ", _3d=" + _3d +
-                ", film=" + film +
-                ", room=" + room +
-                '}';
     }
 }
