@@ -142,6 +142,18 @@ public class RestUsersTest extends MyJerseyTest {
     }
 
     @Test
+    public void createUserFail4() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // create a user
+        final Response response = getTarget().path("/users/").request(JSON).cookie(c)
+                .post(Entity.json(new User(true, Role.CLIENT, "teo@teo.com", null, "Matteo", "Zeni")));
+        assertEquals(400, response.getStatus());
+    }
+
+    @Test
     public void updateUserSuccess() throws Exception {
 
         // login as ADMIN

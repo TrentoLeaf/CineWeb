@@ -252,7 +252,7 @@ public class RestUsers {
 
         // check if user is valid
         if (!user.isValidWithPassword()) {
-            throw BadRequestException.BAD_USER;
+            throw new BadRequestException("User not valid");
         }
 
         // create user
