@@ -14,6 +14,20 @@ import static org.junit.Assert.assertTrue;
 
 public class PricesDBTest extends DBTest {
 
+    @Test
+    public void getPriceOk() throws Exception {
+
+        // create
+        final Price p1 = new Price("A", 1);
+        pricesDB.createPrice(p1);
+
+        // retrieve
+        final Price p2 = pricesDB.getPrice("a");
+
+        // test
+        assertEquals(p1, p2);
+    }
+
     @Test(expected = EntryNotFoundException.class)
     public void getPriceFail() throws Exception {
         pricesDB.getPrice("aaaaaaa");
@@ -74,7 +88,6 @@ public class PricesDBTest extends DBTest {
         pricesDB.createPrice(price);
 
         // edit price
-        price.setType("price111");
         price.setPrice(34);
         pricesDB.updatePrice(price);
 

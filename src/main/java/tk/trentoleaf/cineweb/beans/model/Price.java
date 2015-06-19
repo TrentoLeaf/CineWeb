@@ -75,6 +75,6 @@ public class Price implements Serializable {
         Price price1 = (Price) o;
 
         if (Double.compare(price1.price, price) != 0) return false;
-        return type.equals(price1.type);
+        return type.equalsIgnoreCase(price1.type);
     }
 }
