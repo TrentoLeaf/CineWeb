@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
- * This class is used to send emails through SendGrid.
+ * This class is used to send email through SendGrid.
  */
 public class EmailSender {
     private static final Logger logger = Logger.getLogger(EmailSender.class.getSimpleName());
@@ -220,7 +220,7 @@ public class EmailSender {
         } catch (IOException e) {
 
         }
-        
+
         // get the html snippet for tickets summary
         InputStream isSummary = classloader.getResourceAsStream("email/tickets_summary.html");
 
