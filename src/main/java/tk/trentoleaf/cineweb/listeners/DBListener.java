@@ -10,6 +10,10 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
+/**
+ * WebListener that opens a pool of connections to the database at the application start.
+ * Closes the connection at the application shutdown.
+ */
 @WebListener
 public class DBListener implements ServletContextListener {
     private final Logger logger = Logger.getLogger(DBListener.class.getSimpleName());
@@ -17,17 +21,14 @@ public class DBListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
-        // create a TodoDB connection
-        //TodoDB todoDB = TodoDB.instance();
+        // get an instance of the database
         final DB db = DB.instance();
 
         try {
-            // open the connection
-            // todoDB.open();
+            // open the connections pool
             db.open();
 
-            // create first user
-            // todoDB.createAdminUser();
+            // create the first admin user if not exists
             UsersDB.instance().createAdminUser();
 
         } catch (RuntimeException | SQLException | URISyntaxException e) {
@@ -35,20 +36,18 @@ public class DBListener implements ServletContextListener {
             logger.warning("Try to set the Environment variable DATABASE_URL to 'postgres://user:password@localhost:5432/db'");
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
 
-        // retrieve the database
-        //final TodoDB todoDB = TodoDB.instance();
+        // get the database instance
         final DB db = DB.instance();
 
-        // close the connection
         try {
-            // todoDB.close();
+            // close the connections
             db.close();
+
         } catch (NullPointerException | SQLException e) {
             logger.severe("Cannot close the connection to the database");
             throw new RuntimeException(e);
