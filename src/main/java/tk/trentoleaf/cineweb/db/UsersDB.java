@@ -12,6 +12,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * This class handles the users storage and authentication. It uses the connections provided by the DB class.
+ *
+ * @see tk.trentoleaf.cineweb.db.DB
+ */
 public class UsersDB {
     private final Logger logger = Logger.getLogger(UsersDB.class.getSimpleName());
 
@@ -297,8 +302,6 @@ public class UsersDB {
         }
     }
 
-    // TODO -> serve?
-    // TODO -> test!
     // enable or disable a user
     public void changeUserStatus(int uid, boolean enable) throws SQLException, UserNotFoundException {
         final String query = "UPDATE users SET enabled = ? WHERE uid = ?";

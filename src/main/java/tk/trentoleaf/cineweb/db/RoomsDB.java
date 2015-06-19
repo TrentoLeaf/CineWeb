@@ -2,17 +2,23 @@ package tk.trentoleaf.cineweb.db;
 
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.db.WrongCodeException;
-import tk.trentoleaf.cineweb.model.*;
+import tk.trentoleaf.cineweb.model.Play;
+import tk.trentoleaf.cineweb.model.Room;
+import tk.trentoleaf.cineweb.model.Seat;
+import tk.trentoleaf.cineweb.model.SeatReserved;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
+/**
+ * This class handles the rooms and seats storage. It uses the connections provided by the DB class.
+ *
+ * @see tk.trentoleaf.cineweb.db.DB
+ */
 public class RoomsDB {
-    private final Logger logger = Logger.getLogger(RoomsDB.class.getSimpleName());
 
     // get a DB instance
     protected DB db = DB.instance();
@@ -252,11 +258,11 @@ public class RoomsDB {
         //list of all seatReserved in the room
         final List<SeatReserved> seat = new ArrayList<>();
 
-        for (int i = 0; i < allSeat.size(); i++) {
-            if (seatReserved.contains(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), true))) {
-                seat.add(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), true));
+        for (Seat anAllSeat : allSeat) {
+            if (seatReserved.contains(new SeatReserved(anAllSeat.getRid(), anAllSeat.getX(), anAllSeat.getY(), true))) {
+                seat.add(new SeatReserved(anAllSeat.getRid(), anAllSeat.getX(), anAllSeat.getY(), true));
             } else {
-                seat.add(new SeatReserved(allSeat.get(i).getRid(), allSeat.get(i).getX(), allSeat.get(i).getY(), false));
+                seat.add(new SeatReserved(anAllSeat.getRid(), anAllSeat.getX(), anAllSeat.getY(), false));
             }
         }
 

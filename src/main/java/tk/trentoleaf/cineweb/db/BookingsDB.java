@@ -11,6 +11,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class handles the bookings storage. It uses the connections provided by the DB class.
+ *
+ * @see tk.trentoleaf.cineweb.db.DB
+ */
 public class BookingsDB {
 
     // get a DB instance

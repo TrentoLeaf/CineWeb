@@ -5,17 +5,19 @@ import org.postgresql.util.PSQLException;
 import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
 import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.model.Film;
 import tk.trentoleaf.cineweb.model.Play;
 import tk.trentoleaf.cineweb.model.Room;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
+/**
+ * This class handles the plays storage. It uses the connections provided by the DB class.
+ *
+ * @see tk.trentoleaf.cineweb.db.DB
+ */
 public class PlaysDB {
-    private final Logger logger = Logger.getLogger(PlaysDB.class.getSimpleName());
 
     // get a DB instance
     protected DB db = DB.instance();

@@ -6,10 +6,13 @@ import tk.trentoleaf.cineweb.model.Film;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
+/**
+ * This class handles the films storage. It uses the connections provided by the DB class.
+ *
+ * @see tk.trentoleaf.cineweb.db.DB
+ */
 public class FilmsDB {
-    private final Logger logger = Logger.getLogger(FilmsDB.class.getSimpleName());
 
     // get a DB instance
     protected DB db = DB.instance();
