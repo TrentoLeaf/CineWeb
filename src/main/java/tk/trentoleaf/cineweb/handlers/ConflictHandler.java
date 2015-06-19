@@ -8,6 +8,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+/**
+ * Jersey Provider that handles ConflictException. Return an HTTP 409 (conflict) with a short explanation.
+ *
+ * @see tk.trentoleaf.cineweb.exceptions.rest.ConflictException
+ * @see <a href="http://www.restapitutorial.com/httpstatuscodes.html">REST tuturial</a>
+ */
 @Provider
 public class ConflictHandler implements ExceptionMapper<ConflictException> {
 
