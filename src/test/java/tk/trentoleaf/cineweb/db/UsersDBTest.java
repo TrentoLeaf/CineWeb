@@ -3,8 +3,8 @@ package tk.trentoleaf.cineweb.db;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.exceptions.db.*;
-import tk.trentoleaf.cineweb.model.Role;
-import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.beans.model.Role;
+import tk.trentoleaf.cineweb.beans.model.User;
 
 import java.util.ArrayList;
 import java.util.List;

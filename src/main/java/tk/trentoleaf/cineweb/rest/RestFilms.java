@@ -5,7 +5,7 @@ import tk.trentoleaf.cineweb.annotations.rest.Compress;
 import tk.trentoleaf.cineweb.db.FilmsDB;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
-import tk.trentoleaf.cineweb.model.Film;
+import tk.trentoleaf.cineweb.beans.model.Film;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

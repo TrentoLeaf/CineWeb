@@ -5,8 +5,8 @@ import org.postgresql.util.PSQLException;
 import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
 import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.model.Play;
-import tk.trentoleaf.cineweb.model.Room;
+import tk.trentoleaf.cineweb.beans.model.Play;
+import tk.trentoleaf.cineweb.beans.model.Room;
 
 import java.sql.*;
 import java.util.ArrayList;

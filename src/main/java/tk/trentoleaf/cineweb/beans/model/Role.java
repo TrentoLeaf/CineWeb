@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb.model;
+package tk.trentoleaf.cineweb.beans.model;
 
 import com.google.gson.annotations.SerializedName;
 

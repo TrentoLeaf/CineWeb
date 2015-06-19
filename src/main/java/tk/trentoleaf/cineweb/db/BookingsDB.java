@@ -4,8 +4,8 @@ import org.joda.time.DateTime;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.db.FilmAlreadyGoneException;
 import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
-import tk.trentoleaf.cineweb.model.Booking;
-import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.beans.model.Booking;
+import tk.trentoleaf.cineweb.beans.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;

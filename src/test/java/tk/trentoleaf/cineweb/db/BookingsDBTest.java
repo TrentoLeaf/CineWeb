@@ -5,8 +5,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
+import tk.trentoleaf.cineweb.beans.model.*;
 import tk.trentoleaf.cineweb.exceptions.db.*;
-import tk.trentoleaf.cineweb.model.*;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,8 +3,8 @@ package tk.trentoleaf.cineweb.db;
 import org.joda.time.DateTime;
 import org.postgresql.util.PSQLException;
 import tk.trentoleaf.cineweb.exceptions.db.*;
-import tk.trentoleaf.cineweb.model.Role;
-import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.beans.model.Role;
+import tk.trentoleaf.cineweb.beans.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;

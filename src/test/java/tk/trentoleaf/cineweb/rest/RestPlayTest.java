@@ -3,9 +3,9 @@ package tk.trentoleaf.cineweb.rest;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.model.Film;
-import tk.trentoleaf.cineweb.model.Play;
-import tk.trentoleaf.cineweb.model.Room;
+import tk.trentoleaf.cineweb.beans.model.Film;
+import tk.trentoleaf.cineweb.beans.model.Play;
+import tk.trentoleaf.cineweb.beans.model.Room;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;

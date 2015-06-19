@@ -1,16 +1,19 @@
-package tk.trentoleaf.cineweb.model;
+package tk.trentoleaf.cineweb.beans.model;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import tk.trentoleaf.cineweb.annotations.hibernate.SafeString;
-import tk.trentoleaf.cineweb.entities.Registration;
+import tk.trentoleaf.cineweb.beans.rest.Registration;
 import tk.trentoleaf.cineweb.utils.Utils;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * User bean: represent a User.
+ */
 public class User implements Serializable {
 
     private int uid;
@@ -36,9 +39,22 @@ public class User implements Serializable {
 
     public static User FIRST_ADMIN = new User(true, Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin");
 
+    /**
+     * Construct an empty user.
+     */
     public User() {
     }
 
+    /**
+     * Construct a user.
+     *
+     * @param enabled    True if this user is enabled.
+     * @param role       User Role: can be CLIENT or ADMIN.
+     * @param email      User email.
+     * @param password   User password.
+     * @param firstName  User first name.
+     * @param secondName User second name.
+     */
     public User(boolean enabled, Role role, String email, String password, String firstName, String secondName) {
         this.enabled = enabled;
         this.role = role;
@@ -48,8 +64,14 @@ public class User implements Serializable {
         this.secondName = secondName;
     }
 
+    /**
+     * Construct a new user from a registration object.
+     *
+     * @param registration The object representing the user registration.
+     */
     public User(Registration registration) {
-        this(false, Role.CLIENT, registration.getEmail(), registration.getPassword(), registration.getFirstName(), registration.getSecondName());
+        this(false, Role.CLIENT, registration.getEmail(), registration.getPassword(),
+                registration.getFirstName(), registration.getSecondName());
     }
 
     public boolean isEnabled() {
@@ -121,8 +143,6 @@ public class User implements Serializable {
     }
 
     public boolean isValid() {
-//        return role != null && StringUtils.isNotEmpty(email) && StringUtils.isNotEmpty(firstName)
-//                && StringUtils.isNotEmpty(secondName) && credit >= 0;
         return Utils.isValid(this);
     }
 
@@ -155,17 +175,4 @@ public class User implements Serializable {
         return !(secondName != null ? !secondName.equals(user.secondName) : user.secondName != null);
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "uid=" + uid +
-                ", enabled=" + enabled +
-                ", role=" + role +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", credit=" + credit +
-                '}';
-    }
 }

@@ -2,7 +2,7 @@ package tk.trentoleaf.cineweb.rest;
 
 import org.junit.Test;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.model.Film;
+import tk.trentoleaf.cineweb.beans.model.Film;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;

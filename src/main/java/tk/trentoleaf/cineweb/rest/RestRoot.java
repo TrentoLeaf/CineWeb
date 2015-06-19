@@ -6,9 +6,9 @@ import tk.trentoleaf.cineweb.db.PlaysDB;
 import tk.trentoleaf.cineweb.db.RoomsDB;
 import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
 import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;
-import tk.trentoleaf.cineweb.model.Film;
-import tk.trentoleaf.cineweb.model.Play;
-import tk.trentoleaf.cineweb.model.Room;
+import tk.trentoleaf.cineweb.beans.model.Film;
+import tk.trentoleaf.cineweb.beans.model.Play;
+import tk.trentoleaf.cineweb.beans.model.Room;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

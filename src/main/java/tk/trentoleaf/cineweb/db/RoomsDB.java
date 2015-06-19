@@ -2,10 +2,10 @@ package tk.trentoleaf.cineweb.db;
 
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.db.WrongCodeException;
-import tk.trentoleaf.cineweb.model.Play;
-import tk.trentoleaf.cineweb.model.Room;
-import tk.trentoleaf.cineweb.model.Seat;
-import tk.trentoleaf.cineweb.model.SeatReserved;
+import tk.trentoleaf.cineweb.beans.model.Play;
+import tk.trentoleaf.cineweb.beans.model.Room;
+import tk.trentoleaf.cineweb.beans.model.Seat;
+import tk.trentoleaf.cineweb.beans.model.SeatReserved;
 
 import java.sql.*;
 import java.util.ArrayList;

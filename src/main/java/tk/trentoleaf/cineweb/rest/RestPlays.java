@@ -9,7 +9,7 @@ import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.rest.BadRequestException;
 import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
-import tk.trentoleaf.cineweb.model.Play;
+import tk.trentoleaf.cineweb.beans.model.Play;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

@@ -1,6 +1,6 @@
 package tk.trentoleaf.cineweb.filters.rest;
 
-import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.beans.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

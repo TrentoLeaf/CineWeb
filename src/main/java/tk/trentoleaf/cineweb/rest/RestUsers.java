@@ -4,15 +4,15 @@ import com.sendgrid.SendGridException;
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
 import tk.trentoleaf.cineweb.annotations.rest.Compress;
 import tk.trentoleaf.cineweb.annotations.rest.UserArea;
+import tk.trentoleaf.cineweb.beans.rest.*;
 import tk.trentoleaf.cineweb.db.UsersDB;
 import tk.trentoleaf.cineweb.email.EmailSender;
-import tk.trentoleaf.cineweb.entities.*;
 import tk.trentoleaf.cineweb.exceptions.db.*;
 import tk.trentoleaf.cineweb.exceptions.rest.AuthFailedException;
 import tk.trentoleaf.cineweb.exceptions.rest.BadRequestException;
 import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
-import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.beans.model.User;
 import tk.trentoleaf.cineweb.utils.CSRFUtils;
 import tk.trentoleaf.cineweb.utils.Utils;
 

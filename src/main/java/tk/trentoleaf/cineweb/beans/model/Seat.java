@@ -1,7 +1,6 @@
-package tk.trentoleaf.cineweb.model;
+package tk.trentoleaf.cineweb.beans.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Seat implements Serializable, Comparable {
 

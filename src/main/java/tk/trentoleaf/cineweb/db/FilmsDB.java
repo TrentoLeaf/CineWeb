@@ -1,7 +1,7 @@
 package tk.trentoleaf.cineweb.db;
 
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.model.Film;
+import tk.trentoleaf.cineweb.beans.model.Film;
 
 import java.sql.*;
 import java.util.ArrayList;

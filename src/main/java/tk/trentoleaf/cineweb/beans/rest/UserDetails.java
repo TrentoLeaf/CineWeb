@@ -1,6 +1,6 @@
-package tk.trentoleaf.cineweb.entities;
+package tk.trentoleaf.cineweb.beans.rest;
 
-import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.beans.model.User;
 
 import java.io.Serializable;
 

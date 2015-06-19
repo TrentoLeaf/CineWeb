@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb.model;
+package tk.trentoleaf.cineweb.beans.model;
 
 import org.apache.commons.collections4.CollectionUtils;
 

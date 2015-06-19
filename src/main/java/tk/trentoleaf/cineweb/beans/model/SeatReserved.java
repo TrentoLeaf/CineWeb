@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb.model;
+package tk.trentoleaf.cineweb.beans.model;
 
 
 public class SeatReserved extends Seat

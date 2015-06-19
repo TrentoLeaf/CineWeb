@@ -1,6 +1,6 @@
 package tk.trentoleaf.cineweb.handlers;
 
-import tk.trentoleaf.cineweb.entities.ErrorResponse;
+import tk.trentoleaf.cineweb.beans.rest.ErrorResponse;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
 
 import javax.ws.rs.core.MediaType;

@@ -2,7 +2,7 @@ package tk.trentoleaf.cineweb.db;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.postgresql.util.PSQLException;
-import tk.trentoleaf.cineweb.model.Role;
+import tk.trentoleaf.cineweb.beans.model.Role;
 
 import java.net.URI;
 import java.net.URISyntaxException;
