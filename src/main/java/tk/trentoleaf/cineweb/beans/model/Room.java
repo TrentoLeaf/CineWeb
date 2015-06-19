@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Room bean: represent a cinema room.
+ */
 public class Room implements Serializable {
 
     private int rid;
@@ -14,9 +17,19 @@ public class Room implements Serializable {
 
     private transient List<Seat> seats;
 
+    /**
+     * Construct an empty room.
+     */
     public Room() {
     }
 
+    /**
+     * Construct a new Room.
+     *
+     * @param rid     Room ID.
+     * @param rows    Number of rows.
+     * @param columns Number of columns.
+     */
     public Room(int rid, int rows, int columns) {
         this.rid = rid;
         this.rows = rows;
@@ -24,6 +37,14 @@ public class Room implements Serializable {
         this.seats = new ArrayList<>();
     }
 
+    /**
+     * Construct a new Room.
+     *
+     * @param rid     Room ID.
+     * @param rows    Number of rows.
+     * @param columns Number of columns.
+     * @param seats   Seats of the room.
+     */
     public Room(int rid, int rows, int columns, List<Seat> seats) {
         this.rid = rid;
         this.rows = rows;
@@ -83,15 +104,5 @@ public class Room implements Serializable {
         if (rows != room.rows) return false;
         if (columns != room.columns) return false;
         return CollectionUtils.isEqualCollection(this.seats, room.seats);
-    }
-
-    @Override
-    public String toString() {
-        return "Room{" +
-                "rid=" + rid +
-                ", rows=" + rows +
-                ", columns=" + columns +
-                ", seats=" + seats +
-                '}';
     }
 }

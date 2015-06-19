@@ -2,18 +2,34 @@ package tk.trentoleaf.cineweb.beans.model;
 
 import java.io.Serializable;
 
+/**
+ * Seat bean: represent a Seat in a cinema Room.
+ */
 public class Seat implements Serializable, Comparable {
 
     private int rid;
     private int x;
     private int y;
 
+    /**
+     * Construct a new Seat.
+     *
+     * @param x Number of row.
+     * @param y Number of column.
+     */
     public Seat(int x, int y) {
         this.rid = -1;
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * Construct a new Seat.
+     *
+     * @param rid Room ID.
+     * @param x   Number of row.
+     * @param y   Number of column.
+     */
     public Seat(int rid, int x, int y) {
         this.rid = rid;
         this.x = x;
@@ -64,8 +80,7 @@ public class Seat implements Serializable, Comparable {
         }
 
         // compare col (y)
-        int yDiff = this.y - o.y;
-        return yDiff;
+        return this.y - o.y;
     }
 
     @Override
@@ -78,7 +93,6 @@ public class Seat implements Serializable, Comparable {
         if (rid != seat.rid) return false;
         if (x != seat.x) return false;
         return y == seat.y;
-
     }
 
     @Override
@@ -87,14 +101,5 @@ public class Seat implements Serializable, Comparable {
         result = 31 * result + x;
         result = 31 * result + y;
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Seat{" +
-                "rid=" + rid +
-                ", x=" + x +
-                ", y=" + y +
-                '}';
     }
 }
