@@ -2,6 +2,7 @@ package tk.trentoleaf.cineweb.rest;
 
 import com.sendgrid.SendGridException;
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
+import tk.trentoleaf.cineweb.annotations.rest.Compress;
 import tk.trentoleaf.cineweb.annotations.rest.UserArea;
 import tk.trentoleaf.cineweb.db.UsersDB;
 import tk.trentoleaf.cineweb.email.EmailSender;
@@ -223,6 +224,7 @@ public class RestUsers {
 
     @GET
     @AdminArea
+    @Compress
     public List<User> getUsers() throws SQLException {
         return usersDB.getUsers();
     }

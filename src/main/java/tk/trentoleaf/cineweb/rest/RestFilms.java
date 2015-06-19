@@ -1,6 +1,7 @@
 package tk.trentoleaf.cineweb.rest;
 
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
+import tk.trentoleaf.cineweb.annotations.rest.Compress;
 import tk.trentoleaf.cineweb.db.FilmsDB;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
@@ -20,6 +21,7 @@ public class RestFilms {
     private FilmsDB filmsDB = FilmsDB.instance();
 
     @GET
+    @Compress
     public List<Film> getFilms() throws SQLException {
         return filmsDB.getFilms();
     }
@@ -57,13 +59,12 @@ public class RestFilms {
         } catch (EntryNotFoundException e) {
             throw NotFoundException.FILM_NOT_FOUND;
         }
-
     }
 
     @DELETE
     @Path("/{id}")
     @AdminArea
-    public Response deleteUser(@PathParam("id") int id) throws SQLException {
+    public Response deleteFilm(@PathParam("id") int id) throws SQLException {
 
         // delete film
         try {
@@ -72,7 +73,6 @@ public class RestFilms {
         } catch (EntryNotFoundException e) {
             throw NotFoundException.FILM_NOT_FOUND;
         }
-
     }
 
 }

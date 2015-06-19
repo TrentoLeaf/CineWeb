@@ -1,6 +1,7 @@
 package tk.trentoleaf.cineweb.rest;
 
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
+import tk.trentoleaf.cineweb.annotations.rest.Compress;
 import tk.trentoleaf.cineweb.db.PlaysDB;
 import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
 import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;
@@ -24,6 +25,7 @@ public class RestPlays {
     private PlaysDB playsDB = PlaysDB.instance();
 
     @GET
+    @Compress
     public List<Play> getPlays() throws SQLException {
         return playsDB.getPlays();
     }
