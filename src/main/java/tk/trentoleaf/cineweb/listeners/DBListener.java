@@ -1,6 +1,7 @@
 package tk.trentoleaf.cineweb.listeners;
 
 import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.db.PricesDB;
 import tk.trentoleaf.cineweb.db.UsersDB;
 
 import javax.servlet.ServletContextEvent;
@@ -30,6 +31,9 @@ public class DBListener implements ServletContextListener {
 
             // create the first admin user if not exists
             UsersDB.instance().createAdminUser();
+
+            // load default prices
+            PricesDB.instance().loadDefaultPrices();
 
         } catch (RuntimeException | SQLException | URISyntaxException e) {
             logger.severe("Cannot open the connection to the database -> " + e.toString());

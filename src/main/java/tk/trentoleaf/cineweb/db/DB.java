@@ -109,12 +109,14 @@ public class DB {
         createTableFilms();
         createTablePlays();
         createTableBookings();
+        createTablePrices();
     }
 
     // destroy the TodoDB -> useful for Unit tests
     public void reset() throws SQLException {
 
         // drop tables
+        dropTablePrices();
         dropTableBookings();
         dropTablePlays();
         dropTableFilms();
@@ -131,6 +133,7 @@ public class DB {
         // unload module crypto
         removeCrypto();
     }
+
 
     // make sure the extension crypto is loaded
     // used to secure store passwords
@@ -299,6 +302,15 @@ public class DB {
         }
     }
 
+    // create table prices
+    private void createTablePrices() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            stm.execute("CREATE TABLE IF NOT EXISTS prices (" +
+                    "type CITEXT PRIMARY KEY," +
+                    "price DOUBLE PRECISION NOT NULL);");
+        }
+    }
+
     // drop table roles
     private void dropTableRoles() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
@@ -359,6 +371,13 @@ public class DB {
     private void dropTableBookings() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("DROP TABLE IF EXISTS bookings;");
+        }
+    }
+
+    // drop table prices
+    private void dropTablePrices() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            stm.execute("DROP TABLE IF EXISTS prices;");
         }
     }
 
