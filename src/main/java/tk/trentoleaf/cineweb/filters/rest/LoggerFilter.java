@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb.filters;
+package tk.trentoleaf.cineweb.filters.rest;
 
 import tk.trentoleaf.cineweb.model.User;
 
@@ -10,9 +10,11 @@ import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
-import java.util.Date;
 import java.util.logging.Logger;
 
+/**
+ * This filter logs every request to the REST APIs.
+ */
 @Provider
 @PreMatching
 public class LoggerFilter implements ContainerRequestFilter {
@@ -30,6 +32,7 @@ public class LoggerFilter implements ContainerRequestFilter {
         final Integer uid = (user != null) ? user.getUid() : null;
 
         // log the request
-        logger.info("REQUEST at " + new Date() + " [uid = " + uid + "]: " + requestContext.getMethod() + " " + requestContext.getUriInfo().getRequestUri());
+        logger.info("REQUEST (uid = " + uid + "): " + requestContext.getMethod() + " " +
+                requestContext.getUriInfo().getRequestUri());
     }
 }

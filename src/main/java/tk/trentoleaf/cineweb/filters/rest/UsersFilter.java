@@ -1,4 +1,4 @@
-package tk.trentoleaf.cineweb.filters;
+package tk.trentoleaf.cineweb.filters.rest;
 
 import tk.trentoleaf.cineweb.annotations.rest.UserArea;
 import tk.trentoleaf.cineweb.db.UsersDB;
@@ -13,9 +13,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.logging.Logger;
 
+/**
+ * This class implements the permission check for the reserved User area. All the user-area rest methods
+ * must be annotated with the @UserArea annotation.
+ *
+ * @see tk.trentoleaf.cineweb.annotations.rest.UserArea
+ */
 @UserArea
 @Provider
 public class UsersFilter implements ContainerRequestFilter {
@@ -46,7 +51,8 @@ public class UsersFilter implements ContainerRequestFilter {
         if (role != Role.CLIENT && role != Role.ADMIN) {
 
             // log
-            logger.info("REJECTED - REQUEST at " + new Date() + ": " + requestContext.getMethod() + " " + requestContext.getUriInfo().getRequestUri());
+            logger.warning("REJECTED [USER] - REQUEST (uid = " + uid + "): " +
+                    requestContext.getMethod() + " " + requestContext.getUriInfo().getRequestUri());
 
             // return HTTP 401
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());

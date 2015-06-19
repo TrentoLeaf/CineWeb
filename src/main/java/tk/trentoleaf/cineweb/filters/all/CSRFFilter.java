@@ -1,6 +1,7 @@
-package tk.trentoleaf.cineweb.filters;
+package tk.trentoleaf.cineweb.filters.all;
 
 import tk.trentoleaf.cineweb.utils.CSRFUtils;
+import tk.trentoleaf.cineweb.utils.Utils;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -13,6 +14,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
+/**
+ * This filter implements a protection layer against CSRF attacks. A CSRF token is added to HTTP GET responses (as a
+ * cookie, when the session is created). On POST, PUT, DELETE requests, the same token is expected in a custom HTTP
+ * header and is validated against the HTTP Session.
+ *
+ * @see <a href="http://seclab.stanford.edu/websec/csrf/csrf.pdf">Robust Defenses for Cross-Site Request Forgery</a>
+ */
 @WebFilter(urlPatterns = "/*")
 public class CSRFFilter implements Filter {
     private Logger logger = Logger.getLogger(CSRFFilter.class.getSimpleName());
@@ -32,21 +40,29 @@ public class CSRFFilter implements Filter {
     }
 
     @Override
-    public void destroy() {
-    }
-
-    @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
         // get request, response
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        // get session and associated uid
         final HttpSession session = request.getSession();
+        final Integer uid = (session != null) ? (Integer) session.getAttribute(Utils.UID) : null;
 
         // get method
         final String method = request.getMethod();
 
-        // check method
+        // TODO: on post, put, delete -> change csrf value...
+
+        // if GET, add the CSRF token
+        if (method.equals("GET")) {
+
+            // add CSRF token
+            CSRFUtils.addCSRFToken(request, response);
+        }
+
+        // if POST, PUT, DELETE -> validate the CSRF token
         if (!methodsWhiteList.contains(method)) {
 
             // get cookies
@@ -65,22 +81,28 @@ public class CSRFFilter implements Filter {
             final String csrfHeader = request.getHeader(CSRFUtils.HEADER);
 
             // expected value
-            final String expected = (String) session.getAttribute(CSRFUtils.SESSION);
+            final String expected = (session != null) ? (String) session.getAttribute(CSRFUtils.SESSION) : null;
 
             // check CSRF
-            if (csrfCookie == null || csrfHeader == null || expected == null || !csrfCookie.equals(csrfHeader) || !csrfHeader.equals(expected)) {
+            if (csrfCookie == null || csrfHeader == null || expected == null ||
+                    !csrfCookie.equals(csrfHeader) || !csrfHeader.equals(expected)) {
 
                 // abort
-                logger.info("[CSRF REJECT] {cookie: " + csrfCookie + ", header: " + csrfHeader + ", expected: " + expected + "}: " + request.getRequestURI());
+                logger.info("[CSRF REJECT] (uid = " + uid + ") {cookie: " + csrfCookie + ", header: " + csrfHeader +
+                        ", expected: " + expected + "}: " + request.getRequestURI());
 
                 // TODO: enable
-                // response.reset();
-                // response.setStatus(401);
-                // return;
+//                response.reset();
+//                response.setStatus(401);
+//                return;
             }
         }
 
         // process request
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    @Override
+    public void destroy() {
     }
 }
