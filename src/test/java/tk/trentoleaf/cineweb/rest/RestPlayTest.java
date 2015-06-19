@@ -24,10 +24,10 @@ public class RestPlayTest extends MyJerseyTest {
 
         // create a play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
 
         // no need to login
 
@@ -50,10 +50,10 @@ public class RestPlayTest extends MyJerseyTest {
 
         // create a play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
 
         // list of films
         final List<Play> plays = new ArrayList<>();
@@ -74,8 +74,8 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
 
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
@@ -100,8 +100,8 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
 
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
@@ -118,8 +118,8 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
 
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
@@ -137,8 +137,8 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        roomsDB.createRoom(3, 4);
 
         // play to create
         final Play p1 = new Play(f1.getFid(), 0, DateTime.now(), true);
@@ -156,12 +156,12 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
 
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
         final Play p2 = new Play(f1, room, DateTime.now().plusMinutes(40), true);
 
         // create film
@@ -174,10 +174,10 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room and play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
 
         // login as admin
         final Cookie c = loginAdmin();
@@ -187,7 +187,7 @@ public class RestPlayTest extends MyJerseyTest {
         assertEquals(200, r1.getStatus());
 
         // should throw an exception
-        db.getPlay(p1.getPid());
+        playsDB.getPlay(p1.getPid());
     }
 
     @Test
@@ -206,10 +206,10 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room and play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
 
         // login as client
         final Cookie c = loginClient();
@@ -224,10 +224,10 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room and play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
 
         // no login
 

@@ -20,7 +20,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // create a user
         final User u = new User(true, Role.CLIENT, "email@email.com", "pass", "name", "name");
-        db.createUser(u);
+        usersDB.createUser(u);
 
         // search the user
         final Response r1 = getTarget().path("/users/" + u.getUid()).request(JSON).cookie(c).get();
@@ -33,7 +33,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // create a user
         final User u = new User(true, Role.CLIENT, "email@email.com", "pass", "name", "name");
-        db.createUser(u);
+        usersDB.createUser(u);
 
         // no admin
         final Response r1 = getTarget().path("/users/" + u.getUid()).request(JSON).get();
@@ -94,7 +94,7 @@ public class RestUsersTest extends MyJerseyTest {
         final User expected = response.readEntity(User.class);
 
         // current
-        final User current = db.getUser(expected.getUid());
+        final User current = usersDB.getUser(expected.getUid());
 
         // test
         assertEquals(expected, current);
@@ -149,7 +149,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // user to update
         final User u1 = new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni");
-        db.createUser(u1);
+        usersDB.createUser(u1);
 
         // try update
         final Response r1 = getTarget().path("/users/" + u1.getUid()).request(JSON)
@@ -157,7 +157,7 @@ public class RestUsersTest extends MyJerseyTest {
         assertEquals(200, r1.getStatus());
 
         // check
-        final User current = db.getUser("a@a.com");
+        final User current = usersDB.getUser("a@a.com");
         final User expected = new User(true, Role.CLIENT, "a@a.com", null, "Matteo", "Zeni");
         expected.setUid(current.getUid());
         assertEquals(expected, current);
@@ -171,7 +171,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // user to update
         final User u1 = new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni");
-        db.createUser(u1);
+        usersDB.createUser(u1);
 
         // try update
         final Response r1 = getTarget().path("/users/" + u1.getUid()).request(JSON)
@@ -184,7 +184,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // user to update
         final User u1 = new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni");
-        db.createUser(u1);
+        usersDB.createUser(u1);
 
         // try update (FAIL - no session)
         final Response r1 = getTarget().path("/users/" + u1.getUid()).request(JSON)
@@ -221,7 +221,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // user to edit
         final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
-        db.createUser(u1);
+        usersDB.createUser(u1);
 
         // bad request
         final Response r1 = getTarget().path("/users/" + u1.getUid()).request(JSON)
@@ -237,8 +237,8 @@ public class RestUsersTest extends MyJerseyTest {
 
         final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
         final User u2 = new User(true, Role.ADMIN, "aaaaa@aaa.com", "safdsd", "sdfsdf", "sdfsdfsdf");
-        db.createUser(u1);
-        db.createUser(u2);
+        usersDB.createUser(u1);
+        usersDB.createUser(u2);
 
         // conflict on update
         final Response r1 = getTarget().path("/users/" + u1.getUid()).request(JSON)
@@ -254,7 +254,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // create a user
         final User u = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
-        db.createUser(u);
+        usersDB.createUser(u);
 
         // try delete
         final Response response = getTarget().path("/users/" + u.getUid()).request(JSON).cookie(c).delete();
@@ -269,7 +269,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // create a user
         final User u = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
-        db.createUser(u);
+        usersDB.createUser(u);
 
         // try delete
         final Response response = getTarget().path("/users/" + u.getUid()).request(JSON).cookie(c).delete();
@@ -281,7 +281,7 @@ public class RestUsersTest extends MyJerseyTest {
 
         // create a user
         final User u = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni");
-        db.createUser(u);
+        usersDB.createUser(u);
 
         // try delete (no session)
         final Response response = getTarget().path("/users/" + u.getUid()).request(JSON).delete();

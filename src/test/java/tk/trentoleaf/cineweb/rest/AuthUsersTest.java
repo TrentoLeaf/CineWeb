@@ -31,7 +31,7 @@ public class AuthUsersTest extends MyJerseyTest {
         final String password = "password";
 
         // create a user
-        db.createUser(new User(true, Role.CLIENT, email, password, "Matteo", "Zeni"));
+        usersDB.createUser(new User(true, Role.CLIENT, email, password, "Matteo", "Zeni"));
 
         // login 1
         final Cookie c1 = login(email, password);
@@ -102,7 +102,7 @@ public class AuthUsersTest extends MyJerseyTest {
     public void testChangePasswordFail0() throws Exception {
 
         // create a user
-        db.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+        usersDB.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
 
         // change password -> FAIL (must be logged)
         final Response response = getTarget().path("/users/change-password").request(JSON)
@@ -181,7 +181,7 @@ public class AuthUsersTest extends MyJerseyTest {
                 .post(Entity.json(new Registration("email@trentoleaf.tk", "password", "name", "surname")));
         assertEquals(200, response.getStatus());
 
-        final User current = db.getUser("email@trentoleaf.tk");
+        final User current = usersDB.getUser("email@trentoleaf.tk");
         final User expected = new User(false, Role.CLIENT, "email@trentoleaf.tk", "password", "name", "surname");
         expected.setUid(current.getUid());
 
@@ -230,7 +230,7 @@ public class AuthUsersTest extends MyJerseyTest {
         assertEquals(200, r1.getStatus());
 
         // get registration code
-        final String code = db.getConfirmationCode("email@trentoleaf.tk");
+        final String code = usersDB.getConfirmationCode("email@trentoleaf.tk");
 
         // confirm user
         final Response r2 = getTarget().path("/users/confirm").request(JSON)
@@ -264,7 +264,7 @@ public class AuthUsersTest extends MyJerseyTest {
     public void forgotPasswordSuccess() throws Exception {
 
         // create a user
-        db.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+        usersDB.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
 
         // forgot password request
         final Response r1 = getTarget().path("/users/forgot-password").request(JSON)
@@ -276,7 +276,7 @@ public class AuthUsersTest extends MyJerseyTest {
     public void forgotPasswordFail1() throws Exception {
 
         // create a user
-        db.createUser(new User(false, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+        usersDB.createUser(new User(false, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
 
         // forgot password request
         final Response r1 = getTarget().path("/users/forgot-password").request(JSON)
@@ -288,7 +288,7 @@ public class AuthUsersTest extends MyJerseyTest {
     public void forgotPasswordFail2() throws Exception {
 
         // create a user
-        db.createUser(new User(false, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+        usersDB.createUser(new User(false, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
 
         // forgot password request
         final Response r1 = getTarget().path("/users/forgot-password").request(JSON)
@@ -300,7 +300,7 @@ public class AuthUsersTest extends MyJerseyTest {
     public void forgotPasswordFail3() throws Exception {
 
         // create a user
-        db.createUser(new User(false, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+        usersDB.createUser(new User(false, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
 
         // forgot password request
         final Response r1 = getTarget().path("/users/forgot-password").request(JSON)
@@ -312,7 +312,7 @@ public class AuthUsersTest extends MyJerseyTest {
     public void changePasswordRecoverSuccess() throws Exception {
 
         // create a user
-        db.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+        usersDB.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
 
         // forgot password request
         final Response r1 = getTarget().path("/users/forgot-password").request(JSON)
@@ -321,11 +321,11 @@ public class AuthUsersTest extends MyJerseyTest {
 
         // test recover password
         final Response r2 = getTarget().path("/users/change-password-code").request(JSON)
-                .post(Entity.json(new ChangePasswordWithCode("teo@teo.com", db.getResetPasswordCode("teo@teo.com"), "aaa")));
+                .post(Entity.json(new ChangePasswordWithCode("teo@teo.com", usersDB.getResetPasswordCode("teo@teo.com"), "aaa")));
         assertEquals(200, r2.getStatus());
 
         // login
-        assertTrue(db.authenticate("teo@teo.com", "aaa"));
+        assertTrue(usersDB.authenticate("teo@teo.com", "aaa"));
     }
 
     @Test
@@ -341,7 +341,7 @@ public class AuthUsersTest extends MyJerseyTest {
     public void changePasswordRecoverFail2() throws Exception {
 
         // create a user
-        db.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
+        usersDB.createUser(new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni"));
 
         // forgot password request
         final Response r1 = getTarget().path("/users/forgot-password").request(JSON)
@@ -350,7 +350,7 @@ public class AuthUsersTest extends MyJerseyTest {
 
         // test recover password
         final Response r2 = getTarget().path("/users/change-password-code").request(JSON)
-                .post(Entity.json(new ChangePasswordWithCode("aaa@teo.com", db.getResetPasswordCode("teo@teo.com"), "aaa")));
+                .post(Entity.json(new ChangePasswordWithCode("aaa@teo.com", usersDB.getResetPasswordCode("teo@teo.com"), "aaa")));
         assertEquals(404, r2.getStatus());
     }
 
@@ -359,7 +359,7 @@ public class AuthUsersTest extends MyJerseyTest {
 
         // create a user
         final User user = new User(true, Role.CLIENT, "teo@teo.com", "teo", "Matteo", "Zeni");
-        db.createUser(user);
+        usersDB.createUser(user);
 
         // login
         final Cookie c = login(user.getEmail(), user.getPassword());
@@ -392,7 +392,7 @@ public class AuthUsersTest extends MyJerseyTest {
 
         // create 1 admin
         final User u1 = new User(true, Role.ADMIN, email, password, "Test", "User");
-        db.createUser(u1);
+        usersDB.createUser(u1);
 
         // login as the new user
         final Cookie cookieU1 = login(email, password);
@@ -404,7 +404,7 @@ public class AuthUsersTest extends MyJerseyTest {
 
         // disable user
         u1.setEnabled(false);
-        db.updateUser(u1);
+        usersDB.updateUser(u1);
 
         // try to add user -> should fail
         final Response r1 = getTarget().path("/users/").request(JSON).cookie(cookieU1)
@@ -413,11 +413,11 @@ public class AuthUsersTest extends MyJerseyTest {
 
         // enable user
         u1.setEnabled(true);
-        db.updateUser(u1);
+        usersDB.updateUser(u1);
 
         // change u1 permissions
         u1.setRole(Role.CLIENT);
-        db.updateUser(u1);
+        usersDB.updateUser(u1);
 
         // try to add another user -> should now fail!
         final Response r2 = getTarget().path("/users/").request(JSON).cookie(cookieU1)
@@ -430,7 +430,7 @@ public class AuthUsersTest extends MyJerseyTest {
 
         // disable user
         u1.setEnabled(false);
-        db.updateUser(u1);
+        usersDB.updateUser(u1);
 
         // try to see the me area -> should fail
         final Response r4 = getTarget().path("/users/me").request(JSON).cookie(cookieU1).get();

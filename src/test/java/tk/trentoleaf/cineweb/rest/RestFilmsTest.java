@@ -20,7 +20,7 @@ public class RestFilmsTest extends MyJerseyTest {
 
         // create a film
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
+        filmsDB.createFilm(f1);
 
         // no need to login
 
@@ -43,7 +43,7 @@ public class RestFilmsTest extends MyJerseyTest {
 
         // create a film
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
+        filmsDB.createFilm(f1);
 
         // list of films
         final List<Film> films = new ArrayList<>();
@@ -57,7 +57,7 @@ public class RestFilmsTest extends MyJerseyTest {
 
         // create film 2
         final Film f2 = new Film("sdofijoisdf", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f2);
+        filmsDB.createFilm(f2);
         films.add(f2);
 
         // get films
@@ -145,9 +145,9 @@ public class RestFilmsTest extends MyJerseyTest {
     @Test
     public void editFilmSuccess() throws Exception {
 
-        // create film in db
+        // create film in filmsDB
         final Film f1 = new Film("sdofijoisdf", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
+        filmsDB.createFilm(f1);
         final Film f2 = new Film("Davide amicone", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
 
         // login as admin
@@ -158,7 +158,7 @@ public class RestFilmsTest extends MyJerseyTest {
         assertEquals(200, r1.getStatus());
 
         f2.setFid(f1.getFid());
-        assertEquals(db.getFilm(f1.getFid()), f2);
+        assertEquals(filmsDB.getFilm(f1.getFid()), f2);
     }
 
     @Test
@@ -191,9 +191,9 @@ public class RestFilmsTest extends MyJerseyTest {
     @Test
     public void editFilmFail3() throws Exception {
 
-        // create film in db
+        // create film in filmsDB
         final Film f1 = new Film("sdofijoisdf", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
+        filmsDB.createFilm(f1);
         final Film f2 = new Film("Davide amicone", "sfdsf", "not an url", "http://aaaa.org", "trama moltooo lunga", 120);
 
         // login as admin
@@ -207,9 +207,9 @@ public class RestFilmsTest extends MyJerseyTest {
     @Test(expected = EntryNotFoundException.class)
     public void deleteFilmSuccess() throws Exception {
 
-        // create film to delete in db
+        // create film to delete in filmsDB
         final Film f1 = new Film("sdofijoisdf", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
+        filmsDB.createFilm(f1);
 
         // login as admin
         final Cookie c = loginAdmin();
@@ -219,7 +219,7 @@ public class RestFilmsTest extends MyJerseyTest {
         assertEquals(200, r1.getStatus());
 
         // should throw an exception
-        db.getFilm(f1.getFid());
+        filmsDB.getFilm(f1.getFid());
     }
 
     @Test
@@ -236,9 +236,9 @@ public class RestFilmsTest extends MyJerseyTest {
     @Test
     public void deleteFilmFail2() throws Exception {
 
-        // create film to delete in db
+        // create film to delete in filmsDB
         final Film f1 = new Film("sdofijoisdf", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
+        filmsDB.createFilm(f1);
 
         // login as client
         final Cookie c = loginClient();
@@ -251,9 +251,9 @@ public class RestFilmsTest extends MyJerseyTest {
     @Test
     public void deleteFilmFail3() throws Exception {
 
-        // create film to delete in db
+        // create film to delete in filmsDB
         final Film f1 = new Film("sdofijoisdf", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
+        filmsDB.createFilm(f1);
 
         // no login
 

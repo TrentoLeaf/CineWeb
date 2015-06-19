@@ -11,7 +11,7 @@ import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.After;
 import org.junit.Before;
-import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.db.*;
 import tk.trentoleaf.cineweb.entities.Auth;
 import tk.trentoleaf.cineweb.handlers.BadRequestHandler;
 import tk.trentoleaf.cineweb.handlers.ConflictHandler;
@@ -39,7 +39,12 @@ public class MyJerseyTest extends JerseyTest {
 
     protected static final String JSON = MediaType.APPLICATION_JSON;
     protected static final String COOKIE_NAME = "JSESSIONID";
+
     protected final DB db = DB.instance();
+    protected final UsersDB usersDB = UsersDB.instance();
+    protected final RoomsDB roomsDB = RoomsDB.instance();
+    protected final FilmsDB filmsDB = FilmsDB.instance();
+    protected final PlaysDB playsDB = PlaysDB.instance();
 
     @Before
     public void before() throws Exception {
@@ -127,7 +132,7 @@ public class MyJerseyTest extends JerseyTest {
     protected final Cookie loginClient(String email, String password) throws Exception {
 
         // create a user
-        db.createUser(new User(true, Role.CLIENT, email, password, "Normal", "User"));
+        usersDB.createUser(new User(true, Role.CLIENT, email, password, "Normal", "User"));
 
         // login
         return login(email, password);
@@ -147,7 +152,7 @@ public class MyJerseyTest extends JerseyTest {
     protected final Cookie loginAdmin(String email, String password) throws Exception {
 
         // create a user
-        db.createUser(new User(true, Role.ADMIN, email, password, "Normal", "User"));
+        usersDB.createUser(new User(true, Role.ADMIN, email, password, "Normal", "User"));
 
         // login
         return login(email, password);

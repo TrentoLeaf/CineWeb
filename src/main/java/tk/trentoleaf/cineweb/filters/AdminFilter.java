@@ -1,7 +1,7 @@
 package tk.trentoleaf.cineweb.filters;
 
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
-import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.db.UsersDB;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.utils.Utils;
 
@@ -22,7 +22,7 @@ public class AdminFilter implements ContainerRequestFilter {
     private Logger logger = Logger.getLogger(AdminFilter.class.getSimpleName());
 
     // database
-    private DB db = DB.instance();
+    private UsersDB usersDB = UsersDB.instance();
 
     @Context
     private HttpServletRequest httpRequest;
@@ -37,7 +37,7 @@ public class AdminFilter implements ContainerRequestFilter {
         // check the role
         Role role = null;
         try {
-            role = (uid != null) ? db.getUserRoleIfEnabled(uid) : null;
+            role = (uid != null) ? usersDB.getUserRoleIfEnabled(uid) : null;
         } catch (SQLException e) {
             logger.severe(e.toString());
         }

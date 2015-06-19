@@ -1,7 +1,7 @@
 package tk.trentoleaf.cineweb.rest;
 
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
-import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.db.FilmsDB;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
 import tk.trentoleaf.cineweb.model.Film;
@@ -16,19 +16,19 @@ import java.util.List;
 @Path("/films")
 public class RestFilms {
 
-    // db singleton
-    private DB db = DB.instance();
+    // filmsDB singleton
+    private FilmsDB filmsDB = FilmsDB.instance();
 
     @GET
     public List<Film> getFilms() throws SQLException {
-        return db.getFilms();
+        return filmsDB.getFilms();
     }
 
     @GET
     @Path("/{id}")
     public Film getFilm(@PathParam("id") int fid) throws SQLException {
         try {
-            return db.getFilm(fid);
+            return filmsDB.getFilm(fid);
         } catch (EntryNotFoundException e) {
             throw NotFoundException.FILM_NOT_FOUND;
         }
@@ -38,8 +38,8 @@ public class RestFilms {
     @AdminArea
     public Film addFilm(@NotNull(message = "Missing film object") @Valid Film film) throws SQLException {
 
-        // add to db
-        db.createFilm(film);
+        // add to filmsDB
+        filmsDB.createFilm(film);
 
         return film;
     }
@@ -52,7 +52,7 @@ public class RestFilms {
         // update film
         try {
             film.setFid(id);
-            db.updateFilm(film);
+            filmsDB.updateFilm(film);
             return film;
         } catch (EntryNotFoundException e) {
             throw NotFoundException.FILM_NOT_FOUND;
@@ -67,7 +67,7 @@ public class RestFilms {
 
         // delete film
         try {
-            db.deleteFilm(id);
+            filmsDB.deleteFilm(id);
             return Response.ok().build();
         } catch (EntryNotFoundException e) {
             throw NotFoundException.FILM_NOT_FOUND;

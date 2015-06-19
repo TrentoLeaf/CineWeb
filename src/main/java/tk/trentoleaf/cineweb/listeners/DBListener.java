@@ -1,4 +1,7 @@
-package tk.trentoleaf.cineweb.db;
+package tk.trentoleaf.cineweb.listeners;
+
+import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.db.UsersDB;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -14,15 +17,18 @@ public class DBListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
-        try {
-            // create a DB connection
-            DB db = DB.instance();
+        // create a TodoDB connection
+        //TodoDB todoDB = TodoDB.instance();
+        final DB db = DB.instance();
 
+        try {
             // open the connection
+            // todoDB.open();
             db.open();
 
             // create first user
-            db.createAdminUser();
+            // todoDB.createAdminUser();
+            UsersDB.instance().createAdminUser();
 
         } catch (RuntimeException | SQLException | URISyntaxException e) {
             logger.severe("Cannot open the connection to the database -> " + e.toString());
@@ -36,10 +42,12 @@ public class DBListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce) {
 
         // retrieve the database
+        //final TodoDB todoDB = TodoDB.instance();
         final DB db = DB.instance();
 
         // close the connection
         try {
+            // todoDB.close();
             db.close();
         } catch (NullPointerException | SQLException e) {
             logger.severe("Cannot close the connection to the database");

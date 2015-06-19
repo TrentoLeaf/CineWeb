@@ -1,7 +1,9 @@
 package tk.trentoleaf.cineweb.rest;
 
 import org.joda.time.DateTime;
-import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.db.FilmsDB;
+import tk.trentoleaf.cineweb.db.PlaysDB;
+import tk.trentoleaf.cineweb.db.RoomsDB;
 import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
 import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;
 import tk.trentoleaf.cineweb.model.Film;
@@ -20,7 +22,9 @@ import java.sql.SQLException;
 public class RestRoot {
 
     // db singleton
-    private DB db = DB.instance();
+    private FilmsDB filmsDB = FilmsDB.instance();
+    private RoomsDB roomsDB = RoomsDB.instance();
+    private PlaysDB playsDB = PlaysDB.instance();
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -47,21 +51,21 @@ public class RestRoot {
         final Film f10 = new Film( "Titolo 8", "Genere 8", "Asdfds", "../webapp/img/temporary/img8.jpg", "Descrizione 8", 221);
         final Film f11 = new Film("Titolo 9", "Genere 9", "asdffdd", "../webapp/img/temporary/img9.jpg", "Descrizione 9", 227);
 
-        db.createFilm(f1);
-        db.createFilm(f2);
-        db.createFilm(f3);
-        db.createFilm(f4);
-        db.createFilm(f5);
-        db.createFilm(f6);
-        db.createFilm(f7);
-        db.createFilm(f8);
-        db.createFilm(f9);
-        db.createFilm(f10);
-        db.createFilm(f11);
+        filmsDB.createFilm(f1);
+        filmsDB.createFilm(f2);
+        filmsDB.createFilm(f3);
+        filmsDB.createFilm(f4);
+        filmsDB.createFilm(f5);
+        filmsDB.createFilm(f6);
+        filmsDB.createFilm(f7);
+        filmsDB.createFilm(f8);
+        filmsDB.createFilm(f9);
+        filmsDB.createFilm(f10);
+        filmsDB.createFilm(f11);
 
         // rooms
-        final Room r1 = db.createRoom(23, 12);
-        final Room r2 = db.createRoom(2, 5);
+        final Room r1 = roomsDB.createRoom(23, 12);
+        final Room r2 = roomsDB.createRoom(2, 5);
 
         // plays
         final Play p1 = new Play(f1, r2, DateTime.now(), true);
@@ -77,17 +81,17 @@ public class RestRoot {
         final Play p11 = new Play(f2, r1, DateTime.now().plusMinutes(10000), false);
 
         // insert
-        db.createPlay(p1);
-        db.createPlay(p2);
-        db.createPlay(p3);
-        db.createPlay(p4);
-        db.createPlay(p5);
-        db.createPlay(p6);
-        db.createPlay(p7);
-        db.createPlay(p8);
-        db.createPlay(p9);
-        db.createPlay(p10);
-        db.createPlay(p11);
+        playsDB.createPlay(p1);
+        playsDB.createPlay(p2);
+        playsDB.createPlay(p3);
+        playsDB.createPlay(p4);
+        playsDB.createPlay(p5);
+        playsDB.createPlay(p6);
+        playsDB.createPlay(p7);
+        playsDB.createPlay(p8);
+        playsDB.createPlay(p9);
+        playsDB.createPlay(p10);
+        playsDB.createPlay(p11);
 
         return Response.ok().build();
     }
