@@ -33,19 +33,7 @@ public class PdfTest {
         fileOuputStream.write(pdf);
         fileOuputStream.close();
 
-        System.out.println("Finished...");
-    }
-
-    // TODO: enable test
-    // @Test
-    public void sendPDF() throws Exception {
-
-        // create user
-        final User user = new User(true, Role.ADMIN, "davide.pedranz@gmail.com", "teo", "Davide", "Pedranz");
-
-        // send email
-        EmailSender sender = EmailSender.instance();
-        sender.sendTicketPDFEmail(user, new FilmTicketData());
+        System.out.println("End. PDF available at \"/tmp/cineweb.pdf\".");
     }
 
 }
