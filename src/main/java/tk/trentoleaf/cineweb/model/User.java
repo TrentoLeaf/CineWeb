@@ -3,7 +3,7 @@ package tk.trentoleaf.cineweb.model;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
-import tk.trentoleaf.cineweb.annotations.SafeString;
+import tk.trentoleaf.cineweb.annotations.hibernate.SafeString;
 import tk.trentoleaf.cineweb.entities.Registration;
 import tk.trentoleaf.cineweb.utils.Utils;
 

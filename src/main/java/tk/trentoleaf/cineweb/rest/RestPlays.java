@@ -1,6 +1,6 @@
 package tk.trentoleaf.cineweb.rest;
 
-import tk.trentoleaf.cineweb.annotations.AdminArea;
+import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
 import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
 import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;

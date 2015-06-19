@@ -1,8 +1,8 @@
 package tk.trentoleaf.cineweb.rest;
 
 import com.sendgrid.SendGridException;
-import tk.trentoleaf.cineweb.annotations.AdminArea;
-import tk.trentoleaf.cineweb.annotations.UserArea;
+import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
+import tk.trentoleaf.cineweb.annotations.rest.UserArea;
 import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.email.EmailSender;
 import tk.trentoleaf.cineweb.entities.*;

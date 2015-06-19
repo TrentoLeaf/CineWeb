@@ -1,6 +1,6 @@
 package tk.trentoleaf.cineweb.filters;
 
-import tk.trentoleaf.cineweb.annotations.AdminArea;
+import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
 import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.model.Role;
 import tk.trentoleaf.cineweb.utils.Utils;

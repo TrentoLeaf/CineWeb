@@ -2,7 +2,7 @@ package tk.trentoleaf.cineweb.filters;
 
 import tk.trentoleaf.cineweb.db.DB;
 import tk.trentoleaf.cineweb.model.Role;
-import tk.trentoleaf.cineweb.annotations.UserArea;
+import tk.trentoleaf.cineweb.annotations.rest.UserArea;
 import tk.trentoleaf.cineweb.utils.Utils;
 
 import javax.servlet.http.HttpServletRequest;
