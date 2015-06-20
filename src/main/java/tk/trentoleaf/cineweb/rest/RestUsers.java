@@ -1,17 +1,21 @@
 package tk.trentoleaf.cineweb.rest;
 
 import com.sendgrid.SendGridException;
-import tk.trentoleaf.cineweb.annotations.AdminArea;
-import tk.trentoleaf.cineweb.annotations.UserArea;
-import tk.trentoleaf.cineweb.db.DB;
+import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
+import tk.trentoleaf.cineweb.annotations.rest.Compress;
+import tk.trentoleaf.cineweb.annotations.rest.UserArea;
+import tk.trentoleaf.cineweb.beans.rest.in.*;
+import tk.trentoleaf.cineweb.beans.rest.out.ActivateUser;
+import tk.trentoleaf.cineweb.beans.rest.out.LoginOk;
+import tk.trentoleaf.cineweb.beans.rest.out.UserDetails;
+import tk.trentoleaf.cineweb.db.UsersDB;
 import tk.trentoleaf.cineweb.email.EmailSender;
-import tk.trentoleaf.cineweb.entities.*;
 import tk.trentoleaf.cineweb.exceptions.db.*;
 import tk.trentoleaf.cineweb.exceptions.rest.AuthFailedException;
 import tk.trentoleaf.cineweb.exceptions.rest.BadRequestException;
 import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
-import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.beans.model.User;
 import tk.trentoleaf.cineweb.utils.CSRFUtils;
 import tk.trentoleaf.cineweb.utils.Utils;
 
@@ -28,12 +32,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Users end point. Handles users registration, password resets, authentication. Implements CRUD operations on the users.
+ */
 @Path("/users")
 public class RestUsers {
     private Logger logger = Logger.getLogger(RestUsers.class.getSimpleName());
 
-    // db singleton
-    private DB db = DB.instance();
+    // usersDB singleton
+    private UsersDB usersDB = UsersDB.instance();
 
     // invalidate session
     private void invalidateSession() {
@@ -61,12 +68,12 @@ public class RestUsers {
     public Response login(@NotNull(message = "Missing email, password") @Valid Auth auth) throws SQLException {
 
         // try authentication
-        boolean success = db.authenticate(auth.getEmail(), auth.getPassword());
+        boolean success = usersDB.authenticate(auth.getEmail(), auth.getPassword());
 
         // login ok, get user
         if (success) {
             try {
-                final User user = db.getUser(auth.getEmail());
+                final User user = usersDB.getUser(auth.getEmail());
 
                 // login ok, save uid
                 final HttpSession session = request.getSession(true);
@@ -105,7 +112,7 @@ public class RestUsers {
 
         // try to change the password
         try {
-            db.changePasswordWithOldPassword(change.getEmail(), change.getOldPassword(), change.getNewPassword());
+            usersDB.changePasswordWithOldPassword(change.getEmail(), change.getOldPassword(), change.getNewPassword());
             return Response.ok().build();
         } catch (WrongPasswordException | UserNotFoundException e) {
             throw new AuthFailedException();
@@ -119,13 +126,13 @@ public class RestUsers {
         // try to add the user
         try {
 
-            // add user to db
+            // add user to usersDB
             final User user = new User(registration);
-            db.createUser(user);
+            usersDB.createUser(user);
 
             try {
                 // request verification code
-                final String code = db.requestConfirmationCode(user.getUid());
+                final String code = usersDB.requestConfirmationCode(user.getUid());
 
                 // send email
                 EmailSender.instance().sendRegistrationEmail(uriInfo.getRequestUri(), user, code);
@@ -146,7 +153,7 @@ public class RestUsers {
 
         // try to confirm the user
         try {
-            db.confirmUser(confirmCode.getCode());
+            usersDB.confirmUser(confirmCode.getCode());
             return new ActivateUser(0, "User activated");
         } catch (UserNotFoundException e) {
             throw NotFoundException.GENERIC;
@@ -161,7 +168,7 @@ public class RestUsers {
 
         // check if user exists
         try {
-            final User user = db.getUser(forgotPassword.getEmail());
+            final User user = usersDB.getUser(forgotPassword.getEmail());
 
             // check if enabled
             if (!user.isEnabled()) {
@@ -169,7 +176,7 @@ public class RestUsers {
             }
 
             // if here -> request password reset
-            final String code = db.requestResetPassword(user.getUid());
+            final String code = usersDB.requestResetPassword(user.getUid());
 
             // send email
             try {
@@ -192,7 +199,7 @@ public class RestUsers {
 
         // try to change the password
         try {
-            db.changePasswordWithCode(change.getEmail(), change.getCode(), change.getNewPassword());
+            usersDB.changePasswordWithCode(change.getEmail(), change.getCode(), change.getNewPassword());
             return Response.ok().build();
         } catch (UserNotFoundException | WrongCodeException e) {
             throw new AuthFailedException();
@@ -202,29 +209,30 @@ public class RestUsers {
     @GET
     @UserArea
     @Path("/me")
-    public UserDetails getUser() throws NotFoundException, SQLException {
+    public UserDetails getUser() throws SQLException {
 
+        // get current session
         final HttpSession session = request.getSession(false);
-        if (session != null) {
-            final Integer uid = (Integer) session.getAttribute(Utils.UID);
-            try {
-                final User current = (uid != null) ? db.getUser(uid) : null;
-                if (current != null) {
-                    return new UserDetails(current);
-                }
-            } catch (UserNotFoundException e) {
-                // nothing, see later
-            }
-        }
+        assert session != null;
 
-        // if here -> no user logged in
-        throw NotFoundException.USER_NOT_FOUND;
+        // get logged user
+        final Integer uid = (Integer) session.getAttribute(Utils.UID);
+        assert uid != null;
+
+        // return the current user
+        try {
+            final User current = usersDB.getUser(uid);
+            return new UserDetails(current);
+        } catch (UserNotFoundException e) {
+            throw NotFoundException.USER_NOT_FOUND;
+        }
     }
 
     @GET
     @AdminArea
+    @Compress
     public List<User> getUsers() throws SQLException {
-        return db.getUsers();
+        return usersDB.getUsers();
     }
 
     @GET
@@ -232,7 +240,7 @@ public class RestUsers {
     @Path("/{id}")
     public User getUser(@PathParam("id") int uid) throws SQLException {
         try {
-            return db.getUser(uid);
+            return usersDB.getUser(uid);
         } catch (UserNotFoundException e) {
             throw NotFoundException.USER_NOT_FOUND;
         }
@@ -244,18 +252,17 @@ public class RestUsers {
 
         // check if user is valid
         if (!user.isValidWithPassword()) {
-            throw BadRequestException.BAD_USER;
+            throw new BadRequestException("User not valid");
         }
 
         // create user
         try {
-            db.createUser(user);
+            usersDB.createUser(user);
             user.removePassword();
             return user;
         } catch (ConstrainException e) {
             throw ConflictException.EMAIL_IN_USE;
         }
-
     }
 
     @PUT
@@ -266,14 +273,13 @@ public class RestUsers {
         // update user
         try {
             user.setUid(id);
-            db.updateUser(user);
+            usersDB.updateUser(user);
             return user;
         } catch (ConstrainException e) {
             throw ConflictException.EMAIL_IN_USE;
         } catch (UserNotFoundException ex) {
             throw NotFoundException.USER_NOT_FOUND;
         }
-
     }
 
     @DELETE
@@ -281,7 +287,7 @@ public class RestUsers {
     @Path("/{id}")
     public Response deleteUser(@PathParam("id") int id) throws SQLException {
         try {
-            db.deleteUser(id);
+            usersDB.deleteUser(id);
             return Response.ok().build();
         } catch (UserNotFoundException e) {
             throw NotFoundException.USER_NOT_FOUND;

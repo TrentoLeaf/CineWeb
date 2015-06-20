@@ -5,6 +5,9 @@ import org.glassfish.jersey.server.ServerProperties;
 
 import javax.ws.rs.ApplicationPath;
 
+/**
+ * Jersey REST APIs. Map Jersey on the /api/ path.
+ */
 @ApplicationPath("/api/*")
 public class MyApplication extends ResourceConfig {
 

@@ -4,7 +4,7 @@ import com.itextpdf.text.DocumentException;
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
 import org.apache.commons.io.IOUtils;
-import tk.trentoleaf.cineweb.model.User;
+import tk.trentoleaf.cineweb.beans.model.User;
 import tk.trentoleaf.cineweb.pdf.FilmTicketData;
 import tk.trentoleaf.cineweb.pdf.PdfCreator;
 import tk.trentoleaf.cineweb.utils.Utils;

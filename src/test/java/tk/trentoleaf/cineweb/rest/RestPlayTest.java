@@ -3,9 +3,9 @@ package tk.trentoleaf.cineweb.rest;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.model.Film;
-import tk.trentoleaf.cineweb.model.Play;
-import tk.trentoleaf.cineweb.model.Room;
+import tk.trentoleaf.cineweb.beans.model.Film;
+import tk.trentoleaf.cineweb.beans.model.Play;
+import tk.trentoleaf.cineweb.beans.model.Room;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;
@@ -24,10 +24,10 @@ public class RestPlayTest extends MyJerseyTest {
 
         // create a play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
 
         // no need to login
 
@@ -50,10 +50,10 @@ public class RestPlayTest extends MyJerseyTest {
 
         // create a play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
 
         // list of films
         final List<Play> plays = new ArrayList<>();
@@ -74,13 +74,13 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
 
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
 
-        // create film
+        // create play
         final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
         assertEquals(200, r1.getStatus());
 
@@ -100,13 +100,13 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
 
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
 
-        // create film
+        // create play
         final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
         assertEquals(401, r1.getStatus());
     }
@@ -118,13 +118,13 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
 
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
 
-        // create film
+        // create play
         final Response r1 = getTarget().path("/plays").request(JSON).post(Entity.json(p1));
         assertEquals(401, r1.getStatus());
     }
@@ -137,13 +137,13 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        roomsDB.createRoom(3, 4);
 
         // play to create
         final Play p1 = new Play(f1.getFid(), 0, DateTime.now(), true);
 
-        // create film
+        // create play
         final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
         assertEquals(400, r1.getStatus());
     }
@@ -156,17 +156,52 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
 
         // play to create
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
         final Play p2 = new Play(f1, room, DateTime.now().plusMinutes(40), true);
 
-        // create film
+        // create play
         final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p2));
         assertEquals(409, r1.getStatus());
+    }
+
+    @Test
+    public void addPlayFail5() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // film
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        filmsDB.createFilm(f1);
+
+        // play to create
+        final Play p1 = new Play(f1.getFid(), 453, DateTime.now(), true);
+
+        // create play -> should fail (missing fid)
+        final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
+        assertEquals(400, r1.getStatus());
+    }
+
+    @Test
+    public void addPlayFail6() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // room
+        final Room room = roomsDB.createRoom(3, 4);
+
+        // play to create
+        final Play p1 = new Play(453, room.getRid(), DateTime.now(), true);
+
+        // create play -> should fail (missing rid)
+        final Response r1 = getTarget().path("/plays").request(JSON).cookie(c).post(Entity.json(p1));
+        assertEquals(400, r1.getStatus());
     }
 
     @Test(expected = EntryNotFoundException.class)
@@ -174,10 +209,10 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room and play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
 
         // login as admin
         final Cookie c = loginAdmin();
@@ -187,7 +222,7 @@ public class RestPlayTest extends MyJerseyTest {
         assertEquals(200, r1.getStatus());
 
         // should throw an exception
-        db.getPlay(p1.getPid());
+        playsDB.getPlay(p1.getPid());
     }
 
     @Test
@@ -206,10 +241,10 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room and play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
 
         // login as client
         final Cookie c = loginClient();
@@ -224,10 +259,10 @@ public class RestPlayTest extends MyJerseyTest {
 
         // film and room and play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        db.createFilm(f1);
-        final Room room = db.createRoom(3, 4);
+        filmsDB.createFilm(f1);
+        final Room room = roomsDB.createRoom(3, 4);
         final Play p1 = new Play(f1, room, DateTime.now(), true);
-        db.createPlay(p1);
+        playsDB.createPlay(p1);
 
         // no login
 

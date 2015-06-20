@@ -6,14 +6,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * This class wraps a HttpServletResponse and compress it using GZIP.
+ *
+ * @see tk.trentoleaf.cineweb.filters.all.GZIPFilter
+ */
 public class GZIPResponseStream extends ServletOutputStream {
 
-    private HttpServletResponse response = null;
-    private ServletOutputStream outputStream = null;
-    private ByteArrayOutputStream baos = null;
-    private GZIPOutputStream gzipStream = null;
+    private HttpServletResponse response;
+    private ServletOutputStream outputStream;
+    private ByteArrayOutputStream baos;
+    private GZIPOutputStream gzipStream;
 
-    // constructor
+    /**
+     * Wraps and compress a HttpServletResponse using GZIP.
+     *
+     * @param response The HttpServletResponse to compress.
+     * @throws IOException
+     */
     public GZIPResponseStream(HttpServletResponse response) throws IOException {
         super();
 

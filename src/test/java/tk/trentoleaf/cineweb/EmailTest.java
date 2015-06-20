@@ -3,9 +3,9 @@ package tk.trentoleaf.cineweb;
 import com.sendgrid.SendGrid;
 import org.junit.Ignore;
 import org.junit.Test;
+import tk.trentoleaf.cineweb.beans.model.Role;
+import tk.trentoleaf.cineweb.beans.model.User;
 import tk.trentoleaf.cineweb.email.EmailSender;
-import tk.trentoleaf.cineweb.model.Role;
-import tk.trentoleaf.cineweb.model.User;
 import tk.trentoleaf.cineweb.pdf.FilmTicketData;
 
 import java.net.URI;

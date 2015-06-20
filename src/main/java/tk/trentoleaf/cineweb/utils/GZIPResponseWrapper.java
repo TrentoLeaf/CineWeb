@@ -7,12 +7,22 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+/**
+ * This class wraps a HttpServletResponse and compress it using GZIP.
+ *
+ * @see tk.trentoleaf.cineweb.filters.all.GZIPFilter
+ */
 public class GZIPResponseWrapper extends HttpServletResponseWrapper {
 
     private ServletOutputStream stream;
     private PrintWriter writer;
 
-    // wrap an HTTP response -> zip
+    /**
+     * Wraps and compress a HttpServletResponse using GZIP.
+     *
+     * @param response The HttpServletResponse to compress.
+     * @throws IOException
+     */
     public GZIPResponseWrapper(HttpServletResponse response) throws IOException {
         super(response);
         stream = new GZIPResponseStream(response);
