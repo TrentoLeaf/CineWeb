@@ -1,0 +1,179 @@
+<div class="row">
+    <div class="col s12 m12 l12 center-align">
+        <h2 class="yellow-text text-accent-4">Riepilogo e conferma</h2>
+    </div>
+</div>
+
+<div  ng-controller="BuyController as ctrl">
+    <div class="row white-text"> <!-- tabella riepilogo acquisti -->
+        <div class="row">
+            <div class="col s12 offset-m1 m10 offset-l1 l10">
+                <h4>Biglietti acquistati</h4>
+                <div class="row" ng-repeat = "play in ctrl.nonsodove">
+                    <div>
+                        <h5 class="yellow-text text-accent-4">{{ctrl.play.title}}</h5>
+                        <h6>{{ctrl.play.date}} {{ctrl.play.time}}</h6>
+                        <table class="summaryTable">
+                            <thead>
+                            <tr>
+                                <th>Tipologia</th>
+                                <th>Quantità</th>
+                                <th>Prezzo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="ticket in nonsodove2">
+                                <td>{{tiket.type}}</td>
+                                <td>{{ticket.number}}</td>
+                                <td>{{tiket.price}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST  -->
+
+                <div class="row">
+                    <div>
+                        <h5 class="yellow-text text-accent-4">Film</h5>
+                        <h6>20/10/2015 21:00</h6>
+                        <table class="summaryTable">
+                            <thead>
+                            <tr>
+                                <th>Tipologia</th>
+                                <th>Quantità</th>
+                                <th>Prezzo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span>Normale</span></td>
+                                <td><span>2</span></td>
+                                <td><span>€ 12.50</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>Normale</span></td>
+                                <td><span>2</span></td>
+                                <td><span>€ 12.50</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div>
+                        <h5 class="yellow-text text-accent-4">Film</h5>
+                        <h6>20/10/2015 21:00</h6>
+                        <table class="summaryTable">
+                            <thead>
+                            <tr>
+                                <th>Tipologia</th>
+                                <th>Quantità</th>
+                                <th>Prezzo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span>Normale</span></td>
+                                <td><span>2</span></td>
+                                <td><span>€ 12.50</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>Normale</span></td>
+                                <td><span>2</span></td>
+                                <td><span>€ 12.50</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+                <!-- END TEST END TEST END TEST END TEST END TEST END TEST END TEST -->
+
+            </div>
+        </div>
+    </div>
+    <div class="row white-text"> <!-- informazioni carta di credito -->
+        <div class="col s12 offset-m1 m10 offset-l1 l10">
+            <h4>Metodo di pagamento</h4>
+            <div class="row"> <!-- messaggio d'errore -->
+                <p class="red-text"><i class="mdi-alert-error"></i>&nbsp I dati inseriti sembrano non essere validi. Controlla.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 offset-m1 m4 offset-l1 l4">
+                <div class="input-field">
+                    <input id="credit_card" type="text" class="validate" length="16">
+                    <label for="credit_card">Carta di credito</label>
+                </div>
+            </div>
+            <div class="col s12 offset-m3 m3 offset-l3 l3">
+                <div class="input-field col s6 m6 l6">
+                    <input id="month" type="number" length="7">
+                    <label for="month">Mese di scadenza</label>
+                </div>
+                <div class="input-field col s6 m6 l6">
+                    <input id="year" type="number" length="7">
+                    <label for="year">Anno di scadenza</label>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 offset-m1 m4 offset-l1 l4">
+                <div class="input-field">
+                    <input id="holder" type="text" class="validate">
+                    <label for="holder">Intestatario</label>
+                </div>
+            </div>
+            <div class="col s12 offset-m3 m3 offset-l3 l3">
+                <div class="input-field">
+                    <input id="cvv" type="number">
+                    <label for="cvv">CVV</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row white-text"> <!-- totale -->
+        <div class="row" style="margin-bottom: 0px;">
+            <div class="col s12 offset-m1 m10 offset-l1 l10">
+                <h4 class="col s7 m7 l7">Totale:</h4>
+                <h4 class="total col s5 m5 l5 right-align">{{nonsodove3.total | currency:"€ "}}€ 34.00</h4>
+            </div>
+        </div>
+        <div class="row"> <!-- nota credito accumulato -->
+            <div class="col s12 offset-m1 m10 offset-l1 l10">
+                <p>Nota: Attualmente hai a disposizione {{user.credito}} € di credito. Il totale è stato calcolato tenendo conto del tuo credito accumulato.</p>
+            </div>
+        </div>
+    </div>
+    <div class="row"> <!-- bottoni -->
+        <div class="col s12 offset-m1 m3 offset-l1 l3 center">
+            <button class="btn red white-text waves-effect waves-light" type="submit" name="next" style="width:100%">Annulla
+                <i class="mdi-navigation-cancel right"></i>
+            </button>
+        </div>
+        <div class="col s12 m4 l4">
+            &nbsp
+        </div>
+        <div class="col s12 m3 l3 center">
+            <button class="btn green white-text waves-effect waves-light" type="submit" name="next" style="width:100%">Paga
+                <i class="mdi-content-send white-text right"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+    </div>
+</div>

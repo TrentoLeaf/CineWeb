@@ -25,7 +25,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule',
-        'tabmodule', 'loginModule', 'registrationModule', 'meModule', 'adminUsers', 'confirmModule'])
+        'tabmodule', 'loginModule', 'registrationModule', 'meModule', 'adminUsers', 'confirmModule', 'buyModule'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -49,7 +49,7 @@ $(document).ready(function () {
             }).when('/password_recovery', {
                 templateUrl: '../partials/password_recovery.html',
                 controller: 'LoginController',
-                controllerAs: 'ctrl'
+                controllerAs: 'c'
             }).when('/me', {
                 templateUrl: '../partials/me.html',
                 controller: 'MeController',
@@ -65,6 +65,14 @@ $(document).ready(function () {
             }).when('/admin/users', {
                 templateUrl: '../partials/admin/users.html',
                 controller: 'AdminUsersController',
+                controllerAs: 'ctrl'
+            }).when('/buy', {
+                templateUrl: '../partials/buy_seats.html',
+                controller: 'BuyController',
+                controllerAs: 'ctrl'
+            }).when('/buy_last_step', {
+                templateUrl: '../partials/buy_summary.html',
+                controller: 'BuyController',
                 controllerAs: 'ctrl'
             }).when('/error', {
                 templateUrl: '../partials/error.html'

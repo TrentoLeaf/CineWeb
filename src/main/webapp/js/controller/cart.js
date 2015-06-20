@@ -19,7 +19,6 @@
             $rootScope.total = $rootScope.total || 0.00;
 
             this.addToCart = function (film, time_index) {
-                console.log("Add to cart!!!");
 
                 // film: l'oggetto film da acquistare
                 // time_index: l'indice dell'ora (nell' array time di film) da prenotare
@@ -37,7 +36,6 @@
                  }*/
 
                 if (!duplicate) {
-                    console.log("acqustato.");
                     // copio film per non sporcare i film in programmazione con valori del carrello
                     var newFilm = this.cloneObject(film);
                     // aggiungo un dropdown con tipo e numero di biglietti
@@ -45,12 +43,18 @@
                     newFilm['tickets'].push({type: $rootScope.tickets[0].type, number: 1});
                     newFilm['time'] = film['time'][time_index];
                     $rootScope.cart.push(newFilm);
+                    // abilita il pulsante 'prosegui'
+                    $('#btn-go-to-buy').removeClass('hide');
                     this.updateTotal();
                 }
             };
 
             this.removeFromCart = function (film) {
                 $rootScope.cart.splice(film, 1); // rimuove 1 elemento a partire da 'film'
+                // se il carrello è vuoto, tolgo il pulsante 'prosegui'
+                if ( $rootScope.cart.length == 0) {
+                    $('#btn-go-to-buy').addClass('hide');
+                }
                 this.updateTotal();
             };
 

@@ -122,9 +122,23 @@ main {
       top: 56px;
       width: 100%;
       overflow-y: auto; } }
+  @media screen and (max-width: 600px) {
+    main .buy-buttons-div {
+      height: 5em;
+      max-height: 5em;
+      overflow-y: auto; } }
 
 footer {
   margin-top: 0px !important; }
+
+#month::-webkit-inner-spin-button,
+#month::-webkit-outer-spin-button,
+#year::-webkit-inner-spin-button,
+#year::-webkit-outer-spin-button,
+#cvv::-webkit-inner-spin-button,
+#cvv::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0; }
 
 .priceTable tr:nth-child(odd) {
   background-color: #e6e6e6;
@@ -140,6 +154,14 @@ footer {
   padding-left: 1em; }
 .priceTable tr td:nth-child(2) {
   padding-right: 1em; }
+
+.summaryTable td {
+  text-align: center;
+  padding: 0; }
+.summaryTable th {
+  text-align: center; }
+.summaryTable span {
+  font-size: 0.7em; }
 
 @-webkit-keyframes shake {
   0% {

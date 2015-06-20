@@ -200,11 +200,35 @@ main {
     }
   }
 
+  // madal footer
+  .buy-buttons-div {
+    @media screen and (max-width: 600px) {
+      height: 5em;
+      max-height: 5em;
+      overflow-y: auto;
+    }
+  }
+
+
+
+
+
 
 }
 
 footer {
   margin-top: 0px !important;
+}
+
+// hide spinner in input number
+#month::-webkit-inner-spin-button,
+#month::-webkit-outer-spin-button,
+#year::-webkit-inner-spin-button,
+#year::-webkit-outer-spin-button,
+#cvv::-webkit-inner-spin-button,
+#cvv::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 
@@ -235,6 +259,21 @@ footer {
     }
   }
 
+}
+
+.summaryTable {
+  td {
+    text-align: center;
+    padding: 0;
+  }
+
+  th {
+    text-align: center;
+  }
+
+  span {
+    font-size: 0.7em;
+  }
 }
 
 

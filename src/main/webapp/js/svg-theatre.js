@@ -31,18 +31,9 @@ $(document).ready(function() {
     var theatre_x = ((15*stage_w)/680);
     var theatre_y = 165;
     // set viewbox dimensions
-
-    console.log($("#svg-theatre")[0]);
-    console.log("aaa");
-
     $("#svg-theatre")[0].setAttribute("viewBox", '0 0 '+stage_w+' '+(stage_h+theatre_h)); // leave has it is due to a jQuery/SnapSVG bug
     $("#svg-theatre").attr({width: "100%", height: "100%"});
-
-
-    console.log($("#svg-theatre")[0]);
-    console.log($("#svg-theatre"));
-    console.log("aaa");
-
+    
     // init snap
     var snap = Snap("#svg-theatre");
 
