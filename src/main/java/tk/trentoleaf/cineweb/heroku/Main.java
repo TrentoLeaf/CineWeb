@@ -3,7 +3,7 @@ package tk.trentoleaf.cineweb.heroku;
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
-import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.webapp.*;
 
 /**
@@ -12,7 +12,7 @@ import org.eclipse.jetty.webapp.*;
  */
 public class Main {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         // The port that we should run on can be set into an environment variable
         // Look for that variable and default to 8080 if it isn't there.
         String webPort = System.getenv("PORT");
@@ -20,7 +20,16 @@ public class Main {
             webPort = "8080";
         }
 
-        final Server server = new Server(Integer.valueOf(webPort));
+        // create a server that handles X-Forwarded-Proto
+        final Server server = new Server();
+        HttpConfiguration httpConfiguration = new HttpConfiguration();
+        httpConfiguration.setSendServerVersion(false);
+        httpConfiguration.addCustomizer(new ForwardedRequestCustomizer());
+        ServerConnector serverConnector = new ServerConnector(server, new HttpConnectionFactory(httpConfiguration));
+        serverConnector.setPort(Integer.valueOf(webPort));
+        server.addConnector(serverConnector);
+
+        //final Server server = new Server(Integer.valueOf(webPort));
         final WebAppContext root = new WebAppContext();
         root.setContextPath("/");
 
@@ -30,15 +39,15 @@ public class Main {
 
         // Configuration classes. This gives support for multiple features.
         // The annotationConfiguration is required to support annotations like @WebServlet
-        root.setConfigurations(new Configuration[] {
+        root.setConfigurations(new Configuration[]{
                 new AnnotationConfiguration(), new WebXmlConfiguration(),
                 new WebInfConfiguration(),
                 new PlusConfiguration(), new MetaInfConfiguration(),
-                new FragmentConfiguration(), new EnvConfiguration() });
+                new FragmentConfiguration(), new EnvConfiguration()});
 
         // Important! make sure Jetty scans all classes under ./classes looking for annotations. Classes
         // directory is generated running 'mvn package'
-        root.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/classes/.*");
+        root.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern", ".*/classes/.*");
 
         // Parent loader priority is a class loader setting that Jetty accepts.
         // By default Jetty will behave like most web containers in that it will

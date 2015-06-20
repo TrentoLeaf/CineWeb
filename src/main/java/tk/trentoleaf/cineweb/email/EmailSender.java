@@ -3,16 +3,21 @@ package tk.trentoleaf.cineweb.email;
 import com.itextpdf.text.DocumentException;
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
-import tk.trentoleaf.cineweb.model.User;
+import org.apache.commons.io.IOUtils;
+import tk.trentoleaf.cineweb.beans.model.User;
 import tk.trentoleaf.cineweb.pdf.FilmTicketData;
 import tk.trentoleaf.cineweb.pdf.PdfCreator;
 import tk.trentoleaf.cineweb.utils.Utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
+/**
+ * This class is used to send email through SendGrid.
+ */
 public class EmailSender {
     private static final Logger logger = Logger.getLogger(EmailSender.class.getSimpleName());
 
@@ -34,6 +39,7 @@ public class EmailSender {
         return sender;
     }
 
+    // force singleton pattern
     private EmailSender() throws SendGridException {
         final String username = System.getenv("SENDGRID_USERNAME");
         final String password = System.getenv("SENDGRID_PASSWORD");
@@ -46,125 +52,147 @@ public class EmailSender {
     }
 
     // send an email to confirm the registration
-    public void sendRegistrationEmail(URI uri, User user, String verificationCode) throws SendGridException {
+    public void test() throws SendGridException {
+
+        // load images to put in the PDF
+        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("email/registration.html");
+
+        StringWriter writer = new StringWriter();
+        try {
+            IOUtils.copy(is, writer, "UTF-8");
+        } catch (IOException e) {
+
+        }
+        String theString = writer.toString();
+        theString = theString.replace("{{BASE_URL}}", "https://cineweb.herokuapp.com");
+
+
+        // create email
+        SendGrid.Email email = new SendGrid.Email();
+        email.setFrom(FROM);
+        email.addTo("davide.pedranz@gmail.com");
+        email.setSubject(WE + " - Conferma registrazione");
+        email.setHtml(theString);
+
+        // try to send, log failures
+        try {
+            SendGrid.Response response = sendgrid.send(email);
+
+            sendgrid.send(email);
+
+        } catch (SendGridException e) {
+            logger.severe(e.toString());
+            throw e;
+        }
+    }
+
+    // send an email to confirm the registration
+    public SendGrid.Response sendRegistrationEmail(URI uri, User user, String verificationCode) throws SendGridException {
 
         // create url
         final String url = Utils.uriToRoot(uri) + "/#?c=" + verificationCode;
-        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo.png";
+        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
+
+        // get the html mail
+        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("email/registration.html");
+
+        StringWriter writer = new StringWriter();
+        try {
+            IOUtils.copy(is, writer, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+
+        }
+
+        // modify the html mail
+        String theString = writer.toString();
+        theString = theString.replace("{{logo_img}}", urlLogo);
+        theString = theString.replace("{{sito}}", Utils.uriToRoot(uri));
+        theString = theString.replace("{{nome}}", user.getFirstName());
+        theString = theString.replace("{{cognome}}", user.getSecondName());
+        theString = theString.replace("{{email}}", user.getEmail());
+        theString = theString.replace("{{url_address}}", url);
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
         email.setFrom(FROM);
         email.addTo(user.getEmail());
         email.setSubject(WE + " - Conferma registrazione");
-        email.setText(EmailUtils.registrationText(user.getFirstName(), user.getSecondName(), url));
-        email.setHtml("<html lang=\"it\">\n" +
-                "<head>\n" +
-                "\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n" +
-                "\t<title>CineWeb</title>\n" +
-                "</head>\n" +
-                "<body topmargin=\"0\" leftmargin=\"0\" marginheight=\"0\" marginwidth=\"0\" style=\"-webkit-font-smoothing: antialiased;width:100% !important;background:#e4e4e4;-webkit-text-size-adjust:none;\">\n" +
-                "\n" +
-                "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#212121\"><tr><td width=\"100%\">\n" +
-                "\n" +
-                "\t<table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\" class=\"table\"><tr><td width=\"600\" class=\"cell\">\n" +
-                "\n" +
-                "\t\t<table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table\"><tr><td width=\"200\" class=\"logocell\"><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"20\" class=\"hide\"/><br class=\"hide\"/><img src=\"" + urlLogo + " width=\"70\" height=\"70\" alt=\"Campaign Monitor\" style=\"-ms-interpolation-mode:bicubic;\"/><br/><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"10\" class=\"hide\"/><br class=\"hide\"/></td>\n" +
-                "\t\t\t<td width=\"200\" align=\"center\" style=\"color:#ffea00;font-size:26px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;\">\n" +
-                "\t\t\t\t<span><strong>CineWeb</strong></span>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td align=\"right\" width=\"200\" class=\"hide\" style=\"color:#ffea00;font-size:12px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;\"><span>HOME </span><strong><span style=\"text-transform:uppercase;\"/></strong> <span>TROVACI </span></td>\n" +
-                "\t\t</tr></table><table width=\"600\" cellpadding=\"25\" cellspacing=\"0\" border=\"0\" class=\"promotable\"><tr><td bgcolor=\"#ffffff\" width=\"600\" class=\"promocell\">\n" +
-                "\n" +
-                "\t\t<multiline label=\"Main feature intro\"><p style=\"font-size: 16px;line-height: 26px;font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;margin-top: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 14px;font-weight: normal\">Gentile " + user.getSecondName() + ",<br/>Riceve questa email in quanto ha richiesto di iscriversi al nostro sito, La ringraziamo per la sua richiesta e nel farlo le proponiamo una selezione aggiornata dei nostri film in programmazione.<br/>Rinnoavandole i nostri ringraziamenti per la Sua registrazione le ricordiamo che il nostro team è a sua disposizione per qualsiasi dubbio o necessita.<br/>Cordiali Saluti,<br/>Il team di TrentoLeaf+</p></multiline></td>\n" +
-                "\t</tr></table><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"15\" class=\"divider\"/><br/><table width=\"600\" cellpadding=\"25\" cellspacing=\"0\" border=\"0\" class=\"promotable\"><tr><td bgcolor=\"#ffffff\" width=\"600\" class=\"promocell\">\n" +
-                "\n" +
-                "\t\t<multiline label=\"Main feature intro\"><p style=\"font-size: 16px;line-height: 26px;font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;margin-top: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 14px;font-weight: normal\">Riepilogo dati inseriti:<br/>Firstname: " + user.getFirstName() + ",<br/>Secondname:" + user.getSecondName() + "<br/>Email:" + user.getEmail() + "<br/>Clicca il link qui sotto per finalizzare la tua iscrizione<br/>" + url + "</p></multiline></td>\n" +
-                "\t</tr></table><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"15\" class=\"divider\"/><br/><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"15\" class=\"divider\"/><br/><layout label=\"Gallery highlights\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td bgcolor=\"#ffea00\" nowrap=\"nowrap\"><img border=\"0\" src=\"images/spacer.gif\" width=\"5\" height=\"1\"/></td>\n" +
-                "\t\t<td width=\"100%\" bgcolor=\"#ffffff\">\n" +
-                "\n" +
-                "\t\t\t<table width=\"100%\" cellpadding=\"20\" cellspacing=\"0\" border=\"0\"><tr><td bgcolor=\"#ffffff\" class=\"contentblock\">\n" +
-                "\n" +
-                "\t\t\t\t<h4 class=\"secondary\" style=\"color: #444 !important;font-size: 16px;line-height: 24px;font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;margin-top: 0;margin-bottom: 10px;padding-top: 0;padding-bottom: 0;font-weight: normal\"><strong><singleline label=\"Gallery title\">Prossimamente nelle nostre migliori sale:</singleline></strong></h4>\n" +
-                "\t\t\t\t<multiline label=\"Gallery description\"></multiline></td>\n" +
-                "\t\t\t</tr></table></td>\n" +
-                "\t</tr></table><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td bgcolor=\"#ffea00\" nowrap=\"nowrap\"><img border=\"0\" src=\"images/spacer.gif\" width=\"5\" height=\"1\"/></td>\n" +
-                "\t\t<td bgcolor=\"#ffffff\" nowrap=\"nowrap\"><img border=\"0\" src=\"images/spacer.gif\" width=\"5\" height=\"1\"/></td>\n" +
-                "\t\t<td width=\"100%\" bgcolor=\"#ffffff\">\n" +
-                "\n" +
-                "\t\t\t<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\"><tr><td><img border=\"0\" src=\"images/gallery.png\" width=\"107\" height=\"107\" editable=\"true\" class=\"galleryimage\" label=\"Image 1\"/></td>\n" +
-                "\t\t\t\t<td><img border=\"0\" src=\"images/gallery.png\" width=\"107\" height=\"107\" editable=\"true\" class=\"galleryimage\" label=\"Image 2\"/></td>\n" +
-                "\t\t\t\t<td><img border=\"0\" src=\"images/gallery.png\" width=\"107\" height=\"107\" editable=\"true\" class=\"galleryimage\" label=\"Image 3\"/></td>\n" +
-                "\t\t\t\t<td><img border=\"0\" src=\"images/gallery.png\" width=\"107\" height=\"107\" editable=\"true\" class=\"galleryimage\" label=\"Image 4\"/></td>\n" +
-                "\t\t\t\t<td><img border=\"0\" src=\"images/gallery.png\" width=\"107\" height=\"107\" editable=\"true\" class=\"galleryimage\" label=\"Image 5\"/></td>\n" +
-                "\t\t\t</tr><tr><td><img border=\"0\" src=\"images/gallery.png\" width=\"107\" height=\"107\" editable=\"true\" class=\"galleryimage\" label=\"Image 6\"/></td>\n" +
-                "\t\t\t\t<td><img border=\"0\" src=\"images/gallery.png\" width=\"107\" height=\"107\" editable=\"true\" class=\"galleryimage\" label=\"Image 7\"/></td>\n" +
-                "\t\t\t\t<td><img border=\"0\" src=\"images/gallery.png\" width=\"107\" height=\"107\" editable=\"true\" class=\"galleryimage\" label=\"Image 8\"/></td>\n" +
-                "\t\t\t\t<td><img border=\"0\" src=\"images/gallery.png\" width=\"107\" height=\"107\" editable=\"true\" class=\"galleryimage\" label=\"Image 9\"/></td>\n" +
-                "\t\t\t\t<td><img border=\"0\" src=\"images/gallery.png\" width=\"107\" height=\"107\" editable=\"true\" class=\"galleryimage\" label=\"Image 10\"/></td>\n" +
-                "\t\t\t</tr></table><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"5\"/><br/></td>\n" +
-                "\t</tr></table><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"15\" class=\"divider\"/><br/></layout></td>\n" +
-                "\t</tr></table><img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"25\" class=\"divider\"/><br/><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f2f2f2\"><tr><td>\n" +
-                "\n" +
-                "\t<img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"30\"/><br/><table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\" class=\"table\"><tr><td width=\"600\" nowrap=\"nowrap\" bgcolor=\"#f2f2f2\" class=\"cell\">\n" +
-                "\n" +
-                "\t<table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table\"><tr><td width=\"380\" valign=\"top\" class=\"footershow\">\n" +
-                "\n" +
-                "\t\t<img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"8\"/><br/><p style=\"color:#a6a6a6;font-size:12px;font-family:Helvetica,Arial,sans-serif;margin-top:0;margin-bottom:15px;padding-top:0;padding-bottom:0;line-height:18px;\" class=\"reminder\">Stai vedendo questo perché sei un mitico cliente del <a href=\"https://http://cineweb.herokuapp.com/\" style=\"color:#a6a6a6;text-decoration:underline;\">nostro sito</a> al quale ti sei iscritto.</p>\n" +
-                "\t\t<p style=\"color:#c9c9c9;font-size:12px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;\"><preferences style=\"color:#3ca7dd;text-decoration:none;\"><strong>Modifica la tua iscrizione</strong></preferences>  |  <unsubscribe style=\"color:#3ca7dd;text-decoration:none;\"><strong>Disiscriviti</strong></unsubscribe></p>\n" +
-                "\n" +
-                "\n" +
-                "\t</td>\n" +
-                "\t\t<td align=\"right\" width=\"220\" style=\"color:#a6a6a6;font-size:12px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;text-shadow: 0 1px 0 #ffffff;\" valign=\"top\" class=\"hide\">\n" +
-                "\n" +
-                "\t\t\t<img border=\"0\" src=\"images/spacer.gif\" width=\"1\" height=\"10\"/><br/><p style=\"color:#b3b3b3;font-size:11px;line-height:15px;font-family:Helvetica,Arial,sans-serif;margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0;font-weight:bold;\">CineWeb</p><p style=\"color:#b3b3b3;font-size:11px;line-height:15px;font-family:Helvetica,Arial,sans-serif;margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0;font-weight:normal;\">Made by TrentoLeaf+</p></td>\n" +
-                "\t</tr></table></td>\n" +
-                "</tr></table></td>\n" +
-                "</tr></table></td>\n" +
-                "</tr></table></body>\n" +
-                "</html>\n");
+        email.setText("Gentile " + user.getFirstName() + ",\n" +
+                "La Sua richiesta di iscrizione è stata inoltrata con successo." + "\n" +
+                "Per completare la Sua iscrizione clicchi su questo link: " + url + "\n");
+        email.setHtml(theString);
+
         // try to send, log failures
+        SendGrid.Response response;
         try {
-            sendgrid.send(email);
+            response = sendgrid.send(email);
         } catch (SendGridException e) {
             logger.severe(e.toString());
             throw e;
         }
+        return response;
     }
 
     // send a password recover
-    public void sendRecoverPasswordEmail(URI uri, User user, String code) throws SendGridException {
+    public SendGrid.Response sendRecoverPasswordEmail(URI uri, User user, String code) throws SendGridException {
 
         // create url
         final String url = Utils.uriToRoot(uri) + "/#?r=" + code;
+        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
+
+        // get the html mail
+        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("email/password_recovery.html");
+
+        StringWriter writer = new StringWriter();
+        try {
+            IOUtils.copy(is, writer, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+
+        }
+
+        // modify the html mail
+        String theString = writer.toString();
+        theString = theString.replace("{{logo_img}}", urlLogo);
+        theString = theString.replace("{{sito}}", Utils.uriToRoot(uri));
+        theString = theString.replace("{{nome}}", user.getFirstName());
+        theString = theString.replace("{{url_address}}", url);
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
         email.setFrom(FROM);
         email.addTo(user.getEmail());
         email.setSubject(WE + " - Recupero password");
-        email.setText("TESTO... " + url);
+        email.setText("Gentile " + user.getFirstName() + ",\n" +
+                "Come da sua richiesta le abbiamo inviato la mail per ripristinare la sua password.\n" +
+                "Per completare questa operazione clicchi sul seguente link: " + url + "\n");
+        email.setHtml(theString);
 
         // try to send, log failures
+        SendGrid.Response response;
         try {
-            sendgrid.send(email);
+            response = sendgrid.send(email);
         } catch (SendGridException e) {
             logger.severe(e.toString());
             throw e;
         }
+        return response;
     }
 
     //send a pdf with the ticket
-    public void sendTicketPDFEmail(User user, FilmTicketData data) throws SendGridException, IOException, DocumentException {
+    public SendGrid.Response sendTicketPDFEmail(URI uri, User user, ArrayList<FilmTicketData> data) throws SendGridException, IOException, DocumentException {
+
+        // url logo
+        final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
         email.setFrom(FROM);
         email.addTo(user.getEmail());
-        email.setSubject(WE + " - Ticket acquistato");
+        email.setSubject(WE + " - Invio biglietti acquistati");
         email.setText("Ecco a lei il Ticket in allegato in formato PDF!");
-
-        // TODO: optionally add a cute html text
 
         // generate PDF
         try {
@@ -172,33 +200,83 @@ public class EmailSender {
             // create and open a new pdf file
             final PdfCreator pdfCreator = new PdfCreator();
 
-            // addTicketToPdf add a ticket to the pdf with data in input
-            pdfCreator.addTicketToPdf(data);
-
-            // repeat addTicketToPdf to add more ticket to the same pdf
-            pdfCreator.addTicketToPdf(data);
-            pdfCreator.addTicketToPdf(data);
+            // add the tickets to the pdf
+            for (FilmTicketData d : data) {
+                // addTicketToPdf add a ticket to the pdf with data in input
+                pdfCreator.addTicketToPdf(d);
+            }
 
             // close the creation of the pdf and get the pdf
             byte[] pdf = pdfCreator.getFilledPdf();
 
             // add pdf as attachment
-            email.addAttachment("ticket.pdf", new ByteArrayInputStream(pdf));
+            email.addAttachment("cineweb-tickets.pdf", new ByteArrayInputStream(pdf));
 
         } catch (DocumentException | IOException e) {
             logger.severe(e.toString());
             throw e;
         }
 
-        // try to send, log failures
+        // get the html mail
+        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("email/tickets.html");
+
+        StringWriter writer = new StringWriter();
         try {
+            IOUtils.copy(is, writer, Charset.forName("UTF-8"));
+        } catch (IOException e) {
 
-            // send email
-            sendgrid.send(email);
+        }
 
+        // get the html snippet for tickets summary
+        InputStream isSummary = classloader.getResourceAsStream("email/tickets_summary.html");
+
+        StringWriter writerSummary = new StringWriter();
+        try {
+            IOUtils.copy(isSummary, writerSummary, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+
+        }
+
+
+        // modify the html mail
+        String theString = writer.toString();
+        String theStringSummary = writerSummary.toString();
+        theString = theString.replace("{{logo_img}}", urlLogo);
+        theString = theString.replace("{{sito}}", Utils.uriToRoot(uri));
+        theString = theString.replace("{{nome}}", user.getFirstName());
+
+        // add the plays summary in the mail
+        for (FilmTicketData d : data) {
+            String tmpSummaryString = theStringSummary;
+
+            tmpSummaryString = tmpSummaryString.replace("{{titolo}}", d.getFilmTitle());
+            tmpSummaryString = tmpSummaryString.replace("{{data}}", d.getDate());
+            tmpSummaryString = tmpSummaryString.replace("{{ora}}", d.getTime());
+            tmpSummaryString = tmpSummaryString.replace("{{sala}}", d.getTheatre());
+            tmpSummaryString = tmpSummaryString.replace("{{posto}}", d.getSeat());
+            tmpSummaryString = tmpSummaryString.replace("{{tipo}}", d.getType());
+
+            theString = theString.replace("{{riepilogo}}", tmpSummaryString+"{{riepilogo}}");
+        }
+        theString = theString.replace("{{riepilogo}}", "");
+
+
+        // add the content to email
+        email.setText("Gentile " + user.getFirstName() + ",\n" +
+                "Le abbiamo inviato i biglietti che ha acquistato sul sito di CineWeb.\n" +
+                "Li può trovare in allegato alla mail.\n" +
+                "Cordiali Saluti. Cineweb.");
+        email.setHtml(theString);
+
+        // try to send, log failures
+        SendGrid.Response response;
+        try {
+            response = sendgrid.send(email);
         } catch (SendGridException e) {
             logger.severe(e.toString());
             throw e;
         }
+        return response;
     }
 }
