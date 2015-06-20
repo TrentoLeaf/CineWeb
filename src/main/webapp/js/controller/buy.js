@@ -13,7 +13,7 @@ var SEAT_UNAVAILABLE = 2;
     'use strict';
 
     angular.module('buyModule', ['usersModule', 'storageModule', 'constantsModule'])
-        .controller('BuyController', ['$location', function ($location) {
+        .controller('BuyController', ['$location', '$anchorScroll', function ($location, $anchorScroll) {
 
 
             this.data_from_server = [{title:"titolo", date:"data", time:"ora", playbill:"img/temporary/mad-max-fury-road-locandina-400x250.jpg", seats:[[1,1,1,0,1,1,1],[1,0,1,2,0,1,1],[1,2,1,2,1,2,1],[1,1,1,1,1,2,0]], seats_selected: 4},
@@ -64,8 +64,9 @@ var SEAT_UNAVAILABLE = 2;
 
                     // generate svg seats
                     generateSvg(this.data_from_server[this.data_from_server_index].seats, this.selected_seats, this.film);
-                    // tornare in cima
-                    //$location.hash('header-navbar');
+                    // back to top of page
+                    $location.hash('main-content');
+                    $anchorScroll();
                 }
                 else { // scelta dei posti terminata
                     // TODO chiamata AJAX con invio di data_to_server
