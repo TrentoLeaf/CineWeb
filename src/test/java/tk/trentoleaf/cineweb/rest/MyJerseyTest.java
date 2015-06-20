@@ -13,10 +13,10 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.After;
 import org.junit.Before;
 import tk.trentoleaf.cineweb.MyApplication;
-import tk.trentoleaf.cineweb.db.*;
-import tk.trentoleaf.cineweb.beans.rest.in.Auth;
 import tk.trentoleaf.cineweb.beans.model.Role;
 import tk.trentoleaf.cineweb.beans.model.User;
+import tk.trentoleaf.cineweb.beans.rest.in.Auth;
+import tk.trentoleaf.cineweb.db.*;
 import tk.trentoleaf.cineweb.utils.GsonJerseyProvider;
 
 import javax.ws.rs.ProcessingException;
@@ -44,6 +44,7 @@ public class MyJerseyTest extends JerseyTest {
     protected final RoomsDB roomsDB = RoomsDB.instance();
     protected final FilmsDB filmsDB = FilmsDB.instance();
     protected final PlaysDB playsDB = PlaysDB.instance();
+    protected final PricesDB pricesDB = PricesDB.instance();
 
     @Before
     public void before() throws Exception {
