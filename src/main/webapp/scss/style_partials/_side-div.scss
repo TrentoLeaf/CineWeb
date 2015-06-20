@@ -58,6 +58,14 @@ main {
               padding: 0;
             }
 
+            .item-ticket-counter-container {
+              padding-bottom:0.5em;
+            }
+
+            .item-ticket-labels {
+              padding-bottom: 0.3em;
+            }
+
             select {
               height: 2em;
               margin-bottom: 0.5em;
@@ -94,6 +102,12 @@ main {
     // login
     .side-login {
       width: 100%;
+
+      // contenitore pulsante 'i tuoi dati'
+      .btn-your-data-container {
+        margin-top: 3em;
+      }
+
     }
 
     // ricerca

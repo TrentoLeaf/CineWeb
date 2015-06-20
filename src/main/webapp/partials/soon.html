@@ -8,15 +8,14 @@
 
         <ul class="row">
             <div class="col s12 m11 l11">
-                <li class="col s12 offset-m1 m5 offset-l1 l3" ng-repeat="film in date.films"
-                    style="margin-bottom: 4em;">
+                <li class="col s12 offset-m1 m5 offset-l1 l3 play" ng-repeat="film in date.films">
                     <div class="card">
                         <div class="card-image">
-                            <img class="responsive-img plays-locandina" ng-src="{{film.playbill}}" alt="Locandina">
+                            <img class="responsive-img play-playbill" ng-src="{{film.playbill}}" alt="Locandina">
                         </div>
                         <div class="card-content grey-text text-darken-4">
                             <span class="card-title black-text truncate">{{film.title}}</span>
-                            <div style="overflow: hidden; max-height: 100px; height: 100px">
+                            <div class="card-times">
                                 <p>{{film.description}} I am a very simple card. I am good at containing small bits of
                                     information.
                                     I am convenient because I require little markup to use effectively.</p>
@@ -24,8 +23,7 @@
                         </div>
                         <div class="card-action center-align">
                             <a ng-click="ctrl.setCurrent($parent.$index, $index)" data-target="modal"
-                               class="modal-trigger waves-effect waves-blue btn-flat grey-text text-darken-4"
-                               style="padding: 0; margin: 0; width: 100%">
+                               class="play-details-btn modal-trigger waves-effect waves-blue btn-flat grey-text text-darken-4">
                                 <i class="mdi-action-info-outline left"></i>Dettagli</a>
                         </div>
                     </div>
@@ -34,11 +32,10 @@
         </ul>
 
         <!-- Finestrella dei dettagli e acquista -->
-        <div id="modal" class="modal modal-fixed-footer grey-text text-darken-4"
-             style="max-height: 80%; height: 80%; width: 80%">
+        <div id="modal" class="modal modal-fixed-footer grey-text text-darken-4">
             <div class="modal-content">
                 <div class="row">
-                    <i class="btn-flat mdi-navigation-close right small" ng-click="ctrl.closeWindow()" style="padding: 0px"></i>
+                    <i class="btn-flat mdi-navigation-close right small modal-close" ng-click="ctrl.closeWindow()"></i>
                 </div>
                 <div class="row">
                     <div class="col s12 m12 l12">
@@ -63,7 +60,7 @@
                         </div>
                     </div>
                     <div class="col s12 m12 l6">
-                        <h5 style="margin-top: 0">Data: <span>{{ctrl.current.date}}</span></h5>
+                        <h5 class="modal-date">Data: <span>{{ctrl.current.date}}</span></h5>
                         <h5>Descrizione:</h5>
                         <p>{{ctrl.current.description}}</p>
                     </div>

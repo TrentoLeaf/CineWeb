@@ -27,14 +27,44 @@ main .content-div {
   width: 100%;
   height: auto;
   z-index: 1; }
-  main .content-div .plays-locandina {
-    min-height: 300px;
-    max-height: 300px; }
-@media screen and (max-width: 600px) {
-  main .buy-buttons-div {
-    height: 5em;
-    max-height: 5em;
-    overflow-y: auto; } }
+  main .content-div .play {
+    margin-bottom: 4em; }
+    main .content-div .play .play-playbill {
+      min-height: 300px;
+      max-height: 300px; }
+    main .content-div .play .card-times {
+      overflow: auto;
+      max-height: 100px;
+      height: 100px; }
+      main .content-div .play .card-times .time-badge {
+        margin: 0em 0.5em 0.5em 0.5em;
+        padding: 0em 1.5em 0em 1.5em;
+        cursor: default; }
+    main .content-div .play .play-details-btn {
+      padding: 0;
+      margin: 0;
+      width: 100%; }
+  main .content-div .buy-summary .buy-summary-total-container {
+    margin-bottom: 0px; }
+  main .content-div .buy-summary .buy-summary-btn {
+    width: 100%; }
+
+#modal {
+  max-height: 80%;
+  height: 80%;
+  width: 80%; }
+  #modal .modal-close {
+    padding: 0px; }
+  #modal .modal-date {
+    margin-top: 0; }
+  #modal .modal-time-badge {
+    margin-left: 1em;
+    margin-bottom: 0.5em; }
+  @media screen and (max-width: 600px) {
+    #modal .buy-buttons-div {
+      height: 5em;
+      max-height: 5em;
+      overflow-y: auto; } }
 
 main .side-div {
   box-sizing: border-box;
@@ -74,6 +104,10 @@ main .side-div {
           main .side-div .side-cart .side-cart-content .cart-item .item-details .row {
             margin: 0;
             padding: 0; }
+          main .side-div .side-cart .side-cart-content .cart-item .item-details .item-ticket-counter-container {
+            padding-bottom: 0.5em; }
+          main .side-div .side-cart .side-cart-content .cart-item .item-details .item-ticket-labels {
+            padding-bottom: 0.3em; }
           main .side-div .side-cart .side-cart-content .cart-item .item-details select {
             height: 2em;
             margin-bottom: 0.5em; }
@@ -93,6 +127,8 @@ main .side-div {
         height: auto; }
   main .side-div .side-login {
     width: 100%; }
+    main .side-div .side-login .btn-your-data-container {
+      margin-top: 3em; }
   main .side-div .side-search {
     width: 100%; }
 @media only screen and (min-width: 992px) {

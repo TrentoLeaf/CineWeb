@@ -102,10 +102,10 @@
                                     </div>
                                     <i ng-click="cc.removeFromCart($index)" class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
                                 </div>
-                                <div class="col s12 m12 l12" style="padding-bottom:0.5em;">
+                                <div class="col s12 m12 l12 item-ticket-counter-container">
                                     <p>Rimangono ancora: 6 biglietti.</p> <!-- TODO ng-model con i max biglietti in cart.film -->
                                 </div>
-                                <div class="row" style="padding-bottom:0.3em;">
+                                <div class="row item-ticket-labels">
                                     <div class="col s7 m7 l7">
                                         <label>Tipologia</label>
                                     </div>
@@ -193,7 +193,7 @@
                         <h4>Benvenuto</h4>
                         <h5>{{c.user.name}}</h5> <!-- TODO definire -->
                         <h6>{{c.user.email}}</h6> <!-- TODO definire -->
-                        <div class="row" style="margin-top:3em;">
+                        <div class="row btn-your-data-container">
                             <!-- TODO redirect to userArea partial -->
                             <button ng-click="c.toUserArea()" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-action-assignment right"></i>I tuoi dati</button>
                         </div>

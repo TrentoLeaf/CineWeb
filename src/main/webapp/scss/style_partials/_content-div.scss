@@ -6,15 +6,72 @@ main {
     height: auto;
     z-index: 1;
 
-    // immagini locandina nel frame principale
-    .plays-locandina {
-      min-height: 300px;
-      max-height: 300px;
+    // singolo spettacolo
+    .play {
+      margin-bottom: 4em;
+
+      // immagini locandina nel frame principale
+      .play-playbill {
+        min-height: 300px;
+        max-height: 300px;
+      }
+
+      .card-times {
+        overflow: auto;
+        max-height: 100px;
+        height: 100px;
+
+        .time-badge {
+          margin: 0em 0.5em 0.5em 0.5em;
+          padding: 0em 1.5em 0em 1.5em;
+          cursor: default;
+        }
+
+      }
+
+      .play-details-btn {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+      }
+
+    }
+
+    // riepilogo acquisti
+    .buy-summary {
+
+      .buy-summary-total-container {
+        margin-bottom: 0px;
+      }
+
+      .buy-summary-btn {
+        width:100%;
+      }
     }
 
   }
+}
 
-  // footer dei modal con i pusanti 'acquista spettacolo'
+// modal dettagli spettacolo
+#modal {
+  max-height: 80%;
+  height: 80%;
+  width: 80%;
+
+  .modal-close {
+    padding: 0px;
+  }
+
+  .modal-date {
+    margin-top: 0;
+  }
+
+  .modal-time-badge {
+    margin-left: 1em;
+    margin-bottom: 0.5em;
+  }
+
+  // footer del modal con i pusanti 'acquista spettacolo'
   .buy-buttons-div {
     @media screen and (max-width: 600px) {
       height: 5em;
@@ -22,5 +79,5 @@ main {
       overflow-y: auto;
     }
   }
-
 }
+
