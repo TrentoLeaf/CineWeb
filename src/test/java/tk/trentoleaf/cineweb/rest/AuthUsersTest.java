@@ -439,5 +439,24 @@ public class AuthUsersTest extends MyJerseyTest {
         assertEquals(401, r4.getStatus());
     }
 
+    @Test
+    public void invalidateSession() throws Exception {
+
+        // login as admin
+        final Cookie c = loginAdmin();
+
+        // try to get users -> should pass
+        final Response r1 = getTarget().path("/users/").request(JSON).cookie(c).get();
+        assertEquals(200, r1.getStatus());
+
+        // logout
+        final Response r2 = getTarget().path("users/logout").request().cookie(c).post(null);
+        assertEquals(200, r2.getStatus());
+
+        // try to get users -> should fail
+        final Response r3 = getTarget().path("/users/").request(JSON).cookie(c).get();
+        assertEquals(401, r3.getStatus());
+    }
+
 }
 
