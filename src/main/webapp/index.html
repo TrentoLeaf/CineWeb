@@ -84,9 +84,9 @@
     <div class="side-div grey darken-4 white-text">
         <!-- Only Mobile: bottone per chiudere la side-div-->
         <div class="row hide-side-nav-button-mobile-container hide-on-med-and-up grey darken-4">
-            <button ng-click="tab.setTab(-1)" class="hide-side-nav-button-mobile btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i>Torna indietro</button>
+            <button ng-click="tab.setTab(-1)" class="btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i>Torna indietro</button>
         </div>
-        <ul class="side-div-menu">
+        <ul class="side-div-container">
             <li ng-controller="CartController as cc" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
                 <div class="side-cart-content grey darken-4 row"> <!-- Contenuto carrello -->
                     <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
@@ -117,10 +117,12 @@
                                     <div class="col s7 m7 l7"> <!-- dropdown tipologia biglietto -->
                                         <select class="browser-default black-text" ng-model="cart[$parent.$index].tickets[$index].type" ng-change="cc.updateTotal()" >
                                             <option ng-repeat="ticket in tickets" value="{{ticket.type}}">{{ticket.name}}</option>
-                                            <!--<option value="normale" selected>Normale</option>
+                                            <!--
+                                            <option value="normale" selected>Normale</option>
                                             <option value="ridotto">Ridotto</option>
                                             <option value="militari">Militari</option>
-                                            <option value="disabili">Disabili</option>-->
+                                            <option value="disabili">Disabili</option>
+                                            -->
                                         </select>
                                     </div>
                                     <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4"> <!-- dropdown quantità biglietti -->
@@ -179,7 +181,7 @@
                             </div>
                         </form>
                     </li>
-                    <li ng-show="c.logged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- already login page -->
+                    <li ng-show="c.logged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- already logged page -->
                         <div class="row">
                             <div class="col s7 m7 l7">
                                 <h6 ng-show="c.error" class="red-text">{{c.error}}</h6>

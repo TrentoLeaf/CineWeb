@@ -1,0 +1,122 @@
+main {
+
+  // div laterale contenente carrello, login, ricerca
+  .side-div {
+    box-sizing: border-box;
+    position: fixed;
+    top: 64px;
+    right: 0px;
+    bottom: 0px;
+    width: 0px; // == nascosto
+    height: auto;
+    overflow-y: auto;
+    z-index: 2;
+    transition: width 0.3s;
+
+    // lista ul  per li carrello, li login, li ricerca
+    .side-div-container {
+      height: auto;
+    }
+
+    // contenitore pulsante per nascondere il div laterale
+    .hide-side-nav-button-mobile-container {
+      margin-top: 1em;
+    }
+
+    // carrello
+    .side-cart {
+      width: 100%;
+      height: 100%;
+
+      .side-cart-content {
+        margin-top: 0.5em;
+        width: 100%;
+        z-index: 3;
+
+        .cart-item {
+          padding: 0.1em;
+          border-radius: 2px;
+
+          .item-image {
+            padding-top: 0.3em;
+            padding-left: 0.3em;
+            img { // for firefox and ie
+              width: 100%;
+              height: 100%;
+            }
+          }
+
+          .item-details {
+            padding: 0;
+
+            .mdi-action-highlight-remove {
+              padding-right: 0.1em;
+            }
+
+            .row {
+              margin: 0;
+              padding: 0;
+            }
+
+            select {
+              height: 2em;
+              margin-bottom: 0.5em;
+            }
+
+            input[type="number"] {
+              margin: 0;
+              height: 28px;
+              margin-top: -30px;
+            }
+
+          }
+        }
+      }
+
+      .side-cart-actions {
+        box-sizing: border-box;
+        width: 100%;
+        height: auto;
+        z-index: 3;
+        margin-bottom: 0px;
+
+        .side-cart-total {
+          margin-bottom: 1em;
+        }
+
+        &:nth-child(2) {
+          height: auto;
+        }
+
+      }
+    }
+
+    // login
+    .side-login {
+      width: 100%;
+    }
+
+    // ricerca
+    .side-search {
+      width: 100%;
+    }
+
+
+  }
+
+  // classe applicata al div laterale per gestirne l'apertura orizzontale
+  .side-div-w {
+
+    @media only screen and (min-width: 992px) {
+      width: 30%;
+    }
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+      width: 50%;
+    }
+    @media only screen and (max-width: 600px) {
+      top: 56px;
+      width: 100%;
+      overflow-y: auto;
+    }
+  }
+}

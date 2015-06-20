@@ -64,9 +64,6 @@ var SEAT_UNAVAILABLE = 2;
 
                     // generate svg seats
                     generateSvg(this.data_from_server[this.data_from_server_index].seats, this.selected_seats, this.film);
-                    // back to top of page
-                    $location.hash('main-content');
-                    $anchorScroll();
                 }
                 else { // scelta dei posti terminata
                     // TODO chiamata AJAX con invio di data_to_server
@@ -75,6 +72,10 @@ var SEAT_UNAVAILABLE = 2;
                     $location.path('/buy_last_step');
                     // TODO server risponde errore --> gestire il tipo  di errore
                 }
+
+                // back to top of page
+                $location.hash('main-content');
+                $anchorScroll();
             };
 
             /* chiamata da bottone avanti nella scelta posti */

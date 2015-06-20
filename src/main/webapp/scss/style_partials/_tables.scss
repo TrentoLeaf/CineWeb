@@ -1,0 +1,50 @@
+$light-line: rgb(230,230,230);
+$dark-line:  rgb(40,40,40);
+
+// tabella dei prezzi nella pagina informazioni
+.priceTable {
+
+  tr:nth-child(odd) {
+    background-color: $light-line;
+    color: $dark-line;
+  }
+
+  tr:nth-child(even) {
+    background-color: $dark-line;
+    color: $light-line;
+  }
+
+  tr {
+    td:nth-child(1) {
+      padding-left: 1em;
+    }
+    td:nth-child(2) {
+      padding-right: 1em;
+    }
+  }
+
+  td {
+    border-radius: 0px;
+    height: 1.5em;
+    max-height: 1.5em;
+    padding: 0px;
+  }
+
+}
+
+// tabella di riepilogo acquisti
+.summaryTable {
+
+  th {
+    text-align: center;
+  }
+
+  td {
+    text-align: center;
+    padding: 0;
+  }
+
+  span {
+    font-size: 0.7em;
+  }
+}

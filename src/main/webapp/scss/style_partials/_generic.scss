@@ -1,0 +1,36 @@
+#logo {
+  max-height: 100%;
+  width: 47px;
+  margin-top: 5px;
+  margin-right: 0.5rem;
+}
+
+#title {
+  @media only screen and (max-width: 600px) {
+    font-size: 1.5rem;
+  }
+}
+
+body {
+
+}
+
+main {
+  height: 100%;
+}
+
+footer {
+  margin-top: 0px !important;
+}
+
+
+// nasconde gli spinner per gli input field di tipo number (mese, anno, cvv carta di credito)
+#month::-webkit-inner-spin-button,
+#month::-webkit-outer-spin-button,
+#year::-webkit-inner-spin-button,
+#year::-webkit-outer-spin-button,
+#cvv::-webkit-inner-spin-button,
+#cvv::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

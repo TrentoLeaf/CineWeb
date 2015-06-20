@@ -1,0 +1,26 @@
+main {
+
+  // frame principale
+  .content-div {
+    width: 100%;
+    height: auto;
+    z-index: 1;
+
+    // immagini locandina nel frame principale
+    .plays-locandina {
+      min-height: 300px;
+      max-height: 300px;
+    }
+
+  }
+
+  // footer dei modal con i pusanti 'acquista spettacolo'
+  .buy-buttons-div {
+    @media screen and (max-width: 600px) {
+      height: 5em;
+      max-height: 5em;
+      overflow-y: auto;
+    }
+  }
+
+}
