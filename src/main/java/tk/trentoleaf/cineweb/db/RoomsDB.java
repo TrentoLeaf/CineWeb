@@ -245,12 +245,12 @@ public class RoomsDB {
     }
 
     // get a list of all seats by a Play
-    public List<SeatStatus> getSeatsByPlay(Play play) throws SQLException {
+    public List<SeatStatus> getSeatsByPlay(Play play) throws DBException {
         return getSeatsByPlay(play.getPid());
     }
 
     // get a list of all seats by a Play
-    public List<SeatStatus> getSeatsByPlay(int pid) throws SQLException {
+    public List<SeatStatus> getSeatsByPlay(int pid) throws DBException {
 
         // list of results
         final List<SeatStatus> seats = new ArrayList<>();
