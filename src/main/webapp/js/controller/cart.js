@@ -1,16 +1,34 @@
 (function () {
     "use strict";
 
-    angular.module('cartModule', [])
-        .controller('CartController', ['$rootScope', function ($rootScope) {
+    String.prototype.capitalizeFirstLetter = function() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    };
 
-            // TODO dati da recuperare dal server
-            $rootScope.tickets = [
-                {type: "normale", name: "Normale", price: 8.50},
-                {type: "ridotto", name: "Ridotto", price: 5.50},
-                {type: "militare", name: "Militare", price: 6},
-                {type: "disabile", name: "Disabile", price: 7}
-            ];
+    angular.module('cartModule', ['pricesModule'])
+        .controller('CartController', ['$rootScope', 'Prices', function ($rootScope, Prices) {
+
+            // map for the prices
+            var pricesMap = {
+                normal: "Normale",
+                reduced: "Ridotto",
+                military: "Militare",
+                disabled: "Disabile"
+            };
+
+            // function to load the prices
+            this.loadPrices = function () {
+                Prices.query(function(data) {
+                    data.map(function(o) {
+                        o.name = pricesMap[o.type] || o.type.capitalizeFirstLetter();
+                    });
+                    $rootScope.tickets = data;
+                });
+            };
+
+            // load the prices
+            $rootScope.tickets = [];
+            this.loadPrices();
 
             this.maxTickets = 10;
 
