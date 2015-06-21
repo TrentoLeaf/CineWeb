@@ -115,7 +115,7 @@
         <div class="row">
             <div class="col s12 offset-m1 m4 offset-l1 l4">
                 <div class="input-field">
-                    <input id="credit_card" type="text" class="validate" length="16">
+                    <input id="credit_card" type="number" length="16">
                     <label for="credit_card">Carta di credito</label>
                 </div>
             </div>
@@ -155,13 +155,16 @@
         </div>
         <div class="row"> <!-- nota credito accumulato -->
             <div class="col s12 offset-m1 m10 offset-l1 l10">
-                <p>Nota: Attualmente hai a disposizione {{user.credito}} € di credito. Il totale è stato calcolato tenendo conto del tuo credito accumulato.</p>
+                <p>Nota: Attualmente hai a disposizione {{user.credito}} € di credito.
+                    Parte dell'importo da pagare verrà quindi scalato dal tuo credito.
+                    Il totale è stato calcolato tenendo conto del tuo credito accumulato.
+                </p>
             </div>
         </div>
     </div>
     <div class="row"> <!-- bottoni -->
         <div class="col s12 offset-m1 m3 offset-l1 l3 center">
-            <button class="btn red white-text waves-effect waves-light buy-summary-btn" type="submit" name="next">Annulla
+            <button ng-click="ctrl.open_cancel_modal();" class="btn modal-trigger red white-text waves-effect waves-light buy-btn" type="submit" data-target="modal_buy_cancel">Annulla
                 <i class="mdi-navigation-cancel right"></i>
             </button>
         </div>
@@ -169,11 +172,23 @@
             &nbsp
         </div>
         <div class="col s12 m3 l3 center">
-            <button class="btn green white-text waves-effect waves-light buy-summary-btn" type="submit" name="next">Paga
+            <button class="btn green white-text waves-effect waves-light buy-btn" type="submit">Paga
                 <i class="mdi-content-send white-text right"></i>
             </button>
         </div>
     </div>
     <div class="row">
+    </div>
+</div>
+
+<div id="modal_buy_cancel" class="modal">
+    <div class="modal-content">
+        <h4>Conferma annullamento</h4>
+        <p>Sei sicuro di voler interrompere la procedura di acquisto dei biglietti?</p>
+    </div>
+    <div class="modal-footer">
+        <!-- TODO perchè se chiudo una volta il modal e poi lo riapro ng-click di 'si' NON funziona più ??? -->
+        <a class="modal-action modal-close waves-effect waves-red btn-flat">No</a>
+        <a ng-click="ctrl.cancel_procedure();" class="modal-action modal-close waves-effect waves-green btn-flat">Si</a>
     </div>
 </div>

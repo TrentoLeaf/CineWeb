@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     // init the mobile menu sidenav
-    $(".button-collapse").sideNav();
+    $('.button-collapse').sideNav();
 
     // init the dropdown selectors
     $('select').material_select();
