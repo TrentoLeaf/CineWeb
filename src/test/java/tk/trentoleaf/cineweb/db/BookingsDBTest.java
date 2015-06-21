@@ -148,22 +148,26 @@ public class BookingsDBTest extends DBTest {
         filmsDB.createFilm(f1);
 
         final Room r1 = roomsDB.createRoom(4, 5);
-        final List<Seat> s1 = r1.getSeats();
+        final Seat s1 = new Seat(r1.getRid(), 0, 2);
+        final Seat s2 = new Seat(r1.getRid(), 3, 3);
+        final Seat s3 = new Seat(r1.getRid(), 0, 0);
 
         final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
         playsDB.createPlay(p1);
 
         // create bookings  int rid, int x, int y, int uid, int pid, double price
-        bookingsDB.createBooking(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
-        bookingsDB.createBooking(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
+        bookingsDB.createBooking(s1, u1, p1, 12.0);
+        bookingsDB.createBooking(s2, u1.getUid(), p1.getPid(), 12);
+        bookingsDB.createBooking(r1.getRid(), s3.getX(), s3.getY(), u1.getUid(), p1.getPid(), 34);
 
         // expected
-        List<SeatReserved> expected = new ArrayList<>();
-        expected.add(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), true));
-        expected.add(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), true));
+        List<Seat> expected = new ArrayList<>();
+        expected.add(s1);
+        expected.add(s3);
+        expected.add(s2);
 
         // current
-        List<SeatReserved> current = roomsDB.getSeatsReservedByPlay(p1);
+        List<Seat> current = roomsDB.getSeatsReservedByPlay(p1);
 
         // test
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
@@ -180,30 +184,38 @@ public class BookingsDBTest extends DBTest {
         filmsDB.createFilm(f1);
 
         final Room r1 = roomsDB.createRoom(4, 5);
-        final List<Seat> s1 = r1.getSeats();
+        final Seat s1 = new Seat(r1.getRid(), 0, 2);
+        final Seat s2 = new Seat(r1.getRid(), 3, 3);
+        final Seat s3 = new Seat(r1.getRid(), 0, 0);
 
         final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
+        final Play p2 = new Play(f1, r1, ff.parseDateTime("22/10/2015 15:40:00"), true);
         playsDB.createPlay(p1);
+        playsDB.createPlay(p2);
 
-        // create bookings  int rid, int x, int y, int uid, int pid, double price
-        bookingsDB.createBooking(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
-        bookingsDB.createBooking(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
+        // create bookings
+        bookingsDB.createBooking(s1, u1, p1, 12);   // p1
+        bookingsDB.createBooking(s2, u1, p1, 12);   // p1
+        bookingsDB.createBooking(s3, u1, p2, 12);   // p2
 
         // expected
-        List<SeatReserved> expected = new ArrayList<>();
-        //expected.add(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(),true) );
-        //expected.add(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(),true) );
+        List<SeatStatus> expected = new ArrayList<>();
 
-        for (Seat seat : s1) {
-            expected.add(new SeatReserved(seat.getRid(), seat.getX(), seat.getY(), false));
+        // load all seats
+        for (Seat seat : roomsDB.getSeatsByRoom(r1.getRid())) {
+            expected.add(SeatStatus.fromSeat(seat, false));
         }
-        expected.remove(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), false));
-        expected.remove(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), false));
-        expected.add(new SeatReserved(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), true));
-        expected.add(new SeatReserved(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), true));
+
+        // remove reserved seats
+        expected.remove(SeatStatus.fromSeat(s1, false));
+        expected.remove(SeatStatus.fromSeat(s2, false));
+
+        // add reserved seats as reserved
+        expected.add(SeatStatus.fromSeat(s1, true));
+        expected.add(SeatStatus.fromSeat(s2, true));
 
         // current
-        List<SeatReserved> current = roomsDB.getSeatsByPlay(p1);
+        List<SeatStatus> current = roomsDB.getSeatsByPlay(p1);
 
         // test
         assertTrue(CollectionUtils.isEqualCollection(expected, current));

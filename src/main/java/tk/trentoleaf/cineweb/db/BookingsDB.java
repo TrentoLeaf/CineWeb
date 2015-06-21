@@ -1,6 +1,8 @@
 package tk.trentoleaf.cineweb.db;
 
 import org.joda.time.DateTime;
+import tk.trentoleaf.cineweb.beans.model.Play;
+import tk.trentoleaf.cineweb.beans.model.Seat;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.db.FilmAlreadyGoneException;
 import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
@@ -38,18 +40,30 @@ public class BookingsDB {
     private BookingsDB() {
     }
 
+
+    // create a new booking
+    public Booking createBooking(Seat seat, User user, Play play, double price) throws SQLException, FilmAlreadyGoneException {
+        return createBooking(seat, user.getUid(), play.getPid(), price);
+    }
+
+    // create a new booking
+    public Booking createBooking(Seat seat, int uid, int pid, double price) throws SQLException, FilmAlreadyGoneException {
+        return createBooking(seat.getRid(), seat.getX(), seat.getY(), uid, pid, price);
+    }
+
+    // create a new booking
     public Booking createBooking(int rid, int x, int y, int uid, int pid, double price) throws SQLException, FilmAlreadyGoneException {
         final String query = "INSERT INTO bookings (bid, uid, pid, rid, x, y, time_booking, price) VALUES " +
                 "(DEFAULT, ?, ?, ?, ?, ?, ?, ?) RETURNING bid";
 
-
+        // check if the play has already started
         final DateTime timeBooking = new DateTime(System.currentTimeMillis());
         if (playsDB.isOlderPlay(pid, timeBooking)) {
             throw new FilmAlreadyGoneException();
         }
 
+        // create booking object
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-
             final Booking booking = new Booking(rid, x, y, uid, pid, timeBooking, price);
 
             stm.setInt(1, booking.getUid());
@@ -63,14 +77,14 @@ public class BookingsDB {
             ResultSet rs = stm.executeQuery();
             rs.next();
 
+            // get id and return the booking object
             int bid = rs.getInt("bid");
             booking.setBid(bid);
             return booking;
         }
     }
 
-
-    //list of all booking
+    // list of all booking
     public List<Booking> getBookings() throws SQLException {
         final List<Booking> bookings = new ArrayList<>();
 
