@@ -79,7 +79,7 @@ public class UsersDBTest extends DBTest {
     }
 
 
-    @Test(expected = ConstrainException.class)
+    @Test(expected = UniqueViolationException.class)
     public void createUserFail() throws Exception {
 
         // create users
@@ -151,7 +151,7 @@ public class UsersDBTest extends DBTest {
         usersDB.updateUser(u1);
     }
 
-    @Test(expected = ConstrainException.class)
+    @Test(expected = UniqueViolationException.class)
     public void updateUserFail2() throws Exception {
 
         // create users
@@ -329,7 +329,7 @@ public class UsersDBTest extends DBTest {
         assertTrue(usersDB.authenticate("teo@teo.com", "pippo"));
     }
 
-    @Test(expected = WrongPasswordException.class)
+    @Test(expected = WrongCredentialsException.class)
     public void changePasswordFail1() throws Exception {
 
         // create users
@@ -340,7 +340,7 @@ public class UsersDBTest extends DBTest {
         usersDB.changePasswordWithOldPassword("teo@teo.com", "wrong_password", "new_password");
     }
 
-    @Test(expected = WrongPasswordException.class)
+    @Test(expected = WrongCredentialsException.class)
     public void changePasswordFail2() throws Exception {
 
         // change password
@@ -372,7 +372,7 @@ public class UsersDBTest extends DBTest {
         assertTrue(usersDB.authenticate("teo@teo.com", "pippo"));
     }
 
-    @Test(expected = WrongCodeException.class)
+    @Test(expected = WrongCredentialsException.class)
     public void resetPasswordFail() throws Exception {
 
         // create users
