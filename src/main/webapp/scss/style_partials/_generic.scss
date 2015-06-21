@@ -25,6 +25,8 @@ footer {
 
 
 // nasconde gli spinner per gli input field di tipo number (mese, anno, cvv carta di credito)
+#credit_card::-webkit-inner-spin-button,
+#credit_card::-webkit-outer-spin-button,
 #month::-webkit-inner-spin-button,
 #month::-webkit-outer-spin-button,
 #year::-webkit-inner-spin-button,

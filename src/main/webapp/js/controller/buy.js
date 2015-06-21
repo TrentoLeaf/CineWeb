@@ -89,6 +89,23 @@ var SEAT_UNAVAILABLE = 2;
                 this.next_buy();
             };
 
+
+            this.open_cancel_modal = function () {
+                $('#modal_buy_cancel').openModal();
+            };
+
+            this.cancel_procedure = function () {
+                this.film = {};
+                this.selected_seats = [];
+                this.data_to_server = [];
+                this.data_from_server = [];
+                this.data_from_server_index = -1;
+
+                console.log("buy procedure canceled!");
+
+                $location.path('/today');
+            };
+
             this.cloneObject = function (obj) {
                 return (JSON.parse(JSON.stringify(obj)));
             };
@@ -249,7 +266,7 @@ function generateSvg (posti, posti_selezionati, film) {
         }
 
     });
-}
+};
 
 /* return the next character in aphabet relative to char input */
 function nextChar(c) {

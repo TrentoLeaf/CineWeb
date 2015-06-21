@@ -14,6 +14,8 @@ main {
 footer {
   margin-top: 0px !important; }
 
+#credit_card::-webkit-inner-spin-button,
+#credit_card::-webkit-outer-spin-button,
 #month::-webkit-inner-spin-button,
 #month::-webkit-outer-spin-button,
 #year::-webkit-inner-spin-button,
@@ -44,9 +46,11 @@ main .content-div {
       padding: 0;
       margin: 0;
       width: 100%; }
+  main .content-div .buy-seats .buy-btn {
+    width: 100%; }
   main .content-div .buy-summary .buy-summary-total-container {
     margin-bottom: 0px; }
-  main .content-div .buy-summary .buy-summary-btn {
+  main .content-div .buy-summary .buy-btn {
     width: 100%; }
 
 #modal {

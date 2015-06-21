@@ -37,6 +37,13 @@ main {
 
     }
 
+    // selezione posti
+    .buy-seats {
+      .buy-btn {
+        width:100%;
+      }
+    }
+
     // riepilogo acquisti
     .buy-summary {
 
@@ -44,7 +51,7 @@ main {
         margin-bottom: 0px;
       }
 
-      .buy-summary-btn {
+      .buy-btn {
         width:100%;
       }
     }
