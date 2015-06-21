@@ -172,14 +172,13 @@ public class DB {
             // create table roles
             try (Statement createStm = connection.createStatement()) {
                 createStm.execute("CREATE TABLE IF NOT EXISTS roles (" +
-                        "roleid CHAR(8) PRIMARY KEY," +
+                        "roleid CITEXT PRIMARY KEY," +
                         "description VARCHAR(200));");
             }
 
             // insert roles
-            final List<Role> roles = Role.getRoles();
             final String insertRole = "INSERT INTO roles (roleid, description) VALUES (?, ?);";
-            for (Role r : roles) {
+            for (Role r : Role.values()) {
                 try (PreparedStatement insertStm = connection.prepareStatement(insertRole)) {
                     insertStm.setString(1, r.getRoleID());
                     insertStm.setString(2, r.getDescription());
@@ -193,18 +192,25 @@ public class DB {
 
     // create table user
     private void createTableUsers() throws SQLException {
-        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
-            stm.execute("CREATE TABLE IF NOT EXISTS users (" +
-                    "uid SERIAL PRIMARY KEY," +
-                    "enabled BOOLEAN," +
-                    "roleid CHAR(8) REFERENCES roles(roleid)," +
-                    "email CITEXT UNIQUE NOT NULL," +
-                    "pass CHAR(60) NOT NULL," +
-                    "first_name VARCHAR(100)," +
-                    "second_name VARCHAR(100)," +
-                    "credit DOUBLE PRECISION DEFAULT 0);");
-            stm.execute("CREATE INDEX ON users (email);");
-            stm.execute("CREATE INDEX ON users (uid, roleid);");
+        try (Connection connection = getConnection()) {
+            try (Statement stm = connection.createStatement()) {
+                stm.execute("CREATE TABLE IF NOT EXISTS users (" +
+                        "uid SERIAL PRIMARY KEY," +
+                        "enabled BOOLEAN," +
+                        "roleid CITEXT REFERENCES roles(roleid)," +
+                        "email CITEXT UNIQUE NOT NULL," +
+                        "pass VARCHAR(60) NOT NULL," +
+                        "first_name VARCHAR(100)," +
+                        "second_name VARCHAR(100)," +
+                        "credit DOUBLE PRECISION DEFAULT 0);");
+            }
+            // index on email already exists -> unique constraint
+            try (Statement stm = connection.createStatement()) {
+                stm.execute("CREATE INDEX users_role ON users (uid, roleid);");
+            } catch (SQLException e) {
+                // do nothing -> index already exists
+                logger.warning("Cannot create index users_role -> already exists");
+            }
         }
     }
 
