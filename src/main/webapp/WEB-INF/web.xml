@@ -11,6 +11,7 @@
 
     <!-- change session cookie -->
     <session-config>
+        <session-timeout>15</session-timeout>
         <cookie-config>
             <name>popcorn</name>
             <http-only>true</http-only>
