@@ -4,8 +4,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.Price;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.db.NotNullViolationException;
+import tk.trentoleaf.cineweb.exceptions.db.UniqueViolationException;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,14 +68,14 @@ public class PricesDBTest extends DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
-    @Test(expected = SQLException.class)
+    @Test(expected = UniqueViolationException.class)
     public void createPriceFail1() throws Exception {
         final Price p1 = new Price("pippo", 3);
         pricesDB.createPrice(p1);
         pricesDB.createPrice(p1);
     }
 
-    @Test(expected = SQLException.class)
+    @Test(expected = NotNullViolationException.class)
     public void createPriceFail2() throws Exception {
         final Price p1 = new Price(null, 3);
         pricesDB.createPrice(p1);

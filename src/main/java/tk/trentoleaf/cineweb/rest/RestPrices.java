@@ -4,6 +4,7 @@ import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
 import tk.trentoleaf.cineweb.beans.model.Price;
 import tk.trentoleaf.cineweb.db.PricesDB;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.db.UniqueViolationException;
 import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
 
@@ -39,7 +40,7 @@ public class RestPrices {
         try {
             pricesDB.createPrice(price);
             return price;
-        } catch (SQLException e) {
+        } catch (UniqueViolationException e) {
             throw new ConflictException("Price already exists");
         }
     }
@@ -47,7 +48,7 @@ public class RestPrices {
     @PUT
     @Path("/{type}")
     @AdminArea
-    public Price editPrice(@PathParam("type") String type, @NotNull(message = "Missing price") @Valid Price price) throws SQLException {
+    public Price editPrice(@PathParam("type") String type, @NotNull(message = "Missing price") @Valid Price price) {
 
         // make price case insensitive
         price.setType(type.toLowerCase());
@@ -64,7 +65,7 @@ public class RestPrices {
     @DELETE
     @Path("/{type}")
     @AdminArea
-    public Response deletePrice(@PathParam("type") String type) throws SQLException {
+    public Response deletePrice(@PathParam("type") String type) {
 
         // delete price
         try {

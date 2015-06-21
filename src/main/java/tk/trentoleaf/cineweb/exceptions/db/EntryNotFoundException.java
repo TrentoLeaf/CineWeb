@@ -1,4 +1,4 @@
 package tk.trentoleaf.cineweb.exceptions.db;
 
-public class EntryNotFoundException extends OLD_DBException {
+public class EntryNotFoundException extends Exception {
 }
