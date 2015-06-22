@@ -14,6 +14,9 @@
         .factory('Auth', ['BASE', '$http', '$q', '$log', function (BASE, $http, $q, $log) {
             var BASE_USERS = BASE + "/users";
 
+            // store the status of the current user
+            var status = null;
+
             return {
                 login: function (email, password) {
                     return $http.post(BASE_USERS + '/login', {email: email, password: password})
@@ -85,13 +88,22 @@
                 },
 
                 me: function () {
-                    return $http.get(BASE_USERS + "/me")
-                        .success(function (data) {
-                            $log.info('ME OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('ME FAILED: ' + status + " " + data);
-                        });
+                    var deferred = $q.defer();
+                    if (status) {
+                        deferred.resolve(status);
+                    } else {
+                        $http.get(BASE_USERS + "/me")
+                            .success(function (data) {
+                                status = data;
+                                $log.info('ME OK: ' + data);
+                                deferred.resolve(status);
+                            })
+                            .error(function (data, status) {
+                                $log.warn('ME FAILED: ' + status + " " + data);
+                                deferred.reject(status);
+                            });
+                    }
+                    return deferred.promise;
                 }
             }
         }]);
