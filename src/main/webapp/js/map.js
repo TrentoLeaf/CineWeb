@@ -9,15 +9,27 @@
 
     var SEAT_NOT_EXIST = 0,
         SEAT_AVAILABLE = 1,
-        SEAT_UNAVAILABLE = 2;
+        SEAT_UNAVAILABLE = 2,
+        SEAT_BEST = 3;
 
     /*  functions to manage the svg */
-    function generateSvg(film, posti_selezionati) {
 
-        var posti = film.seats;
+    function generateSvg(mappa, spettacolo, posti_selezionati) {
+        /* INPUT
+         Tutti)
+         mappa: mappa della sala
+         1) Mappa selezione posti (selection)
+         spettacolo: oggetto contente i dati relativi ad uno spettacolo acquistato (seats_selected)
+         posti_selezionati: array da riempire con i posti selezionati nell sala
+         2) Lista posti già acquistati
+         mappa: matrice con posti acquistati (uguali a SEAT_UNAVAILABLE)
+         3) Posti migliori (best_seats)
+         mappa: matrice con posti migiliori (uguali a SEAT_BEST)
+         NOTA: variabili non usate, alla chiamata,  possono essere messe a null
+         */
 
-        var rows = posti.length;
-        var columns = posti[0].length;
+        var rows = mappa.length;
+        var columns = mappa[0].length;
         // calculate dimensions
 
         // theatre dimensions
@@ -78,13 +90,13 @@
             rr.select('text').attr({text: c}); // set letter
             snap.append(rr);
 
-            // transalte to next column
+            // translate to next column
             i_index += 50;
 
             // print the seats in row
             for (var j = 0; j < columns; j++) {
                 // check if seat exist
-                if (posti[i][j] != SEAT_NOT_EXIST) {
+                if (mappa[i][j] != SEAT_NOT_EXIST) {
 
                     // get a seat
                     var pp = seat.clone();
@@ -92,45 +104,8 @@
                     pp.attr({row: i.toString()});
                     pp.attr({col: j.toString()});
 
-                    switch (posti[i][j]) {
-
-                        case SEAT_AVAILABLE:
-                            // set hover colors
-                            pp.hover(seatHoverIn, seatHoverOut);
-
-                            // set click handler
-                            pp.click(function () {
-                                if (this.hasClass('seat-selected')) {
-                                    this.removeClass('seat-selected');
-                                    this.hover(seatHoverIn, seatHoverOut);
-                                    // TODO remove the id from list of selected seats
-                                    posti_selezionati.splice({
-                                        row: pp.attr('row'),
-                                        col: pp.attr('col')
-                                    }, 1);
-                                    film.seats_selected++;
-                                }
-                                else {
-                                    // TODO check if can be selected (eg: no more seat selactable)
-                                    if (film.seats_selected > 0) {
-                                        this.addClass('seat-selected');
-                                        this.removeClass('seat-hover');
-                                        this.unhover(seatHoverIn, seatHoverOut);
-                                        // TODO add the id to list of selected seats
-                                        posti_selezionati.push({
-                                            row: pp.attr('row'),
-                                            col: pp.attr('col')
-                                        });
-                                        film.seats_selected--;
-                                    }
-                                }
-                            });
-                            break;
-                        case SEAT_UNAVAILABLE:
-                            // set color
-                            pp.addClass('seat-unavailable');
-                            break;
-                    }
+                    // set the type of seat
+                    set_svg_seat(pp, mappa[i][j], spettacolo, posti_selezionati);
 
                     snap.append(pp);
                 }
@@ -161,6 +136,57 @@
         }
     }
 
+    function set_svg_seat (poltrona_svg, posto, spettacolo, posti_selezionati) {
+
+        switch (posto) {
+
+            case SEAT_AVAILABLE:
+                if (spettacolo != undefined) { // only for selection
+
+                    // set hover colors
+                    poltrona_svg.hover(seatHoverIn, seatHoverOut);
+
+                    // set click handler
+                    poltrona_svg.click(function () {
+                        if (this.hasClass('seat-selected')) {
+                            this.removeClass('seat-selected');
+                            this.hover(seatHoverIn, seatHoverOut);
+                            // TODO remove the id from list of selected seats
+                            posti_selezionati.splice({
+                                row: poltrona_svg.attr('row'),
+                                col: poltrona_svg.attr('col')
+                            }, 1);
+                            spettacolo.seats_selected++;
+                        }
+                        else {
+
+                            if (spettacolo.seats_selected > 0) {
+                                this.addClass('seat-selected');
+                                this.removeClass('seat-hover');
+                                this.unhover(seatHoverIn, seatHoverOut);
+
+                                posti_selezionati.push({
+                                    row: poltrona_svg.attr('row'),
+                                    col: poltrona_svg.attr('col')
+                                });
+                                spettacolo.seats_selected--;
+                            }
+                        }
+                    });
+                }
+                break;
+            case SEAT_UNAVAILABLE:
+                // set color
+                poltrona_svg.addClass('seat-unavailable');
+                break;
+            case  SEAT_BEST:
+                // set color
+                poltrona_svg.addClass('seat-best');
+                break;
+        }
+    }
+
+
     /* return the next character in aphabet relative to char input */
     function nextChar(c) {
         if (c == 'Z') {
@@ -187,25 +213,35 @@
                     o: '=o'
                 },
                 link: function (scope, element, attrs) {
+                    // gestione della mappa per la selezione dei posti
                     scope.$watch('o.film.seats', function (seats) {
                         // seats == scope.o.seats
                         console.log(seats);
                         console.log(scope.seats);
 
-                        // scope.o.f = scope.o.f || [];
-                        // scope.o.f.push(1);
-
                         //NEW
                         if ((scope.o.film != undefined) && (scope.o.film.seats != undefined) && (scope.o.selected_seats != undefined)) {
-                            generateSvg(scope.o.film, scope.o.selected_seats);
+                            generateSvg(scope.o.film.seats, scope.o.film, scope.o.selected_seats);
                         }
 
                     }, true);
+
+                    // gestione della mappa per i posti occupati di una sala e i posti migliori
+                    scope.$watch('o.mapTheatre', function (map) {
+
+                        // scope.o.mapTheatre: mappa (matrice) di una sala
+                        if ((scope.o.mapTheatre != undefined)) {
+                            generateSvg(scope.o.mapTheatre, undefined, undefined);
+                        }
+
+                    }, true);
+
                 }
             }
         })
 
         .controller('MapController', function () {
+            // TODO serve questo controller?
             this.test = {
                 a: 123,
                 b: "pippo",

@@ -72,3 +72,10 @@
   fill: #24a8e2; }
 .seat-hover .seat_sitting {
   fill: #52caff; }
+
+.seat-best .seat_back {
+  fill: #c8ab00; }
+.seat-best .seat_arm {
+  fill: #e8c800; }
+.seat-best .seat_sitting {
+  fill: #ffcd00; }

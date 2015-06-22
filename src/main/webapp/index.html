@@ -61,7 +61,6 @@
             <ul class="right hide-on-med-and-down">
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(1)"><i class="mdi-action-shopping-cart"></i></a></li>
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle"></i></a></li>
-                <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(3)"><i class="mdi-action-search"></i></a></li>
             </ul>
 
             <ul id="nav-mobile" class="side-nav grey darken-4">
@@ -72,7 +71,7 @@
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle left"></i>Accedi</a></li>
             </ul>
             <a href="#" data-activates="nav-mobile" class="button-collapse yellow-text text-accent-4"><i class=" mdi-navigation-menu"></i></a>
-            <a href="#" data-activates="nav-mobile" class="button hide-on-large-only right" ng-click="tab.setTab(3)"><i class="yellow-text text-accent-4 mdi-action-search"></i></a>
+            <a data-activates="nav-mobile" class="button hide-on-large-only right" ng-click="tab.setTab(1)"><i class="yellow-text text-accent-4 mdi-action-shopping-cart"></i></a>
         </div>
     </nav>
 </div>
@@ -197,26 +196,10 @@
                         <h6>{{c.user.email}}</h6> <!-- TODO definire -->
                         <div class="row btn-your-data-container">
                             <!-- TODO redirect to userArea partial -->
-                            <button ng-click="c.toUserArea()" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-action-assignment right"></i>I tuoi dati</button>
+                            <button ng-click="c.toUserArea(); tab.setTab(-1);" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-action-assignment right"></i>I tuoi dati</button>
                         </div>
                     </li>
                 </ul>
-            </li>
-            <li class="side-search side-nav-element" ng-show="tab.isSet(3)">
-                <div class="row">
-                    <form>
-                        <div class="input-field">
-                            <i class="mdi-action-search prefix"></i>
-                            <input id="search" type="search" required>
-
-                        </div>
-                    </form>
-
-                </div>
-
-                <div class="row">
-                    <!-- risultati ricerca -->
-                </div>
             </li>
         </ul>
     </div>

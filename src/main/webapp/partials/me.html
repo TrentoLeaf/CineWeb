@@ -2,29 +2,206 @@
     <loading loading="ctrl.loading"></loading>
 
     <div ng-hide="ctrl.loading">
-        <div class="page-title">
-            <h3>Il mio profilo</h3>
+
+        <div class="row">
+            <div class="col s12 m12 l12 center-align">
+                <h2 class="yellow-text text-accent-4">Profilo</h2>
+            </div>
         </div>
 
-        <div class="user-informations">
-            <table class="info-table">
-                <tr>
-                    <td><p>Nome: </p></td>
-                    <td><p>{{ctrl.user.firstName}}</p></td>
-                </tr>
-                <tr>
-                    <td><p>Cognome: </p></td>
-                    <td><p>{{ctrl.user.secondName}}</p></td>
-                </tr>
-                <tr>
-                    <td><p>Email: </p></td>
-                    <td><p>{{ctrl.user.email}}</p></td>
-                </tr>
-                <tr>
-                    <td><p>Credito residuo: </p></td>
-                    <td><p>{{ctrl.user.credit|currency}}</p></td>
-                </tr>
-            </table>
+        <div class="row white-text"> <!-- dati utente -->
+            <div class="col s12 offset-m1 m10 offset-l1 l10">
+                <h4>Dati utente</h4>
+            </div>
+            <div class="col s12 offset-m1 m5 offset-l1 l3">
+                <h6>Nome: {{ctrl.user.firstName}}</h6>
+            </div>
+            <div class="col s12 offset-m1 m5 offset-l1 l3">
+                <h6>Cognome: {{ctrl.user.secondName}}</h6>
+            </div>
+            <div class="col s12 offset-m1 m5 offset-l1 l3">
+                <h6>Email: {{ctrl.user.email}}</h6>
+            </div>
+
+        </div>
+
+        <div class="row white-text"> <!-- cronologia acquisti -->
+            <div class="col s12 offset-m1 m10 offset-l1 l10">
+                <h4>Cronologia acquisti</h4>
+            </div>
+        </div>
+        <div class="row white-text"> <!-- ng-repeat="" -->
+            <div class="col s12 offset-m1 m10 offset-l1 l10  grey darken-4" style="border-radius:2px; box-shadow: black 2px 2px 10px">
+                <div class="row">
+                    <div class="col s12 m12 l12 center-align">
+                        <h5>ACQUISTO</h5>
+                    </div>
+                    <div class="col s12 m4 l4">
+                        <h5>Data: {{ctrl.aaa}}</h5>
+                    </div>
+                    <div class="col s12 m4 l">
+                        <h5>Credito usato: {{ctrl.aaaa|currency:"€ "}}</h5>
+                    </div>
+                    <div class="col s12 m4 l4">
+                        <h5>Totale: {{ctrl.aaaaa|currency:"€ "}}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div ng-repeat="ticket in acquisti">
+                        <table class="summaryTable">
+                            <thead>
+                            <tr>
+                                <th>Film</th>
+                                <th>Tipologia</th>
+                                <th>Quantità</th>
+                                <th>Prezzo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="ticket in nonsodove2">
+                                <td>{{ticket.title}}</td>
+                                <td>{{ticket.type}}</td>
+                                <td>{{ticket.number}}</td>
+                                <td>{{ticket.price}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <!-- TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST  -->
+
+
+                    <table class="summaryTable">
+                        <thead>
+                        <tr>
+                            <th>Film</th>
+                            <th>Tipologia</th>
+                            <th>Quantità</th>
+                            <th>Prezzo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span>Titolo1</span></td>
+                            <td><span>Normale</span></td>
+                            <td><span>2</span></td>
+                            <td><span>12.50</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Titolo2</span></td>
+                            <td><span>Normale</span></td>
+                            <td><span>2</span></td>
+                            <td><span>12.50</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- END TEST END TEST END TEST END TEST END TEST END TEST END TEST -->
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- TEST2 -->
+
+
+        <div class="row white-text"> <!-- ng-repeat="" -->
+            <div class="col s12 offset-m1 m10 offset-l1 l10  grey darken-4" style="border-radius:2px; box-shadow: black 2px 2px 10px">
+                <div class="row">
+                    <div class="col s12 m12 l12 center-align">
+                        <h5>ACQUISTO</h5>
+                    </div>
+                    <div class="col s12 m4 l4">
+                        <h5>Data: {{ctrl.aaa}}</h5>
+                    </div>
+                    <div class="col s12 m4 l">
+                        <h5>Credito usato: {{ctrl.aaaa|currency:"€ "}}</h5>
+                    </div>
+                    <div class="col s12 m4 l4">
+                        <h5>Totale: {{ctrl.aaaaa|currency:"€ "}}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div ng-repeat="ticket in acquisti">
+                        <table class="summaryTable">
+                            <thead>
+                            <tr>
+                                <th>Film</th>
+                                <th>Tipologia</th>
+                                <th>Quantità</th>
+                                <th>Prezzo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="ticket in nonsodove2">
+                                <td>{{ticket.title}}</td>
+                                <td>{{ticket.type}}</td>
+                                <td>{{ticket.number}}</td>
+                                <td>{{ticket.price}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <!-- TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST  -->
+
+
+                    <table class="summaryTable">
+                        <thead>
+                        <tr>
+                            <th>Film</th>
+                            <th>Tipologia</th>
+                            <th>Quantità</th>
+                            <th>Prezzo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span>Titolo1</span></td>
+                            <td><span>Normale</span></td>
+                            <td><span>2</span></td>
+                            <td><span>12.50</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Titolo2</span></td>
+                            <td><span>Normale</span></td>
+                            <td><span>2</span></td>
+                            <td><span>12.50</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- END TEST END TEST END TEST END TEST END TEST END TEST END TEST -->
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- END TEST2 -->
+
+
+
+
+    </div>
+
+    <div class="row">
+    </div>
+
+    <div class="row white-text"> <!-- credito -->
+        <div class="col s12 offset-m1 m10 offset-l1 l10">
+            <h4>Credito disponibile: {{ctrl.user.credit|currency:"€ "}}</h4>
         </div>
     </div>
+
+
+
+
+
 </div>
