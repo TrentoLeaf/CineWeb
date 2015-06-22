@@ -85,7 +85,7 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when('/test', {
                 templateUrl: '../partials/test.html',
-                controller: 'MapController',
+                controller: 'BuyController',
                 controllerAs: 'ctrl'
             }).when('/error', {
                 templateUrl: '../partials/error.html'
