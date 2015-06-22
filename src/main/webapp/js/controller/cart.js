@@ -1,12 +1,18 @@
 (function () {
     "use strict";
 
-    String.prototype.capitalizeFirstLetter = function() {
+    String.prototype.capitalizeFirstLetter = function () {
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
 
-    angular.module('cartModule', ['pricesModule'])
-        .controller('CartController', ['$rootScope', 'Prices', '$location', function ($rootScope, Prices, $location) {
+    angular.module('cartModule', ['pricesModule', 'storageModule'])
+        .controller('CartController', ['$rootScope', 'Prices', '$location', 'StorageService', function ($rootScope, Prices, $location, StorageService) {
+
+            //AAAAAAAAAA
+            this.loadCart = function () {
+                console.log(StorageService.loadCart());
+            };
+
 
             // map for the prices
             var pricesMap = {
@@ -18,8 +24,8 @@
 
             // function to load the prices
             this.loadPrices = function () {
-                Prices.query(function(data) {
-                    data.map(function(o) {
+                Prices.query(function (data) {
+                    data.map(function (o) {
                         o.name = pricesMap[o.type] || o.type.capitalizeFirstLetter();
                     });
                     $rootScope.tickets = data;
@@ -37,6 +43,10 @@
             $rootScope.total = $rootScope.total || 0.00;
 
             this.addToCart = function (film, time_index) {
+
+                //TODO remove
+                this.loadCart();
+                StorageService.saveCart($rootScope.cart);
 
                 // film: l'oggetto film da acquistare
                 // time_index: l'indice dell'ora (nell' array time di film) da prenotare
@@ -70,7 +80,7 @@
             this.removeFromCart = function (film) {
                 $rootScope.cart.splice(film, 1); // rimuove 1 elemento a partire da 'film'
                 // se il carrello è vuoto, tolgo il pulsante 'prosegui'
-                if ( $rootScope.cart.length == 0) {
+                if ($rootScope.cart.length == 0) {
                     $('#btn-go-to-buy').addClass('hide');
                 }
                 this.updateTotal();

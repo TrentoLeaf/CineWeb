@@ -1,8 +1,8 @@
 (function () {
     'use strict';
 
-    angular.module('loginModule', ['usersModule', 'storageModule', 'constantsModule'])
-        .controller('LoginController', ['$location', 'Auth', 'StorageService', function ($location, Auth, StorageService) {
+    angular.module('loginModule', ['usersModule', 'constantsModule'])
+        .controller('LoginController', ['$location', 'Auth', function ($location, Auth) {
 
             var ctrl = this;
 
@@ -11,8 +11,6 @@
 
             this.data = "";
             this.error = "";
-
-            this.email = StorageService.getEmail();
 
             var setData = function (data) {
                 ctrl.data = data;
@@ -27,7 +25,6 @@
             this.login = function (email, password) {
                 Auth.login(email, password).then(
                     function (data) {
-                        StorageService.login(data);
                         // set logged var
                         ctrl.logged = true;
                         setError("");
@@ -90,7 +87,7 @@
             this.mailForPassRecovery = "";
             var REC_PASS_SUCCESS = 0;
             var REC_PASS_MAIL_NOT_EXIST = 1;
-            var REC_PASS_MAIL_NOT_VALID = 2
+            var REC_PASS_MAIL_NOT_VALID = 2;
             var REC_PASS_REQUEST_FAIL = -1;
 
             this.sendPassRecoveryRequest = function () {
@@ -106,7 +103,7 @@
                     // TODO attendi la risposta (successo/mail_non_registrata/fail)
                     // TODO callback:  ctrl.set_rec_pass_msg(response);
                 }
-            }
+            };
 
             /* setta l'errore o il messaggio per il recupero della password */
             this.set_rec_pass_msg = function (result) {
@@ -126,7 +123,7 @@
                     ctrl.rec_pass_msg = "La richiesta non è andata a buon fine. Riprova.";
                 }
 
-            }
+            };
 
 
 

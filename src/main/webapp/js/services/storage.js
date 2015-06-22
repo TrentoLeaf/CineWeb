@@ -4,44 +4,24 @@
     angular.module('storageModule', ['angular-locker'])
         .factory('StorageService', ['locker', function (locker) {
 
-            var EMAIL = 'email';
-            var NAME = 'name';
-            var ROLE = 'role';
+            var CART = 'cart';
 
             return {
 
-                login: function (payload) {
-                    locker.put(EMAIL, payload.email);
-                    locker.put(NAME, payload.name);
-                    locker.put(ROLE, payload.role);
+                saveCart: function (cart) {
+                    locker.put(CART, JSON.stringify(cart));
                 },
 
-                logout: function () {
-                    locker.forget(EMAIL);
-                    locker.forget(NAME);
-                    locker.forget(ROLE);
+                cleanCart: function () {
+                    locker.forget(CART);
                 },
 
-                getEmail: function () {
-                    return locker.get(EMAIL);
-                },
-
-                getName: function () {
-                    return locker.get(NAME);
-                },
-
-                getRole: function () {
-                    return locker.get(ROLE);
-                },
-
-                setEmail: function (email) {
-                    locker.put(EMAIL, email);
-                },
-
-                setName: function (name) {
-                    locker.put(NAME, name);
+                loadCart: function () {
+                    var cart = locker.get(CART);
+                    return cart && JSON.parse(cart);
+                    //return JSON.parse(locker.get(CART));
                 }
-
             }
         }]);
+
 })();
