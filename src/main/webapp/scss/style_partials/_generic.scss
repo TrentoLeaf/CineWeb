@@ -32,7 +32,9 @@ footer {
 #year::-webkit-inner-spin-button,
 #year::-webkit-outer-spin-button,
 #cvv::-webkit-inner-spin-button,
-#cvv::-webkit-outer-spin-button {
-  -webkit-appearance: none;
+#cvv::-webkit-outer-spin-button,
+#credit::-webkit-inner-spin-button,
+#credit::-webkit-outer-spin-button {
+-webkit-appearance: none;
   margin: 0;
 }

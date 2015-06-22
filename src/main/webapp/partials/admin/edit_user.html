@@ -1,0 +1,40 @@
+<div class="row white-text center-align">
+    <div class="row">
+        <h4 class="yellow-text text-accent-4">Modifica Utente</h4>
+    </div>
+    <p>{{ctrl.currentUser | json}}</p>
+
+    <div class="row center">
+
+        <form class="col m6 offset-m3">
+
+            <div class="input-field center col m12">
+                <input placeholder="{{ctrl.currentUser.firstName}}" id="firstName" type="text" ng-model="ctrl.currentUser.firstName">
+                <label class="active" for="firstName">Nome</label>
+            </div>
+            <div class="input-field center col m12">
+                <input placeholder="{{ctrl.currentUser.secondName}}" id="secondName" type="text" ng-model="ctrl.currentUser.secondName">
+                <label class="active" for="secondName">Cognome</label>
+            </div>
+            <div class="input-field center col m12">
+                <input placeholder="{{ctrl.currentUser.credit}}" id="credit" type="number" ng-model="ctrl.currentUser.credit">
+                <label class="active" for="credit">Credito</label>
+            </div>
+
+            <div class="switch">
+                <label>
+                    Disabilitato
+                    <input type="checkbox" ng-model="ctrl.currentUser.enabled">
+                    <span class="lever"></span>
+                    Abilitato
+                </label>
+            </div>
+
+            <div class="section">
+                <a ng-click="ctrl.save()" class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/users">Modifica
+                    <i class="mdi-content-send right"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
