@@ -71,6 +71,28 @@ $(document).ready(function () {
                 templateUrl: '../partials/confirm.html',
                 controller: 'ConfirmController',
                 controllerAs: 'ctrl'
+            }).when ('/admin/dashboard',{
+                templateUrl: '../partials/admin/dashboard.html'
+            }).when ('/admin/films',{
+                templateUrl: '../partials/admin/films.html',
+                controller: 'AdminFilmController',
+                controllerAs: 'ctrl'
+            }).when ('/admin/plays',{
+                templateUrl: '../partials/admin/plays.html',
+                controller: 'AdminPlaysController',
+                controllerAs: 'ctrl'
+            }).when ('/admin/prices',{
+                templateUrl: '../partials/admin/prices.html',
+                controller: 'AdminPricesController',
+                controllerAs: 'ctrl'
+            }).when ('/admin/rooms',{
+                templateUrl: '../partials/admin/rooms.html',
+                controller: 'AdminRoomsController',
+                controllerAs: 'ctrl'
+            }).when ('/admin/stats',{
+                templateUrl: '../partials/admin/stats.html',
+                controller: 'AdminStatsController',
+                controllerAs: 'ctrl'
             }).when('/admin/users', {
                 templateUrl: '../partials/admin/users.html',
                 controller: 'AdminUsersController',
