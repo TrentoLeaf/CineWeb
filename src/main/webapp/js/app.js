@@ -25,7 +25,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule',
-        'registrationModule', 'meModule', 'adminUsers', 'confirmModule', 'buyModule', 'pricesModule'])
+        'registrationModule', 'meModule', 'adminUsers', 'confirmModule', 'buyModule', 'pricesModule', 'mapModule'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -42,12 +42,12 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when('/info', {
                 templateUrl: '../partials/info.html',
-                controller: function(prices) {
+                controller: function (prices) {
                     this.prices = prices;
                 },
                 controllerAs: 'pricesCtrl',
                 resolve: {
-                    prices: ['Prices', function(Prices) {
+                    prices: ['Prices', function (Prices) {
                         return Prices.query().$promise;
                     }]
                 }
@@ -82,6 +82,10 @@ $(document).ready(function () {
             }).when('/buy_last_step', {
                 templateUrl: '../partials/buy_summary.html',
                 controller: 'BuyController',
+                controllerAs: 'ctrl'
+            }).when('/test', {
+                templateUrl: '../partials/test.html',
+                controller: 'MapController',
                 controllerAs: 'ctrl'
             }).when('/error', {
                 templateUrl: '../partials/error.html'
