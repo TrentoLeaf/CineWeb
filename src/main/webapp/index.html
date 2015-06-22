@@ -78,14 +78,14 @@
 
 <!-- here the main content -->
 <main class="grey darken-3" id="main-content">
-    <div ng-click="tab.setTab(-1)" class="content-div grey darken-3" ng-view>
+    <div ng-click="tab.closeTab()" class="content-div grey darken-3" ng-view>
 
     </div>
 
     <div class="side-div grey darken-4 white-text">
         <!-- Only Mobile: bottone per chiudere la side-div-->
         <div class="row hide-side-nav-button-mobile-container hide-on-med-and-up grey darken-4">
-            <button ng-click="tab.setTab(-1)" class="btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i>Torna indietro</button>
+            <button ng-click="tab.closeTab();" class="btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i>Torna indietro</button>
         </div>
         <ul class="side-div-container">
             <li ng-controller="CartController as cc" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
@@ -146,7 +146,7 @@
                         <h5 class="total col s5 m5 l5 right-align">{{total | currency:"€ "}}</h5>
                     </div>
                     <div>
-                        <button ng-click="cc.proceed(); tab.setTab(-1);" id="btn-go-to-buy" class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10 hide">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
+                        <button ng-click="cc.proceed(); tab.closeTab();" id="btn-go-to-buy" class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10 hide">Prosegui<i class="mdi-navigation-chevron-right right"></i></button>
                     </div>
                 </div>
             </li>
@@ -168,7 +168,7 @@
                             </div>
                             <div class="row">
                                 <!-- TODO redirect to userPass partial -->
-                                <a  ng-click="c.losePass(c.user.email); tab.setTab(-1)" class="yellow-text text-accent-4" type="submit" name="forgot" href="">Password dimenticata? Clicca qui.</a>
+                                <a  ng-click="c.losePass(c.user.email); tab.closeTab()" class="yellow-text text-accent-4" type="submit" name="forgot" href="">Password dimenticata? Clicca qui.</a>
                             </div>
                             <div class="row">
                                 <button ng-click="c.login(c.user.email, c.user.pass)" class="col s12 m12 l12 btn-large green white-text waves-effect waves-light" type="submit" name="login">Login
@@ -176,7 +176,7 @@
                                 </button>
                             </div>
                             <div class="row">
-                                <button ng-click="c.register(c.user.email); tab.setTab(-1)" class="col s12 m12 l12 btn yellow accent-4 black-text waves-effect waves-light" type="submit" name="register">Registrati
+                                <button ng-click="c.register(c.user.email); tab.closeTab()" class="col s12 m12 l12 btn yellow accent-4 black-text waves-effect waves-light" type="submit" name="register">Registrati
                                     <i class="mdi-action-description black-text left"></i>
                                 </button>
                             </div>
@@ -196,7 +196,7 @@
                         <h6>{{c.user.email}}</h6> <!-- TODO definire -->
                         <div class="row btn-your-data-container">
                             <!-- TODO redirect to userArea partial -->
-                            <button ng-click="c.toUserArea(); tab.setTab(-1);" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-action-assignment right"></i>I tuoi dati</button>
+                            <button ng-click="c.toUserArea(); tab.closeTab();" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-action-assignment right"></i>I tuoi dati</button>
                         </div>
                     </li>
                 </ul>
@@ -205,7 +205,7 @@
     </div>
 </main>
 
-<footer class="page-footer grey darken-4" ng-click="tab.setTab(-1)">
+<footer class="page-footer grey darken-4" ng-click="tab.closeTab()">
     <div class="container white-text">
         <div class="row">
             <div class="col s12 m6 l6">

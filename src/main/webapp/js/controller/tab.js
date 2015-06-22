@@ -23,8 +23,7 @@
                     // disable main scrolling
                     var mq = window.matchMedia( "(max-width: 600px)" );
                     if (mq.matches) {
-                        console.log("Tab on mobile detected");
-                        $('body').bind('touchmove', function(e){e.preventDefault()});
+                        $('.content-div').bind('touchmove', function(e){e.preventDefault()});
                     }
 
                 }
@@ -34,7 +33,7 @@
                 // disable main scrolling
                 var mq = window.matchMedia( "(max-width: 600px)" );
                 if (mq.matches) {
-                    $('body').unbind('touchmove');
+                    $('.content-div').unbind('touchmove');
                 }
 
                 this.setTab(-1);
