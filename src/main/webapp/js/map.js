@@ -20,7 +20,7 @@
         var columns = posti[0].length;
         // calculate dimensions
 
-        // theatre diimensions
+        // theatre dimensions
         var theatre_w = 50 + (55 * columns) + 50;
         var theatre_h = 60 + (55 * rows) + 50;
         // stage dimensions
@@ -182,18 +182,10 @@
         .directive('map', function () {
             return {
                 restrict: 'E',
-                template: '<div><p>{{o | json}}</p><button ng-click="c.a()">EEE</button></div>',
+                template: '<div id="svg-container"><svg id="svg-theatre"></svg></div>',
                 scope: {
                     o: '=o'
                 },
-                controller: ['$scope', function ($scope) { // NON SERVE
-                    this.a = function () {
-                        $scope.o.e = "eeeeeeeee";
-                        $scope.o.seats = $scope.o.seats || [];
-                        $scope.o.seats.push(3);
-                    }
-                }],
-                controllerAs: 'c',
                 link: function (scope, element, attrs) {
                     scope.$watch('o.film.seats', function (seats) {
                         // seats == scope.o.seats

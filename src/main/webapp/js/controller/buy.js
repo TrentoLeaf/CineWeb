@@ -6,20 +6,19 @@
 
             this.shared_obj = this.shared_obj || {};
 
-            this.data_from_server = [
-                {
-                    title: "titolo",
-                    date: "data",
-                    time: "ora",
-                    playbill: "img/temporary/mad-max-fury-road-locandina-400x250.jpg",
-                    seats: [
-                        [1, 1, 1, 0, 1, 1, 1],
-                        [1, 0, 1, 2, 0, 1, 1],
-                        [1, 2, 1, 2, 1, 2, 1],
-                        [1, 1, 1, 1, 1, 2, 0]
-                    ],
-                    seats_selected: 4
-                },
+            this.data_from_server = [ {
+                title: "titolo",
+                date: "data",
+                time: "ora",
+                playbill: "img/temporary/mad-max-fury-road-locandina-400x250.jpg",
+                seats: [
+                    [1, 1, 1, 0, 1, 1, 1],
+                    [1, 0, 1, 2, 0, 1, 1],
+                    [1, 2, 1, 2, 1, 2, 1],
+                    [1, 1, 1, 1, 1, 2, 0]
+                ],
+                seats_selected: 4
+            },
                 {
                     title: "titolo2",
                     date: "data2",
@@ -73,9 +72,9 @@
                 // TODO callback
                 // TODO salva i dati ricevuti dal server in data_from_server
                 // lancia procedura scelta biglietti
-                //this.next_buy();
+                this.next_buy();
 
-                $location.path('/buy');
+
 
                 // TODO errore
                 /* redirect pagina d'errore */
@@ -128,6 +127,10 @@
                 $('#modal_buy_cancel').openModal();
             };
 
+            this.close_modal = function() {
+                $('#modal_buy_cancel').closeModal();
+            };
+
             this.cancel_procedure = function () {
                 this.shared_obj.film = {};
                 this.shared_obj.selected_seats = [];
@@ -136,7 +139,7 @@
                 this.data_from_server_index = -1;
 
                 console.log("buy procedure canceled!");
-
+                this.close_modal();
                 $location.path('/today');
             };
 
@@ -145,7 +148,7 @@
             };
 
 
-            this.next_buy();
+            this.start_buy();
 
         }]);
 })();

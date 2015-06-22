@@ -6,7 +6,7 @@
     };
 
     angular.module('cartModule', ['pricesModule'])
-        .controller('CartController', ['$rootScope', 'Prices', function ($rootScope, Prices) {
+        .controller('CartController', ['$rootScope', 'Prices', '$location', function ($rootScope, Prices, $location) {
 
             // map for the prices
             var pricesMap = {
@@ -103,6 +103,10 @@
                     }
                 }
 
+            };
+
+            this.proceed = function () {
+                $location.path("/buy");
             };
 
             this.cloneObject = function (obj) {
