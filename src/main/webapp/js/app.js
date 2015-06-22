@@ -71,7 +71,7 @@ $(document).ready(function () {
                 templateUrl: '../partials/confirm.html',
                 controller: 'ConfirmController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/dashboard',{
+            }).when ('/admin',{
                 templateUrl: '../partials/admin/dashboard.html'
             }).when ('/admin/films',{
                 templateUrl: '../partials/admin/films.html',
