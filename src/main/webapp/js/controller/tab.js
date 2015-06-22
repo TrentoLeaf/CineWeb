@@ -20,21 +20,21 @@
                     $('.side-div').addClass('side-div-w');
                     this.tab = tab;
 
-                    // disable main scrolling
+                   /* // disable main scrolling
                     var mq = window.matchMedia( "(max-width: 600px)" );
                     if (mq.matches) {
                         $('.content-div').bind('touchmove', function(e){e.preventDefault()});
-                    }
-
+                    }*/
+                 
                 }
             };
 
             this.closeTab = function () {
-                // disable main scrolling
+                /*// disable main scrolling
                 var mq = window.matchMedia( "(max-width: 600px)" );
                 if (mq.matches) {
                     $('.content-div').unbind('touchmove');
-                }
+                }*/
 
                 this.setTab(-1);
             };
