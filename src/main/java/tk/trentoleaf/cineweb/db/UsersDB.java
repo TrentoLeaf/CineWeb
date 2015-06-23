@@ -1,10 +1,9 @@
 package tk.trentoleaf.cineweb.db;
 
 import org.joda.time.DateTime;
-import org.postgresql.util.PSQLException;
-import tk.trentoleaf.cineweb.exceptions.db.*;
 import tk.trentoleaf.cineweb.beans.model.Role;
 import tk.trentoleaf.cineweb.beans.model.User;
+import tk.trentoleaf.cineweb.exceptions.db.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -152,10 +151,12 @@ public class UsersDB {
             stm.setString(5, user.getSecondName());
             stm.setDouble(6, user.getCredit());
             stm.setInt(7, user.getUid());
+
             int rows = stm.executeUpdate();
             if (rows != 1) {
                 throw new UserNotFoundException();
             }
+
         } catch (SQLException e) {
             throw DBException.factory(e);
         }
