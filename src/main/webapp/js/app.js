@@ -41,8 +41,9 @@ $(document).ready(function () {
                 controller: 'PlaysController',
                 controllerAs: 'ctrl'
             }).when('/info', {
-                templateUrl: '../partials/info.html',
-                controller: function (prices) {
+                templateUrl: '../partials/info.html'
+               /* TODO remove
+               controller: function (prices) {
                     this.prices = prices;
                 },
                 controllerAs: 'pricesCtrl',
@@ -51,6 +52,7 @@ $(document).ready(function () {
                         return Prices.query().$promise;
                     }]
                 }
+                */
             }).when('/registration', {
                 templateUrl: '../partials/registration.html',
                 controller: 'RegistrationCtrl',
