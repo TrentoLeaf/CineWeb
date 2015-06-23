@@ -18,8 +18,7 @@
 
                 loadCart: function () {
                     var cart = locker.get(CART);
-                    return cart && JSON.parse(cart);
-                    //return JSON.parse(locker.get(CART));
+                    return (cart != undefined) ? JSON.parse(cart) : [];
                 }
             }
         }]);
