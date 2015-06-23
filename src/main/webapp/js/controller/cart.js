@@ -5,8 +5,8 @@
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
 
-    angular.module('cartModule', ['pricesModule', 'storageModule'])
-        .controller('CartController', ['$rootScope', 'Prices', '$location', 'StorageService', function ($rootScope, Prices, $location, StorageService) {
+    angular.module('cartModule', ['pricesModule'])
+        .controller('CartController', ['$rootScope', 'Prices', '$location', 'Auth', function ($rootScope, Prices, $location, Auth) {
 
             this.addToCart = function (film, time_index) {
 
@@ -58,7 +58,24 @@
 
 
             this.proceed = function () {
-                $location.path("/buy");
+
+                // check if the user is already logged
+                Auth.me().then(
+                    function (data) {
+                        // reset di afterLogin
+                        $rootScope.afterLogin = "normal";
+                        // vai alla pagina di acquisto
+                        $location.path("/buy");
+
+                    },
+                    function () { /* not logged */
+                        // setta afterLogin a buy (per ritornare alla procedura d'acquisto)
+                        $rootScope.afterLogin = "buy";
+                        // vai alla pagina di login
+                        $location.path('/login');
+                    }
+                );
+
             };
 
             this.cloneObject = function (obj) {

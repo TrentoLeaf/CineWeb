@@ -144,6 +144,8 @@ $(document).ready(function () {
             });
 
 
+            /* variavile per sapere cosa fare dopo un login */
+            $rootScope.afterLogin = "normal";
 
             //updateTotal
             /*

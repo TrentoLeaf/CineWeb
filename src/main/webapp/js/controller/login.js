@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('loginModule', ['usersModule', 'constantsModule'])
-        .controller('LoginController', ['$location', 'Auth', function ($location, Auth) {
+        .controller('LoginController', ['$rootScope', '$location', 'Auth', function ($rootScope, $location, Auth) {
 
             var ctrl = this;
 
@@ -30,8 +30,26 @@
                         //save basic user data
                         ctrl.user = data;
                         setError("");
-                        // redirect al partial principale
-                        //$location.path('/today');
+
+                        // redirect alla giusta pagina
+                        switch ($rootScope.afterLogin) {
+                            case "normal":
+                                $rootScope.afterLogin = "normal";
+                                $location.path('/today');
+                                break;
+                            case "buy":
+                                $rootScope.afterLogin = "normal";
+                                $location.path('/buy');
+                                break;
+                            case "userArea":
+                                $rootScope.afterLogin = "normal";
+                                if (ctrl.user.role = "admin") {
+                                    $location.path('/admin/dashboard');
+                                } else {
+                                    $location.path('/me');
+                                }
+                                break;
+                        }
 
                     },
                     function (error) {
@@ -40,7 +58,7 @@
                     }
                 );
 
-                this.retriveLoginData();
+                //this.retriveLoginData();
 
             };
 
@@ -148,7 +166,7 @@
                         ctrl.user = {};
 
                     }
-                )
+                );
             };
 
             this.retriveLoginData();

@@ -95,9 +95,7 @@
                     console.log("next index: " + this.data_from_server_index);
                     console.log(this.shared_obj.film);
 
-                    // generate svg seats
-                    // generateSvg(this.shared_obj.film, this.shared_obj.selected_seats);
-                }
+                 }
                 else { // scelta dei posti terminata
                     // TODO chiamata AJAX con invio di data_to_server
                     // TODO se il server risponde 'tutto ok'

@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('meModule', ['usersModule'])
-        .controller('MeController', ['$timeout', '$location', 'Auth', function ($timeout, $location, Auth) {
+        .controller('MeController', ['$rootScope', '$timeout', '$location', 'Auth', function ($rootScope, $timeout, $location, Auth) {
 
             var ctrl = this;
             this.user = {};
@@ -27,6 +27,7 @@
 
                         // TODO: move this logic in appConfig
                         // on errors -> redirect to login
+                        $rootScope.afterLogin = "userArea";
                         $location.path('/login');
                     }
                 )
