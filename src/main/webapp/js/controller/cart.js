@@ -8,12 +8,8 @@
     angular.module('cartModule', ['pricesModule', 'storageModule'])
         .controller('CartController', ['$rootScope', 'Prices', '$location', 'StorageService', function ($rootScope, Prices, $location, StorageService) {
 
-            //AAAAAAAAAA
-            this.loadCart = function () {
-                console.log(StorageService.loadCart());
-            };
 
-
+            /* TODO move to app */
             // map for the prices
             var pricesMap = {
                 normal: "Normale",
@@ -35,18 +31,10 @@
             // load the prices
             $rootScope.tickets = [];
             this.loadPrices();
+            /* end move to app */
 
-            this.maxTickets = 10;
-
-            // carrello che contiene oggetti film modificati
-            $rootScope.cart = $rootScope.cart || [];
-            $rootScope.total = $rootScope.total || 0.00;
 
             this.addToCart = function (film, time_index) {
-
-                //TODO remove
-                this.loadCart();
-                StorageService.saveCart($rootScope.cart);
 
                 // film: l'oggetto film da acquistare
                 // time_index: l'indice dell'ora (nell' array time di film) da prenotare
@@ -122,6 +110,38 @@
             this.cloneObject = function (obj) {
                 return (JSON.parse(JSON.stringify(obj)));
             };
+
+
+
+            /* init of cart */
+
+            // load the cart from LocalStorage
+            this.loadCart = function () {
+                $rootScope.cart = StorageService.loadCart();
+                if ($rootScope.cart != null) {
+                    console.log("unhide");
+                    // abilita il pulsante 'prosegui'
+                    $('#btn-go-to-buy').removeClass('hide');
+                } else {
+                    $rootScope.cart = [];
+                }
+                this.updateTotal();
+                console.log("cart loaded");
+            };
+
+            // TODO capire perchè viene chiamato 2 volte ogni volta (doppia chiamata al controller?)
+            // carrello che contiene oggetti film modificati
+            $rootScope.cart = $rootScope.cart || [];
+            $rootScope.total = $rootScope.total || 0.00;
+
+            this.loadCart();
+
+            // save the cart when is changed
+            $rootScope.$watch(function() {return $rootScope.cart;}, function(cart) {
+                StorageService.saveCart(cart);
+                console.log("cart saved");
+            }, true);
+
 
         }]);
 })();

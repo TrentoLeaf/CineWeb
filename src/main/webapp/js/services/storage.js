@@ -17,9 +17,13 @@
                 },
 
                 loadCart: function () {
-                    var cart = locker.get(CART);
-                    return cart && JSON.parse(cart);
-                    //return JSON.parse(locker.get(CART));
+                    var cart = "";
+                    cart = locker.get(CART);
+                    if (cart == "" || cart == "[]" || cart == null || cart == undefined) {
+                        return JSON.parse(null);
+                    } else {
+                        return JSON.parse(cart);
+                    }
                 }
             }
         }]);
