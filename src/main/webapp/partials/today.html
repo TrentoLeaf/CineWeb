@@ -9,7 +9,7 @@
         <ul class="row">
             <div class="col s12 m11 l11">
                 <li class="col s12 offset-m1 m5 offset-l1 l3 play" ng-repeat="film in date.films">
-                    <div class="card">
+                    <div class="card yellow accent-4">
                         <div class="card-image">
                             <img class="responsive-img play-playbill" ng-src="{{film.playbill}}" alt="Locandina">
                         </div>
@@ -19,13 +19,13 @@
                                 <div class="col s12 m12 l12 center-align">
                                     <h6>{{date.date}}</h6>
                                     <h6>ORE</h6>
-                                       <span class="btn-flat blue lighten-2 white-text time-badge" ng-repeat="time in film.time">{{time}}</span>
+                                       <h8 class=" text-grey text-darken-4 time-badge" ng-repeat="time in film.time">{{time}}</h8>
                                 </div>
                             </div>
                         </div>
                         <div class="card-action center-align">
                             <a ng-click="ctrl.setCurrent($parent.$index, $index)" data-target="modal"
-                               class="play-details-btn modal-trigger waves-effect waves-blue btn-flat grey-text text-darken-4">
+                               class="play-details-btn modal-trigger waves-effect waves-yellow btn-flat grey-text text-darken-4">
                                 <i class="mdi-action-info-outline left"></i>Dettagli e Acquista<i
                                     class="mdi-editor-attach-money right"></i></a>
                         </div>
@@ -36,7 +36,7 @@
 
         <!-- Finestrella dei dettagli e acquista -->
         <div id="modal" class="modal modal-fixed-footer grey-text text-darken-4">
-            <div class="modal-content">
+            <div class="modal-content yellow accent-4 ">
                 <div class="row">
                     <i class="btn-flat mdi-navigation-close right small modal-close" ng-click="ctrl.closeWindow()"></i>
                 </div>
@@ -65,7 +65,7 @@
                     <div class="col s12 m12 l6">
                         <h5 class="modal-date">Data: <span>{{ctrl.current.date}}</span></h5>
                         <h5>Orari:</h5>
-                        <span class="btn-flat blue lighten-2 white-text modal-time-badge" ng-repeat="time in ctrl.current.time">{{time}}</span>
+                        <span class="grey darken-4 yellow-text text-accent-4 modal-time-badge" ng-repeat="time in ctrl.current.time">{{time}}</span>
                         <h5>Descrizione:</h5>
 
                         <p>{{ctrl.current.description}}</p>
@@ -75,7 +75,7 @@
             <div class="modal-footer buy-buttons-div">
                 <button ng-repeat="tm in ctrl.current.time track by $index"
                         ng-click="cc.addToCart(ctrl.current, $index); ctrl.closeWindow()"
-                        class="modal-action waves-effect waves-green btn-flat"><i
+                        class="modal-action waves-effect waves-yellow btn-flat"><i
                         class="mdi-action-add-shopping-cart right"></i>Acquista (ore: {{tm}})
                 </button>
             </div>

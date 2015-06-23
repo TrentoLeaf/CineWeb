@@ -1,10 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="container">
+    <div class="col s12 m6 offset-l1 l4 container">
+        <h3 class=" yellow-text text-accent-4 ">Prezzi</h3>
+        <table ng-controller="AdminPricesController as cc" class="priceTable">
+            <tbody>
+            <tr ng-repeat="ticket in tickets">
+                <td>
+                    <h5>{{ticket.name}}</h5>
+                </td>
+                <td>
+                    <h5 class="right-align">{{ticket.price | currency:"€ "}}</h5>
+                </td>
+                <td>
+                    <i class="mdi-content-remove-circle-outline red-text"></i> <!--Remove content -->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div><!--Riepilogo prezzi -->
+</div>
+<br>
+<div class="row container">
+    <div class="input-field col s8">
+        <input id="Categoria" type="text" class="validate">
+        <label for="Categoria">Nome Categoria</label>
+    </div>
+    <div class="input-field col s4">
+        <input id="Prezzo" type="number" class="validate">
+        <label for="Prezzo">Prezzo</label>
+    </div>
+</div> <!-- Questo potrebbe fare cacare -->
+<div class="container center">
+    <a class=" waves-effect waves-light btn col s2 yellow-text text-accent-4 grey darken-4"><i class="mdi-file-cloud left"></i>Aggiungi Nuova Categoria</a> <!--Add content -->
+</div>
+<br>
