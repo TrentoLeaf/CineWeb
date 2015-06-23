@@ -2,33 +2,48 @@
     'use strict';
 
     angular.module('loginModule', ['usersModule', 'constantsModule'])
-        .controller('LoginController', ['$rootScope', '$location', 'Auth', function ($rootScope, $location, Auth) {
+        .controller('LoginController', ['$rootScope', '$location', 'Auth', 'loginService', function ($rootScope, $location, Auth, loginService) {
 
             var ctrl = this;
 
+            // condivisi tramite il servizio loginService
             this.user = {};
             this.logged = false;
 
             this.data = "";
             this.error = "";
 
-            var setData = function (data) {
+            $rootScope.$watch(function() {return loginService.user;}, function(user) {
+                ctrl.user = user;
+            }, true);
+            $rootScope.$watch(function() {return loginService.logged;}, function(logged) {
+                ctrl.logged = logged;
+            }, true);
+            $rootScope.$watch(function() {return loginService.data;}, function(data) {
                 ctrl.data = data;
-                ctrl.error = "";
+            }, true);
+            $rootScope.$watch(function() {return loginService.error;}, function(error) {
+                ctrl.error = error;
+            }, true);
+
+
+            var setData = function (data) {
+                loginService.data = data;
+                loginService.error = "";
             };
 
             var setError = function (error) {
-                ctrl.data = "";
-                ctrl.error = error;
+                loginService.data = "";
+                loginService.error = error;
             };
 
             this.login = function (email, password) {
                 Auth.login(email, password).then(
                     function (data) {
                         // set logged var
-                        ctrl.logged = true;
+                        loginService.logged = true;
                         //save basic user data
-                        ctrl.user = data;
+                        loginService.user = data;
                         setError("");
 
                         // redirect alla giusta pagina
@@ -43,7 +58,7 @@
                                 break;
                             case "userArea":
                                 $rootScope.afterLogin = "normal";
-                                if (ctrl.user.role = "admin") {
+                                if (loginService.user.role == "admin") {
                                     $location.path('/admin/dashboard');
                                 } else {
                                     $location.path('/me');
@@ -53,7 +68,7 @@
 
                     },
                     function (error) {
-                        ctrl.logged = false;
+                        loginService.logged = false;
                         setError('Nome utente o password errati.');
                     }
                 );
@@ -65,13 +80,15 @@
             this.logout = function () {
                 Auth.logout().then(
                     function () {
+                        console.log("LOGINCONTROLLER --> LOGUOT success");
                         setData("Logout eseguito con successo.");
                         setError("");
-                        ctrl.logged = false;
-                        ctrl.user = {};
+                        loginService.logged = false;
+                        loginService.user = {};
                         $location.path('/today');
                     },
                     function () {
+                        console.log("LOGINCONTROLLER --> LOGUOT failed");
                         setError("Logout fallito. Riprova.");
                     }
                 )
@@ -155,15 +172,15 @@
                         console.log(data);
 
                         // set logged var
-                        ctrl.logged = true;
+                        loginService.logged = true;
                         //save basic user data
-                        ctrl.user = data;
+                        loginService.user = data;
                     },
                     function () {
                         console.log("LOGIN DATA NOT retrived");
                         // set logged var
-                        ctrl.logged = false;
-                        ctrl.user = {};
+                        loginService.logged = false;
+                        loginService.user = {};
 
                     }
                 );
@@ -173,7 +190,16 @@
 
 
 
-        }]);
+        }])
+        /* servizio per la condivisone dei dati di login tra i controller di login duplicati */
+        .service('loginService', function() {
+            console.log("PASSATO DI QUI");
+            this.user = {};
+            this.logged = false;
+
+            this.data = "";
+            this.error = "";
+        });
 
 
     function validateEmail(mail) {
