@@ -40,8 +40,8 @@ public class UsersDB {
 
     // create user
     public void createUser(User user) throws DBException {
-        final String query = "INSERT INTO users (uid, enabled, roleid, email, pass, first_name, second_name)" +
-                "VALUES (DEFAULT, ?, ?, lower(?), crypt(?, gen_salt('bf')), ?, ?) RETURNING uid";
+        final String query = "INSERT INTO users (uid, enabled, roleid, email, pass, first_name, second_name, credit)" +
+                "VALUES (DEFAULT, ?, ?, lower(?), crypt(?, gen_salt('bf')), ?, ?, ?) RETURNING uid";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setBoolean(1, user.isEnabled());
@@ -50,6 +50,7 @@ public class UsersDB {
             stm.setString(4, user.getPassword());
             stm.setString(5, user.getFirstName());
             stm.setString(6, user.getSecondName());
+            stm.setDouble(7, user.getCredit());
             ResultSet rs = stm.executeQuery();
             rs.next();
             user.setUid(rs.getInt("uid"));
