@@ -13,6 +13,7 @@ $(document).ready(function () {
         in_duration: 400, // Transition in duration
         out_duration: 300 // Transition out duration
     });
+
 });
 
 /* può tornare utile
@@ -42,17 +43,17 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when('/info', {
                 templateUrl: '../partials/info.html'
-               /* TODO remove
-               controller: function (prices) {
-                    this.prices = prices;
-                },
-                controllerAs: 'pricesCtrl',
-                resolve: {
-                    prices: ['Prices', function (Prices) {
-                        return Prices.query().$promise;
-                    }]
-                }
-                */
+                /* TODO remove
+                 controller: function (prices) {
+                 this.prices = prices;
+                 },
+                 controllerAs: 'pricesCtrl',
+                 resolve: {
+                 prices: ['Prices', function (Prices) {
+                 return Prices.query().$promise;
+                 }]
+                 }
+                 */
             }).when('/registration', {
                 templateUrl: '../partials/registration.html',
                 controller: 'RegistrationCtrl',
