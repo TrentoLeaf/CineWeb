@@ -25,7 +25,7 @@
                     if (mq.matches) {
                         $('.content-div').bind('touchmove', function(e){e.preventDefault()});
                     }*/
-                 
+
                 }
             };
 
