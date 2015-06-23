@@ -112,7 +112,7 @@ $(document).ready(function () {
             }
         })
 
-        .run(['$rootScope', '$location', function ($rootScope, $location) {
+        .run(['$rootScope', '$location', 'Prices', 'StorageService', function ($rootScope, $location, Prices, StorageService) {
 
             // redirect only if needed
             var redirect = function (path) {
@@ -139,6 +139,100 @@ $(document).ready(function () {
                 }
 
             });
+
+
+
+            //updateTotal
+            /*
+             * aggiorna il totale controllando per tutti il film nel carrello,
+             * il numero e tipo di biglietti e li moltiplica per il  loro prezzo
+             */
+            $rootScope.updateTotal = function () {
+                $rootScope.total = 0;
+
+                for (var i = 0; i < $rootScope.cart.length; i++) {
+                    for (var j = 0; j < $rootScope.tickets.length; j++) {
+                        var num = 0;
+                        for (var k = 0; k < $rootScope.cart[i].tickets.length; k++) {
+                            if ($rootScope.cart[i].tickets[k].type == $rootScope.tickets[j].type) {
+                                num = num + $rootScope.cart[i].tickets[k].number;
+                                console.log(num);
+                            }
+                        }
+                        $rootScope.total = $rootScope.total + ($rootScope.tickets[j]['price'] * num);
+                    }
+                }
+                console.log("NEW TOTAL: " + $rootScope.total);
+            };
+
+
+            /* init of prices */
+            console.log("INIT THE PRICES");
+
+            // map for the prices
+            var pricesMap = {
+                normal: "Normale",
+                reduced: "Ridotto",
+                military: "Militare",
+                disabled: "Disabile"
+            };
+
+            // function to load the prices
+            var loadPrices = function () {
+                Prices.query(function (data) {
+                    data.map(function (o) {
+                        o.name = pricesMap[o.type] || o.type.capitalizeFirstLetter();
+                    });
+                    $rootScope.tickets = data;
+                    // when data is ready re-update the total of the cart
+                    $rootScope.updateTotal();
+                });
+            };
+
+            // load the prices
+            $rootScope.tickets = [];
+            loadPrices();
+
+
+
+            /* init of cart */
+
+            // load the cart from LocalStorage
+            var loadCart = function () {
+                $rootScope.cart = StorageService.loadCart();
+                if ($rootScope.cart != null) {
+                    console.log("unhide");
+                    // abilita il pulsante 'prosegui'
+                    $('#btn-go-to-buy').removeClass('hide');
+                } else {
+                    $rootScope.cart = [];
+                }
+                console.log("cart loaded: " + $rootScope.cart);
+            };
+
+            // carrello che contiene oggetti film modificati
+            $rootScope.cart = $rootScope.cart || [];
+            $rootScope.total = $rootScope.total || 0.00;
+
+            loadCart();
+
+            // when cart is changed, save it and update the total
+            $rootScope.$watch(function() {return $rootScope.cart;}, function(cart) {
+
+                $rootScope.updateTotal();
+                StorageService.saveCart(cart);
+                console.log("cart saved");
+            }, true);
+
+
+
+
+
+
+
+
+
+
         }]);
 
 })();

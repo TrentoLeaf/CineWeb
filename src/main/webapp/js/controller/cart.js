@@ -8,32 +8,6 @@
     angular.module('cartModule', ['pricesModule', 'storageModule'])
         .controller('CartController', ['$rootScope', 'Prices', '$location', 'StorageService', function ($rootScope, Prices, $location, StorageService) {
 
-
-            /* TODO move to app */
-            // map for the prices
-            var pricesMap = {
-                normal: "Normale",
-                reduced: "Ridotto",
-                military: "Militare",
-                disabled: "Disabile"
-            };
-
-            // function to load the prices
-            this.loadPrices = function () {
-                Prices.query(function (data) {
-                    data.map(function (o) {
-                        o.name = pricesMap[o.type] || o.type.capitalizeFirstLetter();
-                    });
-                    $rootScope.tickets = data;
-                });
-            };
-
-            // load the prices
-            $rootScope.tickets = [];
-            this.loadPrices();
-            /* end move to app */
-
-
             this.addToCart = function (film, time_index) {
 
                 // film: l'oggetto film da acquistare
@@ -61,7 +35,7 @@
                     $rootScope.cart.push(newFilm);
                     // abilita il pulsante 'prosegui'
                     $('#btn-go-to-buy').removeClass('hide');
-                    this.updateTotal();
+                   // $rootScope.updateTotal();
                 }
             };
 
@@ -71,7 +45,7 @@
                 if ($rootScope.cart.length == 0) {
                     $('#btn-go-to-buy').addClass('hide');
                 }
-                this.updateTotal();
+              //  $rootScope.updateTotal();
             };
 
             // aggiunge un nuovo selettore per tipo e numero di biglietti
@@ -79,29 +53,9 @@
                 if (($rootScope.cart[film].tickets.length) < 4) {
                     $rootScope.cart[film].tickets.push({type: $rootScope.tickets[0].type, number: 1});
                 }
-                this.updateTotal();
+             //   $rootScope.updateTotal();
             };
 
-            /*
-             * aggiorna il totale controllando per tutti il film nel carrello,
-             * il numero e tipo di biglietti e li moltiplica per il  loro prezzo
-             */
-            this.updateTotal = function () {
-                $rootScope.total = 0;
-
-                for (var i = 0; i < $rootScope.cart.length; i++) {
-                    for (var j = 0; j < $rootScope.tickets.length; j++) {
-                        var num = 0;
-                        for (var k = 0; k < $rootScope.cart[i].tickets.length; k++) {
-                            if ($rootScope.cart[i].tickets[k].type == $rootScope.tickets[j].type) {
-                                num = num + $rootScope.cart[i].tickets[k].number;
-                            }
-                        }
-                        $rootScope.total = $rootScope.total + ($rootScope.tickets[j]['price'] * num);
-                    }
-                }
-
-            };
 
             this.proceed = function () {
                 $location.path("/buy");
@@ -113,34 +67,7 @@
 
 
 
-            /* init of cart */
 
-            // load the cart from LocalStorage
-            this.loadCart = function () {
-                $rootScope.cart = StorageService.loadCart();
-                if ($rootScope.cart != null) {
-                    console.log("unhide");
-                    // abilita il pulsante 'prosegui'
-                    $('#btn-go-to-buy').removeClass('hide');
-                } else {
-                    $rootScope.cart = [];
-                }
-                this.updateTotal();
-                console.log("cart loaded");
-            };
-
-            // TODO capire perchè viene chiamato 2 volte ogni volta (doppia chiamata al controller?)
-            // carrello che contiene oggetti film modificati
-            $rootScope.cart = $rootScope.cart || [];
-            $rootScope.total = $rootScope.total || 0.00;
-
-            this.loadCart();
-
-            // save the cart when is changed
-            $rootScope.$watch(function() {return $rootScope.cart;}, function(cart) {
-                StorageService.saveCart(cart);
-                console.log("cart saved");
-            }, true);
 
 
         }]);

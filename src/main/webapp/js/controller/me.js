@@ -11,10 +11,20 @@
             this.loadUserData = function () {
                 Auth.me().then(
                     function (data) {
-                        ctrl.user = data.data;
+                        console.log("ME LOGIN DATA retrived ");
+                        console.log(data);
+
+                        //save basic user data
+                        ctrl.user = data;
+
                         ctrl.loading = false;
                     },
                     function () {
+                        console.log("ME LOGIN DATA NOT retrived");
+                        // set logged var
+                        ctrl.logged = false;
+                        ctrl.user = {};
+
                         // TODO: move this logic in appConfig
                         // on errors -> redirect to login
                         $location.path('/login');

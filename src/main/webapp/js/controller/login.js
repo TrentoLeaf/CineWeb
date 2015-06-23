@@ -27,9 +27,11 @@
                     function (data) {
                         // set logged var
                         ctrl.logged = true;
+                        //save basic user data
+                        ctrl.user = data;
                         setError("");
                         // redirect al partial principale
-                        $location.path('/today');
+                        //$location.path('/today');
 
                     },
                     function (error) {
@@ -37,6 +39,9 @@
                         setError('Nome utente o password errati.');
                     }
                 );
+
+                this.retriveLoginData();
+
             };
 
             this.logout = function () {
@@ -44,13 +49,12 @@
                     function () {
                         setData("Logout eseguito con successo.");
                         setError("");
-                        StorageService.logout();
                         ctrl.logged = false;
+                        ctrl.user = {};
                         $location.path('/today');
                     },
                     function () {
                         setError("Logout fallito. Riprova.");
-                        StorageService.logout();
                     }
                 )
             };
@@ -125,22 +129,44 @@
 
             };
 
+            /* get the info for the login controller (init) */
+            this.retriveLoginData = function () {
+                Auth.me().then(
+                    function (data) {
+                        console.log("LOGIN DATA retrived ");
+                        console.log(data);
+
+                        // set logged var
+                        ctrl.logged = true;
+                        //save basic user data
+                        ctrl.user = data;
+                    },
+                    function () {
+                        console.log("LOGIN DATA NOT retrived");
+                        // set logged var
+                        ctrl.logged = false;
+                        ctrl.user = {};
+
+                    }
+                )
+            };
+
+            this.retriveLoginData();
 
 
 
         }]);
 
+
+    function validateEmail(mail) {
+
+        var atposition=mail.indexOf("@");
+        var dotposition=mail.lastIndexOf(".");
+        if (atposition<1 || dotposition<atposition+2 || dotposition+2>=mail.length){
+            return false;
+        } else {
+            return true;
+        }
+    };
+
 })();
-
-
-function validateEmail(mail) {
-
-    var atposition=mail.indexOf("@");
-    var dotposition=mail.lastIndexOf(".");
-    if (atposition<1 || dotposition<atposition+2 || dotposition+2>=mail.length){
-        return false;
-    } else {
-        return true;
-    }
-}
-

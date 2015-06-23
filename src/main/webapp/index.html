@@ -127,7 +127,7 @@
                                         </select>
                                     </div>
                                     <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4"> <!-- dropdown quantità biglietti -->
-                                        <input ng-model="cart[$parent.$index].tickets[$index].number" ng-change="cc.updateTotal()" class="center-align" type="number" value="">
+                                        <input ng-model="cart[$parent.$index].tickets[$index].number" ng-change="cc.updateTotal()" class="center-align" type="number" value="" min="0">
                                     </div>
                                 </div>
 
@@ -191,7 +191,7 @@
                             </div>
                         </div>
                         <h4>Benvenuto</h4>
-                        <h5>{{c.user.name}}</h5> <!-- TODO definire -->
+                        <h5>{{c.user.firstName}}</h5> <!-- TODO definire -->
                         <h6>{{c.user.email}}</h6> <!-- TODO definire -->
                         <div class="row btn-your-data-container">
                             <!-- TODO redirect to userArea partial -->
