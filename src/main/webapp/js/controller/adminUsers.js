@@ -33,7 +33,8 @@
             this.reverse = false;
 
             this.newUser = new Users();
-            this.newUser.role = "client";
+            this.verifyPassword = "";
+            this.newUserRole = false;
             this.currentUser = {};
 
             this.tmpUser = {};
@@ -77,13 +78,20 @@
 
             // save the current user
             this.addUser = function () {
-                this.newUser.$save(function (data) {
-                    ctrl.users.push(data);
-                    ctrl.newUser = new Users();
-                    ctrl.newUser.role = "client";
-                }, function () {
-                    // errors
-                });
+                if (ctrl.verifyPassword == ctrl.newUser.password) {
+                    if (ctrl.newUserRole) {
+                        ctrl.newUser.role = "admin";
+                    } else {
+                        ctrl.newUser.role = "client";
+                    };
+
+                    this.newUser.$save(function (data) {
+                        ctrl.users.push(data);
+                        ctrl.newUser = new Users();
+                    });
+                } else {
+                    ctrl.verifyPassword = "";
+                };
             };
 
             // edit a given user

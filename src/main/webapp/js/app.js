@@ -74,9 +74,7 @@ $(document).ready(function () {
             }).when ('/admin',{
                 templateUrl: '../partials/admin/dashboard.html'
             }).when ('/admin/films',{
-                templateUrl: '../partials/admin/films.html',
-                controller: 'AdminFilmController',
-                controllerAs: 'ctrl'
+                templateUrl: '../partials/admin/films.html'
             }).when ('/admin/plays',{
                 templateUrl: '../partials/admin/plays.html',
                 controller: 'AdminPlaysController',
@@ -95,6 +93,10 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when('/admin/users', {
                 templateUrl: '../partials/admin/users.html',
+                controller: 'AdminUsersController',
+                controllerAs: 'ctrl'
+            }).when('/admin/users/new_user', {
+                templateUrl: '../partials/admin/new_user.html',
                 controller: 'AdminUsersController',
                 controllerAs: 'ctrl'
             }).when('/admin/users/:uid', {
