@@ -9,7 +9,11 @@
             this.reverse = false;
 
             this.newUser = new Users();
-            this.newUser.role = "client";
+            this.verifyPassword = "";
+            this.newUserRole = false;
+            this.currentUser = {};
+
+            this.tmpUser = {};
 
             var init = function () {
                 ctrl.loading = true;
@@ -37,7 +41,6 @@
 
             // remove a user
             this.deleteUser = function (user) {
-                // todo -> prompt dialog
                 // better BEFORE calling this function
                 Users.delete({id: user.uid}, function () {
                     // ok
@@ -49,13 +52,25 @@
 
             // save the current user
             this.addUser = function () {
-                this.newUser.$save(function (data) {
-                    ctrl.users.push(data);
-                    ctrl.newUser = new Users();
-                    ctrl.newUser.role = "client";
-                }, function () {
-                    // errors
-                });
+                if (ctrl.verifyPassword == ctrl.newUser.password) {
+                    if (ctrl.newUserRole) {
+                        ctrl.newUser.role = "admin";
+                    } else {
+                        ctrl.newUser.role = "client";
+                    };
+
+                    ctrl.newUser.$save(function (data) {
+                        ctrl.users.push(data);
+                        ctrl.newUser = new Users();
+                        console.log("Insertion succes");
+                        console.log(data);
+                    }, function() {
+                        console.log("Insertion failed");
+                    });
+                } else {
+                    ctrl.verifyPassword = "";
+                    this.open_wrong_password_modal();
+                };
             };
 
             // edit a given user
@@ -74,6 +89,14 @@
             // load data at start
             this.loadUsers();
 
+            this.open_delete_modal = function (index) {
+                $('#modal_deleteAgree').openModal();
+                this.tmpUser = this.users[index];
+            };
+
+            this.open_wrong_password_modal = function () {
+                $('#modal_wrong_password').openModal();
+            };
         }]);
 
 })();

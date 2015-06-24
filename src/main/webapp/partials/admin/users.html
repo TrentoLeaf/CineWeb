@@ -1,98 +1,82 @@
-<div class="row">
-    <h4 class="center-align yellow-text text-accent-4">Utenti</h4>
-</div>
-<div class="row">
-    <div class="col offset-s1 s10">
-        <p ng-show="ctrl.loading">Loading...</p>
-
-        <div ng-hide="ctrl.loading">
-            <table class="bordered">
-                <thead>
-                <tr>
-                    <td><a href="" ng-click="ctrl.setOrder('uid')">uid</a></td>
-                    <td><a href="" ng-click="ctrl.setOrder('email')">Email</a></td>
-                    <td><a href="" ng-click="ctrl.setOrder('firstName')">FirstName</a></td>
-                    <td><a href="" ng-click="ctrl.setOrder('secondName')">SecondName</a></td>
-                    <td><a href="" ng-click="ctrl.setOrder('credit')">Credit</a></td>
-                    <td><a href="" ng-click="ctrl.setOrder('enabled')">Confirmed</a></td>
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr ng-repeat="u in ctrl.users | orderBy:ctrl.order:ctrl.reverse">
-                    <td>{{u.uid}}</td>
-                    <td>{{u.email}}</td>
-                    <td>{{u.firstName}}</td>
-                    <td>{{u.secondName}}</td>
-                    <td>{{u.credit}}</td>
-                    <td>{{u.enabled}}</td>
-                    <td>
-                        <button ng-click="ctrl.deleteUser(u)">X</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <div class="row">
-                <button class="col offset-s2 s3 btn-large green white-text waves-effect waves-light"
-                        ng-click="ctrl.loadUsers()">Reload
-                </button>
-                <button class="col offset-s2 s3 btn-large green white-text waves-effect waves-light"
-                        ng-click="ctrl.editUser(ctrl.users[0])">EDIT example
-                </button>
-            </div>
-
-            <div class="row">
-                <form class="col s12 offset-m2 m8 offset-l3 l6">
-
-                    <h2>Nuovo</h2>
-
-                    <div class="row">
-                        <div class="input-field">
-                            <input id="name" type="text" class="validate" ng-model="ctrl.newUser.firstName">
-                            <label for="name">Nome</label>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="surname" type="text" class="validate" ng-model="ctrl.newUser.secondName">
-                            <label for="surname">Cognome</label>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="email" type="email" class="validate" ng-model="ctrl.newUser.email">
-                            <label for="email">Email</label>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="password" type="password" class="validate" ng-model="ctrl.newUser.password">
-                            <label for="password">Password</label>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="credit" type="number" class="validate" ng-model="ctrl.newUser.credit">
-                            <label for="credit">Credito</label>
-                        </div>
-                    </div>
-
-                    <p>Aggiungere ruolo!</p>
-
-                    <p>Aggiungere gli altri campi</p>
-
-                    <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 black-text"
-                            ng-click="ctrl.addUser()">Registrati
-                        <i class="mdi-action-description left"></i>
-                    </button>
-                </form>
-
-            </div>
+<div>
+    <div class="row">
+        <div class="col s12 m12 l12 center-align">
+            <h2 class="center-align yellow-text text-accent-4">Utenti</h2>
         </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <div ng-show="ctrl.loading" class="center-align">
+                <img src="../../img/popcorn.svg" class="popcorn" alt="Loading"/>
+                <h3 class="yellow-text text-accent-4">Caricamento in corso...</h3>
+            </div>
+            <div ng-hide="ctrl.loading">
+                <table class="bordered center-align responsive-table">
+                    <thead>
+                    <tr>
+                        <td><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('uid')">Id</a></td>
+                        <td><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('email')">Email</a></td>
+                        <td><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('firstName')">Nome</a></td>
+                        <td><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('secondName')">Cognome</a></td>
+                        <td><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('credit')">Credito</a></td>
+                        <td><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Confermato</a></td>
+                        <td><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Cancella</a></td>
+                        <td><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Modifica</a></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="white-text" ng-repeat="u in ctrl.users track by $index | orderBy:ctrl.order:ctrl.reverse">
+                        <td>{{u.uid}}</td>
+                        <td>{{u.email}}</td>
+                        <td>{{u.firstName}}</td>
+                        <td>{{u.secondName}}</td>
+                        <td>{{u.credit}} €</td>
+                        <td>{{u.enabled}}</td>
+                        <td>
+                            <a ng-click="ctrl.open_delete_modal($index);" class="modal-trigger" data-target="modal_deleteAgree"><i class="red-text mdi-action-delete"></i></a>
+                        </td>
+                        <td>
+                            <a href="#admin/users/{{u.uid}}"><i class="yellow-text mdi-action-assignment"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="section center-align">
+                <div class="row">
+                    <a class="btn green white-text waves-effect waves-light"
+                       ng-click="ctrl.loadUsers()">RELOAD
+                        <i class="mdi-navigation-refresh"></i>
+                    </a>
+                    <a class="btn green white-text waves-effect waves-light"
+                       ng-click="ctrl.editUser(ctrl.users[0])">EDIT EXAMPLE
+                        <i class="mdi-editor-mode-edit"></i>
+                    </a>
+                    <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/users/new_user">NUOVO UTENTE
+                        <i class="mdi-social-person-add"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="modal_deleteAgree" class="modal">
+    <div class="modal-content">
+        <h4>Cancellazione Utente</h4>
+        <p>Sei sicuro di voler cancellare l'utente</p>
+        <ul class="">
+            <li><label for="modal_uid" class="left-align">Uid</label><div id="modal_uid">{{ctrl.tmpUser.uid}}</div></li>
+            <li><label for="modal_email" class="left-align">Email</label><div id="modal_email">{{ctrl.tmpUser.email}}</div></li>
+            <li><label for="modal_firstName" class="left-align">Nome</label><div id="modal_firstName">{{ctrl.tmpUser.firstName}}</div></li>
+            <li><label for="modal_secondName" class="left-align">Cognome</label><div id="modal_secondName">{{ctrl.tmpUser.secondName}}</div></li>
+            <li><label for="modal_currency" class="left-align">Credito</label><div id="modal_currency">{{ctrl.tmpUser.credit | currency:"€"}}</div></li>
+            <li><label for="modal_enabled" class="left-align">Abilitazione</label><div id="modal_enabled">{{ctrl.tmpUser.enabled}}</div></li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
+        <a ng-click="ctrl.deleteUser(ctrl.tmpUser)" class="modal-action modal-close waves-effect waves-green btn-flat">ACCETTA</a>
     </div>
 </div>

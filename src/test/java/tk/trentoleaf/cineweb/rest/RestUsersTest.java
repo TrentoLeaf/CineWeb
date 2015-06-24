@@ -19,7 +19,7 @@ public class RestUsersTest extends MyJerseyTest {
         final Cookie c = loginAdmin();
 
         // create a user
-        final User u = new User(true, Role.CLIENT, "email@email.com", "pass", "name", "name");
+        final User u = new User(true, Role.CLIENT, "email@email.com", "pass", "name", "name", 34.5);
         usersDB.createUser(u);
 
         // search the user

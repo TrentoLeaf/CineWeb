@@ -1,0 +1,47 @@
+<div class="row white-text">
+    <div class="col s12 m12 l12">
+        <div class="row">
+            <h2 class="yellow-text text-accent-4 center-align">Films</h2>
+        </div>
+    </div>
+
+    <div ng-show="ctrl.loading" class="center-align">
+        <img src="../../img/popcorn.svg" class="popcorn" alt="Loading"/>
+        <h3 class="yellow-text text-accent-4">Caricamento in corso...</h3>
+    </div>
+
+    <div ng-hide="ctrl.loading">
+        <table class="bordered center-align responsive-table">
+            <thead>
+            <tr>
+                <td><a class="yellow-text text-accent-4" href="">Id</a></td>
+                <td><a class="yellow-text text-accent-4" href="">Email</a></td>
+                <td><a class="yellow-text text-accent-4" href="">Nome</a></td>
+                <td><a class="yellow-text text-accent-4" href="">Cognome</a></td>
+                <td><a class="yellow-text text-accent-4" href="">Credito</a></td>
+                <td><a class="yellow-text text-accent-4" href="">Confermato</a></td>
+                <td><a class="yellow-text text-accent-4" href="">Cancella</a></td>
+                <td><a class="yellow-text text-accent-4" href="">Modifica</a></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="white-text" ng-repeat="f in ctrl.films">
+                <td>{{f.fid}}</td>
+                <td>{{f.title}}</td>
+                <td>{{f.genre}}</td>
+                <td>{{f.trailer}}</td>
+                <td>{{f.playbill}} €</td>
+                <td>{{f.plot}}</td>
+                <td>{{f.duration}}</td>
+
+                <td>
+                    <a ng-click="" class="modal-trigger" data-target="modal_deleteAgree"><i class="red-text mdi-action-delete"></i></a>
+                </td>
+                <td>
+                    <a href=""><i class="yellow-text mdi-action-assignment"></i></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

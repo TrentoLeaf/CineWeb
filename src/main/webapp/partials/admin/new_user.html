@@ -1,0 +1,93 @@
+<div class="row white-text">
+    <div class="row">
+        <div class="col s12 m12 l12">
+            <h2 class="yellow-text text-accent-4 center-align">Nuovo utente</h2>
+        </div>
+    </div>
+    <div>{{ctrl.newUser}}</div>
+    <div class="row white-text">
+        <form class="col s12 offset-m2 m8 offset-l3 l6">
+            <div class="row">
+                <div class="input-field">
+                    <input id="name" type="text" class="validate" ng-model="ctrl.newUser.firstName">
+                    <label for="name">Nome</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="surname" type="text" class="validate" ng-model="ctrl.newUser.secondName">
+                    <label for="surname">Cognome</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="email" type="email" class="validate" ng-model="ctrl.newUser.email">
+                    <label for="email">Email</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="password" type="password" class="validate" ng-model="ctrl.newUser.password">
+                    <label for="password">Password</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="validate_password" type="password" class="validate" ng-model="ctrl.verifyPassword">
+                    <label for="validate_password">Verifica password</label>
+                </div>
+            </div>
+
+            <!-- Non viene settato il valore del credito nell'aggiunta dell'utente -->
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="credit" type="number" class="validate" ng-model="ctrl.newUser.credit">
+                    <label for="credit">Credito</label>
+                </div>
+            </div>
+            <div class="section">
+                <div class="switch center-align">
+                    <label>
+                        Utente
+                        <input type="checkbox" ng-model="ctrl.newUserRole">
+                        <span class="lever center-align"></span>
+                        Amministratore
+                    </label>
+                </div>
+                <div class="switch center-align">
+                    <label>
+                        Disabilitato
+                        <input type="checkbox" ng-model="ctrl.newUser.enabled">
+                        <span class="lever center-align"></span>
+                        Abilitato
+                    </label>
+                </div>
+            </div>
+            <div class="section center-align">
+                <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/users">INDIETRO
+                    <i class="mdi-navigation-arrow-back left"></i>
+                </a>
+                <a class="btn waves-effect waves-light green white-text"
+                   ng-click="ctrl.addUser()" href="#admin/users">REGISTRA
+                    <i class="mdi-action-description right"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="modal_wrong_password" class="modal">
+    <div class="modal-content">
+        <h4>Errore inserimento password</h4>
+        <p>La password inserità non corrisponde con quella nel controllo password</p>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">OK</a>
+    </div>
+</div>
