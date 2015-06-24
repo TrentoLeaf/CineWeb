@@ -30,7 +30,7 @@
                         </a>
                     </td>
                     <td>
-                        <a ng-click="ctrl.open_edit_modal($index)" class="modal-trigger"  data-target="modal_edit" href="">
+                        <a ng-click="ctrl.open_edit_modal(ticket)" class="modal-trigger"  data-target="modal_edit" href="">
                             <i class="yellow-text mdi-editor-mode-edit"></i>
                         </a>
                     </td>
@@ -49,30 +49,22 @@
 
             <form>
                 <div class="input-field col s8">
-                    <input id="Categoria" type="text" class="validate">
+                    <input id="Categoria" type="text" class="validate" ng-model="ctrl.newPrice.type">
                     <label for="Categoria">Nome Categoria</label>
                 </div>
                 <div class="input-field col s4">
-                    <input id="Prezzo" type="number" class="validate">
+                    <input id="Prezzo" type="number" class="validate" ng-model="ctrl.newPrice.price">
                     <label for="Prezzo">Prezzo</label>
                 </div>
 
                 <div class="section center-align">
                     <a class="btn waves-effect waves-light green white-text"
-                       ng-click="ctrl.addPrice()" href="#admin/price">AGGIUNGI
+                       ng-click="ctrl.addPrice(ctrl.newPrice)" href="">AGGIUNGI
                         <i class="mdi-content-add right"></i>
                     </a>
                 </div>
             </form>
 
-        </div>
-    </div>
-
-    <div class="row">
-        <div class=" section center-align">
-            <a class="btn-large waves-effect waves-light yellow accent-4 black-text" href="#admin">
-                <i class="mdi-action-home"></i>
-            </a>
         </div>
     </div>
 </div>
@@ -90,5 +82,32 @@
     <div class="modal-footer">
         <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
         <a ng-click="ctrl.deletePrice(ctrl.tmpPrice)" class="modal-action modal-close waves-effect waves-green btn-flat">ACCETTA</a>
+    </div>
+</div>
+
+<div id="modal_edit" class="modal">
+    <div class="modal-content">
+        <h4>Modifica Prezzo</h4>
+        <p>Sei sicuro di voler cancellare la seguente categoria di prezzi?</p>
+        <form>
+            <div class="row">
+                <div class="input-field">
+                    <input id="cat" type="text" class="validate" ng-model="ctrl.tmpPrice.type" disabled>
+                    <label for="cat" class="active">Nome Categoria</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="row">
+                    <div class="input-field">
+                        <input id="price" type="number" class="validate" ng-model="ctrl.tmpPrice.price">
+                        <label for="price" class="active">Prezzo</label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">ANNULLA</a>
+        <a ng-click="ctrl.editPrice(ctrl.tmpPrice)" class="modal-action modal-close waves-effect waves-green btn-flat">MODIFICA</a>
     </div>
 </div>
