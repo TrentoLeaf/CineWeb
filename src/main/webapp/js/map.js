@@ -137,7 +137,7 @@
         }
 
         // init the tooltips
-        $('.tooltipped').tooltip({delay: 20});
+        $('.tooltipped').tooltip({delay: 300});
     }
 
     function set_svg_seat (poltrona_svg, posto, spettacolo, posti_selezionati) {
