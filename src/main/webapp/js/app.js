@@ -206,9 +206,9 @@ $(document).ready(function () {
             // function to load the prices
             var loadPrices = function () {
                 Prices.query(function (data) {
-                    data.map(function (o) {
+                   /* data.map(function (o) {
                         o.type = o.type.capitalizeFirstLetter();
-                    });
+                    });*/
                     $rootScope.tickets = data;
                     // when data is ready re-update the total of the cart
                     $rootScope.updateTotal();
