@@ -65,6 +65,27 @@ public class User implements Serializable {
     }
 
     /**
+     * Construct a user.
+     *
+     * @param enabled    True if this user is enabled.
+     * @param role       User Role: can be CLIENT or ADMIN.
+     * @param email      User email.
+     * @param password   User password.
+     * @param firstName  User first name.
+     * @param secondName User second name.
+     * @param credit     User initial credit.
+     */
+    public User(boolean enabled, Role role, String email, String password, String firstName, String secondName, double credit) {
+        this.enabled = enabled;
+        this.role = role;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.credit = credit;
+    }
+
+    /**
      * Construct a new user from a registration object.
      *
      * @param registration The object representing the user registration.
@@ -171,8 +192,21 @@ public class User implements Serializable {
         if (Double.compare(user.credit, credit) != 0) return false;
         if (role != user.role) return false;
         if (!email.equalsIgnoreCase(user.email)) return false;
-        if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
-        return !(secondName != null ? !secondName.equals(user.secondName) : user.secondName != null);
+        if (!firstName.equals(user.firstName)) return false;
+        return secondName.equals(user.secondName);
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid=" + uid +
+                ", enabled=" + enabled +
+                ", role=" + role +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", credit=" + credit +
+                '}';
+    }
 }
