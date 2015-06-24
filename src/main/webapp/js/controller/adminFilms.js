@@ -32,7 +32,7 @@
                     ctrl.newFilm = new Films();
 
                 });
-            }
+            };
 
             this.loadFilms();
 

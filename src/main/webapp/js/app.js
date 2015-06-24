@@ -96,13 +96,13 @@ $(document).ready(function () {
                 templateUrl: '../partials/admin/users.html',
                 controller: 'AdminUsersController',
                 controllerAs: 'ctrl'
-            }).when('/admin/users/:uid', {
-                templateUrl: '../partials/admin/edit_user.html',
-                controller: 'AdminUsersEditController',
-                controllerAs: 'ctrl'
             }).when('/admin/users/new_user', {
                 templateUrl: '../partials/admin/new_user.html',
                 controller: 'AdminUsersController',
+                controllerAs: 'ctrl'
+            }).when('/admin/users/:uid', {
+                templateUrl: '../partials/admin/edit_user.html',
+                controller: 'AdminUsersEditController',
                 controllerAs: 'ctrl'
             }).when('/buy', {
                 templateUrl: '../partials/buy_seats.html',

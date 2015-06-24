@@ -44,7 +44,7 @@
                             case "userArea":
                                 $rootScope.afterLogin = "normal";
                                 if (ctrl.user.role = "admin") {
-                                    $location.path('/admin/dashboard');
+                                    $location.path('/admin');
                                 } else {
                                     $location.path('/me');
                                 }
