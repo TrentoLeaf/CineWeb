@@ -10,38 +10,51 @@
         <h3 class="yellow-text text-accent-4">Caricamento in corso...</h3>
     </div>
 
-    <div ng-hide="ctrl.loading">
-        <table class="bordered center-align responsive-table">
-            <thead>
-            <tr>
-                <td><a class="yellow-text text-accent-4" href="">Id</a></td>
-                <td><a class="yellow-text text-accent-4" href="">Email</a></td>
-                <td><a class="yellow-text text-accent-4" href="">Nome</a></td>
-                <td><a class="yellow-text text-accent-4" href="">Cognome</a></td>
-                <td><a class="yellow-text text-accent-4" href="">Credito</a></td>
-                <td><a class="yellow-text text-accent-4" href="">Confermato</a></td>
-                <td><a class="yellow-text text-accent-4" href="">Cancella</a></td>
-                <td><a class="yellow-text text-accent-4" href="">Modifica</a></td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="white-text" ng-repeat="f in ctrl.films">
-                <td>{{f.fid}}</td>
-                <td>{{f.title}}</td>
-                <td>{{f.genre}}</td>
-                <td>{{f.trailer}}</td>
-                <td>{{f.playbill}} €</td>
-                <td>{{f.plot}}</td>
-                <td>{{f.duration}}</td>
+    <div class="row">
+        <div class="col s12 m12 l12">
+            <div ng-hide="ctrl.loading">
+                <table class="bordered center-align responsive-table">
+                    <thead>
+                    <tr>
+                        <td><a class="yellow-text text-accent-4" href="">Fid</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Titolo</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Genere</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Trailer</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Locandina</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Trama</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Durata</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Cancella</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Modifica</a></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="white-text" ng-repeat="f in ctrl.films">
+                        <td>{{f.fid}}</td>
+                        <td>{{f.title}}</td>
+                        <td>{{f.genre}}</td>
+                        <td>{{f.trailer}}</td>
+                        <td>{{f.playbill}} €</td>
+                        <td class="truncate">{{f.plot}}</td>
+                        <td>{{f.duration}}</td>
 
-                <td>
-                    <a ng-click="" class="modal-trigger" data-target="modal_deleteAgree"><i class="red-text mdi-action-delete"></i></a>
-                </td>
-                <td>
-                    <a href=""><i class="yellow-text mdi-action-assignment"></i></a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        <td>
+                            <a ng-click="" class="modal-trigger" data-target="modal_deleteAgree"><i class="red-text mdi-action-delete"></i></a>
+                        </td>
+                        <td>
+                            <a href=""><i class="yellow-text mdi-action-assignment"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="section center-align">
+        <div class="row">
+            <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/films/new">NUOVO FILM
+                <i class="mdi-image-movie-creation"></i>
+            </a>
+        </div>
     </div>
 </div>

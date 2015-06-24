@@ -2,7 +2,33 @@
     'use strict';
 
     angular.module('adminUsers', ['usersModule'])
-        .controller('AdminUsersController', ['$location', 'Users', function ($location, Users) {
+
+        .controller('AdminUsersEditController', ['$routeParams', '$location', 'Users', function($routeParams, $location, Users) {
+
+            var c = this;
+            this.currentUser = {};
+
+            Users.get({id:$routeParams.uid}).$promise.then(function (data) {
+                c.currentUser = data;
+            }, function () {
+                $location.path("/admin/users");
+            });
+
+
+            this.save = function () {
+                Users.update({id: c.currentUser.uid}, c.currentUser).$promise.then(function (data) {
+                    // ok
+                    console.log("UPDATE OK ->");
+                    console.log(data);
+                    $location.path("/admin/users")
+                }, function () {
+                    // fail...
+                    console.log("UPDATE fail");
+                });
+            };
+
+
+        }]).controller('AdminUsersController', ['$location', 'Users', function ($location, Users) {
 
             var ctrl = this;
             this.order = 'uid';
@@ -64,6 +90,7 @@
                         ctrl.newUser = new Users();
                         console.log("Insertion succes");
                         console.log(data);
+                        $location.path("/admin/users");
                     }, function() {
                         console.log("Insertion failed");
                     });

@@ -1,4 +1,4 @@
-<div>
+<div class="row white-text">
     <div class="row">
         <div class="col s12 m12 l12 center-align">
             <h2 class="center-align yellow-text text-accent-4">Utenti</h2>
@@ -11,7 +11,7 @@
                 <h3 class="yellow-text text-accent-4">Caricamento in corso...</h3>
             </div>
             <div ng-hide="ctrl.loading">
-                <table class="bordered center-align responsive-table">
+                <table class="bordered center-align">
                     <thead>
                     <tr>
                         <td><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('uid')">Id</a></td>
@@ -33,10 +33,14 @@
                         <td>{{u.credit}} €</td>
                         <td>{{u.enabled}}</td>
                         <td>
-                            <a ng-click="ctrl.open_delete_modal($index);" class="modal-trigger" data-target="modal_deleteAgree"><i class="red-text mdi-action-delete"></i></a>
+                            <a ng-click="ctrl.open_delete_modal($index)" class="modal-trigger" data-target="modal_deleteAgree" href="">
+                                <i class="red-text mdi-action-delete"></i>
+                            </a>
                         </td>
                         <td>
-                            <a href="#admin/users/{{u.uid}}"><i class="yellow-text mdi-action-assignment"></i></a>
+                            <a href="#admin/users/{{u.uid}}">
+                                <i class="yellow-text mdi-action-assignment"></i>
+                            </a>
                         </td>
                     </tr>
                     </tbody>
@@ -52,20 +56,12 @@
                        ng-click="ctrl.editUser(ctrl.users[0])">EDIT EXAMPLE
                         <i class="mdi-editor-mode-edit"></i>
                     </a>
-                    <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/users/new_user">NUOVO UTENTE
+                    <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/users/new">NUOVO UTENTE
                         <i class="mdi-social-person-add"></i>
                     </a>
                 </div>
             </div>
 
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="center-align">
-            <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin">
-                <i class="mdi-action-home"></i>
-            </a>
         </div>
     </div>
 </div>
