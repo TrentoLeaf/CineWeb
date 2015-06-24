@@ -5,6 +5,7 @@
 </div>
 
 <div class="row white-text">
+    <div class="row">
     <form class="col s12 offset-m2 m8 offset-l3 l6">
 
         <div class="row">
@@ -36,7 +37,14 @@
         </div>
 
         <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 black-text" ng-click="ctrl.submit(ctrl.user)">Registrati
-            <i class="mdi-action-description left"></i>
+            <i class="mdi-action-description right"></i>
         </button>
     </form>
+    </div>
+    <div class="row center-align">
+        <h6 id="registration_message">{{ctrl.status}}</h6>
+    </div>
+</div>
+<div class="row">
+
 </div>
