@@ -9,28 +9,28 @@
         <div class="card row grey darken-4 white-text">
             <div class="card-content">
                 <span class="card-title">Login</span>
-                <h6 ng-show="c.error" class="red-text">{{c.error}}</h6>
+                <h6 class="red-text">{{loginError}}</h6>
                 <form>
                     <div class="input-field">
                         <i class="mdi-action-account-circle prefix"></i>
-                        <input id="user" type="text" ng-model="c.user.email">
+                        <input id="user" type="text" ng-model="c.email">
                         <label for="user" class="white-text">Nome Utente</label>
                     </div>
                     <div class="input-field">
                         <i class="mdi-action-lock prefix"></i>
-                        <input id="pass" type="password" ng-model="c.user.pass">
+                        <input id="pass" type="password" ng-model="c.pass">
                         <label for="pass" class="white-text">Password</label>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <a  ng-click="c.losePass(c.user.email); tab.closeTab()" class="yellow-text text-accent-4" type="submit" name="forgot" href="">Password dimenticata? Clicca qui.</a>
+                            <a  ng-click="c.losePass(); tab.closeTab()" class="yellow-text text-accent-4" type="submit" name="forgot" href="">Password dimenticata? Clicca qui.</a>
                         </div>
                     </div>
                     <div class="row">
                         <button ng-click="c.login(c.user.email, c.user.pass)" class="col offset-s1 s4 offset-m1 m4 offset-l1 l4 btn yellow accent-4 white-text waves-effect waves-light" type="submit" name="login">Login
                             <i class="mdi-content-send white-text right"></i>
                         </button>
-                        <button ng-click="c.register(c.user.email); tab.closeTab()" class="col offset-s1 s5 offset-m1 m5 offset-l1 l5 btn green white-text waves-effect waves-light" type="submit" name="register">Registrati
+                        <button ng-click="c.toRegister(); tab.closeTab()" class="col offset-s1 s5 offset-m1 m5 offset-l1 l5 btn green white-text waves-effect waves-light" type="submit" name="register">Registrati
                             <i class="mdi-action-description white-text right"></i>
                         </button>
                     </div>

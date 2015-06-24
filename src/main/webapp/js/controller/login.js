@@ -2,69 +2,27 @@
     'use strict';
 
     angular.module('loginModule', ['usersModule', 'constantsModule'])
-        .controller('LoginController', ['$rootScope', '$location', 'Auth', 'loginService', function ($rootScope, $location, Auth, loginService) {
+        .controller('LoginController', ['$rootScope', '$location', 'Auth', function ($rootScope, $location, Auth) {
 
             var ctrl = this;
-
-            // condivisi tramite il servizio loginService
-            this.user = {};
-            this.logged = false;
-
-            this.data = "";
-            this.error = "";
-
-            $rootScope.$watch(function () {
-                return loginService.user;
-            }, function (user) {
-                ctrl.user = user;
-            }, true);
-            $rootScope.$watch(function () {
-                return loginService.logged;
-            }, function (logged) {
-                ctrl.logged = logged;
-            }, true);
-            $rootScope.$watch(function () {
-                return loginService.data;
-            }, function (data) {
-                ctrl.data = data;
-            }, true);
-            $rootScope.$watch(function () {
-                return loginService.error;
-            }, function (error) {
-                ctrl.error = error;
-            }, true);
-
-
-            var setData = function (data) {
-                loginService.data = data;
-                loginService.error = "";
-            };
+            this.email = "";
+            this.pass = "";
 
             var setError = function (error) {
-                loginService.data = "";
-                loginService.error = error;
+                $rootScope.loginError = error;
             };
 
             this.login = function (email, password) {
-                //Auth.login(email, password)
-                //    .success(function (user, s) {
-                //        console.log(user);
-                //        console.log(s);
-                //    }).error(function (error, s) {
-                //        console.log(error);
-                //        console.log(s);
-                //    });
-                Auth.login(email, password).then(
-                    function (data) {
-                        console.log(data);
+                Auth.login(email, password)
+                    .success(function (user) {
 
-                        // set logged var
-                        loginService.logged = true;
+                        // set isUserLogged var
+                        $rootScope.isUserLogged = true;
                         //save basic user data
-                        loginService.user = data.data;
+                        $rootScope.user = user;
                         setError("");
 
-                        // redirect alla giusta pagina
+                        // redirect all' ultima pagina
                         switch ($rootScope.afterLogin) {
                             case "normal":
                                 $rootScope.afterLogin = "normal";
@@ -76,35 +34,35 @@
                                 break;
                             case "userArea":
                                 $rootScope.afterLogin = "normal";
-                                if (loginService.user.role == "admin") {
-                                    $location.path('/admin/dashboard');
+                                if ($rootScope.user.role == "admin") {
+                                    $location.path('/admin');
                                 } else {
                                     $location.path('/me');
                                 }
                                 break;
                         }
-
-                    },
-                    function (error) {
-                        console.log(error);
-                        loginService.logged = false;
+                    }).error(function (error) { /*  login failed*/
+                        $rootScope.isUserLogged = false;
                         setError('Nome utente o password errati.');
-                    }
-                );
+                    });
+
+                ctrl.pass = "";
             };
 
             this.logout = function () {
-                Auth.logout().then(
-                    function () {
-                        console.log("LOGINCONTROLLER --> LOGUOT success");
-                        setData("Logout eseguito con successo.");
+                Auth.logout()
+                    .success( function () {
+                        console.log("LOGINCONTROLLER --> LOGOUT success");
                         setError("");
-                        loginService.logged = false;
-                        loginService.user = {};
+                        $rootScope.isUserLogged = false;
+                        $rootScope.user = {};
                         $location.path('/today');
-                    },
-                    function () {
-                        console.log("LOGINCONTROLLER --> LOGUOT failed");
+
+                        ctrl.email = "";
+                        ctrl.pass = "";
+                    })
+                    .error( function () {
+                        console.log("LOGINCONTROLLER --> LOGOUT failed");
                         setError("Logout fallito. Riprova.");
                     }
                 )
@@ -121,7 +79,7 @@
                 )
             };
 
-            this.losePass = function (email) {
+            this.losePass = function () {
                 // redirect to a new partial
                 $location.path('/password_recovery');
             };
@@ -130,7 +88,7 @@
                 $location.path('/me');
             };
 
-            this.register = function (email) {
+            this.toRegister = function () {
                 // redirect al partial registrazione
                 $location.path('/registration');
             };
@@ -143,7 +101,6 @@
             var REC_PASS_SUCCESS = 0;
             var REC_PASS_MAIL_NOT_EXIST = 1;
             var REC_PASS_MAIL_NOT_VALID = 2;
-            var REC_PASS_REQUEST_FAIL = -1;
 
             this.sendPassRecoveryRequest = function () {
 
@@ -154,9 +111,13 @@
                 if ((this.mailForPassRecovery == undefined) || (!validateEmail(this.mailForPassRecovery))) {
                     ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_VALID);
                 } else {
-                    // TODO invia richiesta ajax
-                    // TODO attendi la risposta (successo/mail_non_registrata/fail)
-                    // TODO callback:  ctrl.set_rec_pass_msg(response);
+                    Auth.forgotPassword(ctrl.mailForPassRecovery)
+                        .success(function() {
+                            ctrl.set_rec_pass_msg(REC_PASS_SUCCESS);
+                        })
+                        .error(function() {
+                            ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_EXIST);
+                        });
                 }
             };
 
@@ -177,44 +138,8 @@
                     $('#pass_recovery_message').addClass("red-text");
                     ctrl.rec_pass_msg = "La richiesta non è andata a buon fine. Riprova.";
                 }
-
             };
-
-            /* get the info for the login controller (init) */
-            this.retriveLoginData = function () {
-                Auth.me().then(
-                    function (data) {
-                        console.log("LOGIN DATA retrived ");
-                        console.log(data);
-
-                        // set logged var
-                        loginService.logged = true;
-                        //save basic user data
-                        loginService.user = data;
-                    },
-                    function () {
-                        console.log("LOGIN DATA NOT retrived");
-                        // set logged var
-                        loginService.logged = false;
-                        loginService.user = {};
-
-                    }
-                );
-            };
-
-            this.retriveLoginData();
-
-
-        }])
-        /* servizio per la condivisone dei dati di login tra i controller di login duplicati */
-        .service('loginService', function () {
-            console.log("PASSATO DI QUI");
-            this.user = {};
-            this.logged = false;
-
-            this.data = "";
-            this.error = "";
-        });
+        }]);
 
 
     function validateEmail(mail) {
