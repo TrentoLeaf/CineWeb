@@ -1,39 +1,94 @@
-<div class="container">
+<div class="row white-text">
+
     <div class="row">
         <div class="col s12 m12 l12">
             <h2 class="yellow-text text-accent-4 center-align">Prezzi</h2>
         </div>
     </div>
-    <div class="col s12 m6 offset-l1 l4 container">
-        <table ng-controller="AdminPricesController as cc" class="priceTable">
-            <tbody>
-            <tr ng-repeat="ticket in tickets">
-                <td>
-                    <h5>{{ticket.name}}</h5>
-                </td>
-                <td>
-                    <h5 class="right-align">{{ticket.price | currency:"€ "}}</h5>
-                </td>
-                <td>
-                    <i class="mdi-content-remove-circle-outline red-text"></i> <!--Remove content -->
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div><!--Riepilogo prezzi -->
-</div>
-<br>
-<div class="row container">
-    <div class="input-field col s8">
-        <input id="Categoria" type="text" class="validate">
-        <label for="Categoria">Nome Categoria</label>
+
+    <div class="row center-align">
+        <div class="container">
+            <table class="bordered">
+                <thead>
+                <td>Tipologia</td>
+                <td>Prezzo</td>
+                <td>Cancella</td>
+                <td>Modifica</td>
+
+                </thead>
+                <tbody>
+                <tr ng-repeat="ticket in tickets">
+                    <td>
+                        <p>{{ticket.name}}</p>
+                    </td>
+                    <td>
+                        <p>{{ticket.price | currency:"€ "}}</p>
+                    </td>
+                    <td>
+                        <a ng-click="ctrl.open_delete_modal(ticket)"  class="modal-trigger" data-target="modal_deleteAgree" href="">
+                            <i class="mdi-action-delete red-text"></i> <!--Remove content -->
+                        </a>
+                    </td>
+                    <td>
+                        <a ng-click="ctrl.open_edit_modal($index)" class="modal-trigger"  data-target="modal_edit" href="">
+                            <i class="yellow-text mdi-editor-mode-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="input-field col s4">
-        <input id="Prezzo" type="number" class="validate">
-        <label for="Prezzo">Prezzo</label>
+
+    <div class="row">
+        <div class="container">
+
+            <div class="separator">
+                <h4 class="yellow-text text-accent-4 center-align">Aggiungi nuova categoria</h4>
+            </div>
+
+            <form>
+                <div class="input-field col s8">
+                    <input id="Categoria" type="text" class="validate">
+                    <label for="Categoria">Nome Categoria</label>
+                </div>
+                <div class="input-field col s4">
+                    <input id="Prezzo" type="number" class="validate">
+                    <label for="Prezzo">Prezzo</label>
+                </div>
+
+                <div class="section center-align">
+                    <a class="btn waves-effect waves-light green white-text"
+                       ng-click="ctrl.addPrice()" href="#admin/price">AGGIUNGI
+                        <i class="mdi-content-add right"></i>
+                    </a>
+                </div>
+            </form>
+
+        </div>
     </div>
-</div> <!-- Questo potrebbe fare cacare -->
-<div class="container center">
-    <a class=" waves-effect waves-light btn col s2 yellow-text text-accent-4 grey darken-4"><i class="mdi-file-cloud left"></i>Aggiungi Nuova Categoria</a> <!--Add content -->
+
+    <div class="row">
+        <div class=" section center-align">
+            <a class="btn-large waves-effect waves-light yellow accent-4 black-text" href="#admin">
+                <i class="mdi-action-home"></i>
+            </a>
+        </div>
+    </div>
 </div>
-<br>
+
+
+<div id="modal_deleteAgree" class="modal">
+    <div class="modal-content">
+        <h4>Cancellazione Prezzo</h4>
+        <p>Sei sicuro di voler cancellare la seguente categoria di prezzi?</p>
+        <ul class="">
+            <li><label for="modal_uid" class="left-align">Categoria</label><div id="modal_uid">{{ctrl.tmpPrice.type}}</div></li>
+            <li><label for="modal_email" class="left-align">Prezzo</label><div id="modal_email">{{ctrl.tmpPrice.price | currency:"€ "}}</div></li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
+        <a ng-click="ctrl.deletePrice(ctrl.tmpPrice)" class="modal-action modal-close waves-effect waves-green btn-flat">ACCETTA</a>
+    </div>
+</div>

@@ -26,7 +26,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule',
-        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'confirmModule', 'buyModule', 'pricesModule', 'mapModule'])
+        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'confirmModule', 'buyModule', 'pricesModule', 'mapModule'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
