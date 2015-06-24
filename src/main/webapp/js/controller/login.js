@@ -13,16 +13,24 @@
             this.data = "";
             this.error = "";
 
-            $rootScope.$watch(function() {return loginService.user;}, function(user) {
+            $rootScope.$watch(function () {
+                return loginService.user;
+            }, function (user) {
                 ctrl.user = user;
             }, true);
-            $rootScope.$watch(function() {return loginService.logged;}, function(logged) {
+            $rootScope.$watch(function () {
+                return loginService.logged;
+            }, function (logged) {
                 ctrl.logged = logged;
             }, true);
-            $rootScope.$watch(function() {return loginService.data;}, function(data) {
+            $rootScope.$watch(function () {
+                return loginService.data;
+            }, function (data) {
                 ctrl.data = data;
             }, true);
-            $rootScope.$watch(function() {return loginService.error;}, function(error) {
+            $rootScope.$watch(function () {
+                return loginService.error;
+            }, function (error) {
                 ctrl.error = error;
             }, true);
 
@@ -38,12 +46,22 @@
             };
 
             this.login = function (email, password) {
+                //Auth.login(email, password)
+                //    .success(function (user, s) {
+                //        console.log(user);
+                //        console.log(s);
+                //    }).error(function (error, s) {
+                //        console.log(error);
+                //        console.log(s);
+                //    });
                 Auth.login(email, password).then(
                     function (data) {
+                        console.log(data);
+
                         // set logged var
                         loginService.logged = true;
                         //save basic user data
-                        loginService.user = data;
+                        loginService.user = data.data;
                         setError("");
 
                         // redirect alla giusta pagina
@@ -68,13 +86,11 @@
 
                     },
                     function (error) {
+                        console.log(error);
                         loginService.logged = false;
                         setError('Nome utente o password errati.');
                     }
                 );
-
-                //this.retriveLoginData();
-
             };
 
             this.logout = function () {
@@ -135,7 +151,7 @@
                 $('#pass_recovery_message').addClass("white-text");
                 ctrl.rec_pass_msg = "Un momento...";
 
-                if ((this.mailForPassRecovery == undefined) || (! validateEmail(this.mailForPassRecovery))) {
+                if ((this.mailForPassRecovery == undefined) || (!validateEmail(this.mailForPassRecovery))) {
                     ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_VALID);
                 } else {
                     // TODO invia richiesta ajax
@@ -189,10 +205,9 @@
             this.retriveLoginData();
 
 
-
         }])
         /* servizio per la condivisone dei dati di login tra i controller di login duplicati */
-        .service('loginService', function() {
+        .service('loginService', function () {
             console.log("PASSATO DI QUI");
             this.user = {};
             this.logged = false;
@@ -204,9 +219,9 @@
 
     function validateEmail(mail) {
 
-        var atposition=mail.indexOf("@");
-        var dotposition=mail.lastIndexOf(".");
-        if (atposition<1 || dotposition<atposition+2 || dotposition+2>=mail.length){
+        var atposition = mail.indexOf("@");
+        var dotposition = mail.lastIndexOf(".");
+        if (atposition < 1 || dotposition < atposition + 2 || dotposition + 2 >= mail.length) {
             return false;
         } else {
             return true;
