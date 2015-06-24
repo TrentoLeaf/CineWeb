@@ -26,7 +26,12 @@
                         switch ($rootScope.afterLogin) {
                             case "normal":
                                 $rootScope.afterLogin = "normal";
-                                $location.path('/today');
+
+                                if ($rootScope.user.role == "admin") {
+                                    $location.path('/admin');
+                                } else {
+                                    $location.path('/today');
+                                }
                                 break;
                             case "buy":
                                 $rootScope.afterLogin = "normal";
@@ -36,6 +41,7 @@
                                 $rootScope.afterLogin = "normal";
 
                                 if ($rootScope.user.role == "admin") {
+                                    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
                                     $location.path('/admin');
                                 } else {
                                     $location.path('/me');
@@ -87,6 +93,10 @@
 
             this.toUserArea = function () {
                 $location.path('/me');
+            };
+
+            this.toDashboard = function () {
+                $location.path('/admin');
             };
 
             this.toRegister = function () {

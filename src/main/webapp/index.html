@@ -200,6 +200,9 @@
                         <div class="row btn-your-data-container">
                             <button ng-click="c.toUserArea(); tab.closeTab();" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-action-assignment right"></i>I tuoi dati</button>
                         </div>
+                        <div class="row btn-your-data-container">
+                            <button ng-show="user.role == 'admin'"  ng-click="c.toDashboard(); tab.closeTab();" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-av-web right"></i>Dashboard</button>
+                        </div>
                     </li>
                 </ul>
             </li>
@@ -234,7 +237,7 @@
 </footer>
 
 <!-- Floating button amministratore-->
-<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+<div ng-show="user.role == 'admin'"  class="fixed-action-btn" style="bottom: 45px; right: 24px;">
     <a class="btn-floating btn-large yellow accent-4" href="#admin">
         <i class="medium mdi-action-home black-text"></i>
     </a>
