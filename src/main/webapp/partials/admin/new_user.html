@@ -32,6 +32,11 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col s12">
+
+                </div>
+            </div>
+            <div class="row">
                 <div class="input-field col s12">
                     <input id="validate_password" type="password" class="validate" ng-model="ctrl.verifyPassword">
                     <label for="validate_password">Verifica password</label>
@@ -70,11 +75,19 @@
                 </a>
                 <a class="btn waves-effect waves-light green white-text"
                    ng-click="ctrl.addUser()" href="#admin/users">REGISTRA
-                    <i class="mdi-action-description left"></i>
+                    <i class="mdi-action-description right"></i>
                 </a>
             </div>
         </form>
-
     </div>
+</div>
 
+<div id="modal_wrong_password" class="modal">
+    <div class="modal-content">
+        <h4>Errore inserimento password</h4>
+        <p>La password inserità non corrisponde con quella nel controllo password</p>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">OK</a>
+    </div>
 </div>

@@ -66,7 +66,6 @@
 
             // remove a user
             this.deleteUser = function (user) {
-                // todo -> prompt dialog
                 // better BEFORE calling this function
                 Users.delete({id: user.uid}, function () {
                     // ok
@@ -85,12 +84,17 @@
                         ctrl.newUser.role = "client";
                     };
 
-                    this.newUser.$save(function (data) {
+                    ctrl.newUser.$save(function (data) {
                         ctrl.users.push(data);
                         ctrl.newUser = new Users();
+                        console.log("Insertion succes");
+                        console.log(data);
+                    }, function() {
+                        console.log("Insertion failed");
                     });
                 } else {
                     ctrl.verifyPassword = "";
+                    this.open_wrong_password_modal();
                 };
             };
 
@@ -115,6 +119,9 @@
                 this.tmpUser = this.users[index];
             };
 
+            this.open_wrong_password_modal = function () {
+                $('#modal_wrong_password').openModal();
+            };
         }]);
 
 

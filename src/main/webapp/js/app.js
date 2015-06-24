@@ -25,7 +25,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule',
-        'registrationModule', 'meModule', 'adminUsers', 'confirmModule', 'buyModule', 'pricesModule'])
+        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'confirmModule', 'buyModule', 'pricesModule'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -74,19 +74,17 @@ $(document).ready(function () {
             }).when ('/admin',{
                 templateUrl: '../partials/admin/dashboard.html'
             }).when ('/admin/films',{
-                templateUrl: '../partials/admin/films.html'
-            }).when ('/admin/plays',{
-                templateUrl: '../partials/admin/plays.html',
-                controller: 'AdminPlaysController',
+                templateUrl: '../partials/admin/films.html',
+                controller: 'AdminFilmsController',
                 controllerAs: 'ctrl'
+            }).when ('/admin/plays',{
+                templateUrl: '../partials/admin/plays.html'
             }).when ('/admin/prices',{
                 templateUrl: '../partials/admin/prices.html',
                 controller: 'AdminPricesController',
                 controllerAs: 'ctrl'
             }).when ('/admin/rooms',{
-                templateUrl: '../partials/admin/rooms.html',
-                controller: 'AdminRoomsController',
-                controllerAs: 'ctrl'
+                templateUrl: '../partials/admin/rooms.html'
             }).when ('/admin/stats',{
                 templateUrl: '../partials/admin/stats.html',
                 controller: 'AdminStatsController',
@@ -95,13 +93,13 @@ $(document).ready(function () {
                 templateUrl: '../partials/admin/users.html',
                 controller: 'AdminUsersController',
                 controllerAs: 'ctrl'
-            }).when('/admin/users/new_user', {
-                templateUrl: '../partials/admin/new_user.html',
-                controller: 'AdminUsersController',
-                controllerAs: 'ctrl'
             }).when('/admin/users/:uid', {
                 templateUrl: '../partials/admin/edit_user.html',
                 controller: 'AdminUsersEditController',
+                controllerAs: 'ctrl'
+            }).when('/admin/users/new_user', {
+                templateUrl: '../partials/admin/new_user.html',
+                controller: 'AdminUsersController',
                 controllerAs: 'ctrl'
             }).when('/buy', {
                 templateUrl: '../partials/buy_seats.html',
