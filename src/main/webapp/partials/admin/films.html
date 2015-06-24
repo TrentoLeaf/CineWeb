@@ -16,12 +16,13 @@
                 <table class="bordered center-align responsive-table">
                     <thead>
                     <tr>
-                        <td><a class="yellow-text text-accent-4" href="">Id</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Email</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Nome</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Cognome</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Credito</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Confermato</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Fid</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Titolo</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Genere</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Trailer</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Locandina</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Trama</a></td>
+                        <td><a class="yellow-text text-accent-4" href="">Durata</a></td>
                         <td><a class="yellow-text text-accent-4" href="">Cancella</a></td>
                         <td><a class="yellow-text text-accent-4" href="">Modifica</a></td>
                     </tr>
@@ -33,7 +34,7 @@
                         <td>{{f.genre}}</td>
                         <td>{{f.trailer}}</td>
                         <td>{{f.playbill}} €</td>
-                        <td>{{f.plot}}</td>
+                        <td class="truncate">{{f.plot}}</td>
                         <td>{{f.duration}}</td>
 
                         <td>

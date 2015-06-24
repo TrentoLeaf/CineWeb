@@ -6,13 +6,60 @@
         </div>
     </div>
 
-    <!-- Contenuto della pagina new_film -->
+    <div class="row">
+        <div class="center-align">
+            {{ctrl.newFilm}}
+        </div>
+    </div>
 
     <div class="row">
-        <div class=" section center-align">
-            <a class="btn-large waves-effect waves-light yellow accent-4 black-text" href="#admin/films">INDIETRO
-                <i class="mdi-navigation-arrow-back left"></i>
-            </a>
-        </div>
+        <form class="col s6 m6 l6 offset-s3 offset-l3 offset-m3 center-align">
+            <div class="row">
+                <div class="input-field">
+                    <input id="title" type="text" class="validate" ng-model="ctrl.newFilm.title">
+                    <label for="title">Titolo</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <input id="genre" type="text" class="validate" ng-model="ctrl.newFilm.genre">
+                    <label for="genre">Genere</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <input id="trailer" type="text" class="validate" ng-model="ctrl.newFilm.trailer">
+                    <label for="trailer">Trailer</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <input id="playbill" type="text" class="validate" ng-model="ctrl.newFilm.playbill">
+                    <label for="playbill">Locandina</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <textarea id="plot" type="" class="materialize-textarea" ng-model="ctrl.newFilm.plot"></textarea>
+                    <label for="plot">Trama</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <input id="duration" type="number" class="validate" ng-model="ctrl.newFilm.duration">
+                    <label for="duration">Durata</label>
+                </div>
+            </div>
+            <div class="section">
+                <a class="btn-large waves-effect waves-light yellow accent-4 black-text" href="#admin/films">INDIETRO
+                    <i class="mdi-navigation-arrow-back left"></i>
+                </a>
+                <a class="btn-large waves-effect waves-light green white-text" href="" ng-click="ctrl.addFilm()">REGISTRA
+                    <i class="mdi-maps-local-movies right"></i>
+                </a>
+
+            </div>
+
+        </form>
     </div>
 </div>

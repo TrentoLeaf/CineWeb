@@ -22,6 +22,8 @@
                 Films.query(function (data) {
                     ctrl.films = data;
                     ctrl.loading = false;
+                }, function (){
+                    //Fail Case
                 });
             };
 
@@ -30,7 +32,10 @@
                 ctrl.newFilm.$save( function (data) {
                     ctrl.films.push(data);
                     ctrl.newFilm = new Films();
+                    $location.path("/admin/films");
 
+                }, function () {
+                    //Fail Case
                 });
             };
 
