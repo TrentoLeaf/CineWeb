@@ -141,7 +141,7 @@
             <div class="col s12 offset-m3 m3 offset-l3 l3">
                 <div class="input-field">
                     <input id="cvv" type="number" length="4">
-                    <label for="cvv">CVV</label>
+                    <label for="cvv">CVV <i class="mdi-action-help tooltipped" data-position="right" data-tooltip="Codice di sicurezza posto sul retro della carta di credito"></i></label>
                 </div>
             </div>
         </div>
@@ -199,4 +199,6 @@
     // init contatore lettere
     $('#credit_card').characterCounter();
     $('#cvv').characterCounter();
+    // init tooltip
+    $('.tooltipped').tooltip({delay: 50});
 </script>
