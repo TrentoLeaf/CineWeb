@@ -174,19 +174,11 @@ $(document).ready(function () {
             /* init of prices */
             console.log("INIT THE PRICES");
 
-            // map for the prices
-            var pricesMap = {
-                normal: "Normale",
-                reduced: "Ridotto",
-                military: "Militare",
-                disabled: "Disabile"
-            };
-
             // function to load the prices
             var loadPrices = function () {
                 Prices.query(function (data) {
                     data.map(function (o) {
-                        o.name = pricesMap[o.type] || o.type.capitalizeFirstLetter();
+                        o.type = o.type.capitalizeFirstLetter();
                     });
                     $rootScope.tickets = data;
                     // when data is ready re-update the total of the cart

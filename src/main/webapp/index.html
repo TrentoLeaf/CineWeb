@@ -117,7 +117,7 @@
                                 <div ng-repeat="drop in cart[$index].tickets track by $index" class="row"> <!-- dropdowns -->
                                     <div class="col s7 m7 l7"> <!-- dropdown tipologia biglietto -->
                                         <select class="browser-default black-text" ng-model="cart[$parent.$index].tickets[$index].type" ng-change="cc.updateTotal()" >
-                                            <option ng-repeat="ticket in tickets" value="{{ticket.type}}">{{ticket.name}}</option>
+                                            <option ng-repeat="ticket in tickets" value="{{ticket.type}}">{{ticket.type}}</option>
                                             <!--
                                             <option value="normale" selected>Normale</option>
                                             <option value="ridotto">Ridotto</option>
