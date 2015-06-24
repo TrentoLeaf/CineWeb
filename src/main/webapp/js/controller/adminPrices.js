@@ -11,8 +11,10 @@
             });
 
             var ctrl = this;
-            this.tmpPrice = {};
+            this.newPrice = new Test();
+            this.tmpPrice = new Test();
 
+            console.log(this.newPrice);
             // remove a priceClass
             this.deletePrice = function () {
 
@@ -26,27 +28,34 @@
                 });
             };
 
-            /*
-            this.addPrice = function () {
-                this.newPrice.$save(function (data) {
-                    ctrl.price.push(data);
-                    ctrl.newPrice = new Prices();
+
+            this.addPrice = function (data) {
+                ctrl.newPrice.$save(function (data) {
+
+                    this.newPrice = new Test();
                 }, function () {
                     // errors
                 });
             };
-            */
 
-            this.open_delete_modal = function (ticket) {
+
+            this.open_delete_modal = function (data) {
+                ctrl.tmpPrice = data;
                 $('#modal_deleteAgree').openModal();
-                this.tmpPrice = ticket;
             };
 
             /*
-          //TODO: edit a given price
+            * Problema durante la modifica, i valori cambiano anche nella tabella ed è necessario fare un refresh
+            */
+            this.open_edit_modal = function (data) {
+
+                ctrl.tmpPrice = data;
+                $('#modal_edit').openModal();
+            };
+
             this.editPrice = function (price) {
-                price. = Math.random().toString(36).substring(7);
-                Prices.update({type: prices}, price).$promise.then(function (data) {
+
+                Test.update({type: price.type}, price).$promise.then(function (data) {
                     // ok
                     console.log("UPDATE OK ->");
                     console.log(data);
@@ -55,7 +64,6 @@
                     console.log("UPDATE fail");
                 });
             };
-*/
 
         }]);
 
