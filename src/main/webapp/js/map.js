@@ -101,6 +101,7 @@
                     // get a seat
                     var pp = seat.clone();
                     pp.transform('t' + i_index + ',' + j_index); // set traslation
+                    // add attr row and column
                     pp.attr({row: i.toString()});
                     pp.attr({col: j.toString()});
 
@@ -184,6 +185,11 @@
                 poltrona_svg.addClass('seat-best');
                 break;
         }
+
+        // add a tooltip to the seat
+        poltrona_svg.addClass('tooltipped');
+        
+
     }
 
 
