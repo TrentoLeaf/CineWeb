@@ -15,22 +15,22 @@
         datasets: [
             {
                 label: "My First dataset",
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
+                fillColor: "rgba(95,255,89,0.2)",
+                strokeColor: "rgba(95,255,89,1)",
+                pointColor: "rgba(95,255,89,1)",
                 pointStrokeColor: "#fff",
                 pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
+                pointHighlightStroke: "rgba(95,255,89,1)",
                 data: [65, 59, 90, 81, 56, 55, 40]
             },
             {
                 label: "My Second dataset",
-                fillColor: "rgba(151,187,205,0.2)",
-                strokeColor: "rgba(151,187,205,1)",
-                pointColor: "rgba(151,187,205,1)",
+                fillColor: "rgba(255,53,31,0.2)",
+                strokeColor: "rgba(255,53,31,1)",
+                pointColor: "rgba(255,53,31,1)",
                 pointStrokeColor: "#fff",
                 pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(151,187,205,1)",
+                pointHighlightStroke: "rgba(255,53,31,1)",
                 data: [28, 48, 40, 19, 96, 27, 100]
             }
         ]
@@ -41,12 +41,12 @@
         datasets: [
             {
                 label: "My First dataset",
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
+                fillColor: "rgba(255,248,41,0.2)",
+                strokeColor: "rgba(255,248,41,1)",
+                pointColor: "rgba(255,248,41,1)",
                 pointStrokeColor: "#fff",
                 pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
+                pointHighlightStroke: "rgba(255,248,41,1)",
                 data: [65, 59, 90, 81, 56, 55, 40]
             },
             {
@@ -77,12 +77,12 @@
             },
             {
                 label: "My Second dataset",
-                fillColor: "rgba(151,187,205,0.2)",
-                strokeColor: "rgba(151,187,205,1)",
-                pointColor: "rgba(151,187,205,1)",
+                fillColor: "rgba(242,54,255,0.2)",
+                strokeColor: "rgba(242,54,255,1)",
+                pointColor: "rgba(242,54,255,1)",
                 pointStrokeColor: "#fff",
                 pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(151,187,205,1)",
+                pointHighlightStroke: "rgba(242,54,255,1)",
                 data: [28, 48, 40, 19, 96, 27, 100]
             }
         ]
