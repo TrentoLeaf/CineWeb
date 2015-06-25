@@ -53,7 +53,7 @@
 
 <body ng-controller="TabController as tab">
 <div class="navbar-fixed">
-    <nav class="grey darken-4" role="navigation" id="header-navbar">
+    <nav class="black" role="navigation" id="header-navbar">
         <div class="nav-wrapper">
             <a id="title" href="#home" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
             <ul class="left hide-on-med-and-down">
@@ -81,19 +81,19 @@
 </div>
 
 <!-- here the main content -->
-<main class="grey darken-3" id="main-content">
-    <div ng-click="tab.closeTab()" class="content-div grey darken-3" ng-view>
+<main class="white" id="main-content">
+    <div ng-click="tab.closeTab()" class="content-div white" ng-view>
 
     </div>
 
-    <div class="side-div grey darken-4 white-text">
+    <div class="side-div white white-text">
         <!-- Only Mobile: bottone per chiudere la side-div-->
-        <div class="row hide-side-nav-button-mobile-container hide-on-med-and-up grey darken-4">
+        <div class="row hide-side-nav-button-mobile-container hide-on-med-and-up white">
             <button ng-click="tab.closeTab();" class="btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i>Torna indietro</button>
         </div>
         <ul class="side-div-container">
             <li ng-controller="CartController as cc" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
-                <div class="side-cart-content grey darken-4 row"> <!-- Contenuto carrello -->
+                <div class="side-cart-content white row"> <!-- Contenuto carrello -->
                     <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
                         <li ng-repeat="film in cart track by $index" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
@@ -121,7 +121,7 @@
                                 <div ng-repeat="drop in cart[$index].tickets track by $index" class="row"> <!-- dropdowns -->
                                     <div class="col s7 m7 l7"> <!-- dropdown tipologia biglietto -->
                                         <select class="browser-default black-text" ng-model="cart[$parent.$index].tickets[$index].type" ng-change="cc.updateTotal()" >
-                                            <option ng-repeat="ticket in tickets" value="{{ticket.type}}">{{ticket.name}}</option>
+                                            <option ng-repeat="ticket in tickets" value="{{ticket.type}}">{{ticket.type}}</option>
                                             <!--
                                             <option value="normale" selected>Normale</option>
                                             <option value="ridotto">Ridotto</option>
@@ -156,50 +156,52 @@
             </li>
             <li class="side-login side-nav-element" ng-show="tab.isSet(2)">
                 <ul ng-controller="LoginController as c" class="row grey darken-4">
-                    <li ng-hide="c.logged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- login page -->
+                    <li ng-hide="isUserLogged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- login page -->
                         <h4>Login</h4>
-                        <h6 ng-show="c.error" class="red-text">{{c.error}}</h6>
+                        <h6 class="red-text">{{loginError}}</h6>
                         <form>
                             <div class="input-field">
                                 <i class="mdi-action-account-circle prefix"></i>
-                                <input id="user" type="text" ng-model="c.user.email">
+                                <input id="user" type="text" ng-model="c.email">
                                 <label for="user" class="white-text">Nome Utente</label>
                             </div>
                             <div class="input-field">
                                 <i class="mdi-action-lock prefix"></i>
-                                <input id="pass" type="password" ng-model="c.user.pass">
+                                <input id="pass" type="password" ng-model="c.pass">
                                 <label for="pass" class="white-text">Password</label>
                             </div>
                             <div class="row">
-                                <a  ng-click="c.losePass(c.user.email); tab.closeTab()" class="yellow-text text-accent-4" type="submit" name="forgot" href="">Password dimenticata? Clicca qui.</a>
+                                <a  ng-click="c.losePass(); tab.closeTab()" class="yellow-text text-accent-4" type="submit" name="forgot" href="">Password dimenticata? Clicca qui.</a>
                             </div>
                             <div class="row">
-                                <button ng-click="c.login(c.user.email, c.user.pass)" class="col s12 m12 l12 btn-large green white-text waves-effect waves-light" type="submit" name="login">Login
+                                <button ng-click="c.login(c.email, c.pass)" class="col s12 m12 l12 btn-large green white-text waves-effect waves-light" type="submit" name="login">Login
                                     <i class="mdi-content-send white-text right"></i>
                                 </button>
                             </div>
                             <div class="row">
-                                <button ng-click="c.register(c.user.email); tab.closeTab()" class="col s12 m12 l12 btn yellow accent-4 white-text waves-effect waves-light" type="submit" name="register">Registrati
+                                <button ng-click="c.toRegister(); tab.closeTab()" class="col s12 m12 l12 btn yellow accent-4 white-text waves-effect waves-light" type="submit" name="register">Registrati
                                     <i class="mdi-action-description white-text right"></i>
                                 </button>
                             </div>
                         </form>
                     </li>
-                    <li ng-show="c.logged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- already logged page -->
+                    <li ng-show="isUserLogged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- already logged page -->
                         <div class="row">
                             <div class="col s7 m7 l7">
-                                <h6 ng-show="c.error" class="red-text">{{c.error}}</h6>
+                                <h6 class="red-text">{{loginError}}</h6>
                             </div>
                             <div class="col s5 m5 l5">
-                                <button ng-click="c.logout()" class="btn red white-text">Logout</button>
+                                <button ng-click="c.logout()" class="btn red white-text right">Logout</button>
                             </div>
                         </div>
                         <h4>Benvenuto</h4>
-                        <h5>{{c.user.firstName}}</h5> <!-- TODO definire -->
-                        <h6>{{c.user.email}}</h6> <!-- TODO definire -->
+                        <h5>{{user.name}}</h5>
+                        <h6>{{user.email}}</h6>
                         <div class="row btn-your-data-container">
-                            <!-- TODO redirect to userArea partial -->
                             <button ng-click="c.toUserArea(); tab.closeTab();" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-action-assignment right"></i>I tuoi dati</button>
+                        </div>
+                        <div class="row btn-your-data-container">
+                            <button ng-show="user.role == 'admin'"  ng-click="c.toDashboard(); tab.closeTab();" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-av-web right"></i>Dashboard</button>
                         </div>
                     </li>
                 </ul>
@@ -209,33 +211,33 @@
 </main>
 
 <footer class="page-footer grey darken-4" ng-click="tab.closeTab()">
-    <div class="container white-text">
+    <div class="container yellow-text text-accent-4">
         <div class="row">
             <div class="col s12 m6 l6">
-                <h5 class="white-text">CineWeb</h5>
-                <h6 class="grey-text text-lighten-4">Via di Qua 23, Trento - 38100, Italia.</h6>
-                <h6 class="grey-text text-lighten-4">Telefono: 0461 63 7231</h6>
+                <h5 class="yellow-text text-accent-4">CineWeb</h5>
+                <h6 class="yellow-text text-accent-4">Via di Qua 23, Trento - 38100, Italia.</h6>
+                <h6 class="yellow-text text-accent-4">Telefono: 0461 63 7231</h6>
             </div>
             <div class="col s12 offset-m1 m5 offset-l2 l4 right-align">
-                <h5 class="white-text">Orari</h5>
+                <h5 class="yellow-text text-accent-4">Orari</h5>
                 <ul>
-                    <li><h6 class="grey-text text-lighten-3" >Lunedì - Mercoledì: 16:00 - 23:00</h6></li>
-                    <li><h6 class="grey-text text-lighten-3" >Giovedì chiuso.</h6></li>
-                    <li><h6 class="grey-text text-lighten-3" >Venerdì - Domenica: 16:00 - 01:00</h6></li>
+                    <li><h6 class="yellow-text text-accent-4" >Lunedì - Mercoledì: 16:00 - 23:00</h6></li>
+                    <li><h6 class="yellow-text text-accent-4" >Giovedì chiuso.</h6></li>
+                    <li><h6 class="yellow-text text-accent-4" >Venerdì - Domenica: 16:00 - 01:00</h6></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="footer-copyright black">
-        <div class="container">
+        <div class="container yellow-text text-accent-4">
             © 2015 TrentoLeaf+
-            <a class="grey-text text-lighten-4 right" href="partials/about.html">About Us</a>
+            <a class="yellow-text text-accent-4 right" href="partials/about.html">About Us</a>
         </div>
     </div>
 </footer>
 
 <!-- Floating button amministratore-->
-<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+<div ng-show="user.role == 'admin'"  class="fixed-action-btn" style="bottom: 45px; right: 24px;">
     <a class="btn-floating btn-large yellow accent-4" href="#admin">
         <i class="medium mdi-action-home black-text"></i>
     </a>

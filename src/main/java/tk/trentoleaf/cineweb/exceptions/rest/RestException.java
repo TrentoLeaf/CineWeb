@@ -6,3 +6,4 @@ public class RestException extends RuntimeException {
         super(message);
     }
 }
+

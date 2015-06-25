@@ -17,13 +17,8 @@
                 },
 
                 loadCart: function () {
-                    var cart = "";
-                    cart = locker.get(CART);
-                    if (cart == "" || cart == "[]" || cart == null || cart == undefined) {
-                        return JSON.parse(null);
-                    } else {
-                        return JSON.parse(cart);
-                    }
+                    var cart = locker.get(CART, null);
+                    return JSON.parse(cart);
                 }
             }
         }]);

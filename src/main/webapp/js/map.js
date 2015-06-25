@@ -101,6 +101,7 @@
                     // get a seat
                     var pp = seat.clone();
                     pp.transform('t' + i_index + ',' + j_index); // set traslation
+                    // add attr row and column
                     pp.attr({row: i.toString()});
                     pp.attr({col: j.toString()});
 
@@ -134,6 +135,9 @@
             // next header
             i_index += 55;
         }
+
+        // init the tooltips
+        $('.tooltipped').tooltip({delay: 300});
     }
 
     function set_svg_seat (poltrona_svg, posto, spettacolo, posti_selezionati) {
@@ -184,6 +188,13 @@
                 poltrona_svg.addClass('seat-best');
                 break;
         }
+
+        // add a tooltip to the seat
+        poltrona_svg.addClass('tooltipped');
+        var row = intToChar(parseInt(poltrona_svg.attr('row')));
+        var col = parseInt(poltrona_svg.attr('col')) + 1;
+        poltrona_svg.attr('data-position', "right");
+        poltrona_svg.attr('data-tooltip', row + col);
     }
 
 
@@ -193,6 +204,11 @@
             return 'A';
         }
         return String.fromCharCode(c.charCodeAt() + 1);
+    }
+
+    /* return the character mapped on asci code - 65('A') (0 = A, 1 = B, ...)*/
+    function intToChar (i) {
+        return String.fromCharCode('A'.charCodeAt() + parseInt(i));
     }
 
     function seatHoverIn() {

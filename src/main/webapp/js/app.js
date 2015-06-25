@@ -145,7 +145,7 @@ $(document).ready(function () {
             }
         })
 
-        .run(['$rootScope', '$location', 'Prices', 'StorageService', function ($rootScope, $location, Prices, StorageService) {
+        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', function ($rootScope, $location, Prices, StorageService, Auth) {
 
             // redirect only if needed
             var redirect = function (path) {
@@ -174,8 +174,7 @@ $(document).ready(function () {
             });
 
 
-            /* variavile per sapere cosa fare dopo un login */
-            $rootScope.afterLogin = "normal";
+
 
             //updateTotal
             /*
@@ -204,20 +203,12 @@ $(document).ready(function () {
             /* init of prices */
             console.log("INIT THE PRICES");
 
-            // map for the prices
-            var pricesMap = {
-                normal: "Normale",
-                reduced: "Ridotto",
-                military: "Militare",
-                disabled: "Disabile"
-            };
-
             // function to load the prices
             var loadPrices = function () {
                 Prices.query(function (data) {
-                    data.map(function (o) {
-                        o.name = pricesMap[o.type] || o.type.capitalizeFirstLetter();
-                    });
+                   /* data.map(function (o) {
+                        o.type = o.type.capitalizeFirstLetter();
+                    });*/
                     $rootScope.tickets = data;
                     // when data is ready re-update the total of the cart
                     $rootScope.updateTotal();
@@ -259,12 +250,31 @@ $(document).ready(function () {
                 console.log("cart saved");
             }, true);
 
+            /* init of login data */
+            $rootScope.user = {};
+            $rootScope.isUserLogged = false;
+            $rootScope.loginError = "";
+            $rootScope.afterLogin = "normal"; // variavile per sapere dove redirigere dopo un login (normal, buy, userArea)
 
+            // request to server the data of a logged user. If the user isn't logged set the login variables.
+            var retriveLoginData = function () {
+                Auth.me()
+                    .success(function (user) {
+                        console.log("THE USER IS ALREADY LOGGED");
+                        console.log(user);
 
+                        $rootScope.isUserLogged = true;
+                        //save basic user data
+                        $rootScope.user = user;
+                    }).error(function (error) {
+                        console.log("THE USER IS NOT LOGGED");
 
+                        $rootScope.isUserLogged = false;
+                        $rootScope.user = {};
+                    });
+            };
 
-
-
+            retriveLoginData();
 
 
 

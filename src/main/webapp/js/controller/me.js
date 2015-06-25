@@ -8,6 +8,7 @@
             this.user = {};
             this.loading = true;
 
+            // TODO tutto da rifare, bisogna richiedere tutti i dati utente
             this.loadUserData = function () {
                 Auth.me().then(
                     function (data) {

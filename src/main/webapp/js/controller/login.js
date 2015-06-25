@@ -5,37 +5,33 @@
         .controller('LoginController', ['$rootScope', '$location', 'Auth', function ($rootScope, $location, Auth) {
 
             var ctrl = this;
-
-            this.user = {};
-            this.logged = false;
-
-            this.data = "";
-            this.error = "";
-
-            var setData = function (data) {
-                ctrl.data = data;
-                ctrl.error = "";
-            };
+            this.email = "";
+            this.pass = "";
 
             var setError = function (error) {
-                ctrl.data = "";
-                ctrl.error = error;
+                $rootScope.loginError = error;
             };
 
             this.login = function (email, password) {
-                Auth.login(email, password).then(
-                    function (data) {
-                        // set logged var
-                        ctrl.logged = true;
+                Auth.login(email, password)
+                    .success(function (user) {
+
+                        // set isUserLogged var
+                        $rootScope.isUserLogged = true;
                         //save basic user data
-                        ctrl.user = data;
+                        $rootScope.user = user;
                         setError("");
 
-                        // redirect alla giusta pagina
+                        // redirect all' ultima pagina
                         switch ($rootScope.afterLogin) {
                             case "normal":
                                 $rootScope.afterLogin = "normal";
-                                $location.path('/today');
+
+                                if ($rootScope.user.role == "admin") {
+                                    $location.path('/admin');
+                                } else {
+                                    $location.path('/today');
+                                }
                                 break;
                             case "buy":
                                 $rootScope.afterLogin = "normal";
@@ -43,35 +39,37 @@
                                 break;
                             case "userArea":
                                 $rootScope.afterLogin = "normal";
-                                if (ctrl.user.role = "admin") {
+
+                                if ($rootScope.user.role == "admin") {
+                                    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
                                     $location.path('/admin');
                                 } else {
                                     $location.path('/me');
                                 }
                                 break;
                         }
-
-                    },
-                    function (error) {
-                        ctrl.logged = false;
+                    }).error(function (error) { /*  login failed*/
+                        $rootScope.isUserLogged = false;
                         setError('Nome utente o password errati.');
-                    }
-                );
+                    });
 
-                //this.retriveLoginData();
-
+                ctrl.pass = "";
             };
 
             this.logout = function () {
-                Auth.logout().then(
-                    function () {
-                        setData("Logout eseguito con successo.");
+                Auth.logout()
+                    .success( function () {
+                        console.log("LOGINCONTROLLER --> LOGOUT success");
                         setError("");
-                        ctrl.logged = false;
-                        ctrl.user = {};
+                        $rootScope.isUserLogged = false;
+                        $rootScope.user = {};
                         $location.path('/today');
-                    },
-                    function () {
+
+                        ctrl.email = "";
+                        ctrl.pass = "";
+                    })
+                    .error( function () {
+                        console.log("LOGINCONTROLLER --> LOGOUT failed");
                         setError("Logout fallito. Riprova.");
                     }
                 )
@@ -88,7 +86,7 @@
                 )
             };
 
-            this.losePass = function (email) {
+            this.losePass = function () {
                 // redirect to a new partial
                 $location.path('/password_recovery');
             };
@@ -97,7 +95,11 @@
                 $location.path('/me');
             };
 
-            this.register = function (email) {
+            this.toDashboard = function () {
+                $location.path('/admin');
+            };
+
+            this.toRegister = function () {
                 // redirect al partial registrazione
                 $location.path('/registration');
             };
@@ -110,7 +112,6 @@
             var REC_PASS_SUCCESS = 0;
             var REC_PASS_MAIL_NOT_EXIST = 1;
             var REC_PASS_MAIL_NOT_VALID = 2;
-            var REC_PASS_REQUEST_FAIL = -1;
 
             this.sendPassRecoveryRequest = function () {
 
@@ -118,12 +119,16 @@
                 $('#pass_recovery_message').addClass("white-text");
                 ctrl.rec_pass_msg = "Un momento...";
 
-                if ((this.mailForPassRecovery == undefined) || (! validateEmail(this.mailForPassRecovery))) {
+                if ((this.mailForPassRecovery == undefined) || (!validateEmail(this.mailForPassRecovery))) {
                     ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_VALID);
                 } else {
-                    // TODO invia richiesta ajax
-                    // TODO attendi la risposta (successo/mail_non_registrata/fail)
-                    // TODO callback:  ctrl.set_rec_pass_msg(response);
+                    Auth.forgotPassword(ctrl.mailForPassRecovery)
+                        .success(function() {
+                            ctrl.set_rec_pass_msg(REC_PASS_SUCCESS);
+                        })
+                        .error(function() {
+                            ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_EXIST);
+                        });
                 }
             };
 
@@ -144,47 +149,18 @@
                     $('#pass_recovery_message').addClass("red-text");
                     ctrl.rec_pass_msg = "La richiesta non è andata a buon fine. Riprova.";
                 }
-
             };
-
-            /* get the info for the login controller (init) */
-            this.retriveLoginData = function () {
-                Auth.me().then(
-                    function (data) {
-                        console.log("LOGIN DATA retrived ");
-                        console.log(data);
-
-                        // set logged var
-                        ctrl.logged = true;
-                        //save basic user data
-                        ctrl.user = data;
-                    },
-                    function () {
-                        console.log("LOGIN DATA NOT retrived");
-                        // set logged var
-                        ctrl.logged = false;
-                        ctrl.user = {};
-
-                    }
-                );
-            };
-
-            this.retriveLoginData();
-
-
-
         }]);
 
 
     function validateEmail(mail) {
 
-        var atposition=mail.indexOf("@");
-        var dotposition=mail.lastIndexOf(".");
-        if (atposition<1 || dotposition<atposition+2 || dotposition+2>=mail.length){
+        var atposition = mail.indexOf("@");
+        var dotposition = mail.lastIndexOf(".");
+        if (atposition < 1 || dotposition < atposition + 2 || dotposition + 2 >= mail.length) {
             return false;
-        } else {
-            return true;
         }
-    };
+        return true;
+    }
 
 })();

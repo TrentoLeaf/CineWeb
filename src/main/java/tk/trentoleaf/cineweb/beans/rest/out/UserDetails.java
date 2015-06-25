@@ -6,7 +6,7 @@ import tk.trentoleaf.cineweb.beans.model.User;
 import java.io.Serializable;
 
 public class UserDetails implements Serializable {
-
+/* OLD by Andrea
     private String email;
     private String firstName;
     private String secondName;
@@ -20,5 +20,18 @@ public class UserDetails implements Serializable {
         this.credit = user.getCredit();
         this.role = user.getRole();
     }
+*/
+
+    private String email;
+    private String name;
+    private Role role;
+
+    public UserDetails(User user) {
+        this.email = user.getEmail();
+        this.name = user.getSecondName() + " " + user.getFirstName();
+        this.role = user.getRole();
+    }
+
+
 
 }
