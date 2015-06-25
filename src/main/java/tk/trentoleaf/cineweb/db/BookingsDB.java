@@ -1,8 +1,12 @@
 package tk.trentoleaf.cineweb.db;
 
 import org.joda.time.DateTime;
-import tk.trentoleaf.cineweb.beans.model.*;
-import tk.trentoleaf.cineweb.exceptions.db.*;
+import tk.trentoleaf.cineweb.beans.model.Booking;
+import tk.trentoleaf.cineweb.beans.model.Ticket;
+import tk.trentoleaf.cineweb.beans.model.User;
+import tk.trentoleaf.cineweb.exceptions.db.DBException;
+import tk.trentoleaf.cineweb.exceptions.db.TicketAlreadyDeletedException;
+import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,8 +21,6 @@ public class BookingsDB {
 
     // get a DB instance
     protected DB db = DB.instance();
-    protected UsersDB usersDB = UsersDB.instance();
-    protected PlaysDB playsDB = PlaysDB.instance();
 
     // instance -> singleton pattern
     private static BookingsDB instance;
@@ -36,57 +38,120 @@ public class BookingsDB {
     }
 
     // create a new booking
-    public void createBooking(Booking booking) throws DBException, FilmAlreadyGoneException {
+    public Booking createBooking(User user, List<Ticket> tickets) throws DBException, UserNotFoundException {
+        return createBooking(user.getUid(), tickets);
+    }
+
+    // create a new booking
+    public Booking createBooking(int uid, List<Ticket> tickets) throws DBException, UserNotFoundException {
 
         // TODO: check if some play is already gone... for each film
+        // booking in creation
+        final Booking booking = new Booking();
 
         // create connection
         try (Connection connection = db.getConnection()) {
+            try {
 
-            // start transaction
-            connection.setAutoCommit(false);
+                // start transaction
+                connection.setAutoCommit(false);
 
-            // insert booking query
-            final String bookingQuery = "INSERT INTO bookings (bid, uid, booking_time, payed_with_credit) " +
-                    "VALUES (DEFAULT, ?, ?, ?) RETURNING bid;";
+                // calculate total cost
+                double cost = 0;
+                for (Ticket t : tickets) {
+                    cost += t.getPrice();
+                }
 
-            // insert booking
-            try (PreparedStatement bookingStm = connection.prepareStatement(bookingQuery)) {
-                bookingStm.setInt(1, booking.getUid());
-                bookingStm.setTimestamp(2, new Timestamp(booking.getTime().toDate().getTime()));
-                bookingStm.setDouble(3, booking.getPayedWithCredit());
+                // get user credit
+                double userCredit;
 
-                final ResultSet bookingRs = bookingStm.executeQuery();
-                bookingRs.next();
-                booking.setBid(bookingRs.getInt("bid"));
+                // get user credit
+                try (PreparedStatement userStm = connection.prepareStatement("SELECT credit FROM users WHERE uid = ?")) {
+                    userStm.setInt(1, uid);
+                    ResultSet userRs = userStm.executeQuery();
 
-                // query to insert a new ticket
-                final String ticketQuery = "INSERT INTO tickets (tid, bid, pid, rid, x, y, price, type, deleted) " +
-                        "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, FALSE) RETURNING tid";
+                    if (userRs.next()) {
+                        userCredit = userRs.getDouble("credit");
+                    } else {
+                        throw new UserNotFoundException();
+                    }
+                }
 
-                // insert every ticket
-                for (Ticket ticket : booking.getTickets()) {
+                // calculate how much I pay with credit and my new credit
+                double payedWithCredit;
+                if (cost >= userCredit) {
+                    payedWithCredit = userCredit;
+                    userCredit = 0;
+                } else {
+                    payedWithCredit = userCredit - cost;
+                    userCredit -= cost;
+                }
 
-                    // try to insert the current ticket
-                    try (PreparedStatement ticketStm = connection.prepareStatement(ticketQuery)) {
-                        ticketStm.setInt(1, ticket.getBid());
-                        ticketStm.setInt(2, ticket.getPid());
-                        ticketStm.setInt(3, ticket.getRid());
-                        ticketStm.setInt(4, ticket.getX());
-                        ticketStm.setInt(5, ticket.getY());
-                        ticketStm.setDouble(6, ticket.getPrice());
-                        ticketStm.setString(7, ticket.getType());
+                // update the user credit
+                try (PreparedStatement userStm = connection.prepareStatement("UPDATE users SET credit = ? WHERE uid = ?")) {
+                    userStm.setDouble(1, userCredit);
+                    userStm.setInt(2, uid);
 
-                        final ResultSet ticketRs = ticketStm.executeQuery();
-                        ticketRs.next();
-                        ticket.setTid(ticketRs.getInt("tid"));
+                    int n = userStm.executeUpdate();
+                    if (n != 1) {
+                        throw new UserNotFoundException();
+                    }
+                }
+
+                // get current time
+                long now = System.currentTimeMillis();
+
+                // insert booking query
+                final String bookingQuery = "INSERT INTO bookings (bid, uid, booking_time, payed_with_credit) " +
+                        "VALUES (DEFAULT, ?, ?, ?) RETURNING bid;";
+
+                // insert booking
+                try (PreparedStatement bookingStm = connection.prepareStatement(bookingQuery)) {
+                    bookingStm.setInt(1, uid);
+                    bookingStm.setTimestamp(2, new Timestamp(now));
+                    bookingStm.setDouble(3, booking.getPayedWithCredit());
+
+                    final ResultSet bookingRs = bookingStm.executeQuery();
+                    bookingRs.next();
+                    booking.setBid(bookingRs.getInt("bid"));
+
+                    // query to insert a new ticket
+                    final String ticketQuery = "INSERT INTO tickets (tid, bid, pid, rid, x, y, price, type, deleted) " +
+                            "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, FALSE) RETURNING tid";
+
+                    // insert every ticket
+                    for (Ticket ticket : tickets) {
+                        ticket.setBid(booking.getBid());
+
+                        // try to insert the current ticket
+                        try (PreparedStatement ticketStm = connection.prepareStatement(ticketQuery)) {
+                            ticketStm.setInt(1, ticket.getBid());
+                            ticketStm.setInt(2, ticket.getPid());
+                            ticketStm.setInt(3, ticket.getRid());
+                            ticketStm.setInt(4, ticket.getX());
+                            ticketStm.setInt(5, ticket.getY());
+                            ticketStm.setDouble(6, ticket.getPrice());
+                            ticketStm.setString(7, ticket.getType());
+
+                            final ResultSet ticketRs = ticketStm.executeQuery();
+                            ticketRs.next();
+                            ticket.setTid(ticketRs.getInt("tid"));
+                        }
                     }
                 }
 
                 // do transaction
                 connection.commit();
 
-            } catch (SQLException e) {
+                // return the booking
+                booking.setUid(uid);
+                booking.setTime(new DateTime(now));
+                booking.setPayedWithCredit(payedWithCredit);
+                booking.setTickets(tickets);
+
+                return booking;
+
+            } catch (SQLException | UserNotFoundException e) {
 
                 // something went wrong -> rollback
                 connection.rollback();
@@ -112,7 +177,7 @@ public class BookingsDB {
                 b.setBid(rs.getInt("bid"));
                 b.setUid(rs.getInt("uid"));
                 b.setTime(new DateTime(rs.getTimestamp("booking_time").getTime()));
-                b.setPayedWithCredit(rs.getDouble("played_with_credit"));
+                b.setPayedWithCredit(rs.getDouble("payed_with_credit"));
                 bookings.add(b);
             }
 

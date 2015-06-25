@@ -21,19 +21,20 @@ public class Booking implements Serializable {
     public Booking() {
     }
 
-    public Booking(int uid, DateTime time, double payedWithCredit) {
+    public Booking(int bid, int uid, DateTime time, double payedWithCredit) {
+        this.bid = bid;
         this.uid = uid;
         this.time = time;
         this.payedWithCredit = payedWithCredit;
     }
 
-    public Booking(int uid, DateTime time, double payedWithCredit, List<Ticket> tickets) {
-        this(uid, time, payedWithCredit);
+    public Booking(int bid, int uid, DateTime time, double payedWithCredit, List<Ticket> tickets) {
+        this(bid, uid, time, payedWithCredit);
         this.tickets = tickets;
     }
 
-    public Booking(User user, DateTime time, double payedWithCredit, List<Ticket> tickets) {
-        this(user.getUid(), time, payedWithCredit, tickets);
+    public Booking(int bid, User user, DateTime time, double payedWithCredit, List<Ticket> tickets) {
+        this(bid, user.getUid(), time, payedWithCredit, tickets);
     }
 
     public int getBid() {
@@ -91,7 +92,8 @@ public class Booking implements Serializable {
         if (bid != booking.bid) return false;
         if (uid != booking.uid) return false;
         if (Double.compare(booking.payedWithCredit, payedWithCredit) != 0) return false;
-        return time.equals(booking.time);
+        if (!time.equals(booking.time)) return false;
+        return tickets.equals(booking.tickets);
 
     }
 }

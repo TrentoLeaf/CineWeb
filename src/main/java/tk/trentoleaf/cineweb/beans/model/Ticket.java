@@ -3,6 +3,7 @@ package tk.trentoleaf.cineweb.beans.model;
 /**
  * Bean that represent a bought ticket for a given seat. It belongs to a booking.
  */
+// TODO: constraint pid -> rid == rid !!!
 public class Ticket {
 
     private int tid;
@@ -16,6 +17,20 @@ public class Ticket {
     private boolean deleted;
 
     public Ticket() {
+    }
+
+    public Ticket(int pid, int rid, int x, int y, double price, String type, boolean deleted) {
+        this.pid = pid;
+        this.rid = rid;
+        this.x = x;
+        this.y = y;
+        this.price = price;
+        this.type = type;
+        this.deleted = deleted;
+    }
+
+    public Ticket(Play play, int x, int y, double price, String type) {
+        this(play.getPid(), play.getRid(), x, y, price, type, false);
     }
 
     public int getTid() {
