@@ -26,7 +26,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule',
-        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'confirmModule', 'buyModule', 'pricesModule', 'mapModule', 'adminStats'])
+        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'confirmModule', 'buyModule', 'pricesModule', 'mapModule', 'adminStats'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -89,7 +89,17 @@ $(document).ready(function () {
                 controller: 'AdminFilmsEditController',
                 controllerAs: 'ctrl'
             }).when ('/admin/plays',{
-                templateUrl: '../partials/admin/plays.html'
+                templateUrl: '../partials/admin/plays.html',
+                controller: 'AdminPlaysController',
+                controllerAs: 'ctrl'
+            }).when ('/admin/plays/new',{
+                templateUrl: '../partials/admin/new_play.html',
+                controller: 'AdminPlaysController',
+                controllerAs: 'ctrl'
+            }).when ('/admin/plays/:pid', {
+                templateUrl: '../partials/admin/edit_play.html',
+                controller: 'AdminPlaysEditController',
+                controllerAs: 'ctrl'
             }).when ('/admin/prices',{
                 templateUrl: '../partials/admin/prices.html',
                 controller: 'AdminPricesController',
