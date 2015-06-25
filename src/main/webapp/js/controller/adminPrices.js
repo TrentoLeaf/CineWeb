@@ -29,8 +29,8 @@
             };
 
 
-            this.addPrice = function (data) {
-                ctrl.newPrice.$save(function (data) {
+            this.addPrice = function () {
+                ctrl.newPrice.$save(function () {
 
                     this.newPrice = new Test();
                 }, function () {
