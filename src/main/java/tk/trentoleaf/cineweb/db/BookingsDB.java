@@ -1,13 +1,8 @@
 package tk.trentoleaf.cineweb.db;
 
 import org.joda.time.DateTime;
-import tk.trentoleaf.cineweb.beans.model.Play;
-import tk.trentoleaf.cineweb.beans.model.Seat;
-import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.db.FilmAlreadyGoneException;
-import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
-import tk.trentoleaf.cineweb.beans.model.Booking;
-import tk.trentoleaf.cineweb.beans.model.User;
+import tk.trentoleaf.cineweb.beans.model.*;
+import tk.trentoleaf.cineweb.exceptions.db.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,7 +11,7 @@ import java.util.List;
 /**
  * This class handles the bookings storage. It uses the connections provided by the DB class.
  *
- * @see tk.trentoleaf.cineweb.db.DB
+ * @see DB
  */
 public class BookingsDB {
 
@@ -40,140 +35,188 @@ public class BookingsDB {
     private BookingsDB() {
     }
 
-
     // create a new booking
-    public Booking createBooking(Seat seat, User user, Play play, double price) throws SQLException, FilmAlreadyGoneException {
-        return createBooking(seat, user.getUid(), play.getPid(), price);
-    }
+    public void createBooking(Booking booking) throws DBException, FilmAlreadyGoneException {
 
-    // create a new booking
-    public Booking createBooking(Seat seat, int uid, int pid, double price) throws SQLException, FilmAlreadyGoneException {
-        return createBooking(seat.getRid(), seat.getX(), seat.getY(), uid, pid, price);
-    }
+        // TODO: check if some play is already gone... for each film
 
-    // create a new booking
-    public Booking createBooking(int rid, int x, int y, int uid, int pid, double price) throws SQLException, FilmAlreadyGoneException {
-        final String query = "INSERT INTO bookings (bid, uid, pid, rid, x, y, time_booking, price) VALUES " +
-                "(DEFAULT, ?, ?, ?, ?, ?, ?, ?) RETURNING bid";
+        // create connection
+        try (Connection connection = db.getConnection()) {
 
-        // check if the play has already started
-        final DateTime timeBooking = new DateTime(System.currentTimeMillis());
-        if (playsDB.isOlderPlay(pid, timeBooking)) {
-            throw new FilmAlreadyGoneException();
-        }
+            // start transaction
+            connection.setAutoCommit(false);
 
-        // create booking object
-        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            final Booking booking = new Booking(rid, x, y, uid, pid, timeBooking, price);
+            // insert booking query
+            final String bookingQuery = "INSERT INTO bookings (bid, uid, booking_time, payed_with_credit) " +
+                    "VALUES (DEFAULT, ?, ?, ?) RETURNING bid;";
 
-            stm.setInt(1, booking.getUid());
-            stm.setInt(2, booking.getPid());
-            stm.setInt(3, booking.getRid());
-            stm.setInt(4, booking.getX());
-            stm.setInt(5, booking.getY());
-            stm.setTimestamp(6, new Timestamp(booking.getTimeBooking().toDate().getTime()));
-            stm.setDouble(7, price);
+            // insert booking
+            try (PreparedStatement bookingStm = connection.prepareStatement(bookingQuery)) {
+                bookingStm.setInt(1, booking.getUid());
+                bookingStm.setTimestamp(2, new Timestamp(booking.getTime().toDate().getTime()));
+                bookingStm.setDouble(3, booking.getPayedWithCredit());
 
-            ResultSet rs = stm.executeQuery();
-            rs.next();
+                final ResultSet bookingRs = bookingStm.executeQuery();
+                bookingRs.next();
+                booking.setBid(bookingRs.getInt("bid"));
 
-            // get id and return the booking object
-            int bid = rs.getInt("bid");
-            booking.setBid(bid);
-            return booking;
+                // query to insert a new ticket
+                final String ticketQuery = "INSERT INTO tickets (tid, bid, pid, rid, x, y, price, type, deleted) " +
+                        "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, FALSE) RETURNING tid";
+
+                // insert every ticket
+                for (Ticket ticket : booking.getTickets()) {
+
+                    // try to insert the current ticket
+                    try (PreparedStatement ticketStm = connection.prepareStatement(ticketQuery)) {
+                        ticketStm.setInt(1, ticket.getBid());
+                        ticketStm.setInt(2, ticket.getPid());
+                        ticketStm.setInt(3, ticket.getRid());
+                        ticketStm.setInt(4, ticket.getX());
+                        ticketStm.setInt(5, ticket.getY());
+                        ticketStm.setDouble(6, ticket.getPrice());
+                        ticketStm.setString(7, ticket.getType());
+
+                        final ResultSet ticketRs = ticketStm.executeQuery();
+                        ticketRs.next();
+                        ticket.setTid(ticketRs.getInt("tid"));
+                    }
+                }
+
+                // do transaction
+                connection.commit();
+
+            } catch (SQLException e) {
+
+                // something went wrong -> rollback
+                connection.rollback();
+
+                // report the error
+                throw e;
+            }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // list of all booking
-    public List<Booking> getBookings() throws SQLException {
+    public List<Booking> getBookings(boolean withTickets) throws DBException {
         final List<Booking> bookings = new ArrayList<>();
 
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
-            ResultSet rs = stm.executeQuery("SELECT bid, uid, pid, rid, x, y, time_booking, price FROM bookings;");
+            ResultSet rs = stm.executeQuery("SELECT bid, uid, booking_time, payed_with_credit FROM bookings;");
 
             while (rs.next()) {
-                int bid = rs.getInt("bid");
-                int uid = rs.getInt("uid");
-                int pid = rs.getInt("pid");
-                int rid = rs.getInt("rid");
-                int x = rs.getInt("x");
-                int y = rs.getInt("y");
-                DateTime timeBooking = new DateTime(rs.getTimestamp("time_booking").getTime());
-                double price = rs.getDouble("price");
-                bookings.add(new Booking(bid, rid, x, y, uid, pid, timeBooking, price));
+                Booking b = new Booking();
+                b.setBid(rs.getInt("bid"));
+                b.setUid(rs.getInt("uid"));
+                b.setTime(new DateTime(rs.getTimestamp("booking_time").getTime()));
+                b.setPayedWithCredit(rs.getDouble("played_with_credit"));
+                bookings.add(b);
             }
+
+            // retrieve tickets if asked
+            if (withTickets) {
+
+                // query
+                final String query = "SELECT tid, pid, rid, x, y, price, type, deleted FROM tickets WHERE bid = ?;";
+
+                // iterate over bookings
+                for (Booking b : bookings) {
+
+                    // create tickets array
+                    final List<Ticket> tickets = new ArrayList<>();
+                    b.setTickets(tickets);
+
+                    // get the tickets
+                    try (PreparedStatement pstm = connection.prepareStatement(query)) {
+                        pstm.setInt(1, b.getBid());
+
+                        ResultSet prs = pstm.executeQuery();
+                        while (prs.next()) {
+                            Ticket t = new Ticket();
+                            t.setTid(prs.getInt("tid"));
+                            t.setBid(b.getBid());
+                            t.setPid(prs.getInt("pid"));
+                            t.setRid(prs.getInt("rid"));
+                            t.setX(prs.getInt("x"));
+                            t.setY(prs.getInt("y"));
+                            t.setPrice(prs.getDouble("price"));
+                            t.setType(prs.getString("type"));
+                            t.setDeleted(prs.getBoolean("deleted"));
+                            tickets.add(t);
+                        }
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
 
         return bookings;
     }
 
-    public Booking getBooking(int bookingId) throws SQLException, EntryNotFoundException {
-        final String query = "SELECT uid, pid, rid, x, y, time_booking, price FROM bookings WHERE bid = ?;";
-
-        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setInt(1, bookingId);
-            ResultSet rs = stm.executeQuery();
-
-            if (rs.next()) {
-                int uid = rs.getInt("uid");
-                int pid = rs.getInt("pid");
-                int rid = rs.getInt("rid");
-                int x = rs.getInt("x");
-                int y = rs.getInt("y");
-                DateTime timeBooking = new DateTime(rs.getTimestamp("time_booking").getTime());
-                double price = rs.getDouble("price");
-
-                return new Booking(bookingId, rid, x, y, uid, pid, timeBooking, price);
-            }
-
-            // no such booking
-            throw new EntryNotFoundException();
-        }
+    // delete ticket ==> set deleted
+    // and update the credit of the user
+    public void deleteTicket(Ticket ticket) throws DBException, TicketAlreadyDeletedException {
+        deleteTicket(ticket.getTid());
     }
 
-    // delete booking
-    public void deleteBooking(Booking booking) throws SQLException, UserNotFoundException, EntryNotFoundException {
+    // delete ticket ==> set deleted
+    // and update the credit of the user
+    public void deleteTicket(int tid) throws DBException, TicketAlreadyDeletedException {
 
-        final String query = "DELETE FROM bookings WHERE bid = ?";
-        final User user;
-
+        // open the connection
         try (Connection connection = db.getConnection()) {
+
+            // begin transaction
             connection.setAutoCommit(false);
 
+            // query to mark the ticket as deleted
+            final String query = "UPDATE tickets SET deleted = TRUE WHERE tid = ? AND deleted = FALSE;";
+
+            // esecute query
             try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, booking.getBid());
+                stm.setInt(1, tid);
 
+                // check result -> must be exactly one
                 int n = stm.executeUpdate();
-
-                if (n == 0) {
-                    throw new EntryNotFoundException();
+                if (n != 1) {
+                    throw new TicketAlreadyDeletedException();
                 }
 
-                double accredit = booking.getPrice() * 0.80;
-                user = usersDB.getUser(booking.getUid());
-                user.addCredit(accredit);
+                // query to update the buyer user
+                final String queryUser = "WITH tmp AS (SELECT uid, price FROM tickets NATURAL JOIN bookings WHERE tid = ?)" +
+                        "UPDATE users SET credit = credit + (SELECT price FROM tmp) WHERE uid = (SELECT uid FROM tmp);";
 
-                final String queryUser = "UPDATE users SET credit = ? WHERE uid = ?";
-
+                // update user balance
                 try (PreparedStatement stmUser = connection.prepareStatement(queryUser)) {
-                    stmUser.setDouble(1, user.getCredit());
-                    stmUser.setInt(2, user.getUid());
-                    stmUser.execute();
+                    stmUser.setInt(1, tid);
 
+                    // check result -> must be exactly one
+                    int m = stmUser.executeUpdate();
+                    if (m != 1) {
+                        throw new TicketAlreadyDeletedException();
+                    }
                 }
 
+                // end transaction
                 connection.commit();
 
             } catch (SQLException e) {
+
+                // if any error -> rollback
                 connection.rollback();
+
+                // report the error
                 throw e;
             }
-        }
-    }
 
-    // delete a Booking
-    public void deleteBooking(int bid) throws SQLException, EntryNotFoundException, UserNotFoundException {
-        deleteBooking(getBooking(bid));
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
     }
 
 }

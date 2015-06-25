@@ -157,7 +157,7 @@ public class RoomsDB {
     public void deleteRoom(int rid) throws DBException, EntryNotFoundException {
         try (Connection connection = db.getConnection()) {
 
-            // create a transaction to ensure TodoDB consistency
+            // create a transaction to ensure DB consistency
             connection.setAutoCommit(false);
 
             // delete seats for this room

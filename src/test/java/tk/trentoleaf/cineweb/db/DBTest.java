@@ -13,7 +13,7 @@ public class DBTest {
     protected final FilmsDB filmsDB = FilmsDB.instance();
     protected final PlaysDB playsDB = PlaysDB.instance();
     protected final RoomsDB roomsDB = RoomsDB.instance();
-    protected final BookingsDB bookingsDB = BookingsDB.instance();
+    protected final OLDBookingsDB oldBookingsDB = OLDBookingsDB.instance();
     protected final PricesDB pricesDB = PricesDB.instance();
 
     @Before

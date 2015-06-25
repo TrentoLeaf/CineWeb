@@ -108,6 +108,7 @@ public class DB {
         createTableFilms();
         createTablePlays();
         createTableBookings();
+        createTableTickets();
         createTablePrices();
     }
 
@@ -116,6 +117,7 @@ public class DB {
 
         // drop tables
         dropTablePrices();
+        dropTableTickets();
         dropTableBookings();
         dropTablePlays();
         dropTableFilms();
@@ -287,22 +289,48 @@ public class DB {
         }
     }
 
-    // create table books
+    // create table bookings
     private void createTableBookings() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS bookings (" +
                     "bid SERIAL," +
                     "uid INTEGER," +
+                    "booking_time TIMESTAMP NOT NULL," +
+                    "payed_with_credit DOUBLE PRECISION," +
+                    "PRIMARY KEY (bid)," +
+                    "FOREIGN KEY (uid) REFERENCES users(uid));");
+        }
+    }
+
+    // create table tickets
+    private void createTableTickets() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            stm.execute("CREATE TABLE IF NOT EXISTS tickets (" +
+                    "tid SERIAL," +
+                    "bid INTEGER," +
                     "pid INTEGER," +
                     "rid INTEGER," +
                     "x INTEGER," +
                     "y INTEGER," +
-                    "time_booking TIMESTAMP NOT NULL," +
-                    "price DOUBLE PRECISION," +
-                    "PRIMARY KEY (bid)," +
-                    "FOREIGN KEY (rid, x, y) REFERENCES seats(rid, x, y)," +
-                    "FOREIGN KEY (uid) REFERENCES users(uid)," +
-                    "FOREIGN KEY (pid) REFERENCES plays(pid));");
+                    "price DOUBLE PRECISION NOT NULL," +
+                    "type TEXT NOT NULL," +
+                    "deleted BOOLEAN NOT NULL DEFAULT FALSE," +
+                    "PRIMARY KEY (tid)," +
+                    "FOREIGN KEY (bid) REFERENCES bookings(bid)," +
+                    "FOREIGN KEY (pid) REFERENCES plays(pid), " +
+                    "FOREIGN KEY (rid, x, y) REFERENCES seats(rid, x, y));");
+            try {
+                // create unique index to enforce db consistency
+                stm.execute("CREATE UNIQUE INDEX tickets_unique ON tickets (pid, rid, x, y) WHERE NOT deleted");
+            } catch (SQLException e) {
+                if (e.getSQLState().equals("42P07")) {
+                    // the index already exists
+                    logger.warning("Index tickets_unique already exists... SKIP");
+                } else {
+                    // other error
+                    throw e;
+                }
+            }
         }
     }
 
@@ -375,6 +403,13 @@ public class DB {
     private void dropTableBookings() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("DROP TABLE IF EXISTS bookings;");
+        }
+    }
+
+    // drop table tickets
+    private void dropTableTickets() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            stm.execute("DROP TABLE IF EXISTS tickets;");
         }
     }
 

@@ -4,6 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.Ignore;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.*;
 import tk.trentoleaf.cineweb.exceptions.db.*;
@@ -13,7 +14,8 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class BookingsDBTest extends DBTest {
+@Ignore
+public class OLDBookingsDBTest extends DBTest {
 
     @Test
     public void createBooking() throws Exception {
@@ -41,16 +43,16 @@ public class BookingsDBTest extends DBTest {
         playsDB.createPlay(p2);
 
         // create bookings  int rid, int x, int y, int uid, int pid, double price
-        final Booking b1 = bookingsDB.createBooking(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
-        final Booking b2 = bookingsDB.createBooking(s2.get(2).getRid(), s2.get(2).getX(), s2.get(2).getY(), u2.getUid(), p2.getPid(), 12);
+        final OldBooking b1 = oldBookingsDB.createBooking(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
+        final OldBooking b2 = oldBookingsDB.createBooking(s2.get(2).getRid(), s2.get(2).getX(), s2.get(2).getY(), u2.getUid(), p2.getPid(), 12);
 
         // expected
-        List<Booking> expected = new ArrayList<>();
+        List<OldBooking> expected = new ArrayList<>();
         expected.add(b1);
         expected.add(b2);
 
         // current
-        List<Booking> current = bookingsDB.getBookings();
+        List<OldBooking> current = oldBookingsDB.getBookings();
 
         // test
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
@@ -87,9 +89,9 @@ public class BookingsDBTest extends DBTest {
         playsDB.createPlay(p3);
 
         // create bookings  int rid, int x, int y, int uid, int pid, double price
-        bookingsDB.createBooking(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
-        bookingsDB.createBooking(s2.get(2).getRid(), s2.get(2).getX(), s2.get(2).getY(), u2.getUid(), p2.getPid(), 12);
-        bookingsDB.createBooking(s2.get(3).getRid(), s2.get(3).getX(), s2.get(3).getY(), u2.getUid(), p3.getPid(), 12);
+        oldBookingsDB.createBooking(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
+        oldBookingsDB.createBooking(s2.get(2).getRid(), s2.get(2).getX(), s2.get(2).getY(), u2.getUid(), p2.getPid(), 12);
+        oldBookingsDB.createBooking(s2.get(3).getRid(), s2.get(3).getX(), s2.get(3).getY(), u2.getUid(), p3.getPid(), 12);
     }
 
     @Test
@@ -109,17 +111,17 @@ public class BookingsDBTest extends DBTest {
         playsDB.createPlay(p1);
 
         // create bookings  int rid, int x, int y, int uid, int pid, double price
-        final Booking b1 = bookingsDB.createBooking(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
-        final Booking b2 = bookingsDB.createBooking(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
+        final OldBooking b1 = oldBookingsDB.createBooking(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
+        final OldBooking b2 = oldBookingsDB.createBooking(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
 
         // expected
-        List<Booking> expected = new ArrayList<>();
+        List<OldBooking> expected = new ArrayList<>();
         expected.add(b1);
         double creditExpected = u1.getCredit() + b2.getPrice() * 0.8;
 
         // current
-        bookingsDB.deleteBooking(b2.getBid());
-        List<Booking> current = bookingsDB.getBookings();
+        oldBookingsDB.deleteBooking(b2.getBid());
+        List<OldBooking> current = oldBookingsDB.getBookings();
         double creditUpdated = usersDB.getUser(u1.getUid()).getCredit();
 
         // test
@@ -129,12 +131,12 @@ public class BookingsDBTest extends DBTest {
 
     @Test(expected = EntryNotFoundException.class)
     public void deleteBookingFail1() throws Exception {
-        bookingsDB.deleteBooking(43535);
+        oldBookingsDB.deleteBooking(43535);
     }
 
     @Test(expected = EntryNotFoundException.class)
     public void deleteBookingFail2() throws Exception {
-        bookingsDB.deleteBooking(new Booking(345, 4, 6, 4, 345, DateTime.now(), 34.23));
+        oldBookingsDB.deleteBooking(new OldBooking(345, 4, 6, 4, 345, DateTime.now(), 34.23));
     }
 
     @Test
@@ -156,9 +158,9 @@ public class BookingsDBTest extends DBTest {
         playsDB.createPlay(p1);
 
         // create bookings  int rid, int x, int y, int uid, int pid, double price
-        bookingsDB.createBooking(s1, u1, p1, 12.0);
-        bookingsDB.createBooking(s2, u1.getUid(), p1.getPid(), 12);
-        bookingsDB.createBooking(r1.getRid(), s3.getX(), s3.getY(), u1.getUid(), p1.getPid(), 34);
+        oldBookingsDB.createBooking(s1, u1, p1, 12.0);
+        oldBookingsDB.createBooking(s2, u1.getUid(), p1.getPid(), 12);
+        oldBookingsDB.createBooking(r1.getRid(), s3.getX(), s3.getY(), u1.getUid(), p1.getPid(), 34);
 
         // expected
         List<Seat> expected = new ArrayList<>();
@@ -194,9 +196,9 @@ public class BookingsDBTest extends DBTest {
         playsDB.createPlay(p2);
 
         // create bookings
-        bookingsDB.createBooking(s1, u1, p1, 12);   // p1
-        bookingsDB.createBooking(s2, u1, p1, 12);   // p1
-        bookingsDB.createBooking(s3, u1, p2, 12);   // p2
+        oldBookingsDB.createBooking(s1, u1, p1, 12);   // p1
+        oldBookingsDB.createBooking(s2, u1, p1, 12);   // p1
+        oldBookingsDB.createBooking(s3, u1, p2, 12);   // p2
 
         // expected
         List<SeatStatus> expected = new ArrayList<>();
