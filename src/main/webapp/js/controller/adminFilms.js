@@ -78,10 +78,15 @@
 
             };
 
-            this.open_delete_modal = function (index) {
-                $('#modal_deleteAgree').openModal();
+            this.open_modal = function (index) {
                 this.tmpFilm = this.films[index];
+                $('#modal_film_delete').openModal();
             };
+
+            this.close_modal = function () {
+                $('#modal_film_delete').closeModal();
+            };
+
 
             this.loadFilms();
 

@@ -83,7 +83,7 @@
                         ctrl.newUser.role = "admin";
                     } else {
                         ctrl.newUser.role = "client";
-                    };
+                    }
 
                     ctrl.newUser.$save(function (data) {
                         ctrl.users.push(data);
@@ -97,7 +97,7 @@
                 } else {
                     ctrl.verifyPassword = "";
                     this.open_wrong_password_modal();
-                };
+                }
             };
 
             // edit a given user
@@ -116,14 +116,24 @@
             // load data at start
             this.loadUsers();
 
-            this.open_delete_modal = function (index) {
-                $('#modal_deleteAgree').openModal();
+            this.open_user_delete_modal = function (index) {
                 this.tmpUser = this.users[index];
+                $('#modal_user_delete').openModal();
+            };
+
+            this.close_user_delete_modal = function () {
+                $('#modal_user_delete').closeModal();
             };
 
             this.open_wrong_password_modal = function () {
                 $('#modal_wrong_password').openModal();
             };
+
+            this.close_wrong_password_modal = function () {
+                $('#modal_wrong_password').closeModal();
+            };
+
+
         }]);
 
 })();

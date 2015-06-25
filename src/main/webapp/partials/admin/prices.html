@@ -25,12 +25,12 @@
                         <p>{{ticket.price | currency:"€ "}}</p>
                     </td>
                     <td>
-                        <a ng-click="ctrl.open_delete_modal(ticket)"  class="modal-trigger" data-target="modal_deleteAgree" href="">
+                        <a ng-click="ctrl.open_delete_modal(ticket)"  class="modal-trigger" data-target="modal_price_delete">
                             <i class="mdi-action-delete red-text"></i> <!--Remove content -->
                         </a>
                     </td>
                     <td>
-                        <a ng-click="ctrl.open_edit_modal(ticket)" class="modal-trigger"  data-target="modal_edit" href="">
+                        <a ng-click="ctrl.open_edit_modal(ticket)" class="modal-trigger"  data-target="modal_price_edit">
                             <i class="yellow-text mdi-editor-mode-edit"></i>
                         </a>
                     </td>
@@ -69,7 +69,7 @@
 </div>
 
 
-<div id="modal_deleteAgree" class="modal">
+<div id="modal_price_delete" class="modal">
     <div class="modal-content">
         <h4>Cancellazione Prezzo</h4>
         <p>Sei sicuro di voler cancellare la seguente categoria di prezzi?</p>
@@ -79,12 +79,12 @@
         </ul>
     </div>
     <div class="modal-footer">
-        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
-        <a ng-click="ctrl.deletePrice(ctrl.tmpPrice)" class="modal-action modal-close waves-effect waves-green btn-flat">ACCETTA</a>
+        <a ng-click="ctrl.close_delete_modal()" class="modal-action waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
+        <a ng-click="ctrl.deletePrice(ctrl.tmpPrice); ctrl.close_delete_modal();" class="modal-action waves-effect waves-green btn-flat">ACCETTA</a>
     </div>
 </div>
 
-<div id="modal_edit" class="modal">
+<div id="modal_price_edit" class="modal">
     <div class="modal-content">
         <h4>Modifica Prezzo</h4>
         <p>Sei sicuro di voler cancellare la seguente categoria di prezzi?</p>
@@ -106,7 +106,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">ANNULLA</a>
-        <a ng-click="ctrl.editPrice(ctrl.tmpPrice)" class="modal-action modal-close waves-effect waves-green btn-flat">MODIFICA</a>
+        <a ng-click="ctrl.close_edit_modal()" class="modal-action waves-effect waves-red waves-red btn-flat">ANNULLA</a>
+        <a ng-click="ctrl.editPrice(ctrl.tmpPrice); ctrl.close_edit_modal();" class="modal-action waves-effect waves-green btn-flat">MODIFICA</a>
     </div>
 </div>

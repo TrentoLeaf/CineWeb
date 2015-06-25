@@ -28,7 +28,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule',
-        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'confirmModule', 'buyModule', 'pricesModule', 'mapModule', 'adminStats'])
+        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'confirmModule', 'buyModule', 'pricesModule', 'mapModule', 'adminStats'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -107,7 +107,9 @@ $(document).ready(function () {
                 controller: 'AdminPricesController',
                 controllerAs: 'ctrl'
             }).when ('/admin/rooms',{
-                templateUrl: '../partials/admin/rooms.html'
+                templateUrl: '../partials/admin/rooms.html',
+                controller: 'AdminRoomsController',
+                controllerAs: 'ctrl'
             }).when ('/admin/stats',{
                 templateUrl: '../partials/admin/stats.html',
                 controller: 'AdminStatsController',
@@ -206,7 +208,6 @@ $(document).ready(function () {
                         for (var k = 0; k < $rootScope.cart[i].tickets.length; k++) {
                             if ($rootScope.cart[i].tickets[k].type == $rootScope.tickets[j].type) {
                                 num = num + $rootScope.cart[i].tickets[k].number;
-                                console.log(num);
                             }
                         }
                         $rootScope.total = $rootScope.total + ($rootScope.tickets[j]['price'] * num);
@@ -222,9 +223,9 @@ $(document).ready(function () {
             // function to load the prices
             var loadPrices = function () {
                 Prices.query(function (data) {
-                   /* data.map(function (o) {
-                        o.type = o.type.capitalizeFirstLetter();
-                    });*/
+                    /* data.map(function (o) {
+                     o.type = o.type.capitalizeFirstLetter();
+                     });*/
                     $rootScope.tickets = data;
                     // when data is ready re-update the total of the cart
                     $rootScope.updateTotal();

@@ -121,7 +121,7 @@
             };
 
 
-            this.open_cancel_modal = function () {
+            this.open_modal = function () {
                 $('#modal_buy_cancel').openModal();
             };
 

@@ -165,7 +165,7 @@
     </div>
     <div class="row"> <!-- bottoni -->
         <div class="col s12 offset-m1 m3 offset-l1 l3 center">
-            <button ng-click="ctrl.open_cancel_modal();" class="btn modal-trigger red white-text waves-effect waves-light buy-btn" type="submit" data-target="modal_buy_cancel">Annulla
+            <button ng-click="ctrl.open_modal();" class="btn modal-trigger red white-text waves-effect waves-light buy-btn" type="submit" data-target="modal_buy_cancel">Annulla
                 <i class="mdi-navigation-cancel right"></i>
             </button>
         </div>
@@ -189,7 +189,6 @@
         <p>Sei sicuro di voler interrompere la procedura di acquisto dei biglietti?</p>
     </div>
     <div class="modal-footer">
-        <!-- TODO perchè se chiudo una volta il modal e poi lo riapro ng-click di 'si' NON funziona più ??? -->
         <a ng-click="ctrl.close_modal()" class="modal-action waves-effect waves-red btn-flat">No</a>
         <a ng-click="ctrl.cancel_procedure();" class="modal-action waves-effect waves-green btn-flat">Si</a>
     </div>

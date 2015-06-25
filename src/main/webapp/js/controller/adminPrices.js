@@ -41,17 +41,25 @@
 
             this.open_delete_modal = function (data) {
                 ctrl.tmpPrice = data;
-                $('#modal_deleteAgree').openModal();
+                $('#modal_price_delete').openModal();
+            };
+
+            this.close_delete_modal = function() {
+                $('#modal_price_delete').closeModal();
             };
 
             /*
-            * Problema durante la modifica, i valori cambiano anche nella tabella ed è necessario fare un refresh
-            */
+             * Problema durante la modifica, i valori cambiano anche nella tabella ed è necessario fare un refresh
+             */
             this.open_edit_modal = function (data) {
-
                 ctrl.tmpPrice = data;
-                $('#modal_edit').openModal();
+                $('#modal_price_edit').openModal();
             };
+
+            this.close_edit_modal = function() {
+                $('#modal_price_edit').closeModal();
+            };
+
 
             this.editPrice = function (price) {
 

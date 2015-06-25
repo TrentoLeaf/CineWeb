@@ -38,7 +38,7 @@
                         <td>{{f.duration}}</td>
 
                         <td>
-                            <a ng-click="ctrl.open_delete_modal($index)" class="modal-trigger" data-target="modal_deleteAgree" href=""><i class="red-text mdi-action-delete"></i></a>
+                            <a ng-click="ctrl.open_modal($index)" class="modal-trigger" data-target="modal_film_delete" href=""><i class="red-text mdi-action-delete"></i></a>
                         </td>
                         <td>
                             <a href="#admin/films/{{f.fid}}"><i class="yellow-text mdi-action-assignment"></i></a>
@@ -59,7 +59,7 @@
     </div>
 </div>
 
-<div id="modal_deleteAgree" class="modal">
+<div id="modal_film_delete" class="modal">
     <div class="modal-content">
         <h4>Cancellazione Film</h4>
         <p>Sei sicuro di voler cancellare il seguente film??</p>
@@ -74,7 +74,7 @@
         </ul>
     </div>
     <div class="modal-footer">
-        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
-        <a ng-click="ctrl.deleteFilm(ctrl.tmpFilm)" class="modal-action modal-close waves-effect waves-green btn-flat">ACCETTA</a>
+        <a ng-click="ctrl.close_modal()" class="modal-action waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
+        <a ng-click="ctrl.deleteFilm(ctrl.tmpFilm); ctrl.close_modal();" class="modal-action waves-effect waves-green btn-flat">ACCETTA</a>
     </div>
 </div>
