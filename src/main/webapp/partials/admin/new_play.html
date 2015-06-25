@@ -1,0 +1,71 @@
+<div class="row white-text">
+
+    <div class="row">
+        <div class="col s12 m12 l12 center-align">
+            <h2 class="center-align yellow-text text-accent-4">Nuova Proiezione</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="center-align black-text">
+            {{ctrl.newPlay | json}}
+        </div>
+    </div>
+
+    <div class="row">
+        <form class="col s6 m6 l6 offset-s3 offset-l3 offset-m3 center-align">
+            <div class="row">
+                <div class="input-field">
+                    <input id="fid" type="number" class="validate" ng-model="ctrl.newPlay.fid">
+                    <label for="fid">Fid</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <input id="rid" type="number" class="validate" ng-model="ctrl.newPlay.rid">
+                    <label for="rid">Rid</label>
+                </div>
+            </div>
+            <div class="row">
+                <label class="center-align">Orario</label>
+            </div>
+            <div class="row">
+                <div class="input-field col s6 m6 l6">
+                    <input id="date" type="date" class="datepicker" ng-model="ctrl.newPlay.time">
+                    <!--
+                    <label for="time">Orario</label>
+                    -->
+                </div>
+                <div class="input-field col s6 m6 l6">
+                    <input id="time" type="time" ng-model="ctrl.newPlay.time">
+                    <!--
+                    <label for="time">Orario</label>
+                    -->
+                </div>
+            </div>
+
+            <div class="section center-align">
+                <div class="switch center-align">
+                    <label>
+                        2D
+                        <input type="checkbox" ng-model="ctrl.newPlay_3d">
+                        <span class="lever center-align"></span>
+                        3D
+                    </label>
+                </div>
+            </div>
+
+
+            <div class="section">
+                <a class="btn-large waves-effect waves-light yellow accent-4 black-text" href="#admin/plays">INDIETRO
+                    <i class="mdi-navigation-arrow-back left"></i>
+                </a>
+                <a class="btn-large waves-effect waves-light green white-text" href="" ng-click="ctrl.addPlay(ctrl.newPlay)">REGISTRA
+                    <i class="mdi-maps-local-movies right"></i>
+                </a>
+
+            </div>
+
+        </form>
+    </div>
+</div>
