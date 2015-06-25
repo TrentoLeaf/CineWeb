@@ -36,8 +36,22 @@
             </div>
         </div>
 
-        <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 black-text" ng-click="ctrl.submit(ctrl.user)">Registrati
+        <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 white-text" ng-click="ctrl.submit(ctrl.user)">Registrati
             <i class="mdi-action-description right"></i>
+
+            <div class="registration-loader preloader-wrapper xsmall left" style="margin-top: 6px;">
+                <div class="spinner-layer spinner-blue-only spinner-white-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+
         </button>
     </form>
     </div>

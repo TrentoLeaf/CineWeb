@@ -35,7 +35,7 @@
                     $rootScope.cart.push(newFilm);
                     // abilita il pulsante 'prosegui'
                     $('#btn-go-to-buy').removeClass('hide');
-                   // $rootScope.updateTotal();
+                    // $rootScope.updateTotal();
                 }
             };
 
@@ -45,7 +45,7 @@
                 if ($rootScope.cart.length == 0) {
                     $('#btn-go-to-buy').addClass('hide');
                 }
-              //  $rootScope.updateTotal();
+                //  $rootScope.updateTotal();
             };
 
             // aggiunge un nuovo selettore per tipo e numero di biglietti
@@ -53,15 +53,22 @@
                 if (($rootScope.cart[film].tickets.length) < 4) {
                     $rootScope.cart[film].tickets.push({type: $rootScope.tickets[0].type, number: 1});
                 }
-             //   $rootScope.updateTotal();
+                //   $rootScope.updateTotal();
             };
 
 
             this.proceed = function () {
 
+                // TODO verificare che il server dia l'ok  e che tutti i valori e spettacoli siano giusti
+
+                $('.cart-loader').addClass('active');
+
+                // TODO semplificare (auth.me si può sostituire con $rootscope.isUserLogged)
                 // check if the user is already logged
                 Auth.me().then(
                     function (data) {
+                        $('.cart-loader').removeClass('active');
+
                         // reset di afterLogin
                         $rootScope.afterLogin = "normal";
                         // vai alla pagina di acquisto
@@ -69,6 +76,8 @@
 
                     },
                     function () { /* not logged */
+                        $('.cart-loader').removeClass('active');
+
                         // setta afterLogin a buy (per ritornare alla procedura d'acquisto)
                         $rootScope.afterLogin = "buy";
                         // vai alla pagina di login

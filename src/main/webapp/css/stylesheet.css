@@ -8,11 +8,20 @@
   #title {
     font-size: 1.5rem; } }
 
+.userLoggedLine {
+  height: 4px;
+  margin: 0px;
+  border: 0px; }
+
 main {
   height: 100%; }
 
 footer {
   margin-top: 0px !important; }
+
+.xsmall {
+  width: 25px;
+  height: 25px; }
 
 #credit_card::-webkit-inner-spin-button,
 #credit_card::-webkit-outer-spin-button,

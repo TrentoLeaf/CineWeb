@@ -29,6 +29,20 @@
                     <div class="row">
                         <button ng-click="c.login(c.email, c.pass)" class="col offset-s1 s4 offset-m1 m4 offset-l1 l4 btn yellow accent-4 white-text waves-effect waves-light" type="submit" name="login">Login
                             <i class="mdi-content-send white-text right"></i>
+
+                            <div class="login-loader preloader-wrapper xsmall left" style="margin-top: 6px;">
+                                <div class="spinner-layer spinner-blue-only spinner-white-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                    <div class="circle"></div>
+                                </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </button>
                         <button ng-click="c.toRegister(); tab.closeTab()" class="col offset-s1 s5 offset-m1 m5 offset-l1 l5 btn green white-text waves-effect waves-light" type="submit" name="register">Registrati
                             <i class="mdi-action-description white-text right"></i>

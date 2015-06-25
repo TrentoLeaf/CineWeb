@@ -13,6 +13,9 @@
             };
 
             this.login = function (email, password) {
+
+                $('.login-loader').addClass('active');
+
                 Auth.login(email, password)
                     .success(function (user) {
 
@@ -41,16 +44,17 @@
                                 $rootScope.afterLogin = "normal";
 
                                 if ($rootScope.user.role == "admin") {
-                                    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
                                     $location.path('/admin');
                                 } else {
                                     $location.path('/me');
                                 }
                                 break;
                         }
+                        $('.login-loader').removeClass('active');
                     }).error(function (error) { /*  login failed*/
                         $rootScope.isUserLogged = false;
                         setError('Nome utente o password errati.');
+                        $('.login-loader').removeClass('active');
                     });
 
                 ctrl.pass = "";
@@ -115,19 +119,24 @@
 
             this.sendPassRecoveryRequest = function () {
 
+                $('.pass-rec-loader').addClass('active');
+
                 $('#pass_recovery_message').removeClass("green-text red-text");
                 $('#pass_recovery_message').addClass("white-text");
                 ctrl.rec_pass_msg = "Un momento...";
 
                 if ((this.mailForPassRecovery == undefined) || (!validateEmail(this.mailForPassRecovery))) {
                     ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_VALID);
+                    $('.pass-rec-loader').removeClass('active');
                 } else {
                     Auth.forgotPassword(ctrl.mailForPassRecovery)
                         .success(function() {
                             ctrl.set_rec_pass_msg(REC_PASS_SUCCESS);
+                            $('.pass-rec-loader').removeClass('active');
                         })
                         .error(function() {
                             ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_EXIST);
+                            $('.pass-rec-loader').removeClass('active');
                         });
                 }
             };

@@ -11,6 +11,12 @@
   }
 }
 
+.userLoggedLine {
+  height: 4px;
+  margin: 0px;
+  border: 0px;
+}
+
 body {
 
 }
@@ -22,6 +28,14 @@ main {
 footer {
   margin-top: 0px !important;
 }
+
+
+// used to reduce preloader dimensions to fit in a button
+.xsmall {
+  width: 25px;
+  height: 25px;
+}
+
 
 
 // nasconde gli spinner per gli input field di tipo number (mese, anno, cvv carta di credito)

@@ -7282,6 +7282,10 @@ select {
 .spinner-green-only {
   border-color: #0f9d58; }
 
+.spinner-white,
+.spinner-white-only {
+  border-color: white; }
+
 /**
  * IMPORTANT NOTE ABOUT CSS ANIMATION PROPERTIES (keanulee):
  *

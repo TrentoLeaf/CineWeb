@@ -15,6 +15,8 @@
 
             this.submit = function (user) {
 
+                $('.registration-loader').addClass('active');
+
                 $('#registration_message').removeClass("red-text green-text");
                 $('#registration_message').addClass("white-text");
                 setStatus("Un momento...");
@@ -26,6 +28,7 @@
                         $('#registration_message').addClass("green-text");
                         setStatus("La richiesta è stata inoltrata. Controlla la tua casella di posta.");
                         console.log(data);
+                        $('.registration-loader').removeClass('active');
                     })
                     .error(
                     function (error) {
@@ -37,6 +40,7 @@
                             setStatus("La richiesta non è andata a buon fine. Ricontrolla i dati inseriti.");
                         }
                         console.log(error);
+                        $('.registration-loader').removeClass('active');
                     }
                 );
             };
