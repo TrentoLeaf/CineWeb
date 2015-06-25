@@ -84,6 +84,10 @@ $(document).ready(function () {
                 templateUrl: '../partials/admin/new_film.html',
                 controller: 'AdminFilmsController',
                 controllerAs: 'ctrl'
+            }).when ('/admin/films/:fid',{
+                templateUrl: '../partials/admin/edit_film.html',
+                controller: 'AdminFilmsEditController',
+                controllerAs: 'ctrl'
             }).when ('/admin/plays',{
                 templateUrl: '../partials/admin/plays.html'
             }).when ('/admin/prices',{

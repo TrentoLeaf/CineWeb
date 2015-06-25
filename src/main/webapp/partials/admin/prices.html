@@ -46,7 +46,6 @@
             <div class="separator">
                 <h4 class="yellow-text text-accent-4 center-align">Aggiungi nuova categoria</h4>
             </div>
-
             <form>
                 <div class="input-field col s8">
                     <input id="Categoria" type="text" class="validate" ng-model="ctrl.newPrice.type">
@@ -75,8 +74,8 @@
         <h4>Cancellazione Prezzo</h4>
         <p>Sei sicuro di voler cancellare la seguente categoria di prezzi?</p>
         <ul class="">
-            <li><label for="modal_uid" class="left-align">Categoria</label><div id="modal_uid">{{ctrl.tmpPrice.type}}</div></li>
-            <li><label for="modal_email" class="left-align">Prezzo</label><div id="modal_email">{{ctrl.tmpPrice.price | currency:"€ "}}</div></li>
+            <li><label for="modal_type" class="left-align">Categoria</label><div id="modal_type">{{ctrl.tmpPrice.type}}</div></li>
+            <li><label for="modal_price" class="left-align">Prezzo</label><div id="modal_price">{{ctrl.tmpPrice.price | currency:"€ "}}</div></li>
         </ul>
     </div>
     <div class="modal-footer">
