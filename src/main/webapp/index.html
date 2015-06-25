@@ -46,6 +46,8 @@
     <script src="js/controller/adminUsers.js"></script>
     <script src="js/controller/adminFilms.js"></script>
     <script src="js/controller/adminPrices.js"></script>
+    <script src="js/controller/adminPlays.js"></script>
+    <script src="js/controller/adminRooms.js"></script>
     <script src="js/controller/statsController.js"></script>
     <script src="js/controller/confirm.js"></script>
     <script src="js/controller/buy.js"></script>
@@ -53,13 +55,13 @@
 
 <body ng-controller="TabController as tab">
 <div class="navbar-fixed">
-    <nav class="grey darken-4" role="navigation" id="header-navbar">
+    <nav class="black" role="navigation" id="header-navbar">
         <div class="nav-wrapper">
             <a id="title" href="#home" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
             <ul class="left hide-on-med-and-down">
-                <li><a class="yellow-text text-accent-4" href="#today">Oggi al Cinema</a></li>
-                <li><a class="yellow-text text-accent-4" href="#soon">Prossimamente</a></li>
-                <li><a class="yellow-text text-accent-4" href="#info">Informazioni</a></li>
+                <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#today">Oggi al Cinema</a></li>
+                <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#soon">Prossimamente</a></li>
+                <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#info">Informazioni</a></li>
             </ul>
 
             <ul class="right hide-on-med-and-down">
@@ -68,9 +70,10 @@
             </ul>
 
             <ul id="nav-mobile" class="side-nav grey darken-4">
-                <li><a class="yellow-text text-accent-4" href="#today">Oggi</a></li>
-                <li><a class="yellow-text text-accent-4" href="#soon">Programmazione</a></li>
-                <li><a class="yellow-text text-accent-4" href="#info">Informazioni</a></li>
+
+                <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#today">Oggi</a></li>
+                <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#soon">Programmazione</a></li>
+                <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#info">Informazioni</a></li>
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(1)"><i class="mdi-action-shopping-cart left"></i>Carrello</a></li>
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle left"></i>Accedi</a></li>
             </ul>
@@ -81,21 +84,21 @@
 </div>
 
 <!-- here the main content -->
-<main class="grey darken-3" id="main-content">
-    <div ng-click="tab.closeTab()" class="content-div grey darken-3" ng-view>
+<main class="grey darken-4" id="main-content">
+    <div ng-click="tab.closeTab()" class="content-div grey darken-4" ng-view>
 
     </div>
 
-    <div class="side-div grey darken-4 white-text">
+    <div class="side-div grey darken-3 white-text">
         <!-- Only Mobile: bottone per chiudere la side-div-->
-        <div class="row hide-side-nav-button-mobile-container hide-on-med-and-up grey darken-4">
+        <div class="row hide-side-nav-button-mobile-container hide-on-med-and-up">
             <button ng-click="tab.closeTab();" class="btn hide-on-med-and-up col offset-s1 s10 offset-m1 m10 yellow accent-4"><i class="mdi-navigation-arrow-back left"></i>Torna indietro</button>
         </div>
         <ul class="side-div-container">
             <li ng-controller="CartController as cc" class="side-cart side-nav-element" ng-show="tab.isSet(1)">
-                <div class="side-cart-content grey darken-4 row"> <!-- Contenuto carrello -->
+                <div class="side-cart-content row"> <!-- Contenuto carrello -->
                     <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
-                        <li ng-repeat="film in cart track by $index" class="cart-item row grey darken-3"> <!-- singolo film acquistato (oggetto da duplicare) -->
+                        <li ng-repeat="film in cart track by $index" class="cart-item row grey darken-4"> <!-- singolo film acquistato (oggetto da duplicare) -->
                             <div class="item-image col s4 m4 l4"> <!-- locandina -->
                                 <img class="responsive-img" ng-src="{{film.playbill}}" alt="locandina" />
                             </div>
@@ -170,7 +173,7 @@
                 </div>
             </li>
             <li class="side-login side-nav-element" ng-show="tab.isSet(2)">
-                <ul ng-controller="LoginController as c" class="row grey darken-4">
+                <ul ng-controller="LoginController as c" class="row grey darken-3">
                     <li ng-hide="isUserLogged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- login page -->
                         <h4>Login</h4>
                         <h6 class="red-text">{{loginError}}</h6>
@@ -217,11 +220,11 @@
                     </li>
                     <li ng-show="isUserLogged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- already logged page -->
                         <div class="row">
-                            <div class="col s7 m7 l7">
-                                <h6 class="red-text">{{loginError}}</h6>
-                            </div>
                             <div class="col s5 m5 l5">
                                 <button ng-click="c.logout()" class="btn red white-text right">Logout</button>
+                            </div>
+                            <div class="col s7 m7 l7">
+                                <h6 class="red-text">{{loginError}}</h6>
                             </div>
                         </div>
                         <h4>Benvenuto</h4>
@@ -240,28 +243,28 @@
     </div>
 </main>
 
-<footer class="page-footer grey darken-4" ng-click="tab.closeTab()">
-    <div class="container white-text">
+<footer class="page-footer grey darken-3" ng-click="tab.closeTab()">
+    <div class="container yellow-text text-accent-4">
         <div class="row">
             <div class="col s12 m6 l6">
-                <h5 class="white-text">CineWeb</h5>
-                <h6 class="grey-text text-lighten-4">Via di Qua 23, Trento - 38100, Italia.</h6>
-                <h6 class="grey-text text-lighten-4">Telefono: 0461 63 7231</h6>
+                <h5 class="yellow-text text-accent-4">CineWeb</h5>
+                <h6 class="yellow-text text-accent-4">Via di Qua 23, Trento - 38100, Italia.</h6>
+                <h6 class="yellow-text text-accent-4">Telefono: 0461 63 7231</h6>
             </div>
             <div class="col s12 offset-m1 m5 offset-l2 l4 right-align">
-                <h5 class="white-text">Orari</h5>
+                <h5 class="yellow-text text-accent-4">Orari</h5>
                 <ul>
-                    <li><h6 class="grey-text text-lighten-3" >Lunedì - Mercoledì: 16:00 - 23:00</h6></li>
-                    <li><h6 class="grey-text text-lighten-3" >Giovedì chiuso.</h6></li>
-                    <li><h6 class="grey-text text-lighten-3" >Venerdì - Domenica: 16:00 - 01:00</h6></li>
+                    <li><h6 class="yellow-text text-accent-4" >Lunedì - Mercoledì: 16:00 - 23:00</h6></li>
+                    <li><h6 class="yellow-text text-accent-4" >Giovedì chiuso.</h6></li>
+                    <li><h6 class="yellow-text text-accent-4" >Venerdì - Domenica: 16:00 - 01:00</h6></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="footer-copyright black">
-        <div class="container">
+        <div class="container yellow-text text-accent-4">
             © 2015 TrentoLeaf+
-            <a class="grey-text text-lighten-4 right" href="partials/about.html">About Us</a>
+            <a class="yellow-text text-accent-4 right" href="partials/about.html">About Us</a>
         </div>
     </div>
 </footer>

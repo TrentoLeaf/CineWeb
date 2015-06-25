@@ -1,3 +1,6 @@
+<!-- stylesheet for the svg -->
+<link type="text/css" rel="stylesheet" href="../css/svg-theatre.css">
+
 <div class="row white-text">
     <div class="col s12 m12 l12">
         <div class="row">
@@ -6,5 +9,136 @@
     </div>
 
     <!-- Corpo delle cose -->
-    
-</div>
+
+    <!-- <div ng-show="ctrl.loading" class="center-align">
+         <img src="../../img/popcorn.svg" class="popcorn" alt="Loading"/>
+         <h3 class="yellow-text text-accent-4">Caricamento in corso...</h3>
+     </div>-->
+
+    <div class="row">
+
+
+        <div class="col s12 m4 l4"> <!-- lista -->
+            <!-- lista degli spettacoli da selezionare -->
+            <ul class="row">
+                <li class="col s12 m12 l12 card grey darken-4" style="padding: 5px;"> <!--inserire qua: ng-repeat="play in ctrl.plays track by $index" -->
+                    <div ng-click="ctrl.setCurrentPlay($index)">
+                        <div class="col s3 m3 l3">
+                            <img class="responsive-img" ng-src="{{play.playbill}}" alt="locandina" />
+                        </div>
+                        <div class="col s8 m8 l8">
+                            <h6><b>czxcxz{{play.title}}</b></h6>
+                            <h6>Data: {{play.date}}, Ore: {{play.time}}</h6>
+                            <h6>Sala: {{play.theatre}}</h6>
+                            <h6>Posti prenotati: {{play.booking}}</h6>
+                        </div>
+                        <div class="col s1 m1 l1 center-align">
+                            <div class="row">
+
+                            </div>
+                            <div class="row">
+                                <a ng-click="ctrl.open_delete_modal($index)" class="modal-trigger" data-target="modal_deleteAgree" href=""><i class="red-text mdi-action-delete"></i></a>
+                                <a ng-click="ctrl.open_modify_page($index)"><i class="yellow-text mdi-action-assignment"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- TEST TEST TEST TEST -->
+                <li class="col s12 m12 l12 card grey darken-4"> <!-- ng-repeat="play in qualcosa track by $index" -->
+                    <div ng-click="ctrl.setCurrentPlay($index)">
+                        <div class="col s3 m3 l3">
+                            <img class="responsive-img" ng-src="{{play.playbill}}" alt="locandina" />
+                        </div>
+                        <div class="col s8 m8 l8">
+                            <h6>czxcxz{{play.title}}</h6>
+                            <h6>Data: {{play.date}}, Ore: {{play.time}}</h6>
+                            <h6>Sala: {{play.theatre}}</h6>
+                            <h6>Posti prenotati: {{play.booking}}</h6>
+                        </div>
+                        <div class="col s1 m1 l1">
+                            <a ng-click="ctrl.open_delete_modal($index)" class="modal-trigger" data-target="modal_deleteAgree" href=""><i class="red-text mdi-action-delete"></i></a>
+                            <a ng-click="ctrl.open_modify_page($index)"><i class="yellow-text mdi-action-assignment"></i></a>
+                        </div>
+                    </div>
+                </li>
+                <!-- END TEST END TEST END TEST END TEST -->
+            </ul>
+
+
+        </div>
+        <div class="col s12 m8 l8"> <!-- mappa -->
+            <map o="ctrl.shared_obj"></map><!-- will be filled by js -->
+        </div>
+
+
+        <!--
+                    <div class="col s12 m12 l12">
+                        <div ng-hide="ctrl.loading">
+                            <table class="bordered center-align">
+                                <thead>
+                                <tr>
+                                    <td><a class="yellow-text text-accent-4" href="">Pid</a></td>
+                                    <td><a class="yellow-text text-accent-4" href="">Fid</a></td>
+                                    <td><a class="yellow-text text-accent-4" href="">Rid</a></td>
+                                    <td><a class="yellow-text text-accent-4" href="">Orario</a></td>
+                                    <td><a class="yellow-text text-accent-4" href="">Locandina</a></td>
+                                    <td><a class="yellow-text text-accent-4" href="">3d</a></td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="white-text" ng-repeat="play in ctrl.plays">
+                                    <td>{{play.pid}}</td>
+                                    <td>{{play.fid}}</td>
+                                    <td>{{play.rid}}</td>
+                                    <td>{{play.time}}</td>
+                                    <td>{{play._3d}} €</td>
+                                    <td>
+                                        <a ng-click="ctrl.open_delete_modal($index)" class="modal-trigger" data-target="modal_deleteAgree" href=""><i class="red-text mdi-action-delete"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="#admin/plays/{{play.pid}}"><i class="yellow-text mdi-action-assignment"></i></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+              -->
+
+
+
+
+
+    </div>
+
+
+
+
+    <div class="row center-align">
+        <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/plays/new">NUOVA PROIEZIONE
+            <i class="mdi-av-videocam"></i>
+        </a>
+    </div>
+    <div class="row">
+
+    </div>
+
+
+
+    <div id="modal_deleteAgree" class="modal">
+        <div class="modal-content">
+            <h4>Cancellazione Proiezione</h4>
+            <p>Sei sicuro di voler cancellare la seguente proiezione?</p>
+            <ul class="">
+                <li><label for="modal_pid" class="left-align">Pid</label><div id="modal_pid">{{ctrl.tmpPlay.pid}}</div></li>
+                <li><label for="modal_fid" class="left-align">Fid</label><div id="modal_fid">{{ctrl.tmpPlay.fid}}</div></li>
+                <li><label for="modal_rid" class="left-align">Rid</label><div id="modal_rid">{{ctrl.tmpPlay.rid}}</div></li>
+                <li><label for="modal_time" class="left-align">Orario</label><div id="modal_time">{{ctrl.tmpPlay.time}}</div></li>
+                <li><label for="modal_3d" class="left-align">3d</label><div id="modal_3d">{{ctrl.tmpPlay._3d}}</div></li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
+            <a ng-click="ctrl.deletePlay(ctrl.tmpPlay)" class="modal-action modal-close waves-effect waves-green btn-flat">ACCETTA</a>
+        </div>
+    </div>

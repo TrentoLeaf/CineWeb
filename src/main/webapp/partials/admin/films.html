@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col s12 m12 l12">
             <div ng-hide="ctrl.loading">
-                <table class="bordered center-align responsive-table">
+                <table class="bordered center-align">
                     <thead>
                     <tr>
                         <td><a class="yellow-text text-accent-4" href="">Fid</a></td>
@@ -34,14 +34,14 @@
                         <td>{{f.genre}}</td>
                         <td>{{f.trailer}}</td>
                         <td>{{f.playbill}} €</td>
-                        <td class="truncate">{{f.plot}}</td>
+                        <td>{{f.plot}}</td>
                         <td>{{f.duration}}</td>
 
                         <td>
-                            <a ng-click="" class="modal-trigger" data-target="modal_deleteAgree"><i class="red-text mdi-action-delete"></i></a>
+                            <a ng-click="ctrl.open_modal($index)" class="modal-trigger" data-target="modal_film_delete" href=""><i class="red-text mdi-action-delete"></i></a>
                         </td>
                         <td>
-                            <a href=""><i class="yellow-text mdi-action-assignment"></i></a>
+                            <a href="#admin/films/{{f.fid}}"><i class="yellow-text mdi-action-assignment"></i></a>
                         </td>
                     </tr>
                     </tbody>
@@ -56,5 +56,25 @@
                 <i class="mdi-image-movie-creation"></i>
             </a>
         </div>
+    </div>
+</div>
+
+<div id="modal_film_delete" class="modal">
+    <div class="modal-content">
+        <h4>Cancellazione Film</h4>
+        <p>Sei sicuro di voler cancellare il seguente film??</p>
+        <ul class="">
+            <li><label for="modal_fid" class="left-align">Fid</label><div id="modal_fid">{{ctrl.tmpFilm.fid}}</div></li>
+            <li><label for="modal_title" class="left-align">Titolo</label><div id="modal_title">{{ctrl.tmpFilm.title}}</div></li>
+            <li><label for="modal_genre" class="left-align">Genere</label><div id="modal_genre">{{ctrl.tmpFilm.genre}}</div></li>
+            <li><label for="modal_trailer" class="left-align">Trailer</label><div id="modal_trailer">{{ctrl.tmpFilm.trailer}}</div></li>
+            <li><label for="modal_playbill" class="left-align">Locandina</label><div id="modal_playbill">{{ctrl.tmpFilm.playbill}}</div></li>
+            <li><label for="modal_plot" class="left-align">Trama</label><div id="modal_plot">{{ctrl.tmpFilm.plot}}</div></li>
+            <li><label for="modal_duration" class="left-align">Durata</label><div id="modal_duration">{{ctrl.tmpFilm.duration}}</div></li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <a ng-click="ctrl.close_modal()" class="modal-action waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
+        <a ng-click="ctrl.deleteFilm(ctrl.tmpFilm); ctrl.close_modal();" class="modal-action waves-effect waves-green btn-flat">ACCETTA</a>
     </div>
 </div>

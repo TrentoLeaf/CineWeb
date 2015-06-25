@@ -28,7 +28,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule',
-        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'confirmModule', 'buyModule', 'pricesModule', 'mapModule', 'adminStats'])
+        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'confirmModule', 'buyModule', 'pricesModule', 'mapModule', 'adminStats'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -86,14 +86,30 @@ $(document).ready(function () {
                 templateUrl: '../partials/admin/new_film.html',
                 controller: 'AdminFilmsController',
                 controllerAs: 'ctrl'
+            }).when ('/admin/films/:fid',{
+                templateUrl: '../partials/admin/edit_film.html',
+                controller: 'AdminFilmsEditController',
+                controllerAs: 'ctrl'
             }).when ('/admin/plays',{
-                templateUrl: '../partials/admin/plays.html'
+                templateUrl: '../partials/admin/plays.html',
+                controller: 'AdminPlaysController',
+                controllerAs: 'ctrl'
+            }).when ('/admin/plays/new',{
+                templateUrl: '../partials/admin/new_play.html',
+                controller: 'AdminPlaysController',
+                controllerAs: 'ctrl'
+            }).when ('/admin/plays/:pid', {
+                templateUrl: '../partials/admin/edit_play.html',
+                controller: 'AdminPlaysEditController',
+                controllerAs: 'ctrl'
             }).when ('/admin/prices',{
                 templateUrl: '../partials/admin/prices.html',
                 controller: 'AdminPricesController',
                 controllerAs: 'ctrl'
             }).when ('/admin/rooms',{
-                templateUrl: '../partials/admin/rooms.html'
+                templateUrl: '../partials/admin/rooms.html',
+                controller: 'AdminRoomsController',
+                controllerAs: 'ctrl'
             }).when ('/admin/stats',{
                 templateUrl: '../partials/admin/stats.html',
                 controller: 'AdminStatsController',
@@ -192,7 +208,6 @@ $(document).ready(function () {
                         for (var k = 0; k < $rootScope.cart[i].tickets.length; k++) {
                             if ($rootScope.cart[i].tickets[k].type == $rootScope.tickets[j].type) {
                                 num = num + $rootScope.cart[i].tickets[k].number;
-                                console.log(num);
                             }
                         }
                         $rootScope.total = $rootScope.total + ($rootScope.tickets[j]['price'] * num);
@@ -208,9 +223,9 @@ $(document).ready(function () {
             // function to load the prices
             var loadPrices = function () {
                 Prices.query(function (data) {
-                   /* data.map(function (o) {
-                        o.type = o.type.capitalizeFirstLetter();
-                    });*/
+                    /* data.map(function (o) {
+                     o.type = o.type.capitalizeFirstLetter();
+                     });*/
                     $rootScope.tickets = data;
                     // when data is ready re-update the total of the cart
                     $rootScope.updateTotal();

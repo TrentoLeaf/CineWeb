@@ -76,12 +76,13 @@
     </div>
 </div>
 
+<!-- modal aperto da js -->
 <div id="modal_wrong_password" class="modal">
     <div class="modal-content">
         <h4>Errore inserimento password</h4>
-        <p>La password inserità non corrisponde con quella nel controllo password</p>
+        <p>La password inserità non corrisponde con quella ripetuta nel controllo password.</p>
     </div>
     <div class="modal-footer">
-        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">OK</a>
+        <a ng-click="ctrl.close_wrong_password_modal();" class="modal-action waves-effect waves-red waves-red btn-flat">OK</a>
     </div>
 </div>

@@ -237,6 +237,7 @@
 
                         //NEW
                         if ((scope.o.film != undefined) && (scope.o.film.seats != undefined) && (scope.o.selected_seats != undefined)) {
+                            console.log("GENERATING BUY MAP");
                             generateSvg(scope.o.film.seats, scope.o.film, scope.o.selected_seats);
                         }
 
@@ -247,6 +248,7 @@
 
                         // scope.o.mapTheatre: mappa (matrice) di una sala
                         if ((scope.o.mapTheatre != undefined)) {
+                            console.log("GENERATING PLAY MAP");
                             generateSvg(scope.o.mapTheatre, undefined, undefined);
                         }
 
