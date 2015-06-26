@@ -5,12 +5,11 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
-import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
-import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;
-import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.beans.model.Film;
 import tk.trentoleaf.cineweb.beans.model.Play;
 import tk.trentoleaf.cineweb.beans.model.Room;
+import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
+import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.db.ForeignKeyException;
 
 import java.util.ArrayList;
