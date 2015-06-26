@@ -5,6 +5,7 @@ import tk.trentoleaf.cineweb.beans.model.Booking;
 import tk.trentoleaf.cineweb.beans.model.Ticket;
 import tk.trentoleaf.cineweb.beans.model.User;
 import tk.trentoleaf.cineweb.exceptions.db.DBException;
+import tk.trentoleaf.cineweb.exceptions.db.PlayGoneException;
 import tk.trentoleaf.cineweb.exceptions.db.TicketAlreadyDeletedException;
 import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
 
@@ -38,12 +39,12 @@ public class BookingsDB {
     }
 
     // create a new booking
-    public Booking createBooking(User user, List<Ticket> tickets) throws DBException, UserNotFoundException {
+    public Booking createBooking(User user, List<Ticket> tickets) throws DBException, UserNotFoundException, PlayGoneException {
         return createBooking(user.getUid(), tickets);
     }
 
     // create a new booking
-    public Booking createBooking(int uid, List<Ticket> tickets) throws DBException, UserNotFoundException {
+    public Booking createBooking(int uid, List<Ticket> tickets) throws DBException, UserNotFoundException,PlayGoneException {
 
         // TODO: check if some play is already gone... for each film
         // booking in creation
@@ -102,11 +103,11 @@ public class BookingsDB {
                 long now = System.currentTimeMillis();
 
                 // insert booking query
-                final String bookingQuery = "INSERT INTO bookings (bid, uid, booking_time, payed_with_credit) " +
+                final String q3 = "INSERT INTO bookings (bid, uid, booking_time, payed_with_credit) " +
                         "VALUES (DEFAULT, ?, ?, ?) RETURNING bid;";
 
                 // insert booking
-                try (PreparedStatement bookingStm = connection.prepareStatement(bookingQuery)) {
+                try (PreparedStatement bookingStm = connection.prepareStatement(q3)) {
                     bookingStm.setInt(1, uid);
                     bookingStm.setTimestamp(2, new Timestamp(now));
                     bookingStm.setDouble(3, payedWithCredit);
@@ -115,16 +116,30 @@ public class BookingsDB {
                     bookingRs.next();
                     bid = bookingRs.getInt("bid");
 
+                    // check if the play has already started
+                    final String q4 = "SELECT COUNT(*) FROM plays WHERE pid = ? AND time >= now();";
+
                     // query to insert a new ticket
-                    final String ticketQuery = "INSERT INTO tickets (tid, bid, pid, rid, x, y, price, type, deleted) " +
+                    final String q5 = "INSERT INTO tickets (tid, bid, pid, rid, x, y, price, type, deleted) " +
                             "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, FALSE) RETURNING tid";
 
                     // insert every ticket
                     for (Ticket ticket : tickets) {
                         ticket.setBid(bid);
 
+                        // check if this play has gone
+                        try (PreparedStatement stm4 = connection.prepareStatement(q4)) {
+                            stm4.setInt(1, ticket.getPid());
+
+                            final ResultSet rs4 = stm4.executeQuery();
+                            rs4.next();
+                            if (rs4.getInt(1) != 1) {
+                                throw new PlayGoneException();
+                            }
+                        }
+
                         // try to insert the current ticket
-                        try (PreparedStatement ticketStm = connection.prepareStatement(ticketQuery)) {
+                        try (PreparedStatement ticketStm = connection.prepareStatement(q5)) {
                             ticketStm.setInt(1, ticket.getBid());
                             ticketStm.setInt(2, ticket.getPid());
                             ticketStm.setInt(3, ticket.getRid());
