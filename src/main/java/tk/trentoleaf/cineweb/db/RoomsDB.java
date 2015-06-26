@@ -1,7 +1,5 @@
 package tk.trentoleaf.cineweb.db;
 
-import tk.trentoleaf.cineweb.beans.model.Play;
-import tk.trentoleaf.cineweb.beans.model.SeatStatus;
 import tk.trentoleaf.cineweb.beans.model.Room;
 import tk.trentoleaf.cineweb.beans.model.Seat;
 import tk.trentoleaf.cineweb.exceptions.db.DBException;
@@ -216,63 +214,64 @@ public class RoomsDB {
         return seats;
     }
 
-    // get a list of all seats reserved by a Play
-    public List<Seat> getSeatsReservedByPlay(Play play) throws DBException {
-        return getSeatsReservedByPlay(play.getPid());
-    }
-
-    //get a list of all seats reserved by a Play.getPid()
-    public List<Seat> getSeatsReservedByPlay(int pid) throws DBException {
-        final List<Seat> seatsReserved = new ArrayList<>();
-
-        final String query = "SELECT rid, x, y FROM bookings WHERE pid = ?;";
-
-        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setInt(1, pid);
-            ResultSet rs = stm.executeQuery();
-
-            while (rs.next()) {
-                int rid = rs.getInt("rid");
-                int x = rs.getInt("x");
-                int y = rs.getInt("y");
-                seatsReserved.add(new Seat(rid, x, y));
-            }
-        } catch (SQLException e) {
-            throw DBException.factory(e);
-        }
-
-        return seatsReserved;
-    }
-
-    // get a list of all seats by a Play
-    public List<SeatStatus> getSeatsByPlay(Play play) throws DBException {
-        return getSeatsByPlay(play.getPid());
-    }
-
-    // get a list of all seats by a Play
-    public List<SeatStatus> getSeatsByPlay(int pid) throws DBException {
-
-        // list of results
-        final List<SeatStatus> seats = new ArrayList<>();
-
-        // query
-        final String query = "WITH tmp AS (SELECT * FROM bookings WHERE pid = ?) " +
-                "SELECT rid, x, y, (bid IS NOT NULL) AS reserved FROM seats NATURAL LEFT JOIN tmp;";
-
-        // execute query
-        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setInt(1, pid);
-            ResultSet rs = stm.executeQuery();
-
-            while (rs.next()) {
-                seats.add(new SeatStatus(rs.getInt("rid"), rs.getInt("x"), rs.getInt("y"), rs.getBoolean("reserved")));
-            }
-        } catch (SQLException e) {
-            throw DBException.factory(e);
-        }
-
-        // return seats
-        return seats;
-    }
+    // TODO: rewrite with the new db structure...
+//    // get a list of all seats reserved by a Play
+//    public List<Seat> getSeatsReservedByPlay(Play play) throws DBException {
+//        return getSeatsReservedByPlay(play.getPid());
+//    }
+//
+//    //get a list of all seats reserved by a Play.getPid()
+//    public List<Seat> getSeatsReservedByPlay(int pid) throws DBException {
+//        final List<Seat> seatsReserved = new ArrayList<>();
+//
+//        final String query = "SELECT rid, x, y FROM bookings WHERE pid = ?;";
+//
+//        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+//            stm.setInt(1, pid);
+//            ResultSet rs = stm.executeQuery();
+//
+//            while (rs.next()) {
+//                int rid = rs.getInt("rid");
+//                int x = rs.getInt("x");
+//                int y = rs.getInt("y");
+//                seatsReserved.add(new Seat(rid, x, y));
+//            }
+//        } catch (SQLException e) {
+//            throw DBException.factory(e);
+//        }
+//
+//        return seatsReserved;
+//    }
+//
+//    // get a list of all seats by a Play
+//    public List<SeatStatus> getSeatsByPlay(Play play) throws DBException {
+//        return getSeatsByPlay(play.getPid());
+//    }
+//
+//    // get a list of all seats by a Play
+//    public List<SeatStatus> getSeatsByPlay(int pid) throws DBException {
+//
+//        // list of results
+//        final List<SeatStatus> seats = new ArrayList<>();
+//
+//        // query
+//        final String query = "WITH tmp AS (SELECT * FROM bookings WHERE pid = ?) " +
+//                "SELECT rid, x, y, (bid IS NOT NULL) AS reserved FROM seats NATURAL LEFT JOIN tmp;";
+//
+//        // execute query
+//        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+//            stm.setInt(1, pid);
+//            ResultSet rs = stm.executeQuery();
+//
+//            while (rs.next()) {
+//                seats.add(new SeatStatus(rs.getInt("rid"), rs.getInt("x"), rs.getInt("y"), rs.getBoolean("reserved")));
+//            }
+//        } catch (SQLException e) {
+//            throw DBException.factory(e);
+//        }
+//
+//        // return seats
+//        return seats;
+//    }
 
 }
