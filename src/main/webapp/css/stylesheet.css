@@ -68,16 +68,20 @@ main .content-div {
   width: 80%; }
   #modal .modal-close {
     padding: 0px; }
+  @media only screen and (max-width: 600px) {
+    #modal iframe {
+      height: 180px; } }
+  @media only screen and (min-width: 600px) and (max-width: 992px) {
+    #modal iframe {
+      height: 250px; } }
+  @media only screen and (min-width: 992px) {
+    #modal iframe {
+      height: 300px; } }
   #modal .modal-date {
     margin-top: 0; }
   #modal .modal-time-badge {
     margin-left: 1em;
     margin-bottom: 0.5em; }
-  @media screen and (max-width: 600px) {
-    #modal .buy-buttons-div {
-      height: 5em;
-      max-height: 5em;
-      overflow-y: auto; } }
 
 main .side-div {
   box-sizing: border-box;

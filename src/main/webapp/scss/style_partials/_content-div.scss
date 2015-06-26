@@ -69,6 +69,18 @@ main {
     padding: 0px;
   }
 
+
+  iframe {
+    @media only screen and (max-width: 600px) {
+      height: 180px;
+    }
+    @media only screen and (min-width: 600px) and (max-width: 992px) {
+      height: 250px;
+    }
+    @media only screen and (min-width: 992px) {
+      height: 300px;
+    }
+  }
   .modal-date {
     margin-top: 0;
   }
@@ -78,13 +90,5 @@ main {
     margin-bottom: 0.5em;
   }
 
-  // footer del modal con i pusanti 'acquista spettacolo'
-  .buy-buttons-div {
-    @media screen and (max-width: 600px) {
-      height: 5em;
-      max-height: 5em;
-      overflow-y: auto;
-    }
-  }
 }
 
