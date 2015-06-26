@@ -5,6 +5,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.*;
+import tk.trentoleaf.cineweb.exceptions.db.UniqueViolationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,50 @@ public class BookingsDBTest extends DBTest {
         // test
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
+
+    @Test(expected = UniqueViolationException.class)
+    public void createBookingFail() throws Exception {
+        final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni", 0);
+        final User u2 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz", 0);
+        usersDB.createUser(u1);
+        usersDB.createUser(u2);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        final Film f2 = new Film("Marco", "horror", "http://bbb.com", "http://bbb.org", "trama", 30);
+        filmsDB.createFilm(f1);
+        filmsDB.createFilm(f2);
+
+        final Room r1 = roomsDB.createRoom(4, 5);
+        final Room r2 = roomsDB.createRoom(2, 3);
+
+        final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
+        final Play p2 = new Play(f1, r2, ff.parseDateTime("20/10/2015 13:00:01"), true);
+        playsDB.createPlay(p1);
+        playsDB.createPlay(p2);
+
+        // tickets to buy
+        final Ticket t1 = new Ticket(p1, 1, 2, 9.33, "normale");
+        final Ticket t2 = new Ticket(p2, 1, 2, 8.50, "ridotto");
+        final Ticket t3 = new Ticket(p2, 0, 2, 8.50, "normale");
+        final List<Ticket> tt1 = new ArrayList<>();
+        tt1.add(t1);
+        tt1.add(t2);
+        tt1.add(t3);
+
+        // create a booking -> OK
+        bookingsDB.createBooking(u1, tt1);
+
+        // create a booking -> fail
+        final Ticket t4 = new Ticket(p1, 1, 2, 45, "aaa");
+        final List<Ticket> tt2 = new ArrayList<>();
+        tt2.add(t4);
+
+        // create booking -> fail
+        bookingsDB.createBooking(u2, tt2);
+    }
+
 
 //
 //    // booking fail by time expired
