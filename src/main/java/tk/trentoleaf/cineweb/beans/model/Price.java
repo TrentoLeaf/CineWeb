@@ -17,10 +17,10 @@ public class Price implements Serializable {
 
     static {
         DEFAULT_PRICES = new ArrayList<>();
-        DEFAULT_PRICES.add(new Price("normal", 8.5));
-        DEFAULT_PRICES.add(new Price("reduced", 5.5));
-        DEFAULT_PRICES.add(new Price("military", 6));
-        DEFAULT_PRICES.add(new Price("disabled", 7));
+        DEFAULT_PRICES.add(new Price("normale", 8.5));
+        DEFAULT_PRICES.add(new Price("ridotto", 5.5));
+        DEFAULT_PRICES.add(new Price("militare", 6));
+        DEFAULT_PRICES.add(new Price("disabile", 7));
     }
 
     @SafeString(message = "Type must be a valid string")
