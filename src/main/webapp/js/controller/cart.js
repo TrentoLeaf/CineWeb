@@ -35,6 +35,8 @@
                     $rootScope.cart.push(newFilm);
                     // abilita il pulsante 'prosegui'
                     $('#btn-go-to-buy').removeClass('hide');
+                    // anima l'icona del carrello dopo un acquisto carrello
+                    animateCartIcon();
                     // $rootScope.updateTotal();
                 }
             };
@@ -91,9 +93,27 @@
                 return (JSON.parse(JSON.stringify(obj)));
             };
 
+            // anima l'icona del carrello
+            function animateCartIcon () {
 
+                // set timeout to remove the animation
+                setTimeout (function () {
+                    $('.cart-icon').css({
+                        '-webkit-animation': '',
+                        '-moz-animation':    '',
+                        '-o-animation':      '',
+                        'animation':         ''
+                    });
+                }, 1650); // 0.3s * 5.5 = 1.65
 
-
+                // start the keyframe cart-animation
+                $('.cart-icon').css({
+                    '-webkit-animation': 'cart-animation 0.3s 5.5',
+                    '-moz-animation':    'cart-animation 0.3s 5.5',
+                    '-o-animation':      'cart-animation 0.3s 5.5',
+                    'animation':         'cart-animation 0.3s 5.5'
+                });
+            }
 
 
         }]);

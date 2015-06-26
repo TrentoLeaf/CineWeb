@@ -13,6 +13,42 @@
   margin: 0px;
   border: 0px; }
 
+@-webkit-keyframes cart-animation {
+  0% {
+    -webkit-transform: rotate(0deg); }
+  25% {
+    -webkit-transform: rotate(30deg); }
+  75% {
+    -webkit-transform: rotate(-30deg); }
+  100% {
+    -webkit-transform: rotate(0deg); } }
+@-moz-keyframes cart-animation {
+  0% {
+    -moz-transform: rotate(0deg); }
+  25% {
+    -moz-transform: rotate(30deg); }
+  75% {
+    -moz-transform: rotate(-30deg); }
+  100% {
+    -moz-transform: rotate(0deg); } }
+@-o-keyframes cart-animation {
+  0% {
+    -o-transform: rotate(0deg); }
+  25% {
+    -o-transform: rotate(30deg); }
+  75% {
+    -o-transform: rotate(-30deg); }
+  100% {
+    -o-transform: rotate(0deg); } }
+@keyframes cart-animation {
+  0% {
+    transform: rotate(0deg); }
+  25% {
+    transform: rotate(20deg); }
+  75% {
+    transform: rotate(-20deg); }
+  100% {
+    transform: rotate(0deg); } }
 main {
   height: 100%; }
 
