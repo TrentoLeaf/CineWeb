@@ -4,7 +4,7 @@
     angular.module('adminPrices', ['pricesModule'])
         .controller('AdminPricesController', ['$location', '$rootScope', 'Prices', '$resource', function ($location, Prices, $rootScope, $resource) {
 
-            var Test = $resource('api/prices/:type', {type: '@type'}, {
+            var Test = $resource('api/prices/:id', {type: '@id'}, {
                 update: {
                     method: 'PUT'
                 }
@@ -31,8 +31,7 @@
 
             this.addPrice = function () {
                 ctrl.newPrice.$save(function () {
-
-                    this.newPrice = new Test();
+                    ctrl.newPrice = new Test();
                 }, function () {
                     // errors
                 });
