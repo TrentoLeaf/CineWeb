@@ -44,6 +44,11 @@
 }
 
 
+.row {
+  // need for firefox (trasform margin in padding)
+  margin-bottom: 0px;
+  padding-bottom: 20px;
+}
 
 body {
 
@@ -64,17 +69,40 @@ footer {
   height: 25px;
 }
 
+// admin actions fixed button
+.admin-actions {
+  @media only screen and (min-width: 600px) {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform:    rotate(-90deg);
+    -ms-transform:     rotate(-90deg);
+    -o-transform:      rotate(-90deg);
+    transform:         rotate(-90deg);
 
+    .admin-actions-home {
+      -webkit-transform: rotate(90deg);
+      -moz-transform:    rotate(90deg);
+      -ms-transform:     rotate(90deg);
+      -o-transform:      rotate(90deg);
+      transform:         rotate(90deg);
+    }
+    .admin-action-btn {
+      -webkit-transform: rotate(90deg);
+      -moz-transform:    rotate(90deg);
+      -ms-transform:     rotate(90deg);
+      -o-transform:      rotate(90deg);
+      transform:         rotate(90deg);
+    }
 
+  }
+}
 // nasconde gli spinner per gli input field di tipo number (mese, anno, cvv carta di credito)
-#credit_card::-webkit-inner-spin-button,
-#credit_card::-webkit-outer-spin-button,
-#month::-webkit-inner-spin-button,
-#month::-webkit-outer-spin-button,
-#year::-webkit-inner-spin-button,
-#year::-webkit-outer-spin-button,
-#cvv::-webkit-inner-spin-button,
-#cvv::-webkit-outer-spin-button {
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }

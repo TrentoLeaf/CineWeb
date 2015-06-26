@@ -49,6 +49,10 @@
     transform: rotate(-20deg); }
   100% {
     transform: rotate(0deg); } }
+.row {
+  margin-bottom: 0px;
+  padding-bottom: 20px; }
+
 main {
   height: 100%; }
 
@@ -59,16 +63,33 @@ footer {
   width: 25px;
   height: 25px; }
 
-#credit_card::-webkit-inner-spin-button,
-#credit_card::-webkit-outer-spin-button,
-#month::-webkit-inner-spin-button,
-#month::-webkit-outer-spin-button,
-#year::-webkit-inner-spin-button,
-#year::-webkit-outer-spin-button,
-#cvv::-webkit-inner-spin-button,
-#cvv::-webkit-outer-spin-button {
+@media only screen and (min-width: 600px) {
+  .admin-actions {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg); }
+    .admin-actions .admin-actions-home {
+      -webkit-transform: rotate(90deg);
+      -moz-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      -o-transform: rotate(90deg);
+      transform: rotate(90deg); }
+    .admin-actions .admin-action-btn {
+      -webkit-transform: rotate(90deg);
+      -moz-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      -o-transform: rotate(90deg);
+      transform: rotate(90deg); } }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0; }
+
+input[type=number] {
+  -moz-appearance: textfield; }
 
 main .content-div {
   width: 100%;

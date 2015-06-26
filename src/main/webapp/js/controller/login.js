@@ -28,7 +28,7 @@
                         // redirect all' ultima pagina
                         switch ($rootScope.afterLogin) {
                             case "normal":
-                                $rootScope.afterLogin = "normal";
+                                ctrl.setAfterLogin("normal");
 
                                 if ($rootScope.user.role == "admin") {
                                     $location.path('/admin');
@@ -37,11 +37,11 @@
                                 }
                                 break;
                             case "buy":
-                                $rootScope.afterLogin = "normal";
+                                ctrl.setAfterLogin("normal");
                                 $location.path('/buy');
                                 break;
                             case "userArea":
-                                $rootScope.afterLogin = "normal";
+                                ctrl.setAfterLogin("normal");
 
                                 if ($rootScope.user.role == "admin") {
                                     $location.path('/admin');
@@ -78,6 +78,10 @@
                     }
                 )
             };
+
+            this.setAfterLogin = function (type) {
+                $rootScope.afterLogin = type;
+            }
 
             this.change = function (email, oldPass, newPass) {
                 Auth.changePassword(email, oldPass, newPass).then(

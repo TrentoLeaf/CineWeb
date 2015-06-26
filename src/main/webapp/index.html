@@ -78,7 +78,7 @@
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle left"></i>Accedi</a></li>
             </ul>
             <a href="#" data-activates="nav-mobile" class="button-collapse yellow-text text-accent-4"><i class=" mdi-navigation-menu"></i></a>
-            <a data-activates="nav-mobile" class="button hide-on-large-only right" ng-click="tab.setTab(1)"><i class="yellow-text text-accent-4 mdi-action-shopping-cart"></i></a>
+            <a data-activates="nav-mobile" class="button hide-on-large-only right" ng-click="tab.setTab(1)"><i class="cart-icon yellow-text text-accent-4 mdi-action-shopping-cart"></i></a>
         </div>
     </nav>
 </div>
@@ -153,7 +153,7 @@
                         <h5 class="total col s5 m5 l5 right-align">{{total | currency:"€ "}}</h5>
                     </div>
                     <div>
-                        <button ng-click="cc.proceed(); tab.closeTab();" id="btn-go-to-buy" class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10 hide">Prosegui
+                        <button ng-hide="cartLength() == 0" ng-click="cc.proceed(); tab.closeTab();" id="btn-go-to-buy" class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui
                             <i class="mdi-navigation-chevron-right right"></i>
 
                             <div class="cart-loader preloader-wrapper small left" style="margin-top: 9px;">
@@ -192,7 +192,7 @@
                                 <a  ng-click="c.losePass(); tab.closeTab()" class="yellow-text text-accent-4" type="submit" name="forgot" href="">Password dimenticata? Clicca qui.</a>
                             </div>
                             <div class="row">
-                                <button ng-click="c.login(c.email, c.pass)" class="col s12 m12 l12 btn-large green white-text waves-effect waves-light" type="submit" name="login">Login
+                                <button ng-click="c.setAfterLogin('normal'); c.login(c.email, c.pass);" class="col s12 m12 l12 btn-large green white-text waves-effect waves-light" type="submit" name="login">Login
 
                                     <i class="mdi-content-send white-text right"></i>
 
@@ -221,7 +221,7 @@
                     <li ng-show="isUserLogged" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10"> <!-- already logged page -->
                         <div class="row">
                             <div class="col s5 m5 l5">
-                                <button ng-click="c.logout()" class="btn red white-text right">Logout</button>
+                                <button ng-click="c.logout()" class="btn red white-text">Logout</button>
                             </div>
                             <div class="col s7 m7 l7">
                                 <h6 class="red-text">{{loginError}}</h6>
@@ -270,18 +270,18 @@
 </footer>
 
 <!-- Floating button amministratore-->
-<div ng-show="user.role == 'admin'"  class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-    <a class="btn-floating btn-large yellow accent-4" href="#admin">
+<div ng-show="user.role == 'admin'"  class="admin-actions fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="admin-actions-home btn-floating btn-large yellow accent-4" href="#admin">
         <i class="medium mdi-action-home black-text"></i>
     </a>
 
     <ul>
-        <li><a class="btn-floating red" href="#admin/films"><i class="mdi-maps-local-movies"></i></a></li>
-        <li><a class="btn-floating teal" href="#admin/plays"><i class="mdi-av-videocam"></i></a></li>
-        <li><a class="btn-floating green" href="#admin/rooms"><i class="mdi-maps-local-convenience-store"></i></a></li>
-        <li><a class="btn-floating blue" href="#admin/prices"><i class="mdi-maps-local-atm"></i></a></li>
-        <li><a class="btn-floating orange" href="#admin/users"><i class="mdi-social-person"></i></a></li>
-        <li><a class="btn-floating pink lighten-1" href="#admin/stats"><i class="mdi-social-poll"></i></a></li>
+        <li class="admin-action-btn"><a class="btn-floating red" href="#admin/films"><i class="mdi-maps-local-movies"></i></a></li>
+        <li class="admin-action-btn"><a class="btn-floating teal" href="#admin/plays"><i class="mdi-av-videocam"></i></a></li>
+        <li class="admin-action-btn"><a class="btn-floating green" href="#admin/rooms"><i class="mdi-maps-local-convenience-store"></i></a></li>
+        <li class="admin-action-btn"><a class="btn-floating blue" href="#admin/prices"><i class="mdi-maps-local-atm"></i></a></li>
+        <li class="admin-action-btn"><a class="btn-floating orange" href="#admin/users"><i class="mdi-social-person"></i></a></li>
+        <li class="admin-action-btn"><a class="btn-floating pink lighten-1" href="#admin/stats"><i class="mdi-social-poll"></i></a></li>
     </ul>
 </div>
 

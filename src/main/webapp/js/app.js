@@ -243,11 +243,7 @@ $(document).ready(function () {
             // load the cart from LocalStorage
             var loadCart = function () {
                 $rootScope.cart = StorageService.loadCart();
-                if ($rootScope.cart != null) {
-                    console.log("unhide");
-                    // abilita il pulsante 'prosegui'
-                    $('#btn-go-to-buy').removeClass('hide');
-                } else {
+                if ($rootScope.cart == null) {
                     $rootScope.cart = [];
                 }
                 console.log("cart loaded: " + $rootScope.cart);
@@ -266,6 +262,13 @@ $(document).ready(function () {
                 StorageService.saveCart(cart);
                 console.log("cart saved");
             }, true);
+
+
+            $rootScope.cartLength  = function () {
+                return $rootScope.cart.length;
+            }
+
+
 
             /* init of login data */
             $rootScope.user = {};
