@@ -11,6 +11,7 @@ import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.beans.model.Film;
 import tk.trentoleaf.cineweb.beans.model.Play;
 import tk.trentoleaf.cineweb.beans.model.Room;
+import tk.trentoleaf.cineweb.exceptions.db.ForeignKeyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class PlaysDBTest extends DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
-    @Test(expected = ConstrainException.class)
+    @Test(expected = ForeignKeyException.class)
     public void createPlayFailure1() throws Exception {
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         filmsDB.createFilm(f1);
@@ -68,7 +69,7 @@ public class PlaysDBTest extends DBTest {
         playsDB.createPlay(p1);
     }
 
-    @Test(expected = ConstrainException.class)
+    @Test(expected = ForeignKeyException.class)
     public void createPlayFailure2() throws Exception {
         final Room r1 = roomsDB.createRoom(23, 12);
 
