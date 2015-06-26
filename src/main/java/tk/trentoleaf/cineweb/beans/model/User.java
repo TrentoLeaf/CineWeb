@@ -9,6 +9,7 @@ import tk.trentoleaf.cineweb.utils.Utils;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -16,28 +17,33 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 
+    // default admin user
+    public static User FIRST_ADMIN = new User(true, Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin");
+
     private int uid;
     private boolean enabled;
 
     @NotNull(message = "Role cannot be null")
     private Role role;
 
+    @Size(max = 255, message = "Email too long")
     @Email(message = "Email must be a valid email")
     @NotEmpty(message = "Email cannot be null")
     private String email;
 
+    @Size(max = 60, message = "Password too long")
     private String password;
 
+    @Size(max = 100, message = "FirstName too long")
     @SafeString(message = "FirstName cannot be null")
     private String firstName;
 
+    @Size(max = 100, message = "SecondName too long")
     @SafeString(message = "SecondName cannot be null")
     private String secondName;
 
     @Min(value = 0, message = "Credit must be >= 0")
     private double credit;
-
-    public static User FIRST_ADMIN = new User(true, Role.ADMIN, "admin@trentoleaf.tk", "admin", "First", "Admin");
 
     /**
      * Construct an empty user.
@@ -163,12 +169,8 @@ public class User implements Serializable {
         this.credit = credit;
     }
 
-    public boolean isValid() {
-        return Utils.isValid(this);
-    }
-
     public boolean isValidWithPassword() {
-        return isValid() && StringUtils.isNotEmpty(password);
+        return Utils.isValid(this) && StringUtils.isNotEmpty(password);
     }
 
     public void addCredit(double credit) {

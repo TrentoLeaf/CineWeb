@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -109,6 +108,7 @@ public class DB {
         createTableFilms();
         createTablePlays();
         createTableBookings();
+        createTableTickets();
         createTablePrices();
     }
 
@@ -117,6 +117,7 @@ public class DB {
 
         // drop tables
         dropTablePrices();
+        dropTableTickets();
         dropTableBookings();
         dropTablePlays();
         dropTableFilms();
@@ -133,7 +134,6 @@ public class DB {
         // unload module crypto
         removeCrypto();
     }
-
 
     // make sure the extension crypto is loaded
     // used to secure store passwords
@@ -172,14 +172,13 @@ public class DB {
             // create table roles
             try (Statement createStm = connection.createStatement()) {
                 createStm.execute("CREATE TABLE IF NOT EXISTS roles (" +
-                        "roleid CHAR(8) PRIMARY KEY," +
+                        "roleid CITEXT PRIMARY KEY," +
                         "description VARCHAR(200));");
             }
 
             // insert roles
-            final List<Role> roles = Role.getRoles();
             final String insertRole = "INSERT INTO roles (roleid, description) VALUES (?, ?);";
-            for (Role r : roles) {
+            for (Role r : Role.values()) {
                 try (PreparedStatement insertStm = connection.prepareStatement(insertRole)) {
                     insertStm.setString(1, r.getRoleID());
                     insertStm.setString(2, r.getDescription());
@@ -193,18 +192,25 @@ public class DB {
 
     // create table user
     private void createTableUsers() throws SQLException {
-        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
-            stm.execute("CREATE TABLE IF NOT EXISTS users (" +
-                    "uid SERIAL PRIMARY KEY," +
-                    "enabled BOOLEAN," +
-                    "roleid CHAR(8) REFERENCES roles(roleid)," +
-                    "email CITEXT UNIQUE NOT NULL," +
-                    "pass CHAR(60) NOT NULL," +
-                    "first_name VARCHAR(100)," +
-                    "second_name VARCHAR(100)," +
-                    "credit DOUBLE PRECISION DEFAULT 0);");
-            stm.execute("CREATE INDEX ON users (email);");
-            stm.execute("CREATE INDEX ON users (uid, roleid);");
+        try (Connection connection = getConnection()) {
+            try (Statement stm = connection.createStatement()) {
+                stm.execute("CREATE TABLE IF NOT EXISTS users (" +
+                        "uid SERIAL PRIMARY KEY," +
+                        "enabled BOOLEAN," +
+                        "roleid CITEXT REFERENCES roles(roleid)," +
+                        "email CITEXT UNIQUE NOT NULL," +
+                        "pass VARCHAR(60) NOT NULL," +
+                        "first_name VARCHAR(100)," +
+                        "second_name VARCHAR(100)," +
+                        "credit DOUBLE PRECISION DEFAULT 0);");
+            }
+            // index on email already exists -> unique constraint
+            try (Statement stm = connection.createStatement()) {
+                stm.execute("CREATE INDEX users_role ON users (uid, roleid);");
+            } catch (SQLException e) {
+                // do nothing -> index already exists
+                logger.warning("Cannot create index users_role -> already exists");
+            }
         }
     }
 
@@ -283,22 +289,48 @@ public class DB {
         }
     }
 
-    // create table books
+    // create table bookings
     private void createTableBookings() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS bookings (" +
                     "bid SERIAL," +
                     "uid INTEGER," +
+                    "booking_time TIMESTAMP NOT NULL," +
+                    "payed_with_credit DOUBLE PRECISION," +
+                    "PRIMARY KEY (bid)," +
+                    "FOREIGN KEY (uid) REFERENCES users(uid));");
+        }
+    }
+
+    // create table tickets
+    private void createTableTickets() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            stm.execute("CREATE TABLE IF NOT EXISTS tickets (" +
+                    "tid SERIAL," +
+                    "bid INTEGER," +
                     "pid INTEGER," +
                     "rid INTEGER," +
                     "x INTEGER," +
                     "y INTEGER," +
-                    "time_booking TIMESTAMP NOT NULL," +
-                    "price DOUBLE PRECISION," +
-                    "PRIMARY KEY (bid)," +
-                    "FOREIGN KEY (rid, x, y) REFERENCES seats(rid, x, y)," +
-                    "FOREIGN KEY (uid) REFERENCES users(uid)," +
-                    "FOREIGN KEY (pid) REFERENCES plays(pid));");
+                    "price DOUBLE PRECISION NOT NULL," +
+                    "type TEXT NOT NULL," +
+                    "deleted BOOLEAN NOT NULL DEFAULT FALSE," +
+                    "PRIMARY KEY (tid)," +
+                    "FOREIGN KEY (bid) REFERENCES bookings(bid)," +
+                    "FOREIGN KEY (pid) REFERENCES plays(pid), " +
+                    "FOREIGN KEY (rid, x, y) REFERENCES seats(rid, x, y));");
+            try {
+                // create unique index to enforce db consistency
+                stm.execute("CREATE UNIQUE INDEX tickets_unique ON tickets (pid, rid, x, y) WHERE NOT deleted");
+            } catch (SQLException e) {
+                if (e.getSQLState().equals("42P07")) {
+                    // the index already exists
+                    logger.warning("Index tickets_unique already exists... SKIP");
+                } else {
+                    // other error
+                    throw e;
+                }
+            }
         }
     }
 
@@ -371,6 +403,13 @@ public class DB {
     private void dropTableBookings() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("DROP TABLE IF EXISTS bookings;");
+        }
+    }
+
+    // drop table tickets
+    private void dropTableTickets() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            stm.execute("DROP TABLE IF EXISTS tickets;");
         }
     }
 

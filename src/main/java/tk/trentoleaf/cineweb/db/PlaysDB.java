@@ -1,12 +1,11 @@
 package tk.trentoleaf.cineweb.db;
 
 import org.joda.time.DateTime;
-import org.postgresql.util.PSQLException;
-import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
-import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;
-import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.beans.model.Play;
 import tk.trentoleaf.cineweb.beans.model.Room;
+import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
+import tk.trentoleaf.cineweb.exceptions.db.DBException;
+import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class PlaysDB {
     }
 
     // create play
-    public void createPlay(Play play) throws SQLException, ConstrainException, AnotherFilmScheduledException {
+    public void createPlay(Play play) throws DBException, AnotherFilmScheduledException {
 
         // TODO: transaction
         boolean another = isAlreadyPlay(play.getRid(), play.getTime());
@@ -46,8 +45,7 @@ public class PlaysDB {
             throw new AnotherFilmScheduledException();
         }
 
-        final String query = "INSERT INTO plays (pid, fid, rid, time, _3d) " +
-                "VALUES (DEFAULT, ?, ?, ?, ?) RETURNING pid;";
+        final String query = "INSERT INTO plays (pid, fid, rid, time, _3d) VALUES (DEFAULT, ?, ?, ?, ?) RETURNING pid;";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setInt(1, play.getFid());
@@ -59,18 +57,19 @@ public class PlaysDB {
             // if here -> no error
             rs.next();
             play.setPid(rs.getInt("pid"));
-        } catch (PSQLException e) {
-            throw new ConstrainException(e);
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // check play
-    public boolean isAlreadyPlay(Room room, DateTime time) throws SQLException {
+    public boolean isAlreadyPlay(Room room, DateTime time) throws DBException {
         return isAlreadyPlay(room.getRid(), time);
     }
 
     // check play
-    public boolean isAlreadyPlay(int rid, DateTime time) throws SQLException {
+    public boolean isAlreadyPlay(int rid, DateTime time) throws DBException {
         final String query = "SELECT COUNT(*) FROM films f NATURAL JOIN plays p " +
                 "WHERE p.rid = ? AND p.time <= ? AND ? <= p.time + (f.duration * INTERVAL '1 minute');";
 
@@ -85,33 +84,14 @@ public class PlaysDB {
             rs.next();
 
             return rs.getInt(1) >= 1;
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
-    }
-
-    // check if is older play
-    public boolean isOlderPlay(int pid, DateTime time) throws SQLException {
-
-        boolean isOlderPlay = false;
-        final String query = "SELECT time FROM plays " +
-                "WHERE pid = ? ;";
-
-        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-
-            stm.setInt(1, pid);
-
-            ResultSet rs = stm.executeQuery();
-            rs.next();
-
-
-            if (rs.getTimestamp(1).before(new Timestamp(time.toDate().getTime()))) {
-                isOlderPlay = true;
-            }
-        }
-        return isOlderPlay;
     }
 
     // get list of plays
-    public List<Play> getPlays() throws SQLException {
+    public List<Play> getPlays() throws DBException {
         final List<Play> plays = new ArrayList<>();
 
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
@@ -125,13 +105,16 @@ public class PlaysDB {
                 boolean _3d = rs.getBoolean("_3d");
                 plays.add(new Play(pid, fid, rid, time, _3d));
             }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
 
         return plays;
     }
 
     // get a play by id
-    public Play getPlay(int pid) throws SQLException, EntryNotFoundException {
+    public Play getPlay(int pid) throws DBException, EntryNotFoundException {
         final String query = "SELECT fid, rid, time, _3d FROM plays WHERE pid = ?;";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
@@ -147,17 +130,21 @@ public class PlaysDB {
                 return new Play(pid, fid, rid, time, _3d);
             }
 
+            // if here, nothing found
             throw new EntryNotFoundException();
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // delete a play
-    public void deletePlay(Play play) throws SQLException, EntryNotFoundException {
+    public void deletePlay(Play play) throws DBException, EntryNotFoundException {
         deletePlay(play.getPid());
     }
 
     // delete a play
-    public void deletePlay(int pid) throws SQLException, EntryNotFoundException {
+    public void deletePlay(int pid) throws DBException, EntryNotFoundException {
         final String query = "DELETE FROM plays WHERE pid = ?";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
@@ -167,8 +154,10 @@ public class PlaysDB {
             if (rows != 1) {
                 throw new EntryNotFoundException();
             }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
-
 
 }

@@ -1,8 +1,8 @@
 package tk.trentoleaf.cineweb.filters.rest;
 
 import tk.trentoleaf.cineweb.annotations.rest.UserArea;
-import tk.trentoleaf.cineweb.db.UsersDB;
 import tk.trentoleaf.cineweb.beans.model.Role;
+import tk.trentoleaf.cineweb.db.UsersDB;
 import tk.trentoleaf.cineweb.utils.Utils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +12,6 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /**
@@ -40,12 +39,7 @@ public class UsersFilter implements ContainerRequestFilter {
         final Integer uid = (session != null) ? (Integer) session.getAttribute(Utils.UID) : null;
 
         // check the role
-        Role role = null;
-        try {
-            role = (uid != null) ? usersDB.getUserRoleIfEnabled(uid) : null;
-        } catch (SQLException e) {
-            logger.severe(e.toString());
-        }
+        final Role role = (uid != null) ? usersDB.getUserRoleIfEnabled(uid) : null;
 
         // if no role -> drop request
         if (role != Role.CLIENT && role != Role.ADMIN) {

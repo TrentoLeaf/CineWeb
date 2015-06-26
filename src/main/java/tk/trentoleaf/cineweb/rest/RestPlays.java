@@ -2,20 +2,19 @@ package tk.trentoleaf.cineweb.rest;
 
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
 import tk.trentoleaf.cineweb.annotations.rest.Compress;
+import tk.trentoleaf.cineweb.beans.model.Play;
 import tk.trentoleaf.cineweb.db.PlaysDB;
 import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
-import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.db.ForeignKeyException;
 import tk.trentoleaf.cineweb.exceptions.rest.BadRequestException;
 import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
-import tk.trentoleaf.cineweb.beans.model.Play;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -29,13 +28,13 @@ public class RestPlays {
 
     @GET
     @Compress
-    public List<Play> getPlays() throws SQLException {
+    public List<Play> getPlays() {
         return playsDB.getPlays();
     }
 
     @GET
     @Path("/{id}")
-    public Play getPlay(@PathParam("id") int id) throws SQLException {
+    public Play getPlay(@PathParam("id") int id) {
         try {
             return playsDB.getPlay(id);
         } catch (EntryNotFoundException e) {
@@ -45,13 +44,13 @@ public class RestPlays {
 
     @POST
     @AdminArea
-    public Play createPlay(@NotNull(message = "Missing play object") @Valid Play play) throws SQLException {
+    public Play createPlay(@NotNull(message = "Missing play object") @Valid Play play) {
 
         // add play to playsDB
         try {
             playsDB.createPlay(play);
             return play;
-        } catch (ConstrainException e) {
+        } catch (ForeignKeyException e) {
             throw new BadRequestException("Fid or rid not found");
         } catch (AnotherFilmScheduledException e1) {
             throw ConflictException.ANOTHER_FILM;
@@ -61,7 +60,7 @@ public class RestPlays {
     @DELETE
     @Path("/{id}")
     @AdminArea
-    public Response deletePlay(@PathParam("id") int id) throws SQLException {
+    public Response deletePlay(@PathParam("id") int id) {
 
         // try to delete the play
         try {

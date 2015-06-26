@@ -2,9 +2,7 @@ package tk.trentoleaf.cineweb.beans.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,13 +32,6 @@ public enum Role {
         return description;
     }
 
-    public static List<Role> getRoles() {
-        List<Role> roles = new ArrayList<>();
-        roles.add(ADMIN);
-        roles.add(CLIENT);
-        return roles;
-    }
-
     // map to convert a String to the corresponding role
     private static final Map<String, Role> map;
 
@@ -53,8 +44,7 @@ public enum Role {
 
     // convert a string to a role
     public static Role fromID(String id) {
-        // NB: id can contains some spaces at the end since saved as CHAR(8)
-        return map.get(id.trim());
+        return map.get(id);
     }
 
 }

@@ -1,6 +1,7 @@
 package tk.trentoleaf.cineweb.db;
 
 import tk.trentoleaf.cineweb.beans.model.Price;
+import tk.trentoleaf.cineweb.exceptions.db.DBException;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 
 import java.sql.*;
@@ -38,24 +39,26 @@ public class PricesDB {
             for (Price p : Price.DEFAULT_PRICES) {
                 createPrice(p);
             }
-        } catch (SQLException e) {
+        } catch (DBException e) {
             // do nothing
         }
     }
 
     // create price
-    public void createPrice(Price price) throws SQLException {
+    public void createPrice(Price price) throws DBException {
         final String query = "INSERT INTO prices (type, price) VALUES (?, ?)";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setString(1, price.getType());
             stm.setDouble(2, price.getPrice());
             stm.execute();
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // get price by type
-    public Price getPrice(String type) throws SQLException, EntryNotFoundException {
+    public Price getPrice(String type) throws DBException, EntryNotFoundException {
         final String query = "SELECT price FROM prices WHERE type = ?;";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
@@ -68,11 +71,14 @@ public class PricesDB {
 
             // no price
             throw new EntryNotFoundException();
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // get prices
-    public List<Price> getPrices() throws SQLException {
+    public List<Price> getPrices() throws DBException {
         List<Price> prices = new ArrayList<>();
 
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
@@ -84,13 +90,16 @@ public class PricesDB {
                 price.setPrice(rs.getDouble("price"));
                 prices.add(price);
             }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
 
         return prices;
     }
 
     // edit price
-    public void updatePrice(Price price) throws SQLException, EntryNotFoundException {
+    public void updatePrice(Price price) throws DBException, EntryNotFoundException {
         final String query = "UPDATE prices SET price = ? WHERE type = ?;";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
@@ -101,16 +110,18 @@ public class PricesDB {
             if (rows != 1) {
                 throw new EntryNotFoundException();
             }
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // delete price
-    public void deletePrice(Price price) throws SQLException, EntryNotFoundException {
+    public void deletePrice(Price price) throws DBException, EntryNotFoundException {
         deletePrice(price.getType());
     }
 
     // delete price
-    public void deletePrice(String type) throws SQLException, EntryNotFoundException {
+    public void deletePrice(String type) throws DBException, EntryNotFoundException {
         final String query = "DELETE FROM prices WHERE type = ?";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
@@ -119,6 +130,8 @@ public class PricesDB {
             if (rows != 1) {
                 throw new EntryNotFoundException();
             }
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 

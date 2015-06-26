@@ -1,11 +1,9 @@
 package tk.trentoleaf.cineweb.db;
 
-import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.db.WrongCodeException;
-import tk.trentoleaf.cineweb.beans.model.Play;
 import tk.trentoleaf.cineweb.beans.model.Room;
 import tk.trentoleaf.cineweb.beans.model.Seat;
-import tk.trentoleaf.cineweb.beans.model.SeatReserved;
+import tk.trentoleaf.cineweb.exceptions.db.DBException;
+import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,12 +37,12 @@ public class RoomsDB {
     }
 
     // create a Room with all the seats
-    public Room createRoom(int rows, int cols) throws SQLException {
+    public Room createRoom(int rows, int cols) throws DBException {
         return createRoom(rows, cols, new ArrayList<Seat>());
     }
 
     // create a new Room
-    public Room createRoom(int rows, int cols, List<Seat> missingSeats) throws SQLException {
+    public Room createRoom(int rows, int cols, List<Seat> missingSeats) throws DBException {
         try (Connection connection = db.getConnection()) {
 
             // create a transaction to ensure TodoDB consistency
@@ -123,13 +121,15 @@ public class RoomsDB {
                 connection.rollback();
 
                 // throw the exception
-                throw e;
+                throw DBException.factory(e);
             }
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // get the room list
-    public List<Room> getRooms(boolean withPlaces) throws SQLException {
+    public List<Room> getRooms(boolean withPlaces) throws DBException {
         List<Room> rooms = new ArrayList<>();
 
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
@@ -143,6 +143,8 @@ public class RoomsDB {
                 r.setSeats(withPlaces ? getSeatsByRoom(r.getRid()) : new ArrayList<Seat>());
                 rooms.add(r);
             }
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
 
         return rooms;
@@ -150,10 +152,10 @@ public class RoomsDB {
 
     // delete room
     // NB: throw an exception if the room is referenced in any table
-    public void deleteRoom(int rid) throws SQLException, EntryNotFoundException {
+    public void deleteRoom(int rid) throws DBException, EntryNotFoundException {
         try (Connection connection = db.getConnection()) {
 
-            // create a transaction to ensure TodoDB consistency
+            // create a transaction to ensure DB consistency
             connection.setAutoCommit(false);
 
             // delete seats for this room
@@ -187,11 +189,13 @@ public class RoomsDB {
                 // throw the exception
                 throw e;
             }
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // get the existing seats for a given room
-    public List<Seat> getSeatsByRoom(int rid) throws SQLException {
+    public List<Seat> getSeatsByRoom(int rid) throws DBException {
         final List<Seat> seats = new ArrayList<>();
         final String query = "SELECT x, y FROM seats WHERE rid = ?;";
 
@@ -203,70 +207,71 @@ public class RoomsDB {
                 int y = rs.getInt("y");
                 seats.add(new Seat(rid, x, y));
             }
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
 
         return seats;
     }
 
-    // get a list of all seats reserved by a Play
-    public List<SeatReserved> getSeatsReservedByPlay(Play play) throws SQLException, WrongCodeException {
-        return getSeatsReservedByPlay(play.getPid());
-    }
-
-    //get a list of all seats reserved by a Play.getPid()
-    public List<SeatReserved> getSeatsReservedByPlay(int pid) throws SQLException, WrongCodeException {
-        final List<SeatReserved> seatsReserved = new ArrayList<>();
-
-        final String query = "SELECT rid, x, y FROM bookings WHERE pid = ?;";
-
-        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setInt(1, pid);
-            ResultSet rs = stm.executeQuery();
-
-            int ridCheck = -1;
-            while (rs.next()) {
-                int rid = rs.getInt("rid");
-
-                // check if all seats find are part of the same room
-                if (ridCheck == rid || ridCheck == -1) {
-                    ridCheck = rid;
-                } else
-                    throw new WrongCodeException();
-
-                int x = rs.getInt("x");
-                int y = rs.getInt("y");
-                seatsReserved.add(new SeatReserved(rid, x, y, true));
-            }
-        }
-
-        return seatsReserved;
-    }
-
-    // get a list of all seats by a Play
-    public List<SeatReserved> getSeatsByPlay(Play play) throws SQLException, WrongCodeException {
-        return getSeatsByPlay(play.getPid());
-    }
-
-    // get a list of all seats by a Play.getPid()
-    public List<SeatReserved> getSeatsByPlay(int pid) throws SQLException, WrongCodeException {
-        //list of seat reserved
-        final List<SeatReserved> seatReserved = getSeatsReservedByPlay(pid);
-
-        //list of all seat in the room
-        final List<Seat> allSeat = getSeatsByRoom(seatReserved.get(1).getRid());
-
-        //list of all seatReserved in the room
-        final List<SeatReserved> seat = new ArrayList<>();
-
-        for (Seat anAllSeat : allSeat) {
-            if (seatReserved.contains(new SeatReserved(anAllSeat.getRid(), anAllSeat.getX(), anAllSeat.getY(), true))) {
-                seat.add(new SeatReserved(anAllSeat.getRid(), anAllSeat.getX(), anAllSeat.getY(), true));
-            } else {
-                seat.add(new SeatReserved(anAllSeat.getRid(), anAllSeat.getX(), anAllSeat.getY(), false));
-            }
-        }
-
-        return seat;
-    }
+    // TODO: rewrite with the new db structure...
+//    // get a list of all seats reserved by a Play
+//    public List<Seat> getSeatsReservedByPlay(Play play) throws DBException {
+//        return getSeatsReservedByPlay(play.getPid());
+//    }
+//
+//    //get a list of all seats reserved by a Play.getPid()
+//    public List<Seat> getSeatsReservedByPlay(int pid) throws DBException {
+//        final List<Seat> seatsReserved = new ArrayList<>();
+//
+//        final String query = "SELECT rid, x, y FROM bookings WHERE pid = ?;";
+//
+//        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+//            stm.setInt(1, pid);
+//            ResultSet rs = stm.executeQuery();
+//
+//            while (rs.next()) {
+//                int rid = rs.getInt("rid");
+//                int x = rs.getInt("x");
+//                int y = rs.getInt("y");
+//                seatsReserved.add(new Seat(rid, x, y));
+//            }
+//        } catch (SQLException e) {
+//            throw DBException.factory(e);
+//        }
+//
+//        return seatsReserved;
+//    }
+//
+//    // get a list of all seats by a Play
+//    public List<SeatStatus> getSeatsByPlay(Play play) throws DBException {
+//        return getSeatsByPlay(play.getPid());
+//    }
+//
+//    // get a list of all seats by a Play
+//    public List<SeatStatus> getSeatsByPlay(int pid) throws DBException {
+//
+//        // list of results
+//        final List<SeatStatus> seats = new ArrayList<>();
+//
+//        // query
+//        final String query = "WITH tmp AS (SELECT * FROM bookings WHERE pid = ?) " +
+//                "SELECT rid, x, y, (bid IS NOT NULL) AS reserved FROM seats NATURAL LEFT JOIN tmp;";
+//
+//        // execute query
+//        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+//            stm.setInt(1, pid);
+//            ResultSet rs = stm.executeQuery();
+//
+//            while (rs.next()) {
+//                seats.add(new SeatStatus(rs.getInt("rid"), rs.getInt("x"), rs.getInt("y"), rs.getBoolean("reserved")));
+//            }
+//        } catch (SQLException e) {
+//            throw DBException.factory(e);
+//        }
+//
+//        // return seats
+//        return seats;
+//    }
 
 }

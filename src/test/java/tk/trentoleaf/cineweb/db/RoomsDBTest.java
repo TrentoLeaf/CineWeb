@@ -9,6 +9,7 @@ import tk.trentoleaf.cineweb.beans.model.Film;
 import tk.trentoleaf.cineweb.beans.model.Play;
 import tk.trentoleaf.cineweb.beans.model.Room;
 import tk.trentoleaf.cineweb.beans.model.Seat;
+import tk.trentoleaf.cineweb.exceptions.db.ForeignKeyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -223,7 +224,7 @@ public class RoomsDBTest extends DBTest {
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
-    @Test(expected = PSQLException.class)
+    @Test(expected = ForeignKeyException.class)
     public void deleteRoomFail1() throws Exception {
 
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);

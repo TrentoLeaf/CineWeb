@@ -1,4 +1,4 @@
 package tk.trentoleaf.cineweb.exceptions.db;
 
-public class UserNotFoundException extends DBException {
+public class UserNotFoundException extends Exception {
 }

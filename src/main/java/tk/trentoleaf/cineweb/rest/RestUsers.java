@@ -65,14 +65,16 @@ public class RestUsers {
     // rest function to do a login
     @POST
     @Path("/login")
-    public Response login(@NotNull(message = "Missing email, password") @Valid Auth auth) throws SQLException {
+    public Response login(@NotNull(message = "Missing email, password") @Valid Auth auth) {
+        try {
 
-        // try authentication
-        boolean success = usersDB.authenticate(auth.getEmail(), auth.getPassword());
+            // try authentication
+            boolean success = usersDB.authenticate(auth.getEmail(), auth.getPassword());
 
-        // login ok, get user
-        if (success) {
-            try {
+            // login ok, get user
+            if (success) {
+
+                // retrieve the user
                 final User user = usersDB.getUser(auth.getEmail());
 
                 // login ok, save uid
@@ -80,15 +82,15 @@ public class RestUsers {
                 session.setAttribute(Utils.UID, user.getUid());
 
                 return Response.ok(new LoginOk(user)).build();
+            }
 
-            } catch (UserNotFoundException e) {
+            // login failed
+            else {
                 invalidateSession();
                 throw new AuthFailedException();
             }
-        }
 
-        // login failed
-        else {
+        } catch (UserNotFoundException e) {
             invalidateSession();
             throw new AuthFailedException();
         }
@@ -108,20 +110,20 @@ public class RestUsers {
     @POST
     @UserArea
     @Path("/change-password")
-    public Response changePassword(@NotNull(message = "Missing email, oldPassword, newPassword") @Valid ChangePassword change) throws SQLException {
+    public Response changePassword(@NotNull(message = "Missing email, oldPassword, newPassword") @Valid ChangePassword change) {
 
         // try to change the password
         try {
             usersDB.changePasswordWithOldPassword(change.getEmail(), change.getOldPassword(), change.getNewPassword());
             return Response.ok().build();
-        } catch (WrongPasswordException | UserNotFoundException e) {
+        } catch (WrongCredentialsException e) {
             throw new AuthFailedException();
         }
     }
 
     @POST
     @Path("/registration")
-    public Response registration(@NotNull(message = "Bad registration request") @Valid Registration registration) throws SQLException {
+    public Response registration(@NotNull(message = "Bad registration request") @Valid Registration registration) {
 
         // try to add the user
         try {
@@ -130,6 +132,7 @@ public class RestUsers {
             final User user = new User(registration);
             usersDB.createUser(user);
 
+            // send the email
             try {
                 // request verification code
                 final String code = usersDB.requestConfirmationCode(user.getUid());
@@ -137,10 +140,11 @@ public class RestUsers {
                 // send email
                 EmailSender.instance().sendRegistrationEmail(uriInfo.getRequestUri(), user, code);
 
-            } catch (SendGridException e) {
+            } catch (SendGridException | UserNotFoundException e) {
                 logger.severe("Cannot send verification email to: " + user.getEmail() + " --> " + e);
             }
-        } catch (ConstrainException | UserNotFoundException e) {
+
+        } catch (UniqueViolationException e) {
             throw ConflictException.EMAIL_IN_USE;
         }
 
@@ -149,7 +153,7 @@ public class RestUsers {
 
     @POST
     @Path("/confirm")
-    public ActivateUser confirmUser(@NotNull(message = "Missing code") @Valid ConfirmCode confirmCode) throws SQLException {
+    public ActivateUser confirmUser(@NotNull(message = "Missing code") @Valid ConfirmCode confirmCode) {
 
         // try to confirm the user
         try {
@@ -164,7 +168,7 @@ public class RestUsers {
 
     @POST
     @Path("/forgot-password")
-    public Response forgotPassword(@NotNull(message = "Missing email") @Valid ForgotPassword forgotPassword) throws SQLException {
+    public Response forgotPassword(@NotNull(message = "Missing email") @Valid ForgotPassword forgotPassword) {
 
         // check if user exists
         try {
@@ -195,13 +199,13 @@ public class RestUsers {
 
     @POST
     @Path("/change-password-code")
-    public Response changePasswordWithCode(@NotNull(message = "Bad changePassword") @Valid ChangePasswordWithCode change) throws SQLException {
+    public Response changePasswordWithCode(@NotNull(message = "Bad changePassword") @Valid ChangePasswordWithCode change) {
 
         // try to change the password
         try {
             usersDB.changePasswordWithCode(change.getEmail(), change.getCode(), change.getNewPassword());
             return Response.ok().build();
-        } catch (UserNotFoundException | WrongCodeException e) {
+        } catch (WrongCredentialsException e) {
             throw new AuthFailedException();
         }
     }
@@ -231,14 +235,14 @@ public class RestUsers {
     @GET
     @AdminArea
     @Compress
-    public List<User> getUsers() throws SQLException {
+    public List<User> getUsers() {
         return usersDB.getUsers();
     }
 
     @GET
     @AdminArea
     @Path("/{id}")
-    public User getUser(@PathParam("id") int uid) throws SQLException {
+    public User getUser(@PathParam("id") int uid) {
         try {
             return usersDB.getUser(uid);
         } catch (UserNotFoundException e) {
@@ -248,7 +252,7 @@ public class RestUsers {
 
     @POST
     @AdminArea
-    public User createUser(@NotNull(message = "Missing user object") @Valid User user) throws SQLException {
+    public User createUser(@NotNull(message = "Missing user object") @Valid User user) {
 
         // check if user is valid
         if (!user.isValidWithPassword()) {
@@ -260,7 +264,7 @@ public class RestUsers {
             usersDB.createUser(user);
             user.removePassword();
             return user;
-        } catch (ConstrainException e) {
+        } catch (UniqueViolationException e) {
             throw ConflictException.EMAIL_IN_USE;
         }
     }
@@ -268,14 +272,14 @@ public class RestUsers {
     @PUT
     @AdminArea
     @Path("/{id}")
-    public User updateUser(@PathParam("id") int id, @NotNull(message = "Missing user object") @Valid User user) throws SQLException {
+    public User updateUser(@PathParam("id") int id, @NotNull(message = "Missing user object") @Valid User user) {
 
         // update user
         try {
             user.setUid(id);
             usersDB.updateUser(user);
             return user;
-        } catch (ConstrainException e) {
+        } catch (UniqueViolationException e) {
             throw ConflictException.EMAIL_IN_USE;
         } catch (UserNotFoundException ex) {
             throw NotFoundException.USER_NOT_FOUND;
@@ -285,7 +289,7 @@ public class RestUsers {
     @DELETE
     @AdminArea
     @Path("/{id}")
-    public Response deleteUser(@PathParam("id") int id) throws SQLException {
+    public Response deleteUser(@PathParam("id") int id) {
         try {
             usersDB.deleteUser(id);
             return Response.ok().build();

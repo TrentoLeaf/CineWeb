@@ -1,14 +1,12 @@
 package tk.trentoleaf.cineweb.rest;
 
 import org.joda.time.DateTime;
-import tk.trentoleaf.cineweb.db.FilmsDB;
-import tk.trentoleaf.cineweb.db.PlaysDB;
-import tk.trentoleaf.cineweb.db.RoomsDB;
-import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
-import tk.trentoleaf.cineweb.exceptions.db.ConstrainException;
 import tk.trentoleaf.cineweb.beans.model.Film;
 import tk.trentoleaf.cineweb.beans.model.Play;
 import tk.trentoleaf.cineweb.beans.model.Room;
+import tk.trentoleaf.cineweb.db.FilmsDB;
+import tk.trentoleaf.cineweb.db.PlaysDB;
+import tk.trentoleaf.cineweb.db.RoomsDB;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,7 +14,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
 
 // TODO
 
@@ -39,7 +36,7 @@ public class RestRoot {
 
     @POST
     @Path("/load-example-data")
-    public Response loadExampleData() throws SQLException, AnotherFilmScheduledException, ConstrainException {
+    public Response loadExampleData() throws Exception {
 
         // TODO!
 

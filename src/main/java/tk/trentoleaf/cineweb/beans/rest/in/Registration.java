@@ -3,20 +3,25 @@ package tk.trentoleaf.cineweb.beans.rest.in;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class Registration implements Serializable {
 
+    @Size(max = 255, message = "Email too long")
     @NotEmpty(message = "Email cannot be null")
     @Email(message = "Email must be a valid email")
     private String email;
 
+    @Size(max = 60, message = "Password too long")
     @NotEmpty(message = "Password cannot be null")
     private String password;
 
+    @Size(max = 100, message = "FirstName too long")
     @NotEmpty(message = "FirstName cannot be null")
     private String firstName;
 
+    @Size(max = 100, message = "SecondName too long")
     @NotEmpty(message = "SecondName cannot be null")
     private String secondName;
 

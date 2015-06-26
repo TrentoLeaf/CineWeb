@@ -1,45 +1,41 @@
 package tk.trentoleaf.cineweb.beans.model;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * Booking bean: represent a reservation for 1 seat for a given play.
+ * Booking bean: represent a reservation for 1 or more seats for some plays.
  */
 public class Booking implements Serializable {
 
     private int bid;
-    private int rid;
-    private int x;
-    private int y;
     private int uid;
-    private int pid;
-    private DateTime timeBooking;
-    private double price;
+    private DateTime time;
+    private double payedWithCredit;
+
+    // tickets associated with this booking
+    private transient List<Ticket> tickets;
 
     public Booking() {
     }
 
-    public Booking(int rid, int x, int y, int uid, int pid, DateTime timeBooking, double price) {
-        this.rid = rid;
-        this.x = x;
-        this.y = y;
+    public Booking(int bid, int uid, DateTime time, double payedWithCredit) {
+        this.bid = bid;
         this.uid = uid;
-        this.pid = pid;
-        this.timeBooking = timeBooking;
-        this.price = price;
+        this.time = time;
+        this.payedWithCredit = payedWithCredit;
     }
 
-    public Booking(int bid, int rid, int x, int y, int uid, int pid, DateTime timeBooking, double price) {
-        this.bid = bid;
-        this.rid = rid;
-        this.x = x;
-        this.y = y;
-        this.uid = uid;
-        this.pid = pid;
-        this.timeBooking = timeBooking;
-        this.price = price;
+    public Booking(int bid, int uid, DateTime time, double payedWithCredit, List<Ticket> tickets) {
+        this(bid, uid, time, payedWithCredit);
+        this.tickets = tickets;
+    }
+
+    public Booking(int bid, User user, DateTime time, double payedWithCredit, List<Ticket> tickets) {
+        this(bid, user.getUid(), time, payedWithCredit, tickets);
     }
 
     public int getBid() {
@@ -50,30 +46,6 @@ public class Booking implements Serializable {
         this.bid = bid;
     }
 
-    public int getRid() {
-        return rid;
-    }
-
-    public void setRid(int rid) {
-        this.rid = rid;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public int getUid() {
         return uid;
     }
@@ -82,28 +54,28 @@ public class Booking implements Serializable {
         this.uid = uid;
     }
 
-    public int getPid() {
-        return pid;
+    public DateTime getTime() {
+        return time;
     }
 
-    public void setPid(int pid) {
-        this.pid = pid;
+    public void setTime(DateTime time) {
+        this.time = time;
     }
 
-    public DateTime getTimeBooking() {
-        return timeBooking;
+    public double getPayedWithCredit() {
+        return payedWithCredit;
     }
 
-    public void setTimeBooking(DateTime timeBooking) {
-        this.timeBooking = timeBooking;
+    public void setPayedWithCredit(double payedWithCredit) {
+        this.payedWithCredit = payedWithCredit;
     }
 
-    public double getPrice() {
-        return price;
+    public List<Ticket> getTickets() {
+        return tickets;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
     }
 
     @Override
@@ -119,12 +91,10 @@ public class Booking implements Serializable {
         Booking booking = (Booking) o;
 
         if (bid != booking.bid) return false;
-        if (rid != booking.rid) return false;
-        if (x != booking.x) return false;
-        if (y != booking.y) return false;
         if (uid != booking.uid) return false;
-        if (pid != booking.pid) return false;
-        if (Double.compare(booking.price, price) != 0) return false;
-        return timeBooking.equals(booking.timeBooking);
+        if (Double.compare(booking.payedWithCredit, payedWithCredit) != 0) return false;
+        if (!time.equals(booking.time)) return false;
+        return CollectionUtils.isEqualCollection(tickets, booking.tickets);
+
     }
 }
