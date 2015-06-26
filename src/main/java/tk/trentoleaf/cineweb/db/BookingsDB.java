@@ -4,10 +4,7 @@ import org.joda.time.DateTime;
 import tk.trentoleaf.cineweb.beans.model.Booking;
 import tk.trentoleaf.cineweb.beans.model.Ticket;
 import tk.trentoleaf.cineweb.beans.model.User;
-import tk.trentoleaf.cineweb.exceptions.db.DBException;
-import tk.trentoleaf.cineweb.exceptions.db.PlayGoneException;
-import tk.trentoleaf.cineweb.exceptions.db.TicketAlreadyDeletedException;
-import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.db.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -44,7 +41,7 @@ public class BookingsDB {
     }
 
     // create a new booking
-    public Booking createBooking(int uid, List<Ticket> tickets) throws DBException, UserNotFoundException,PlayGoneException {
+    public Booking createBooking(int uid, List<Ticket> tickets) throws DBException, UserNotFoundException, PlayGoneException {
 
         // TODO: check if some play is already gone... for each film
         // booking in creation
@@ -251,13 +248,13 @@ public class BookingsDB {
 
     // delete ticket ==> set deleted
     // and update the credit of the user
-    public void deleteTicket(Ticket ticket) throws DBException, TicketAlreadyDeletedException {
+    public void deleteTicket(Ticket ticket) throws DBException, EntryNotFoundException {
         deleteTicket(ticket.getTid());
     }
 
     // delete ticket ==> set deleted
     // and update the credit of the user
-    public void deleteTicket(int tid) throws DBException, TicketAlreadyDeletedException {
+    public void deleteTicket(int tid) throws DBException, EntryNotFoundException {
 
         // open the connection
         try (Connection connection = db.getConnection()) {
@@ -275,12 +272,12 @@ public class BookingsDB {
                 // check result -> must be exactly one
                 int n = stm.executeUpdate();
                 if (n != 1) {
-                    throw new TicketAlreadyDeletedException();
+                    throw new EntryNotFoundException();
                 }
 
                 // query to update the buyer user
                 final String queryUser = "WITH tmp AS (SELECT uid, price FROM tickets NATURAL JOIN bookings WHERE tid = ?)" +
-                        "UPDATE users SET credit = credit + (SELECT price FROM tmp) WHERE uid = (SELECT uid FROM tmp);";
+                        "UPDATE users SET credit = credit + (SELECT price * 0.8 FROM tmp) WHERE uid = (SELECT uid FROM tmp);";
 
                 // update user balance
                 try (PreparedStatement stmUser = connection.prepareStatement(queryUser)) {
@@ -289,7 +286,7 @@ public class BookingsDB {
                     // check result -> must be exactly one
                     int m = stmUser.executeUpdate();
                     if (m != 1) {
-                        throw new TicketAlreadyDeletedException();
+                        throw new EntryNotFoundException();
                     }
                 }
 

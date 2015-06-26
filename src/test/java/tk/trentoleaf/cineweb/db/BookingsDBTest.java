@@ -4,6 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.*;
+import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.db.PlayGoneException;
 import tk.trentoleaf.cineweb.exceptions.db.UniqueViolationException;
 import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
@@ -214,51 +215,54 @@ public class BookingsDBTest extends DBTest {
         bookingsDB.createBooking(u1, tt1);
     }
 
-//    @Test
-//    public void deleteBooking() throws Exception {
-//        final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-//
-//        final User u1 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
-//        usersDB.createUser(u1);
-//
-//        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
-//        filmsDB.createFilm(f1);
-//
-//        final Room r1 = roomsDB.createRoom(4, 5);
-//        final List<Seat> s1 = r1.getSeats();
-//
-//        final Play p1 = new Play(f1, r1, DateTime.now().plusMinutes(10), true);
-//        playsDB.createPlay(p1);
-//
-//        // create bookings  int rid, int x, int y, int uid, int pid, double price
-//        final OldBooking b1 = oldBookingsDB.createBooking(s1.get(2).getRid(), s1.get(2).getX(), s1.get(2).getY(), u1.getUid(), p1.getPid(), 12);
-//        final OldBooking b2 = oldBookingsDB.createBooking(s1.get(1).getRid(), s1.get(1).getX(), s1.get(1).getY(), u1.getUid(), p1.getPid(), 12);
-//
-//        // expected
-//        List<OldBooking> expected = new ArrayList<>();
-//        expected.add(b1);
-//        double creditExpected = u1.getCredit() + b2.getPrice() * 0.8;
-//
-//        // current
-//        oldBookingsDB.deleteBooking(b2.getBid());
-//        List<OldBooking> current = oldBookingsDB.getBookings();
-//        double creditUpdated = usersDB.getUser(u1.getUid()).getCredit();
-//
-//        // test
-//        assertTrue(CollectionUtils.isEqualCollection(expected, current));
-//        assertEquals(creditExpected, creditUpdated, 0.00000001);
-//    }
-//
-//    @Test(expected = EntryNotFoundException.class)
-//    public void deleteBookingFail1() throws Exception {
-//        oldBookingsDB.deleteBooking(43535);
-//    }
-//
-//    @Test(expected = EntryNotFoundException.class)
-//    public void deleteBookingFail2() throws Exception {
-//        oldBookingsDB.deleteBooking(new OldBooking(345, 4, 6, 4, 345, DateTime.now(), 34.23));
-//    }
-//
+    @Test
+    public void deleteTicketSuccess() throws Exception {
+
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni", 0);
+        usersDB.createUser(u1);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        filmsDB.createFilm(f1);
+
+        final Room r1 = roomsDB.createRoom(4, 5);
+        final Room r2 = roomsDB.createRoom(2, 3);
+
+        final Play p1 = new Play(f1, r1, DateTime.now().plusMinutes(10), true);
+        final Play p2 = new Play(f1, r2, DateTime.now().plusMinutes(200), true);
+        playsDB.createPlay(p1);
+        playsDB.createPlay(p2);
+
+        // tickets to buy
+        final Ticket t1 = new Ticket(p1, 1, 2, 4, "normale");
+        final Ticket t2 = new Ticket(p2, 1, 2, 5, "ridotto");
+        final Ticket t3 = new Ticket(p2, 0, 2, 6, "normale");
+        final List<Ticket> tickets = new ArrayList<>();
+        tickets.add(t1);
+        tickets.add(t2);
+        tickets.add(t3);
+
+        // create a booking
+        final Booking booking = bookingsDB.createBooking(u1, tickets);
+
+        // try to delete the second ticket
+        bookingsDB.deleteTicket(t2);
+
+        // check deletion
+        t2.setDeleted(true);
+        List<Booking> expected = new ArrayList<>();
+        expected.add(booking);
+        assertTrue(CollectionUtils.isEqualCollection(expected, bookingsDB.getBookings()));
+
+        // check user credit
+        u1.addCredit(t2.getPrice() * 0.80);
+        assertEquals(u1, usersDB.getUser(u1.getUid()));
+    }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void deleteTicketFail() throws Exception {
+        bookingsDB.deleteTicket(34);
+    }
+
 //    @Test
 //    public void getSeatsReservedByPlay() throws Exception {
 //        final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
