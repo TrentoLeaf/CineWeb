@@ -1,5 +1,6 @@
 package tk.trentoleaf.cineweb.beans.model;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -93,7 +94,7 @@ public class Booking implements Serializable {
         if (uid != booking.uid) return false;
         if (Double.compare(booking.payedWithCredit, payedWithCredit) != 0) return false;
         if (!time.equals(booking.time)) return false;
-        return tickets.equals(booking.tickets);
+        return CollectionUtils.isEqualCollection(tickets, booking.tickets);
 
     }
 }

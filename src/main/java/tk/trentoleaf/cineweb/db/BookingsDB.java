@@ -47,7 +47,7 @@ public class BookingsDB {
 
         // TODO: check if some play is already gone... for each film
         // booking in creation
-        final Booking booking = new Booking();
+        int bid;
 
         // create connection
         try (Connection connection = db.getConnection()) {
@@ -83,7 +83,7 @@ public class BookingsDB {
                     payedWithCredit = userCredit;
                     userCredit = 0;
                 } else {
-                    payedWithCredit = userCredit - cost;
+                    payedWithCredit = cost;
                     userCredit -= cost;
                 }
 
@@ -109,11 +109,11 @@ public class BookingsDB {
                 try (PreparedStatement bookingStm = connection.prepareStatement(bookingQuery)) {
                     bookingStm.setInt(1, uid);
                     bookingStm.setTimestamp(2, new Timestamp(now));
-                    bookingStm.setDouble(3, booking.getPayedWithCredit());
+                    bookingStm.setDouble(3, payedWithCredit);
 
                     final ResultSet bookingRs = bookingStm.executeQuery();
                     bookingRs.next();
-                    booking.setBid(bookingRs.getInt("bid"));
+                    bid = bookingRs.getInt("bid");
 
                     // query to insert a new ticket
                     final String ticketQuery = "INSERT INTO tickets (tid, bid, pid, rid, x, y, price, type, deleted) " +
@@ -121,7 +121,7 @@ public class BookingsDB {
 
                     // insert every ticket
                     for (Ticket ticket : tickets) {
-                        ticket.setBid(booking.getBid());
+                        ticket.setBid(bid);
 
                         // try to insert the current ticket
                         try (PreparedStatement ticketStm = connection.prepareStatement(ticketQuery)) {
@@ -144,6 +144,8 @@ public class BookingsDB {
                 connection.commit();
 
                 // return the booking
+                final Booking booking = new Booking();
+                booking.setBid(bid);
                 booking.setUid(uid);
                 booking.setTime(new DateTime(now));
                 booking.setPayedWithCredit(payedWithCredit);
@@ -166,11 +168,24 @@ public class BookingsDB {
     }
 
     // list of all booking
-    public List<Booking> getBookings(boolean withTickets) throws DBException {
+    public List<Booking> getBookings() throws DBException {
+        return getBookingsByUser(null);
+    }
+
+    // list of all bookings for the given user
+    public List<Booking> getBookingsByUser(Integer uid) throws DBException {
         final List<Booking> bookings = new ArrayList<>();
 
-        try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
-            ResultSet rs = stm.executeQuery("SELECT bid, uid, booking_time, payed_with_credit FROM bookings;");
+        // query for the bookings
+        final String q1 = "SELECT bid, uid, booking_time, payed_with_credit FROM bookings"
+                + (uid != null ? " WHERE uid = ?" : "") + ";";
+
+        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(q1)) {
+            if (uid != null) {
+                stm.setInt(1, uid);
+            }
+
+            ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
                 Booking b = new Booking();
@@ -181,37 +196,33 @@ public class BookingsDB {
                 bookings.add(b);
             }
 
-            // retrieve tickets if asked
-            if (withTickets) {
+            // q2
+            final String q2 = "SELECT tid, pid, rid, x, y, price, type, deleted FROM tickets WHERE bid = ?;";
 
-                // query
-                final String query = "SELECT tid, pid, rid, x, y, price, type, deleted FROM tickets WHERE bid = ?;";
+            // iterate over bookings
+            for (Booking b : bookings) {
 
-                // iterate over bookings
-                for (Booking b : bookings) {
+                // create tickets array
+                final List<Ticket> tickets = new ArrayList<>();
+                b.setTickets(tickets);
 
-                    // create tickets array
-                    final List<Ticket> tickets = new ArrayList<>();
-                    b.setTickets(tickets);
+                // get the tickets
+                try (PreparedStatement pstm = connection.prepareStatement(q2)) {
+                    pstm.setInt(1, b.getBid());
 
-                    // get the tickets
-                    try (PreparedStatement pstm = connection.prepareStatement(query)) {
-                        pstm.setInt(1, b.getBid());
-
-                        ResultSet prs = pstm.executeQuery();
-                        while (prs.next()) {
-                            Ticket t = new Ticket();
-                            t.setTid(prs.getInt("tid"));
-                            t.setBid(b.getBid());
-                            t.setPid(prs.getInt("pid"));
-                            t.setRid(prs.getInt("rid"));
-                            t.setX(prs.getInt("x"));
-                            t.setY(prs.getInt("y"));
-                            t.setPrice(prs.getDouble("price"));
-                            t.setType(prs.getString("type"));
-                            t.setDeleted(prs.getBoolean("deleted"));
-                            tickets.add(t);
-                        }
+                    ResultSet prs = pstm.executeQuery();
+                    while (prs.next()) {
+                        Ticket t = new Ticket();
+                        t.setTid(prs.getInt("tid"));
+                        t.setBid(b.getBid());
+                        t.setPid(prs.getInt("pid"));
+                        t.setRid(prs.getInt("rid"));
+                        t.setX(prs.getInt("x"));
+                        t.setY(prs.getInt("y"));
+                        t.setPrice(prs.getDouble("price"));
+                        t.setType(prs.getString("type"));
+                        t.setDeleted(prs.getBoolean("deleted"));
+                        tickets.add(t);
                     }
                 }
             }

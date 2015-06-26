@@ -33,6 +33,22 @@ public class Ticket {
         this(play.getPid(), play.getRid(), x, y, price, type, false);
     }
 
+    public Ticket(int tid, int bid, int pid, int rid, int x, int y, double price, String type, boolean deleted) {
+        this.tid = tid;
+        this.bid = bid;
+        this.pid = pid;
+        this.rid = rid;
+        this.x = x;
+        this.y = y;
+        this.price = price;
+        this.type = type;
+        this.deleted = deleted;
+    }
+
+    public Ticket(int tid, int bid, Play play, int x, int y, double price, String type) {
+        this(tid, bid, play.getPid(), play.getRid(), x, y, price, type, false);
+    }
+
     public int getTid() {
         return tid;
     }

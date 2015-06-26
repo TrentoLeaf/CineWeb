@@ -6,16 +6,18 @@ import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.*;
 import tk.trentoleaf.cineweb.exceptions.db.UniqueViolationException;
+import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class BookingsDBTest extends DBTest {
 
     @Test
-    public void createBooking() throws Exception {
+    public void createBookingSuccess1() throws Exception {
         final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
 
         final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni", 0);
@@ -54,14 +56,65 @@ public class BookingsDBTest extends DBTest {
         expected.add(b);
 
         // current
-        List<Booking> current = bookingsDB.getBookings(true);
+        List<Booking> current = bookingsDB.getBookings();
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test
+    public void createBookingSuccess2() throws Exception {
+        final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni", 20);
+        usersDB.createUser(u1);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        filmsDB.createFilm(f1);
+
+        final Room r1 = roomsDB.createRoom(4, 5);
+        final Room r2 = roomsDB.createRoom(2, 3);
+
+        final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
+        final Play p2 = new Play(f1, r2, ff.parseDateTime("20/10/2015 13:00:01"), true);
+        playsDB.createPlay(p1);
+        playsDB.createPlay(p2);
+
+        // tickets to buy
+        final Ticket t1 = new Ticket(p1, 1, 2, 4, "normale");
+        final Ticket t2 = new Ticket(p2, 1, 2, 5, "ridotto");
+        final Ticket t3 = new Ticket(p2, 0, 2, 6, "normale");
+        final List<Ticket> tickets = new ArrayList<>();
+        tickets.add(t1);
+        tickets.add(t2);
+        tickets.add(t3);
+
+        // create a booking
+        final Booking booking = bookingsDB.createBooking(u1, tickets);
+
+        // check user credit
+        assertEquals(15, booking.getPayedWithCredit(), 0);
+        u1.setCredit(5);
+        assertEquals(u1, usersDB.getUser(u1.getUid()));
+
+        // expected bookings
+        final List<Booking> expected = new ArrayList<>();
+        final List<Ticket> tt = new ArrayList<>();
+        tt.add(new Ticket(t1.getTid(), booking.getBid(), p1, 1, 2, 4, "normale"));
+        tt.add(new Ticket(t3.getTid(), booking.getBid(), p2, 0, 2, 6, "normale"));
+        tt.add(new Ticket(t2.getTid(), booking.getBid(), p2, 1, 2, 5, "ridotto"));
+        final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, tt);
+        expected.add(b);
+
+        // current
+        List<Booking> current = bookingsDB.getBookingsByUser(u1.getUid());
 
         // test
         assertTrue(CollectionUtils.isEqualCollection(expected, current));
     }
 
     @Test(expected = UniqueViolationException.class)
-    public void createBookingFail() throws Exception {
+    public void createBookingFail1() throws Exception {
         final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
 
         final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni", 0);
@@ -101,6 +154,34 @@ public class BookingsDBTest extends DBTest {
 
         // create booking -> fail
         bookingsDB.createBooking(u2, tt2);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void createBookingFail2() throws Exception {
+        final DateTimeFormatter ff = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        filmsDB.createFilm(f1);
+
+        final Room r1 = roomsDB.createRoom(4, 5);
+        final Room r2 = roomsDB.createRoom(2, 3);
+
+        final Play p1 = new Play(f1, r1, ff.parseDateTime("20/10/2015 12:00:00"), true);
+        final Play p2 = new Play(f1, r2, ff.parseDateTime("20/10/2015 13:00:01"), true);
+        playsDB.createPlay(p1);
+        playsDB.createPlay(p2);
+
+        // tickets to buy
+        final Ticket t1 = new Ticket(p1, 1, 2, 9.33, "normale");
+        final Ticket t2 = new Ticket(p2, 1, 2, 8.50, "ridotto");
+        final Ticket t3 = new Ticket(p2, 0, 2, 8.50, "normale");
+        final List<Ticket> tt1 = new ArrayList<>();
+        tt1.add(t1);
+        tt1.add(t2);
+        tt1.add(t3);
+
+        // create a booking -> no user!
+        bookingsDB.createBooking(45, tt1);
     }
 
 
