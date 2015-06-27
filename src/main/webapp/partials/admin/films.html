@@ -16,25 +16,25 @@
                 <table class="bordered center-align">
                     <thead>
                     <tr>
-                        <td><a class="yellow-text text-accent-4" href="">Fid</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Titolo</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Genere</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Trailer</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Locandina</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Trama</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Durata</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Cancella</a></td>
-                        <td><a class="yellow-text text-accent-4" href="">Modifica</a></td>
+                        <th><a class="yellow-text text-accent-4" href="">Fid</a></th>
+                        <th><a class="yellow-text text-accent-4" href="">Titolo</a></th>
+                        <th><a class="yellow-text text-accent-4" href="">Genere</a></th>
+                        <th><a class="yellow-text text-accent-4" href="">Trailer</a></th>
+                        <th><a class="yellow-text text-accent-4" href="">Locandina</a></th>
+                        <th><a class="yellow-text text-accent-4" href="">Trama</a></th>
+                        <th><a class="yellow-text text-accent-4" href="">Durata</a></th>
+                        <th><a class="yellow-text text-accent-4" href="">Cancella</a></th>
+                        <th><a class="yellow-text text-accent-4" href="">Modifica</a></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="white-text" ng-repeat="f in ctrl.films">
+                    <tr class="white-text" ng-repeat="f in ctrl.films track by $index">
                         <td>{{f.fid}}</td>
                         <td>{{f.title}}</td>
                         <td>{{f.genre}}</td>
                         <td>{{f.trailer}}</td>
                         <td>{{f.playbill}} €</td>
-                        <td>{{f.plot}}</td>
+                        <td class="truncate">{{f.plot}}</td>
                         <td>{{f.duration}}</td>
 
                         <td>
