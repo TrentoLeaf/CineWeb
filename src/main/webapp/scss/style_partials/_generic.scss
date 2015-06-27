@@ -1,3 +1,12 @@
+@mixin transform-rotate($angle) {
+  -webkit-transform: rotate($angle);
+  -moz-transform:    rotate($angle);
+  -ms-transform:     rotate($angle);
+  -o-transform:      rotate($angle);
+  transform:         rotate($angle);
+}
+
+
 #logo {
   max-height: 100%;
   width: 47px;
@@ -83,25 +92,13 @@ footer {
 // admin actions fixed button
 .admin-actions {
   @media only screen and (min-width: 600px) {
-    -webkit-transform: rotate(-90deg);
-    -moz-transform:    rotate(-90deg);
-    -ms-transform:     rotate(-90deg);
-    -o-transform:      rotate(-90deg);
-    transform:         rotate(-90deg);
+    @include transform-rotate(-90deg);
 
     .admin-actions-home {
-      -webkit-transform: rotate(90deg);
-      -moz-transform:    rotate(90deg);
-      -ms-transform:     rotate(90deg);
-      -o-transform:      rotate(90deg);
-      transform:         rotate(90deg);
+      @include transform-rotate(90deg);
     }
     .admin-action-btn {
-      -webkit-transform: rotate(90deg);
-      -moz-transform:    rotate(90deg);
-      -ms-transform:     rotate(90deg);
-      -o-transform:      rotate(90deg);
-      transform:         rotate(90deg);
+      @include transform-rotate(90deg);
     }
 
   }

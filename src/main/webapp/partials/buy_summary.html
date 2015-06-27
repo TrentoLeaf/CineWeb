@@ -9,10 +9,10 @@
         <div class="row">
             <div class="col s12 offset-m1 m10 offset-l1 l10">
                 <h4>Biglietti acquistati</h4>
-                <div class="row" ng-repeat = "play in ctrl.nonsodove">
+                <div class="row" ng-repeat = "play in buy.data_to_server">
                     <div>
-                        <h5 class="yellow-text text-accent-4">{{ctrl.play.title}}</h5>
-                        <h6>{{ctrl.play.date}} {{ctrl.play.time}}</h6>
+                        <h5 class="yellow-text text-accent-4">{{play.title}}</h5>
+                        <h6>{{play.date}} {{play.time}}</h6>
                         <table class="summaryTable">
                             <thead>
                             <tr>
@@ -173,10 +173,10 @@
             &nbsp
         </div>
         <div class="col s12 m3 l3 center">
-            <button class="btn green white-text waves-effect waves-light buy-btn" type="submit">Paga
+            <button ng-click="ctrl.pay()" class="btn green white-text waves-effect waves-light buy-btn" type="submit">Paga
                 <i class="mdi-content-send white-text right"></i>
 
-                <div class="buy-loader preloader-wrapper active xsmall left" style="margin-top: 6px;">
+                <div class="buy-loader preloader-wrapper xsmall left" style="margin-top: 6px;">
                     <div class="spinner-layer spinner-blue-only spinner-white-only">
                         <div class="circle-clipper left">
                             <div class="circle"></div>

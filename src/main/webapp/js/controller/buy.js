@@ -2,68 +2,25 @@
     'use strict';
 
     angular.module('buyModule', ['usersModule', 'storageModule', 'constantsModule'])
-        .controller('BuyController', ['$location', '$anchorScroll', function ($location, $anchorScroll) {
+        .controller('BuySeatController', ['$rootScope', '$location', '$anchorScroll', function ($rootScope, $location, $anchorScroll) {
 
-            this.shared_obj = this.shared_obj || {};
+            var ctrl = this;
 
-            this.data_from_server = [ {
-                title: "titolo",
-                date: "data",
-                time: "ora",
-                playbill: "img/temporary/mad-max-fury-road-locandina-400x250.jpg",
-                seats: [
-                    [1, 1, 1, 0, 1, 1, 1],
-                    [1, 0, 1, 2, 0, 1, 1],
-                    [1, 2, 1, 2, 1, 2, 1],
-                    [1, 1, 1, 1, 1, 2, 0]
-                ],
-                seats_selected: 4
-            },
-                {
-                    title: "titolo2",
-                    date: "data2",
-                    time: "ora2",
-                    playbill: "img/temporary/mad-max-fury-road-locandina-400x250.jpg",
-                    seats: [
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 2, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 2, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 2, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 2, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
-                        [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2]
-                    ],
-                    seats_selected: 6
-                }];
 
-            this.data_from_server_index = -1;
-            this.data_to_server = [];
-            this.shared_obj.film = {};
             /* film di cui si stanno attualmente selezionando i posti, contiene id, locandina, titolo, data-ora, num_posti */
-            this.shared_obj.selected_seats = [];
+            $rootScope.buy.shared_obj.selected_seats = [];
             /* array di oggetti. Gli oggetti sono i posti selezionati */
-            this.error_msg = "";
-
+            $rootScope.buy.shared_obj.film = {};
 
             /* chiamata dal carrello quando l'utente vuole procedere con l'acquisto (pulsante procedi del carrello)*/
             this.start_buy = function () {
-                this.shared_obj.film = {};
-                this.shared_obj.selected_seats = [];
-                this.data_to_server = [];
-                this.data_from_server_index = -1;
+                $rootScope.buy.shared_obj.film = {};
+                $rootScope.buy.shared_obj.selected_seats = [];
+                $rootScope.buy.data_to_server = [];
+                $rootScope.buy.data_from_server_index = -1;
 
-                console.log("start index: " + this.data_from_server_index);
-                console.log(this.shared_obj.film);
+                console.log("start index: " + $rootScope.buy.data_from_server_index);
+                console.log($rootScope.buy.shared_obj.film);
 
                 // TODO controlla se è loggato
                 /* se loggato prosegui col codice, altrimenti redirect alla pagina di login*/
@@ -83,19 +40,19 @@
             /* per ogni spettacolo acquistato presenta la pagina di scelta dei posti. Rimanda poi alla pagina di riepilogo*/
             this.next_buy = function () {
 
-                this.shared_obj.selected_seats = [];
+                $rootScope.buy.shared_obj.selected_seats = [];
                 // next film in cart
-                console.log("here1: " + this.data_from_server_index);
-                this.data_from_server_index++;
-                console.log("here2: " + this.data_from_server_index);
-                if (this.data_from_server_index < this.data_from_server.length) {
+                console.log("here1: " + $rootScope.buy.data_from_server_index);
+                $rootScope.buy.data_from_server_index++;
+                console.log("here2: " + $rootScope.buy.data_from_server_index);
+                if ($rootScope.buy.data_from_server_index < $rootScope.buy.data_from_server.length) {
 
-                    this.shared_obj.film = this.data_from_server[this.data_from_server_index];
+                    $rootScope.buy.shared_obj.film = $rootScope.buy.data_from_server[$rootScope.buy.data_from_server_index];
 
-                    console.log("next index: " + this.data_from_server_index);
-                    console.log(this.shared_obj.film);
+                    console.log("next index: " + $rootScope.buy.data_from_server_index);
+                    console.log($rootScope.buy.shared_obj.film);
 
-                 }
+                }
                 else { // scelta dei posti terminata
                     // TODO chiamata AJAX con invio di data_to_server
                     // TODO se il server risponde 'tutto ok'
@@ -112,11 +69,11 @@
             /* chiamata da bottone avanti nella scelta posti */
             this.save_seats = function () {
                 // creo un nuovo oggetto
-                this.ff = this.cloneObject(film);
+                this.ff = this.cloneObject($rootScope.buy.shared_obj.film);
                 // aggiungo allo spettacolo i posti selezionati
-                this.ff.selected_seats = this.shared_obj.selected_seats;
+                this.ff.selected_seats = $rootScope.buy.shared_obj.selected_seats;
                 // salvo l'oggetto nell'array che inverò al server una volta completate le scelte dei posti di tutti gli spettacoli
-                data_to_server.push(this.ff);
+                $rootScope.buy.data_to_server.push(this.ff);
                 this.next_buy();
             };
 
@@ -130,11 +87,11 @@
             };
 
             this.cancel_procedure = function () {
-                this.shared_obj.film = {};
-                this.shared_obj.selected_seats = [];
-                this.data_to_server = [];
-                this.data_from_server = [];
-                this.data_from_server_index = -1;
+                $rootScope.buy.shared_obj.film = {};
+                $rootScope.buy.shared_obj.selected_seats = [];
+                $rootScope.buy.data_to_server = [];
+                $rootScope.buy.data_from_server = [];
+                $rootScope.buy.data_from_server_index = -1;
 
                 console.log("buy procedure canceled!");
                 this.close_modal();
@@ -148,6 +105,86 @@
 
             this.start_buy();
 
+        }])
+
+        .controller('BuySummaryController', ['$rootScope', '$location', function ($rootScope, $location) {
+
+            // messaggi
+            this.error_msg = "";
+
+            this.pay = function () {
+                $('.buy-loader').addClass('active');
+
+
+                /*TODO: in callback function:
+                 $('.buy-loader').removeClass('active');
+                 $rootScope.buy.complete_error = false;
+                 $location.path('/buy_complete');
+                 */
+                /*TODO: in callback error function:
+                 $('.buy-loader').removeClass('active');
+                 $rootScope.buy.complete_error = true;
+                 $location.path('/buy_complete');
+                 */
+
+                $rootScope.buy.complete_error = false; // temp
+                $location.path('/buy_complete'); // temp
+            };
+
+            this.open_modal = function () {
+                $('#modal_buy_cancel').openModal();
+            };
+
+            this.close_modal = function() {
+                $('#modal_buy_cancel').closeModal();
+            };
+
+            this.cancel_procedure = function () {
+                $rootScope.buy.shared_obj.film = {};
+                $rootScope.buy.shared_obj.selected_seats = [];
+                $rootScope.buy.data_to_server = [];
+                $rootScope.buy.data_from_server = [];
+                $rootScope.buy.data_from_server_index = -1;
+
+                console.log("buy procedure canceled!");
+                this.close_modal();
+                $location.path('/today');
+            };
+
+        }])
+
+        .controller('BuyCompleteController', ['$rootScope', function($rootScope) {
+
+            this.BUY_COMPLETE_SUCCESS = "Il pagamento è andato a buon fine. Grazie per aver acquistato sul nostro sito! A breve riceverai i biglietti direttamente nella tua casella di posta.";
+            this.BUY_COMPLETE_ERROR = "Oh oh... Sembra che qualcuno abbia già prenotato i posti che hai selezionato o hai impiegato troppo a completare la procedura d'acquisto. Ti invitiamo a riprovare.";
+            this.buy_complete_msg = "";
+
+            this.setCompleteMsg = function (error) {
+                $('.buy-complete-msg').removeClass('white-text red-text');
+
+                if (!error) {
+                    $('.buy-complete-msg').addClass('white-text');
+                    this.buy_complete_msg = this.BUY_COMPLETE_SUCCESS;
+                    console.log(this.buy_complete_msg);
+                } else {
+                    $('.buy-complete-msg').addClass('red-text');
+                    this.buy_complete_msg = this.BUY_COMPLETE_ERROR;
+                }
+            };
+
+            this.isisatest = function () {
+                console.log("TESTSTESTSET " + this.buy_complete_msg);
+                console.log("TESTSTESTSET SHARE " + this.buy_complete_msg);
+            };
+
+            this.setCompleteMsg($rootScope.buy.complete_error);
+
         }]);
+
+
+
+
+
+
 })();
 

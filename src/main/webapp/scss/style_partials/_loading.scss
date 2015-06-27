@@ -12,15 +12,90 @@
   100% { -webkit-transform: translate(1px, -2px) rotate(-2deg); }
 }
 
+@-moz-keyframes shake {
+  0% { -moz-transform: translate(2px, 1px) rotate(0deg); }
+  10% { -moz-transform: translate(-1px, -2px) rotate(-2deg); }
+  20% { -moz-transform: translate(-3px, 0px) rotate(2deg); }
+  30% { -moz-transform: translate(0px, 2px) rotate(0deg); }
+  40% { -moz-transform: translate(1px, -1px) rotate(2deg); }
+  50% { -moz-transform: translate(-1px, 2px) rotate(-2deg); }
+  60% { -moz-transform: translate(-3px, 1px) rotate(0deg); }
+  70% { -moz-transform: translate(2px, 1px) rotate(-2deg); }
+  80% { -moz-transform: translate(-1px, -1px) rotate(2deg); }
+  90% { -moz-transform: translate(2px, 2px) rotate(0deg); }
+  100% { -moz-transform: translate(1px, -2px) rotate(-2deg); }
+}
+@-o-keyframes shake {
+  0% { -o-transform: translate(2px, 1px) rotate(0deg); }
+  10% { -o-transform: translate(-1px, -2px) rotate(-2deg); }
+  20% { -o-transform: translate(-3px, 0px) rotate(2deg); }
+  30% { -o-transform: translate(0px, 2px) rotate(0deg); }
+  40% { -o-transform: translate(1px, -1px) rotate(2deg); }
+  50% { -o-transform: translate(-1px, 2px) rotate(-2deg); }
+  60% { -o-transform: translate(-3px, 1px) rotate(0deg); }
+  70% { -o-transform: translate(2px, 1px) rotate(-2deg); }
+  80% { -o-transform: translate(-1px, -1px) rotate(2deg); }
+  90% { -o-transform: translate(2px, 2px) rotate(0deg); }
+  100% { -o-transform: translate(1px, -2px) rotate(-2deg); }
+}
+
+@keyframes shake {
+  0% { transform: translate(2px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-2deg); }
+  20% { transform: translate(-3px, 0px) rotate(2deg); }
+  30% { transform: translate(0px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(2deg); }
+  50% { transform: translate(-1px, 2px) rotate(-2deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(2px, 1px) rotate(-2deg); }
+  80% { transform: translate(-1px, -1px) rotate(2deg); }
+  90% { transform: translate(2px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-2deg); }
+}
+
+@mixin animation-name ($name) {
+  -webkit-animation-name: $name;
+  -moz-animation-name: $name;
+  -o-animation-name: $name;
+  animation-name: $name;
+}
+
+@mixin animation-duration ($duration) {
+  -webkit-animation-duration: $duration;
+  -moz-animation-duration: $duration;
+  -o-animation-duration: $duration;
+  animation-duration: $duration;
+}
+@mixin animation-origin ($x, $y) {
+  -webkit-animation-origin: $x $y;
+  -moz-animation-origin: $x $y;
+  -o-animation-origin: $x $y;
+  animation-origin: $x $y;
+}
+@mixin animation-iteration-count ($iteration-count) {
+  -webkit-animation-iteration-count: $iteration-count;
+  -moz-animation-iteration-count: $iteration-count;
+  -o-animation-iteration-count: $iteration-count;
+  animation-iteration-count: $iteration-count;
+}
+@mixin animation-timing-function ($func) {
+  -webkit-animation-timing-function: $func;
+  -moz-animation-timing-function: $func;
+  -o-animation-timing-function: $func;
+  animation-timing-function: $func;
+}
+
+
 .space-top-bottom {
   margin: 100px 20px;
 }
 
 .popcorn {
   max-width: 248px;
-  -webkit-animation-name: shake;
-  -webkit-animation-duration: 0.8s;
-  -webkit-transform-origin:50% 50%;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
+  @include animation-name(shake);
+  @include animation-duration(0.8s);
+  @include animation-origin(50%, 50%);
+  @include animation-iteration-count(infinite);
+  @include animation-timing-function(linear);
+
 }

@@ -10,23 +10,23 @@
 <div class="buy-seats">
     <div class="row white-text">
         <div class="col s12 m6 l7"> <!-- mappa sala -->
-            <map o="ctrl.shared_obj"></map><!-- will be filled by js -->
+            <map o="buy.shared_obj"></map><!-- will be filled by js -->
         </div>
         <div class="col s12 m6 l5 center"> <!-- info biglietto -->
             <div class="row">
-                <h5 class="yellow-text text-accent-4">{{ctrl.shared_obj.film.title}}</h5>
-                <h6>{{ctrl.shared_obj.film.date}} {{ctrl.shared_obj.film.time}}</h6>
+                <h5 class="yellow-text text-accent-4">{{buy.shared_obj.film.title}}</h5>
+                <h6>{{buy.shared_obj.film.date}} {{buy.shared_obj.film.time}}</h6>
             </div>
             <div class="row">
                 <div class="item-image col offset-s1 s10 offset-m2 m8 offset-l2 l8">
-                    <img class="responsive-img" ng-src="{{ctrl.shared_obj.film.playbill}}" alt="locandina" />
+                    <img class="responsive-img" ng-src="{{buy.shared_obj.film.playbill}}" alt="locandina" />
                 </div>
             </div>
             <div class="row">
                 <h5>Posti rimasti da selezionare:</h5>
             </div>
             <div class="row">
-                <h5 class="yellow-text text-accent-4" style="font-size: 4em;">{{ctrl.shared_obj.film.seats_selected}}</h5>
+                <h5 class="yellow-text text-accent-4" style="font-size: 4em;">{{buy.shared_obj.film.seats_selected}}</h5>
             </div>
         </div>
     </div>
@@ -40,7 +40,7 @@
             &nbsp
         </div>
         <div class="col s12 m3 l3 center">
-            <a ng-click="ctrl.next_buy();" class="btn green white-text waves-effect waves-light buy-btn" type="submit">Avanti
+            <a ng-click="ctrl.save_seats();" class="btn green white-text waves-effect waves-light buy-btn" type="submit">Avanti
                 <i class="mdi-content-send white-text right"></i>
             </a>
         </div>

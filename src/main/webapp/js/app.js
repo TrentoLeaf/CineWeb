@@ -128,11 +128,15 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when('/buy', {
                 templateUrl: '../partials/buy_seats.html',
-                controller: 'BuyController',
+                controller: 'BuySeatController',
                 controllerAs: 'ctrl'
             }).when('/buy_last_step', {
                 templateUrl: '../partials/buy_summary.html',
-                controller: 'BuyController',
+                controller: 'BuySummaryController',
+                controllerAs: 'ctrl'
+            }).when('/buy_complete', {
+                templateUrl: '../partials/buy_complete.html',
+                controller: 'BuyCompleteController',
                 controllerAs: 'ctrl'
             }).when('/test', {
                 templateUrl: '../partials/test.html',
@@ -297,6 +301,54 @@ $(document).ready(function () {
             retriveLoginData();
 
 
+            /* init buy variables */
+
+            $rootScope.buy = {
+                shared_obj: {},
+
+                data_from_server: [ {
+                    title: "titolo",
+                    date: "data",
+                    time: "ora",
+                    playbill: "img/temporary/mad-max-fury-road-locandina-400x250.jpg",
+                    seats: [
+                        [1, 1, 1, 0, 1, 1, 1],
+                        [1, 0, 1, 2, 0, 1, 1],
+                        [1, 2, 1, 2, 1, 2, 1],
+                        [1, 1, 1, 1, 1, 2, 0]
+                    ],
+                    seats_selected: 4
+                },
+                    {
+                        title: "titolo2",
+                        date: "data2",
+                        time: "ora2",
+                        playbill: "img/temporary/mad-max-fury-road-locandina-400x250.jpg",
+                        seats: [
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 2, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 2, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 2, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 2, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2],
+                            [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2]
+                        ],
+                        seats_selected: 6
+                    }],
+                data_from_server_index  : -1,
+                data_to_server : [],
+                complete_error : true
+            };
 
         }]);
 
