@@ -29,6 +29,9 @@
                 } else {
                     ctrl.shared_obj.mapTheatre = ctrl.tmpRoom.theatreMap;
                 }
+
+                // TODO selezionare la sala ($(elemento-giusto).addClass('admin-elem-active');), e togliere la vecchia selezione
+
             };
 
 

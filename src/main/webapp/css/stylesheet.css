@@ -119,6 +119,9 @@ main .content-div {
     margin-left: 1em;
     margin-bottom: 0.5em; }
 
+.admin-elem-active {
+  background-color: yellow; }
+
 main .side-div {
   box-sizing: border-box;
   position: fixed;

@@ -13,9 +13,9 @@
     <div class="col s12 m4 l4"> <!-- lista -->
         <!-- lista degli spettacoli da selezionare -->
         <ul class="row">
-            <li class="col s12 m12 l12 card grey darken-4" style="padding: 5px;"> <!--inserire qua: ng-repeat="room in ctrl.rooms track by $index" -->
+            <li class="col s12 m12 l12 card grey darken-3" style="padding: 5px;"> <!--inserire qua: ng-repeat="room in ctrl.rooms track by $index" -->
                 <div ng-click="ctrl.setCurrentRoom($index)">
-                    <div class="col s11 m11 l11">
+                    <div class="col s11 m11 l11 center-align">
                         <h5><b>SALA{{room.name}}</b></h5>
                     </div>
                     <div class="col s1 m1 l1 center-align">
@@ -30,9 +30,9 @@
                 </div>
             </li>
             <!-- TEST TEST TEST TEST -->
-            <li class="col s12 m12 l12 card grey darken-4" style="padding: 5px;"> <!-- ng-repeat="room in qualcosa track by $index" -->
+            <li class="col s12 m12 l12 card grey darken-3" style="padding: 5px;"> <!-- ng-repeat="room in qualcosa track by $index" -->
                 <div ng-click="ctrl.setCurrentRoom($index)">
-                    <div class="col s11 m11 l11">
+                    <div class="col s11 m11 l11 center-align">
                         <h5><b>SALA {{room.name}}</b></h5>
                     </div>
                     <div class="col s1 m1 l1 center-align">
