@@ -277,25 +277,27 @@ public class RoomsDBTest extends DBTest {
         final int o = SeatCode.UNAVAILABLE.getValue();
 
         // expected room r1 status (during p1)
-        final int[][] ex1 = {
+        final int[][] s1 = {
                 {x, _, o, _, _},
                 {_, x, o, _, _},
                 {_, o, x, _, _},
                 {_, _, _, _, _}
         };
+        final RoomStatus st1 = new RoomStatus(r1.getRid(), r1.getRows(), r1.getColumns(), s1);
 
         // expected room r2 status (during p2)
-        final int[][] ex2 = {
+        final int[][] s2 = {
                 {_, _, _},
                 {_, _, _},
                 {_, _, _}
         };
+        final RoomStatus st2 = new RoomStatus(r2.getRid(), r2.getRows(), r2.getColumns(), s2);
 
         // check r1
-        assertArrayEquals(ex1, roomsDB.getRoomStatusByPlay(p1));
+        assertEquals(st1, roomsDB.getRoomStatusByPlay(p1));
 
         // check r2
-        assertArrayEquals(ex2, roomsDB.getRoomStatusByPlay(p2));
+        assertEquals(st2, roomsDB.getRoomStatusByPlay(p2));
     }
 
     @Test(expected = EntryNotFoundException.class)
