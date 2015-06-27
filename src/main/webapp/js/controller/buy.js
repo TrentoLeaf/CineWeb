@@ -61,6 +61,7 @@
                     // TODO server risponde errore --> gestire il tipo  di errore
                 }
 
+                $('.buy-loader').removeClass('active');
                 // back to top of page
                 $location.hash('main-content');
                 $anchorScroll();
@@ -68,6 +69,7 @@
 
             /* chiamata da bottone avanti nella scelta posti */
             this.save_seats = function () {
+                $('.buy-loader').addClass('active');
                 // creo un nuovo oggetto
                 this.ff = this.cloneObject($rootScope.buy.shared_obj.film);
                 // aggiungo allo spettacolo i posti selezionati
@@ -111,7 +113,7 @@
 
             // messaggi
             this.error_msg = "";
-
+            this.ERROR_CARD = "I dati inseriti sembrano non essere validi. Controlla.";
             this.pay = function () {
                 $('.buy-loader').addClass('active');
 
@@ -122,6 +124,10 @@
                  $location.path('/buy_complete');
                  */
                 /*TODO: in callback error function:
+                 -> errore carta di credito
+                 this.error_msg = this.ERROR_CARD;
+                 $('.buy-loader').removeClass('active');
+                 -> errore posti
                  $('.buy-loader').removeClass('active');
                  $rootScope.buy.complete_error = true;
                  $location.path('/buy_complete');
