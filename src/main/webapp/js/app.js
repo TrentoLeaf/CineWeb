@@ -28,7 +28,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule',
-        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'confirmModule', 'buyModule', 'pricesModule', 'mapModule', 'adminStats'])
+        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule', 'adminStats'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -45,17 +45,6 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when('/info', {
                 templateUrl: '../partials/info.html'
-                /* TODO remove
-                 controller: function (prices) {
-                 this.prices = prices;
-                 },
-                 controllerAs: 'pricesCtrl',
-                 resolve: {
-                 prices: ['Prices', function (Prices) {
-                 return Prices.query().$promise;
-                 }]
-                 }
-                 */
             }).when('/registration', {
                 templateUrl: '../partials/registration.html',
                 controller: 'RegistrationCtrl',
@@ -75,6 +64,10 @@ $(document).ready(function () {
             }).when('/confirm', {
                 templateUrl: '../partials/confirm.html',
                 controller: 'ConfirmController',
+                controllerAs: 'ctrl'
+            }).when('/reset', {
+                templateUrl: '../partials/reset.html',
+                controller: 'ResetController',
                 controllerAs: 'ctrl'
             }).when ('/admin',{
                 templateUrl: '../partials/admin/dashboard.html'

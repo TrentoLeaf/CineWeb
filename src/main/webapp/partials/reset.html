@@ -1,0 +1,42 @@
+<div class="row">
+</div>
+
+<div class="row white-text">
+    <div class="row">
+        <form class="col s12 offset-m2 m8 offset-l3 l6">
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="email" type="email" class="validate" ng-model="ctrl.email">
+                    <label for="email">Email</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="password" type="password" class="validate" ng-model="ctrl.password">
+                    <label for="password">Nuova Password</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="verifyPassword" type="password" class="validate" ng-model="ctrl.verifyPassword">
+                    <label for="verifyPassword">Ripeti Password</label>
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+            <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 white-text" ng-click="ctrl.submit()">Registrati
+                <i class="mdi-action-description right"></i>
+            </button>
+        </form>
+    </div>
+    <div class="row center-align">
+        <h6 id="registration_message">{{ctrl.status}}</h6>
+    </div>
+</div>
+<div class="row">
+
+</div>

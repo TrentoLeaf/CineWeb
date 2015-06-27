@@ -50,6 +50,20 @@
                         });
                 },
 
+                changePasswordWithCode: function (email, code, newPassword) {
+                    return $http.post(BASE_USERS + '/change-password-code', {
+                        email: email,
+                        code: code,
+                        newPassword: newPassword
+                    })
+                        .success(function (data) {
+                            $log.info('CHANGE PASSWORD OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('CHANGE PASSWORD FAILED: ' + status + " " + data);
+                        });
+                },
+
                 registration: function (email, password, firstName, secondName) {
                     return $http.post(BASE_USERS + '/registration', {
                         email: email,
