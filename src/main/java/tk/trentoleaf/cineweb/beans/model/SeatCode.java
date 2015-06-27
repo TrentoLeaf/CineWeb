@@ -2,7 +2,7 @@ package tk.trentoleaf.cineweb.beans.model;
 
 public enum SeatCode {
 
-    NOT_EXISTS(0),
+    MISSING(0),
     AVAILABLE(1),
     UNAVAILABLE(2),
     BEST(3);

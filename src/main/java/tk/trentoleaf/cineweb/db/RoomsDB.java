@@ -250,12 +250,14 @@ public class RoomsDB {
         final List<SeatStatus> seats = new ArrayList<>();
 
         // query
-        final String query = "WITH tmp AS (SELECT * FROM tickets WHERE pid = ? AND deleted = FALSE) " +
-                "SELECT rid, x, y, (tid IS NOT NULL) AS reserved FROM seats NATURAL LEFT JOIN tmp;";
+        final String query = "WITH t1 AS (SELECT * FROM tickets WHERE pid = ? AND deleted = FALSE)," +
+                "t2 AS (SELECT rid, x, y FROM seats WHERE rid = (SELECT rid FROM plays WHERE pid = ?)) " +
+                "SELECT rid, x, y, (tid IS NOT NULL) AS reserved FROM t2 NATURAL LEFT JOIN t1;";
 
         // execute query
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setInt(1, pid);
+            stm.setInt(2, pid);
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
@@ -270,12 +272,12 @@ public class RoomsDB {
     }
 
     // get the status of a room
-    public int[][] getRoomStatusByPlay(Play play) throws DBException {
+    public int[][] getRoomStatusByPlay(Play play) throws DBException, EntryNotFoundException {
         return getRoomStatusByPlay(play.getPid());
     }
 
     // get the status of a room
-    public int[][] getRoomStatusByPlay(int pid) throws DBException {
+    public int[][] getRoomStatusByPlay(int pid) throws DBException, EntryNotFoundException {
 
         // find the wright room
         final String query = "SELECT rid, rows, cols FROM rooms WHERE rid = (SELECT rid FROM plays WHERE pid = ?)";
@@ -284,25 +286,29 @@ public class RoomsDB {
             stm.setInt(1, pid);
 
             final ResultSet rs = stm.executeQuery();
-            rs.next();
+            if (rs.next()) {
 
-            // get room dimensions
-            final int rows = rs.getInt("rows");
-            final int cols = rs.getInt("cols");
+                // get room dimensions
+                final int rows = rs.getInt("rows");
+                final int cols = rs.getInt("cols");
 
-            // prepare result matrix
-            final int[][] result = new int[rows][cols];
-            for (int[] col : result) {
-                Arrays.fill(col, SeatCode.UNAVAILABLE.getValue());
+                // prepare result matrix
+                final int[][] result = new int[rows][cols];
+                for (int[] col : result) {
+                    Arrays.fill(col, SeatCode.MISSING.getValue());
+                }
+
+                // get presents seats status
+                final List<SeatStatus> seats = getSeatsByPlay(pid);
+                for (SeatStatus s : seats) {
+                    result[s.getX()][s.getY()] = s.isReserved() ? SeatCode.UNAVAILABLE.getValue() : SeatCode.AVAILABLE.getValue();
+                }
+
+                return result;
             }
 
-            // get presents seats status
-            final List<SeatStatus> seats = getSeatsByPlay(pid);
-            for (SeatStatus s : seats) {
-                result[s.getX()][s.getY()] = s.isReserved() ? SeatCode.UNAVAILABLE.getValue() : SeatCode.AVAILABLE.getValue();
-            }
-
-            return result;
+            // not found
+            throw new EntryNotFoundException();
 
         } catch (SQLException e) {
             throw DBException.factory(e);
