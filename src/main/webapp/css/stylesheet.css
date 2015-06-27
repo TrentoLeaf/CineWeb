@@ -172,7 +172,8 @@ main .side-div {
       z-index: 3; }
       main .side-div .side-cart .side-cart-content .cart-item {
         padding: 0.1em;
-        border-radius: 2px; }
+        border-radius: 2px;
+        margin-bottom: 1em; }
         main .side-div .side-cart .side-cart-content .cart-item .item-image {
           padding-top: 0.3em;
           padding-left: 0.3em; }

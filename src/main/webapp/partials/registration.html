@@ -6,61 +6,63 @@
 
 <div class="row white-text">
     <div class="row">
-    <form class="col s12 offset-m2 m8 offset-l3 l6">
+        <form class="col s12 offset-m2 m8 offset-l3 l6">
 
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="name" type="text" class="validate" ng-model="ctrl.user.firstName">
-                <label for="name">Nome</label>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="surname" type="text" class="validate" ng-model="ctrl.user.secondName">
-                <label for="surname">Cognome</label>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="email" type="email" class="validate" ng-model="ctrl.user.email">
-                <label for="email">Email</label>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="password" type="password" class="validate" ng-model="ctrl.user.password">
-                <label for="password">Password</label>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="verifyPassword" type="password" class="validate" ng-model="ctrl.verifyPassword">
-                <label for="verifyPassword">Conferma Password</label>
-            </div>
-        </div>
-
-        <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 white-text" ng-click="ctrl.submit(ctrl.user)">Registrati
-            <i class="mdi-action-description right"></i>
-
-            <div class="registration-loader preloader-wrapper xsmall left" style="margin-top: 6px;">
-                <div class="spinner-layer spinner-blue-only spinner-white-only">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div><div class="gap-patch">
-                    <div class="circle"></div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="name" type="text" class="validate" ng-model="ctrl.user.firstName">
+                    <label for="name">Nome</label>
                 </div>
-                    <div class="circle-clipper right">
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="surname" type="text" class="validate" ng-model="ctrl.user.secondName">
+                    <label for="surname">Cognome</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="email" type="email" class="validate" ng-model="ctrl.user.email">
+                    <label for="email">Email</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="password" type="password" class="validate" ng-model="ctrl.user.password">
+                    <label for="password">Password</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="verifyPassword" type="password" class="validate" ng-model="ctrl.verifyPassword">
+                    <label for="verifyPassword">Conferma Password</label>
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+            <button class="btn waves-effect waves-light offset-s3 col s6 yellow accent-4 white-text" ng-click="ctrl.submit(ctrl.user)">Registrati
+                <i class="mdi-action-description right"></i>
+
+                <div class="registration-loader preloader-wrapper xsmall left" style="margin-top: 6px;">
+                    <div class="spinner-layer spinner-blue-only spinner-white-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
                         <div class="circle"></div>
                     </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-        </button>
-    </form>
+            </button>
+        </form>
     </div>
     <div class="row center-align">
         <h6 id="registration_message">{{ctrl.status}}</h6>
