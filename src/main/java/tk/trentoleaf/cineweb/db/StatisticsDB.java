@@ -40,9 +40,12 @@ public class StatisticsDB {
     public List<FilmGrossing> getFilmsGrossing() throws DBException {
         final List<FilmGrossing> gg = new ArrayList<>();
 
+        final String query = "WITH tmp AS (SELECT fid, SUM(price) AS grossing FROM films NATURAL JOIN plays " +
+                "NATURAL JOIN tickets WHERE deleted = FALSE GROUP BY fid) " +
+                "SELECT fid, grossing FROM films NATURAL LEFT JOIN tmp;";
+
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
-            ResultSet rs = stm.executeQuery("SELECT fid, SUM(price) AS grossing FROM films NATURAL JOIN plays " +
-                    "NATURAL JOIN tickets WHERE deleted = FALSE GROUP BY fid;");
+            ResultSet rs = stm.executeQuery(query);
 
             while (rs.next()) {
                 FilmGrossing g = new FilmGrossing();
