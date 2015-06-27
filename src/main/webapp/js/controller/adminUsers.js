@@ -95,8 +95,11 @@
                         console.log("Insertion failed");
                     });
                 } else {
+                    ctrl.newUser.password = "";
                     ctrl.verifyPassword = "";
                     this.open_wrong_password_modal();
+                    $('#password').addClass("invalid");
+                    $('#verifyPassword').addClass("invalid");
                 }
             };
 
@@ -131,6 +134,7 @@
 
             this.close_wrong_password_modal = function () {
                 $('#modal_wrong_password').closeModal();
+                $('#password').focus();
             };
 
 
