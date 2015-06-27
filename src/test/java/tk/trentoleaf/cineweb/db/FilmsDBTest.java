@@ -3,11 +3,11 @@ package tk.trentoleaf.cineweb.db;
 import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.postgresql.util.PSQLException;
-import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.beans.model.Film;
 import tk.trentoleaf.cineweb.beans.model.Play;
 import tk.trentoleaf.cineweb.beans.model.Room;
+import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.db.ForeignKeyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +93,7 @@ public class FilmsDBTest extends DBTest {
         filmsDB.deleteFilm(43543543);
     }
 
-    @Test(expected = PSQLException.class)
+    @Test(expected = ForeignKeyException.class)
     public void deleteFilmFail2() throws Exception {
 
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);

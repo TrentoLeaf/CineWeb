@@ -15,6 +15,7 @@ public class DBTest {
     protected final RoomsDB roomsDB = RoomsDB.instance();
     protected final BookingsDB bookingsDB = BookingsDB.instance();
     protected final PricesDB pricesDB = PricesDB.instance();
+    protected final StatisticsDB statisticsDB = StatisticsDB.instance();
 
     @Before
     public void before() throws SQLException, URISyntaxException, ClassNotFoundException {

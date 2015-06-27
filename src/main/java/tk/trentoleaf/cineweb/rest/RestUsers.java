@@ -4,10 +4,12 @@ import com.sendgrid.SendGridException;
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
 import tk.trentoleaf.cineweb.annotations.rest.Compress;
 import tk.trentoleaf.cineweb.annotations.rest.UserArea;
+import tk.trentoleaf.cineweb.beans.model.TopClient;
 import tk.trentoleaf.cineweb.beans.rest.in.*;
 import tk.trentoleaf.cineweb.beans.rest.out.ActivateUser;
 import tk.trentoleaf.cineweb.beans.rest.out.LoginOk;
 import tk.trentoleaf.cineweb.beans.rest.out.UserDetails;
+import tk.trentoleaf.cineweb.db.StatisticsDB;
 import tk.trentoleaf.cineweb.db.UsersDB;
 import tk.trentoleaf.cineweb.email.EmailSender;
 import tk.trentoleaf.cineweb.exceptions.db.*;
@@ -39,8 +41,9 @@ import java.util.logging.Logger;
 public class RestUsers {
     private Logger logger = Logger.getLogger(RestUsers.class.getSimpleName());
 
-    // usersDB singleton
+    // DB singleton
     private UsersDB usersDB = UsersDB.instance();
+    private StatisticsDB statisticsDB = StatisticsDB.instance();
 
     // invalidate session
     private void invalidateSession() {
@@ -248,6 +251,14 @@ public class RestUsers {
         } catch (UserNotFoundException e) {
             throw NotFoundException.USER_NOT_FOUND;
         }
+    }
+
+    @GET
+    @AdminArea
+    @Compress
+    @Path("/top")
+    public List<TopClient> getTopClients() {
+        return statisticsDB.getTopClients();
     }
 
     @POST
