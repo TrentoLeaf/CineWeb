@@ -239,12 +239,12 @@ public class RoomsDB {
     }
 
     // get the status of a room
-    public int[][] getRoomStatusByPlay(Play play) throws DBException, EntryNotFoundException {
+    public RoomStatus getRoomStatusByPlay(Play play) throws DBException, EntryNotFoundException {
         return getRoomStatusByPlay(play.getPid());
     }
 
     // get the status of a room
-    public int[][] getRoomStatusByPlay(int pid) throws DBException, EntryNotFoundException {
+    public RoomStatus getRoomStatusByPlay(int pid) throws DBException, EntryNotFoundException {
 
         // find the wright room
         final String query = "SELECT rid, rows, cols FROM rooms WHERE rid = (SELECT rid FROM plays WHERE pid = ?)";
@@ -254,6 +254,9 @@ public class RoomsDB {
 
             final ResultSet rs = stm.executeQuery();
             if (rs.next()) {
+
+                // get rid
+                final int rid = rs.getInt("rid");
 
                 // get room dimensions
                 final int rows = rs.getInt("rows");
@@ -271,7 +274,7 @@ public class RoomsDB {
                     result[s.getX()][s.getY()] = s.isReserved() ? SeatCode.UNAVAILABLE.getValue() : SeatCode.AVAILABLE.getValue();
                 }
 
-                return result;
+                return new RoomStatus(rid, rows, cols, result);
             }
 
             // not found

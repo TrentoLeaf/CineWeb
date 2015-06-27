@@ -3,7 +3,9 @@ package tk.trentoleaf.cineweb.rest;
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
 import tk.trentoleaf.cineweb.annotations.rest.Compress;
 import tk.trentoleaf.cineweb.beans.model.Play;
+import tk.trentoleaf.cineweb.beans.model.RoomStatus;
 import tk.trentoleaf.cineweb.db.PlaysDB;
+import tk.trentoleaf.cineweb.db.RoomsDB;
 import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.db.ForeignKeyException;
@@ -23,8 +25,9 @@ import java.util.List;
 @Path("/plays")
 public class RestPlays {
 
-    // playsDB singleton
+    // DB singleton
     private PlaysDB playsDB = PlaysDB.instance();
+    private RoomsDB roomsDB = RoomsDB.instance();
 
     @GET
     @Compress
@@ -68,6 +71,16 @@ public class RestPlays {
             return Response.ok().build();
         } catch (EntryNotFoundException e) {
             throw NotFoundException.PLAY_NOT_FOUND;
+        }
+    }
+
+    @GET
+    @Path("/{id}/room")
+    public RoomStatus getRoomStatusByPlay(@PathParam("id") int id) {
+        try {
+            return roomsDB.getRoomStatusByPlay(id);
+        } catch (EntryNotFoundException e) {
+            throw NotFoundException.GENERIC;
         }
     }
 
