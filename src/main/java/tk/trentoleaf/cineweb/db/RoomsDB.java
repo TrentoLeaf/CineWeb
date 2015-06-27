@@ -210,39 +210,6 @@ public class RoomsDB {
         return seats;
     }
 
-    // get a list of all seats reserved by a Play
-    public List<Seat> getSeatsReservedByPlay(Play play) throws DBException {
-        return getSeatsReservedByPlay(play.getPid());
-    }
-
-    //get a list of all seats reserved by a Play.getPid()
-    public List<Seat> getSeatsReservedByPlay(int pid) throws DBException {
-        final List<Seat> seatsReserved = new ArrayList<>();
-
-        final String query = "SELECT rid, x, y FROM tickets WHERE pid = ? AND deleted = FALSE;";
-
-        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setInt(1, pid);
-            ResultSet rs = stm.executeQuery();
-
-            while (rs.next()) {
-                int rid = rs.getInt("rid");
-                int x = rs.getInt("x");
-                int y = rs.getInt("y");
-                seatsReserved.add(new Seat(rid, x, y));
-            }
-        } catch (SQLException e) {
-            throw DBException.factory(e);
-        }
-
-        return seatsReserved;
-    }
-
-    // get a list of all seats by a Play
-    public List<SeatStatus> getSeatsByPlay(Play play) throws DBException {
-        return getSeatsByPlay(play.getPid());
-    }
-
     // get a list of all seats by a Play
     public List<SeatStatus> getSeatsByPlay(int pid) throws DBException {
 
