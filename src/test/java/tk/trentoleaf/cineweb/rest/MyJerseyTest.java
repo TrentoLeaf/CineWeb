@@ -45,6 +45,7 @@ public class MyJerseyTest extends JerseyTest {
     protected final FilmsDB filmsDB = FilmsDB.instance();
     protected final PlaysDB playsDB = PlaysDB.instance();
     protected final PricesDB pricesDB = PricesDB.instance();
+    protected final BookingsDB bookingsDB = BookingsDB.instance();
 
     @Before
     public void before() throws Exception {

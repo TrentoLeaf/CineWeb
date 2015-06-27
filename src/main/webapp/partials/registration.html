@@ -9,7 +9,7 @@
     <form class="col s12 offset-m2 m8 offset-l3 l6">
 
         <div class="row">
-            <div class="input-field">
+            <div class="input-field col s12">
                 <input id="name" type="text" class="validate" ng-model="ctrl.user.firstName">
                 <label for="name">Nome</label>
             </div>
@@ -33,6 +33,13 @@
             <div class="input-field col s12">
                 <input id="password" type="password" class="validate" ng-model="ctrl.user.password">
                 <label for="password">Password</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="verifyPassword" type="password" class="validate" ng-model="ctrl.verifyPassword">
+                <label for="verifyPassword">Conferma Password</label>
             </div>
         </div>
 

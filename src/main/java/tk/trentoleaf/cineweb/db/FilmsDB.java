@@ -1,5 +1,6 @@
 package tk.trentoleaf.cineweb.db;
 
+import tk.trentoleaf.cineweb.exceptions.db.DBException;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.beans.model.Film;
 
@@ -33,7 +34,7 @@ public class FilmsDB {
     }
 
     // insert a new film
-    public void createFilm(Film film) throws SQLException {
+    public void createFilm(Film film) throws DBException {
         final String query = "INSERT INTO films (fid, title, genre, trailer, playbill, plot, duration) VALUES " +
                 "(DEFAULT, ?, ?, ?, ?, ?, ?) RETURNING fid";
 
@@ -44,15 +45,20 @@ public class FilmsDB {
             stm.setString(4, film.getPlaybill());
             stm.setString(5, film.getPlot());
             stm.setInt(6, film.getDuration());
+
             ResultSet rs = stm.executeQuery();
             rs.next();
             film.setFid(rs.getInt("fid"));
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // list of users
-    public Film getFilm(int fid) throws SQLException, EntryNotFoundException {
+    public Film getFilm(int fid) throws DBException, EntryNotFoundException {
         final String query = "SELECT title, genre, trailer, playbill, plot, duration FROM films WHERE fid = ?;";
+
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setInt(1, fid);
             ResultSet rs = stm.executeQuery();
@@ -71,11 +77,14 @@ public class FilmsDB {
 
             // no such film found
             throw new EntryNotFoundException();
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // list of films
-    public List<Film> getFilms() throws SQLException {
+    public List<Film> getFilms() throws DBException {
         List<Film> films = new ArrayList<>();
 
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
@@ -92,13 +101,16 @@ public class FilmsDB {
                 f.setDuration(rs.getInt("duration"));
                 films.add(f);
             }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
 
         return films;
     }
 
     // edit film
-    public void updateFilm(Film film) throws SQLException, EntryNotFoundException {
+    public void updateFilm(Film film) throws DBException, EntryNotFoundException {
         final String query = "UPDATE films SET title = ?, genre = ?, trailer = ?, playbill = ?, plot = ?, duration = ? WHERE fid = ?";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
@@ -114,24 +126,31 @@ public class FilmsDB {
             if (rows != 1) {
                 throw new EntryNotFoundException();
             }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 
     // delete film
-    public void deleteFilm(Film film) throws SQLException, EntryNotFoundException {
+    public void deleteFilm(Film film) throws DBException, EntryNotFoundException {
         deleteFilm(film.getFid());
     }
 
     // delete film
-    public void deleteFilm(int id) throws SQLException, EntryNotFoundException {
+    public void deleteFilm(int id) throws DBException, EntryNotFoundException {
         final String query = "DELETE FROM films WHERE fid = ?";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
             stm.setInt(1, id);
+
             int rows = stm.executeUpdate();
             if (rows != 1) {
                 throw new EntryNotFoundException();
             }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
         }
     }
 

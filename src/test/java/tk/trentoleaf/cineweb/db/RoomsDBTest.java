@@ -3,20 +3,16 @@ package tk.trentoleaf.cineweb.db;
 import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.postgresql.util.PSQLException;
+import tk.trentoleaf.cineweb.beans.model.*;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.beans.model.Film;
-import tk.trentoleaf.cineweb.beans.model.Play;
-import tk.trentoleaf.cineweb.beans.model.Room;
-import tk.trentoleaf.cineweb.beans.model.Seat;
 import tk.trentoleaf.cineweb.exceptions.db.ForeignKeyException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RoomsDBTest extends DBTest {
 
@@ -243,6 +239,70 @@ public class RoomsDBTest extends DBTest {
 
         // test delete
         roomsDB.deleteRoom(234);
+    }
+
+    @Test
+    public void getSeatsByPlay() throws Exception {
+
+        final User u1 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        usersDB.createUser(u1);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        filmsDB.createFilm(f1);
+
+        final List<Seat> m1 = Arrays.asList(new Seat(0, 0), new Seat(1, 1), new Seat(2, 2));
+        final Room r1 = roomsDB.createRoom(4, 5, m1);
+        final Room r2 = roomsDB.createRoom(3, 3);
+
+        final Play p1 = new Play(f1, r1, DateTime.now().plusMinutes(10), true);
+        playsDB.createPlay(p1);
+        final Play p2 = new Play(f1, r2, DateTime.now().plusMinutes(10), true);
+        playsDB.createPlay(p2);
+
+        // tickets to buy
+        final Ticket t1 = new Ticket(p1, 1, 2, 9.33, "normale");
+        final Ticket t2 = new Ticket(p1, 2, 1, 8.50, "ridotto");
+        final Ticket t3 = new Ticket(p1, 0, 2, 8.50, "normale");
+        final List<Ticket> tickets = new ArrayList<>();
+        tickets.add(t1);
+        tickets.add(t2);
+        tickets.add(t3);
+
+        // create a booking
+        bookingsDB.createBooking(u1, tickets);
+
+        // status
+        final int x = SeatCode.MISSING.getValue();
+        final int _ = SeatCode.AVAILABLE.getValue();
+        final int o = SeatCode.UNAVAILABLE.getValue();
+
+        // expected room r1 status (during p1)
+        final int[][] s1 = {
+                {x, _, o, _, _},
+                {_, x, o, _, _},
+                {_, o, x, _, _},
+                {_, _, _, _, _}
+        };
+        final RoomStatus st1 = new RoomStatus(r1.getRid(), r1.getRows(), r1.getColumns(), s1);
+
+        // expected room r2 status (during p2)
+        final int[][] s2 = {
+                {_, _, _},
+                {_, _, _},
+                {_, _, _}
+        };
+        final RoomStatus st2 = new RoomStatus(r2.getRid(), r2.getRows(), r2.getColumns(), s2);
+
+        // check r1
+        assertEquals(st1, roomsDB.getRoomStatusByPlay(p1));
+
+        // check r2
+        assertEquals(st2, roomsDB.getRoomStatusByPlay(p2));
+    }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void getSeatsByPlayFail() throws Exception {
+        roomsDB.getRoomStatusByPlay(214);
     }
 
 }

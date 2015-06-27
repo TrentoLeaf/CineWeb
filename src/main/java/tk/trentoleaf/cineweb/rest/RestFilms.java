@@ -2,16 +2,17 @@ package tk.trentoleaf.cineweb.rest;
 
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
 import tk.trentoleaf.cineweb.annotations.rest.Compress;
+import tk.trentoleaf.cineweb.beans.model.Film;
+import tk.trentoleaf.cineweb.beans.model.FilmGrossing;
 import tk.trentoleaf.cineweb.db.FilmsDB;
+import tk.trentoleaf.cineweb.db.StatisticsDB;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
-import tk.trentoleaf.cineweb.beans.model.Film;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -20,18 +21,19 @@ import java.util.List;
 @Path("/films")
 public class RestFilms {
 
-    // filmsDB singleton
+    // DB singleton
     private FilmsDB filmsDB = FilmsDB.instance();
+    private StatisticsDB statisticsDB = StatisticsDB.instance();
 
     @GET
     @Compress
-    public List<Film> getFilms() throws SQLException {
+    public List<Film> getFilms() {
         return filmsDB.getFilms();
     }
 
     @GET
     @Path("/{id}")
-    public Film getFilm(@PathParam("id") int fid) throws SQLException {
+    public Film getFilm(@PathParam("id") int fid) {
         try {
             return filmsDB.getFilm(fid);
         } catch (EntryNotFoundException e) {
@@ -39,9 +41,17 @@ public class RestFilms {
         }
     }
 
+    @GET
+    @Path("/grossing")
+    @Compress
+    @AdminArea
+    public List<FilmGrossing> getFilmsGrossing() {
+        return statisticsDB.getFilmsGrossing();
+    }
+
     @POST
     @AdminArea
-    public Film addFilm(@NotNull(message = "Missing film object") @Valid Film film) throws SQLException {
+    public Film addFilm(@NotNull(message = "Missing film object") @Valid Film film) {
 
         // add to filmsDB
         filmsDB.createFilm(film);
@@ -52,7 +62,7 @@ public class RestFilms {
     @PUT
     @Path("/{id}")
     @AdminArea
-    public Film editFilm(@PathParam("id") int id, @NotNull(message = "Missing film object") @Valid Film film) throws SQLException {
+    public Film editFilm(@PathParam("id") int id, @NotNull(message = "Missing film object") @Valid Film film) {
 
         // update film
         try {
@@ -67,7 +77,7 @@ public class RestFilms {
     @DELETE
     @Path("/{id}")
     @AdminArea
-    public Response deleteFilm(@PathParam("id") int id) throws SQLException {
+    public Response deleteFilm(@PathParam("id") int id) {
 
         // delete film
         try {
