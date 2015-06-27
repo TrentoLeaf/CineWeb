@@ -2,10 +2,12 @@ package tk.trentoleaf.cineweb.rest;
 
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
 import tk.trentoleaf.cineweb.annotations.rest.Compress;
+import tk.trentoleaf.cineweb.beans.model.Film;
+import tk.trentoleaf.cineweb.beans.model.FilmGrossing;
 import tk.trentoleaf.cineweb.db.FilmsDB;
+import tk.trentoleaf.cineweb.db.StatisticsDB;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
-import tk.trentoleaf.cineweb.beans.model.Film;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -20,8 +22,9 @@ import java.util.List;
 @Path("/films")
 public class RestFilms {
 
-    // filmsDB singleton
+    // DB singleton
     private FilmsDB filmsDB = FilmsDB.instance();
+    private StatisticsDB statisticsDB = StatisticsDB.instance();
 
     @GET
     @Compress
@@ -37,6 +40,14 @@ public class RestFilms {
         } catch (EntryNotFoundException e) {
             throw NotFoundException.FILM_NOT_FOUND;
         }
+    }
+
+    @GET
+    @Path("/grossing")
+    @Compress
+    @AdminArea
+    public List<FilmGrossing> getFilmsGrossing() {
+        return statisticsDB.getFilmsGrossing();
     }
 
     @POST
