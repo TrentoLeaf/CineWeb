@@ -298,4 +298,9 @@ public class RoomsDBTest extends DBTest {
         assertArrayEquals(ex2, roomsDB.getRoomStatusByPlay(p2));
     }
 
+    @Test(expected = EntryNotFoundException.class)
+    public void getSeatsByPlayFail() throws Exception {
+        roomsDB.getRoomStatusByPlay(214);
+    }
+
 }
