@@ -38,4 +38,21 @@ public class TopClient {
     public void setSpent(double spent) {
         this.spent = spent;
     }
+
+    @Override
+    public int hashCode() {
+        return uid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TopClient client = (TopClient) o;
+
+        if (uid != client.uid) return false;
+        if (tickets != client.tickets) return false;
+        return Double.compare(client.spent, spent) == 0;
+    }
 }

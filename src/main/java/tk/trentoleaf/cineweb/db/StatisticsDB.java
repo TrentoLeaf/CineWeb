@@ -67,7 +67,7 @@ public class StatisticsDB {
 
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
             ResultSet rs = stm.executeQuery("SELECT uid, COUNT(tid) AS tickets, SUM(price) AS spent FROM " +
-                    "bookings NATURAL JOIN tickets WHERE deleted = FALSE GROUP BY uid");
+                    "bookings NATURAL JOIN tickets WHERE deleted = FALSE GROUP BY uid LIMIT 10");
 
             while (rs.next()) {
                 TopClient c = new TopClient();
@@ -83,6 +83,5 @@ public class StatisticsDB {
 
         return topClients;
     }
-
 
 }
