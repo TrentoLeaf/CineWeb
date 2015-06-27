@@ -73,10 +73,10 @@ public class StatisticsDBTest extends DBTest {
         bookingsDB.deleteTicket(t4);
 
         // expected
-        final FilmGrossing g1 = new FilmGrossing(f1.getFid(), 35);
-        final FilmGrossing g2 = new FilmGrossing(f2.getFid(), 37.5);
-        final FilmGrossing g3 = new FilmGrossing(f3.getFid(), 23);
-        final FilmGrossing g4 = new FilmGrossing(f4.getFid(), 0);
+        final FilmGrossing g1 = new FilmGrossing(f1.getFid(), f1.getTitle(), 35);
+        final FilmGrossing g2 = new FilmGrossing(f2.getFid(), f2.getTitle(), 37.5);
+        final FilmGrossing g3 = new FilmGrossing(f3.getFid(), f3.getTitle(), 23);
+        final FilmGrossing g4 = new FilmGrossing(f4.getFid(), f4.getTitle(), 0);
         final List<FilmGrossing> expected = Arrays.asList(g1, g2, g3, g4);
 
         // current
@@ -149,8 +149,8 @@ public class StatisticsDBTest extends DBTest {
         bookingsDB.deleteTicket(t4);
 
         // expected
-        final TopClient c1 = new TopClient(u1.getUid(), 4, 42.5);
-        final TopClient c2 = new TopClient(u2.getUid(), 5, 35);
+        final TopClient c1 = new TopClient(u1.getUid(), u1.getFirstName(), u1.getSecondName(), 4, 42.5);
+        final TopClient c2 = new TopClient(u2.getUid(), u2.getFirstName(), u2.getSecondName(), 5, 35);
         final List<TopClient> expected = Arrays.asList(c1, c2);
 
         // current

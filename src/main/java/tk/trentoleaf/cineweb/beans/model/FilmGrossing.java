@@ -3,13 +3,15 @@ package tk.trentoleaf.cineweb.beans.model;
 public class FilmGrossing {
 
     private int fid;
+    private String title;
     private double grossing;
 
     public FilmGrossing() {
     }
 
-    public FilmGrossing(int fid, double grossing) {
+    public FilmGrossing(int fid, String title, double grossing) {
         this.fid = fid;
+        this.title = title;
         this.grossing = grossing;
     }
 
@@ -19,6 +21,14 @@ public class FilmGrossing {
 
     public void setFid(int fid) {
         this.fid = fid;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public double getGrossing() {
@@ -31,12 +41,7 @@ public class FilmGrossing {
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = fid;
-        temp = Double.doubleToLongBits(grossing);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return fid;
     }
 
     @Override
@@ -47,6 +52,8 @@ public class FilmGrossing {
         FilmGrossing that = (FilmGrossing) o;
 
         if (fid != that.fid) return false;
-        return Double.compare(that.grossing, grossing) == 0;
+        if (Double.compare(that.grossing, grossing) != 0) return false;
+        return title.equals(that.title);
     }
+
 }

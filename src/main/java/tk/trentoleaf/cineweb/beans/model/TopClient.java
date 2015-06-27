@@ -2,15 +2,19 @@ package tk.trentoleaf.cineweb.beans.model;
 
 public class TopClient {
 
-    public int uid;
-    public int tickets;
-    public double spent;
+    private int uid;
+    private String firstName;
+    private String secondName;
+    private int tickets;
+    private double spent;
 
     public TopClient() {
     }
 
-    public TopClient(int uid, int tickets, double spent) {
+    public TopClient(int uid, String firstName, String secondName, int tickets, double spent) {
         this.uid = uid;
+        this.firstName = firstName;
+        this.secondName = secondName;
         this.tickets = tickets;
         this.spent = spent;
     }
@@ -21,6 +25,22 @@ public class TopClient {
 
     public void setUid(int uid) {
         this.uid = uid;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public int getTickets() {
@@ -53,6 +73,9 @@ public class TopClient {
 
         if (uid != client.uid) return false;
         if (tickets != client.tickets) return false;
-        return Double.compare(client.spent, spent) == 0;
+        if (Double.compare(client.spent, spent) != 0) return false;
+        if (!firstName.equals(client.firstName)) return false;
+        return secondName.equals(client.secondName);
     }
+
 }
