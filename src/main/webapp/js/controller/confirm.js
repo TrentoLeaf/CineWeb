@@ -8,8 +8,6 @@
             this.loading = true;
             this.status = "";
 
-            this.beforeHtml = "<div class='row'></div><div class='row center-align white-text'><h5>";
-            this.afterHtml = "</h5></div>";
             var confirm = function () {
 
                 // get and remove c
@@ -19,16 +17,16 @@
                 // do confirm request...
                 if (code == undefined) {
                     ctrl.loading = false;
-                    ctrl.status = this.beforeHtml+"Link non più valido o già usato."+this.afterHtml;
+                    ctrl.status = "Link non più valido o già usato.";
                 } else {
                     Auth.confirmRegistration(code).then(
                         function () {
                             ctrl.loading = false;
-                            ctrl.status = this.beforeHtml+"Account confermato. Ora puoi acquistare biglietti!"+this.afterHtml;
+                            ctrl.status = "Account confermato. Ora puoi acquistare biglietti!";
                         },
                         function () {
                             ctrl.loading = false;
-                            ctrl.status = this.beforeHtml+"Link non più valido o già usato."+this.afterHtml;
+                            ctrl.status = "Link non più valido o già usato.";
                         }
                     );
                 }
