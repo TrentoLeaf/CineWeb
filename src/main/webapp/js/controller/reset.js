@@ -22,7 +22,7 @@
                     ctrl.loading = false;
                     ctrl.status = "Link non più valido.";
                 } else {
-                    if (ctrl.verifyPassword == ctrl.user.password) {
+                    if (ctrl.verifyPassword == ctrl.password) {
                         Auth.changePasswordWithCode(ctrl.email, code, ctrl.password).then(
                             function () {
                                 ctrl.loading = false;
