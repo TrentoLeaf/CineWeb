@@ -36,7 +36,7 @@ public class DBException extends RuntimeException {
             case UNIQUE_VIOLATION_CODE:
                 return new UniqueViolationException(sqlException);
             default:
-                return new UnknownDBException(sqlException);
+                return new DBException(sqlException);
         }
     }
 
