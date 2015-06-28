@@ -75,6 +75,8 @@
                 } else {
                     ctrl.shared_obj.mapTheatre = ctrl.tmpPlay.theatreMap;
                 }
+
+                // TODO selezionare la proiezione ($(elemento-giusto).addClass('admin-elem-active');), e togliere la vecchia selezione
             };
 
             this.addPlay = function (data) {
@@ -102,6 +104,7 @@
             };
 
             this.open_modify_page = function (index) {
+                // TODO change modal
                 $('#modal_deleteAgree').openModal();
                 ctrl.tmpPlay = ctrl.plays[index];
                 $location.path('/admin/plays/' + ctrl.tmpPlay.pid);
