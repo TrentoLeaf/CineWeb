@@ -28,6 +28,9 @@
          NOTA: variabili non usate, alla chiamata,  possono essere messe a null
          */
 
+        // clean the content of the svg
+        $("#svg-theatre").empty();
+
         var rows = mappa.length;
         var columns = mappa[0].length;
         // calculate dimensions

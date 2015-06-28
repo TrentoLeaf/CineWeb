@@ -260,15 +260,13 @@ $(document).ready(function () {
 
             $rootScope.cartLength  = function () {
                 return $rootScope.cart.length;
-            }
-
-
+            };
 
             /* init of login data */
             $rootScope.user = {};
             $rootScope.isUserLogged = false;
             $rootScope.loginError = "";
-            $rootScope.afterLogin = "normal"; // variavile per sapere dove redirigere dopo un login (normal, buy, userArea)
+            $rootScope.afterLogin = "normal"; // variabile per sapere dove redirigere dopo un login (normal, buy, userArea)
 
             // request to server the data of a logged user. If the user isn't logged set the login variables.
             var retriveLoginData = function () {

@@ -2,10 +2,9 @@
     'use strict';
 
     angular.module('buyModule', ['usersModule', 'storageModule', 'constantsModule'])
-        .controller('BuySeatController', ['$rootScope', '$location', '$anchorScroll', function ($rootScope, $location, $anchorScroll) {
+        .controller('BuySeatController', ['$rootScope', '$location', '$anchorScroll', '$window', function ($rootScope, $location, $anchorScroll, $window) {
 
             var ctrl = this;
-
 
             /* film di cui si stanno attualmente selezionando i posti, contiene id, locandina, titolo, data-ora, num_posti */
             $rootScope.buy.shared_obj.selected_seats = [];
