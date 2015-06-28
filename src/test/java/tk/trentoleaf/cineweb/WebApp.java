@@ -3,6 +3,8 @@ package tk.trentoleaf.cineweb;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.jetty.server.Server;
@@ -131,6 +133,20 @@ public class WebApp {
             // check gzip -> use Vary header
             Header[] vary = response.getHeaders("Vary");
             assertEquals(0, vary.length);
+        }
+    }
+
+    @Test
+    public void testBadJson() throws Exception {
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+
+            // request
+            HttpPost request = new HttpPost("http://localhost:8080/api/users/login");
+            request.setEntity(new StringEntity("{bad json"));
+            HttpResponse response = client.execute(request);
+
+            // check response
+            assertEquals(400, response.getStatusLine().getStatusCode());
         }
     }
 
