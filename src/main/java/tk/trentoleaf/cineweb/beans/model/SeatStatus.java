@@ -7,10 +7,6 @@ public class SeatStatus extends Seat {
 
     private boolean reserved;
 
-    public static SeatStatus fromSeat(Seat seat, boolean reserved) {
-        return new SeatStatus(seat.getRid(), seat.getX(), seat.getY(), reserved);
-    }
-
     public SeatStatus(int rid, int x, int y, boolean reserved) {
         super(rid, x, y);
         this.reserved = reserved;

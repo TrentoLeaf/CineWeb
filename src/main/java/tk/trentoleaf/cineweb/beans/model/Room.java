@@ -15,7 +15,8 @@ public class Room implements Serializable {
     private int rows;
     private int columns;
 
-    private transient List<Seat> seats;
+    // list of seats presents in this room
+    private List<Seat> seats;
 
     /**
      * Construct an empty room.

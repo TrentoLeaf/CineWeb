@@ -197,18 +197,4 @@ public class User implements Serializable {
         if (!firstName.equals(user.firstName)) return false;
         return secondName.equals(user.secondName);
     }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "uid=" + uid +
-                ", enabled=" + enabled +
-                ", role=" + role +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", credit=" + credit +
-                '}';
-    }
 }

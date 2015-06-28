@@ -11,7 +11,7 @@ import javax.servlet.http.*;
  * This filter compress all text files (html, css, js, svg, eot, ttf) not already compressed.
  * It wraps the ServletResponse and use GZIP for the compression.
  */
-@WebFilter(urlPatterns = {"*.html", "*.css", "*.js", "*.svg", "*.eot", "*.ttf"})
+@WebFilter(urlPatterns = {"", "*.html", "*.css", "*.js", "*.svg", "*.eot", "*.ttf"})
 public class GZIPFilter implements Filter {
 
     public void init(FilterConfig filterConfig) {
