@@ -7,7 +7,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Booking bean: represent a reservation for 1 or more seats for some plays.
+ * Booking bean: represent a reservation for 1 or more seats for some plays. Each reserved seat correspond
+ * to a Ticket object.
+ *
+ * @see Ticket
  */
 public class Booking implements Serializable {
 
@@ -19,9 +22,20 @@ public class Booking implements Serializable {
     // tickets associated with this booking
     private List<Ticket> tickets;
 
+    /**
+     * Construct an empty Booking.
+     */
     public Booking() {
     }
 
+    /**
+     * Construct a Booking.
+     *
+     * @param bid             Booking ID.
+     * @param uid             UserID who made the reservation.
+     * @param time            Time of the reservation.
+     * @param payedWithCredit How much was payed with the user credit.
+     */
     public Booking(int bid, int uid, DateTime time, double payedWithCredit) {
         this.bid = bid;
         this.uid = uid;
@@ -29,11 +43,29 @@ public class Booking implements Serializable {
         this.payedWithCredit = payedWithCredit;
     }
 
+    /**
+     * Construct a Booking.
+     *
+     * @param bid             Booking ID.
+     * @param uid             UserID who made the reservation.
+     * @param time            Time of the reservation.
+     * @param payedWithCredit How much was payed with the user credit.
+     * @param tickets         List of the reserved Ticket.
+     */
     public Booking(int bid, int uid, DateTime time, double payedWithCredit, List<Ticket> tickets) {
         this(bid, uid, time, payedWithCredit);
         this.tickets = tickets;
     }
 
+    /**
+     * Construct a Booking.
+     *
+     * @param bid             Booking ID.
+     * @param user            User who made the reservation.
+     * @param time            Time of the reservation.
+     * @param payedWithCredit How much was payed with the user credit.
+     * @param tickets         List of the reserved Ticket.
+     */
     public Booking(int bid, User user, DateTime time, double payedWithCredit, List<Ticket> tickets) {
         this(bid, user.getUid(), time, payedWithCredit, tickets);
     }

@@ -1,5 +1,8 @@
 package tk.trentoleaf.cineweb.beans.model;
 
+/**
+ * FilmGrossing: represent the grossing of a given Film.
+ */
 public class FilmGrossing {
 
     private int fid;

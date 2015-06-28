@@ -75,13 +75,12 @@ public class StatisticsDB {
             ResultSet rs = stm.executeQuery(query);
 
             while (rs.next()) {
-                TopClient c = new TopClient();
-                c.setUid(rs.getInt("uid"));
-                c.setFirstName(rs.getString("first_name"));
-                c.setSecondName(rs.getString("second_name"));
-                c.setTickets(rs.getInt("tickets"));
-                c.setSpent(rs.getDouble("spent"));
-                topClients.add(c);
+                int uid = rs.getInt("uid");
+                String firstName = rs.getString("first_name");
+                String secondName = rs.getString("second_name");
+                int tickets = rs.getInt("tickets");
+                double spent = rs.getDouble("spent");
+                topClients.add(new TopClient(uid, firstName, secondName, tickets, spent));
             }
 
         } catch (SQLException e) {

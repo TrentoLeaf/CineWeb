@@ -42,9 +42,14 @@ public enum Role {
         }
     }
 
-    // convert a string to a role
-    public static Role fromID(String id) {
-        return map.get(id);
+    /**
+     * Convert a String to the corresponding Role.
+     *
+     * @param roleID The String representing the Role.
+     * @return The corresponding Role object.
+     */
+    public static Role fromID(String roleID) {
+        return map.get(roleID);
     }
 
 }

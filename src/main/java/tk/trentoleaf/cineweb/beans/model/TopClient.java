@@ -1,5 +1,8 @@
 package tk.trentoleaf.cineweb.beans.model;
 
+/**
+ * This class represent a TopClient, one of the top 10 clients (for spent money).
+ */
 public class TopClient {
 
     private int uid;
@@ -8,54 +11,20 @@ public class TopClient {
     private int tickets;
     private double spent;
 
-    public TopClient() {
-    }
-
+    /**
+     * Construct a new TopClient.
+     *
+     * @param uid        ID of the User.
+     * @param firstName  First Name.
+     * @param secondName Second Name.
+     * @param tickets    Number of bought tickets.
+     * @param spent      Total spent money.
+     */
     public TopClient(int uid, String firstName, String secondName, int tickets, double spent) {
         this.uid = uid;
         this.firstName = firstName;
         this.secondName = secondName;
         this.tickets = tickets;
-        this.spent = spent;
-    }
-
-    public int getUid() {
-        return uid;
-    }
-
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
-    }
-
-    public int getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(int tickets) {
-        this.tickets = tickets;
-    }
-
-    public double getSpent() {
-        return spent;
-    }
-
-    public void setSpent(double spent) {
         this.spent = spent;
     }
 
