@@ -17,7 +17,7 @@ public class Booking implements Serializable {
     private double payedWithCredit;
 
     // tickets associated with this booking
-    private transient List<Ticket> tickets;
+    private List<Ticket> tickets;
 
     public Booking() {
     }
@@ -95,6 +95,6 @@ public class Booking implements Serializable {
         if (Double.compare(booking.payedWithCredit, payedWithCredit) != 0) return false;
         if (!time.equals(booking.time)) return false;
         return CollectionUtils.isEqualCollection(tickets, booking.tickets);
-
     }
+
 }
