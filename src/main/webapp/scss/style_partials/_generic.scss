@@ -6,6 +6,32 @@
   transform:         rotate($angle);
 }
 
+@mixin display-flex () {
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+@mixin flex($a, $b, $c) {
+  -webkit-box-flex: $a $b $c;      /* OLD - iOS 6-, Safari 3.1-6 */
+  -moz-box-flex: $a $b $c;         /* OLD - Firefox 19- */
+  -webkit-flex: $a $b $c;          /* Chrome */
+  -ms-flex: $a $b $c;              /* IE 10 */
+  flex: $a $b $c;                  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+@mixin flex-direction($direction) {
+  -webkit-box-orient: $direction; /* OLD - iOS 6-, Safari 3.1-6 */
+  @if $direction==column {
+    -webkit-box-orient: vertical; /* OLD - iOS 6-, Safari 3.1-6 */
+  }
+  -moz-box-flex-direction: $direction;         /* OLD - Firefox 19- */
+  -webkit-flex-direction: $direction;          /* Chrome */
+  -ms-flex-direction: $direction;              /* IE 10 */
+  flex-direction: $direction;
+}
 
 #logo {
   max-height: 100%;
@@ -60,11 +86,13 @@
 }
 
 body {
-
+  @include display-flex();
+  min-height: 100vh;
+  @include flex-direction(column);
 }
 
 main {
-  height: 100%;
+  @include flex(1, 0, auto);
 }
 
 // badge numero di spettacoli ne carrelli
