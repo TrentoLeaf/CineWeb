@@ -1,7 +1,6 @@
 package tk.trentoleaf.cineweb;
 
 import com.sendgrid.SendGrid;
-import org.junit.Ignore;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.Role;
 import tk.trentoleaf.cineweb.beans.model.User;
@@ -11,7 +10,6 @@ import tk.trentoleaf.cineweb.pdf.FilmTicketData;
 import java.net.URI;
 import java.util.ArrayList;
 
-@Ignore
 public class EmailTest {
 
     @Test
