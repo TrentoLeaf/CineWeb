@@ -86,10 +86,8 @@ public class GsonJerseyProvider implements MessageBodyWriter<Object>, MessageBod
         try (InputStreamReader streamReader = new InputStreamReader(entityStream, UTF_8)) {
             return getGsonInstance().fromJson(streamReader, genericType);
         } catch (JsonSyntaxException e) {
-            // Log exception
-            e.printStackTrace();
+            throw new IOException(e);
         }
-        return null;
     }
 
     @Override
