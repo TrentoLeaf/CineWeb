@@ -7,12 +7,34 @@ import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.webapp.*;
 
 /**
- * This class launches the web application in an embedded Jetty container. This is the entry point to your application. The Java
- * command that is used for launching should fire this main method.
+ * This class launches the web application in an embedded Jetty container. This is the entry point to your application.
+ * The Java command that is used for launching should fire this main method.
  */
 public class Main {
 
+    /**
+     * WebApp entry point.
+     *
+     * @param args Command line parameters. NB: they are ignored.
+     * @throws Exception If it is not possible to start the embedded Jetty server.
+     */
     public static void main(String[] args) throws Exception {
+
+        // get the server
+        final Server server = createServer();
+
+        // start the server
+        server.start();
+        server.join();
+    }
+
+    /**
+     * Create an embedded Jetty server.
+     *
+     * @return The embedded Jetty server. NB: it must be started.
+     */
+    public static Server createServer() {
+
         // The port that we should run on can be set into an environment variable
         // Look for that variable and default to 8080 if it isn't there.
         String webPort = System.getenv("PORT");
@@ -29,7 +51,6 @@ public class Main {
         serverConnector.setPort(Integer.valueOf(webPort));
         server.addConnector(serverConnector);
 
-        //final Server server = new Server(Integer.valueOf(webPort));
         final WebAppContext root = new WebAppContext();
         root.setContextPath("/");
 
@@ -58,7 +79,8 @@ public class Main {
 
         server.setHandler(root);
 
-        server.start();
-        server.join();
+        // return the server
+        return server;
     }
+
 }
