@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
@@ -128,6 +129,20 @@ public class WebApp {
 
             // request
             HttpGet request = new HttpGet("http://localhost:8080/api");
+            HttpResponse response = client.execute(request);
+
+            // check gzip -> use Vary header
+            Header[] vary = response.getHeaders("Vary");
+            assertEquals(0, vary.length);
+        }
+    }
+
+    @Test
+    public void testGzipDisabled() throws Exception {
+        try (CloseableHttpClient client = HttpClients.custom().disableContentCompression().build()) {
+
+            // request
+            HttpGet request = new HttpGet("http://localhost:8080/index.html");
             HttpResponse response = client.execute(request);
 
             // check gzip -> use Vary header
