@@ -12,39 +12,38 @@
 
     <div class="row">
         <div class="col s12 m12 l12" ng-hide="ctrl.loading">
-                <table class="userTable bordered responsive-table">
-                    <thead>
-                    <tr>
-                        <th><a class="yellow-text text-accent-4" href="">Fid</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Titolo</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Genere</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Trailer</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Locandina</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Trama</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Durata</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Cancella</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Modifica</a></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="white-text" ng-repeat="f in ctrl.films">
-                        <td>{{f.fid}}</td>
-                        <td>{{f.title}}</td>
-                        <td>{{f.genre}}</td>
-                        <td>{{f.trailer}}</td>
-                        <td>{{f.playbill}} €</td>
-                        <td>{{f.plot}}</td>
-                        <td>{{f.duration}}</td>
-
-                        <td>
-                            <a ng-click="ctrl.open_modal($index)" class="modal-trigger" data-target="modal_film_delete" href=""><i class="red-text mdi-action-delete"></i></a>
-                        </td>
-                        <td>
-                            <a href="#admin/films/{{f.fid}}"><i class="yellow-text mdi-action-assignment"></i></a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <table class="adminTable bordered responsive-table">
+                <thead>
+                <tr>
+                    <th><a class="yellow-text text-accent-4" href="">Fid</a></th>
+                    <th><a class="yellow-text text-accent-4" href="">Titolo</a></th>
+                    <th><a class="yellow-text text-accent-4" href="">Genere</a></th>
+                    <th><a class="yellow-text text-accent-4" href="">Trailer</a></th>
+                    <th><a class="yellow-text text-accent-4" href="">Locandina</a></th>
+                    <th><a class="yellow-text text-accent-4" href="">Trama</a></th>
+                    <th><a class="yellow-text text-accent-4" href="">Durata</a></th>
+                    <th><a class="yellow-text text-accent-4" href="">Modifica</a></th>
+                    <th><a class="yellow-text text-accent-4" href="">Cancella</a></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="white-text" ng-repeat="f in ctrl.films">
+                    <td>{{f.fid}}</td>
+                    <td>{{f.title}}</td>
+                    <td>{{f.genre}}</td>
+                    <td>{{f.trailer}}</td>
+                    <td>{{f.playbill}} €</td>
+                    <td>{{f.plot}}</td>
+                    <td>{{f.duration}}</td>
+                    <td>
+                        <a href="#admin/films/{{f.fid}}"><i class="yellow-text mdi-action-assignment"></i></a>
+                    </td>
+                    <td>
+                        <a ng-click="ctrl.open_modal($index)" class="modal-trigger" data-target="modal_film_delete" href=""><i class="red-text mdi-action-delete"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

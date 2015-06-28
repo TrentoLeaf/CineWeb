@@ -188,9 +188,6 @@ $(document).ready(function () {
 
             });
 
-
-
-
             //updateTotal
             /*
              * aggiorna il totale controllando per tutti il film nel carrello,

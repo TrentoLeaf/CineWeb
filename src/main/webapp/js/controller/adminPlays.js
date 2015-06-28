@@ -29,7 +29,7 @@
 
 
         }])
-        .controller('AdminPlaysController', ['$location', 'Plays', function ($location, Plays) {
+        .controller('AdminPlaysController', ['$rootScope', '$location', 'Plays', function ($rootScope, $location, Plays) {
 
 
             var ctrl = this;
@@ -40,6 +40,10 @@
             this.shared_obj = {};
 
             var init = function () {
+                if ($rootScope.isUserLogged == false) {
+                    $rootScope.afterLogin = "userArea";
+                    $location.path('/login');
+                }
 
                 ctrl.loading = true;
                 ctrl.plays = [];

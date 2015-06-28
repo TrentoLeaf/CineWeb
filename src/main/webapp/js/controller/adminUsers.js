@@ -28,7 +28,7 @@
             };
 
 
-        }]).controller('AdminUsersController', ['$location', 'Users', function ($location, Users) {
+        }]).controller('AdminUsersController', ['$rootScope', '$location', 'Users', function ($rootScope, $location, Users) {
 
             var ctrl = this;
             this.order = 'uid';
@@ -42,6 +42,11 @@
             this.tmpUser = {};
 
             var init = function () {
+                if ($rootScope.isUserLogged == false) {
+                    $rootScope.afterLogin = "userArea";
+                    $location.path('/login');
+                }
+
                 ctrl.loading = true;
                 ctrl.users = [];
             };

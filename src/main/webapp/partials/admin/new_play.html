@@ -13,7 +13,7 @@
     </div>
 
     <div class="row">
-        <form class="col s6 m6 l6 offset-s3 offset-l3 offset-m3 center-align">
+        <form class="col s12 offset-m2 m8 offset-l3 l6 center-align">
             <div class="row">
                 <div class="input-field">
                     <input id="fid" type="number" class="validate" ng-model="ctrl.newPlay.fid">
@@ -27,20 +27,13 @@
                 </div>
             </div>
             <div class="row">
-                <label class="center-align">Orario</label>
-            </div>
-            <div class="row">
                 <div class="input-field col s6 m6 l6">
                     <input id="date" type="date" class="datepicker" ng-model="ctrl.newPlay.time">
-                    <!--
-                    <label for="time">Orario</label>
-                    -->
+                    <label class="active" for="time">Data</label>
                 </div>
                 <div class="input-field col s6 m6 l6">
                     <input id="time" type="time" ng-model="ctrl.newPlay.time">
-                    <!--
-                    <label for="time">Orario</label>
-                    -->
+                    <label class="active" for="time">Orario</label>
                 </div>
             </div>
 
@@ -54,9 +47,10 @@
                     </label>
                 </div>
             </div>
+            <div class="row">
 
-
-            <div class="section">
+            </div>
+            <div class="row">
                 <a class="btn-large waves-effect waves-light yellow accent-4 black-text" href="#admin/plays">INDIETRO
                     <i class="mdi-navigation-arrow-back left"></i>
                 </a>

@@ -15,6 +15,15 @@
             this.tmpPrice = new Test();
 
             console.log(this.newPrice);
+
+            var init = function () {
+                if ($rootScope.isUserLogged == false) {
+                    $rootScope.afterLogin = "userArea";
+                    $location.path('/login');
+                }
+
+            };
+
             // remove a priceClass
             this.deletePrice = function () {
 
@@ -72,6 +81,7 @@
                 });
             };
 
+            init();
         }]);
 
 })();

@@ -29,7 +29,7 @@
 
 
         }])
-        .controller('AdminFilmsController', ['$location', 'Films', function ($location, Films) {
+        .controller('AdminFilmsController', ['$rootScope', '$location', 'Films', function ($rootScope, $location, Films) {
 
 
             var ctrl = this;
@@ -37,6 +37,10 @@
 
 
             var init = function () {
+                if ($rootScope.isUserLogged == false) {
+                    $rootScope.afterLogin = "userArea";
+                    $location.path('/login');
+                }
 
                 ctrl.loading = true;
                 ctrl.films = [];

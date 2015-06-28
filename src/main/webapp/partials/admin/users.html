@@ -5,12 +5,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col s12 m12 l12" ng-show="ctrl.loading" class="center-align">
+        <div class="col s12 m12 l12 center-align" ng-show="ctrl.loading">
             <img src="../../img/popcorn.svg" class="popcorn" alt="Loading"/>
             <h3 class="yellow-text text-accent-4">Caricamento in corso...</h3>
         </div>
         <div class="col s12 m12 l12" ng-hide="ctrl.loading">
-            <table class="userTable bordered responsive-table">
+            <table class="adminTable bordered responsive-table">
                 <thead>
                 <tr>
                     <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('uid')">Id</a></th>
@@ -19,8 +19,8 @@
                     <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('secondName')">Cognome</a></th>
                     <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('credit')">Credito</a></th>
                     <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Confermato</a></th>
-                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Cancella</a></th>
                     <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Modifica</a></th>
+                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Cancella</a></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -32,13 +32,13 @@
                     <td>{{u.credit}} €</td>
                     <td>{{u.enabled}}</td>
                     <td>
-                        <a ng-click="ctrl.open_user_delete_modal($index)" class="modal-trigger" data-target="modal_user_delete">
-                            <i class="red-text mdi-action-delete"></i>
+                        <a href="#admin/users/{{u.uid}}">
+                            <i class="yellow-text mdi-action-assignment"></i>
                         </a>
                     </td>
                     <td>
-                        <a href="#admin/users/{{u.uid}}">
-                            <i class="yellow-text mdi-action-assignment"></i>
+                        <a ng-click="ctrl.open_user_delete_modal($index)" class="modal-trigger" data-target="modal_user_delete">
+                            <i class="red-text mdi-action-delete"></i>
                         </a>
                     </td>
                 </tr>

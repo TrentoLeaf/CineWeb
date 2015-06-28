@@ -50,12 +50,12 @@ $dark-line:  rgb(40,40,40);
 }
 
 // tabella gestione utenti (admin)
-.userTable {
+.adminTable {
 
   th, td {
     text-align: center;
     font-size: 1.5em;
-    padding: 0;
+    padding: 0.5em 0em 0.5em 0em;
   }
 
 }

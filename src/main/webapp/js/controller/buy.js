@@ -121,6 +121,7 @@
                 /*TODO: in callback function:
                  $('.buy-loader').removeClass('active');
                  $rootScope.buy.complete_error = false;
+                 $rootScope.cart = [];
                  $location.path('/buy_complete');
                  */
                 /*TODO: in callback error function:
@@ -178,10 +179,6 @@
                 }
             };
 
-            this.isisatest = function () {
-                console.log("TESTSTESTSET " + this.buy_complete_msg);
-                console.log("TESTSTESTSET SHARE " + this.buy_complete_msg);
-            };
 
             this.setCompleteMsg($rootScope.buy.complete_error);
 

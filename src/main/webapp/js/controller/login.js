@@ -67,14 +67,20 @@
                         setError("");
                         $rootScope.isUserLogged = false;
                         $rootScope.user = {};
-                        $location.path('/today');
-
                         ctrl.email = "";
                         ctrl.pass = "";
+                        $location.path('/today');
                     })
                     .error( function () {
                         console.log("LOGINCONTROLLER --> LOGOUT failed");
-                        setError("Logout fallito. Riprova.");
+                        // logout fallito
+                        // setError("Logout fallito. Riprova.");
+                        setError("");
+                        $rootScope.isUserLogged = false;
+                        $rootScope.user = {};
+                        ctrl.email = "";
+                        ctrl.pass = "";
+                        $location.path('/today');
                     }
                 )
             };

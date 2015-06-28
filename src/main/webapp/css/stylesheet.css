@@ -250,10 +250,10 @@ main .side-div {
 .summaryTable span {
   font-size: 0.7em; }
 
-.userTable th, .userTable td {
+.adminTable th, .adminTable td {
   text-align: center;
   font-size: 1.5em;
-  padding: 0; }
+  padding: 0.5em 0em 0.5em 0em; }
 
 @-webkit-keyframes shake {
   0% {

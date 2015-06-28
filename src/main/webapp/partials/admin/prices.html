@@ -8,30 +8,25 @@
 
     <div class="row center-align">
         <div class="container">
-            <table class="bordered">
+            <table class="adminTable bordered responsive-table">
                 <thead>
-                <td>Tipologia</td>
-                <td>Prezzo</td>
-                <td>Cancella</td>
-                <td>Modifica</td>
-
+                <th class="yellow-text text-accent-4">Tipologia</th>
+                <th class="yellow-text text-accent-4">Prezzo</th>
+                <th class="yellow-text text-accent-4">Modifica</th>
+                <th class="yellow-text text-accent-4">Cancella</th>
                 </thead>
                 <tbody>
                 <tr ng-repeat="ticket in tickets">
+                    <td>{{ticket.type}}</td>
+                    <td>{{ticket.price | currency:"€ "}}</td>
                     <td>
-                        <p>{{ticket.type}}</p>
-                    </td>
-                    <td>
-                        <p>{{ticket.price | currency:"€ "}}</p>
+                        <a ng-click="ctrl.open_edit_modal(ticket)" class="modal-trigger"  data-target="modal_price_edit">
+                            <i class="yellow-text mdi-editor-mode-edit"></i>
+                        </a>
                     </td>
                     <td>
                         <a ng-click="ctrl.open_delete_modal(ticket)"  class="modal-trigger" data-target="modal_price_delete">
                             <i class="mdi-action-delete red-text"></i> <!--Remove content -->
-                        </a>
-                    </td>
-                    <td>
-                        <a ng-click="ctrl.open_edit_modal(ticket)" class="modal-trigger"  data-target="modal_price_edit">
-                            <i class="yellow-text mdi-editor-mode-edit"></i>
                         </a>
                     </td>
                 </tr>

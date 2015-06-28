@@ -4,16 +4,24 @@
     angular.module('adminRooms', ['filmsPlaysModule'])
 
 // TODO mancano le dipendenze dal servizio Room (che non esiste)
-        .controller('AdminRoomsController', ['$location', function ($location) {
-
+        .controller('AdminRoomsController', ['$rootScope', '$location', function ($rootScope, $location) {
 
             var ctrl = this;
             this.tmpRoom = {};
             this.rooms = [];
             this.shared_obj = {};
-            
-            this.loadPlay = function () {
 
+            var init = function () {
+                if ($rootScope.isUserLogged == false) {
+                    $rootScope.afterLogin = "userArea";
+                    $location.path('/login');
+                }
+
+                ctrl.rooms = [];
+            };
+
+            this.loadPlay = function () {
+                init();
                // TODO request al server tramite il servizio Room per ottenere tutte le sale
             };
 
