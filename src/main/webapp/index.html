@@ -36,6 +36,7 @@
     <script src="js/services/storage.js"></script>
     <script src="js/services/users.js"></script>
     <script src="js/services/rooms.js"></script>
+    <script src="js/services/stats.js"></script>
     <script src="js/services/filmsPlays.js"></script>
     <script src="js/services/prices.js"></script>
     <script src="js/controller/login.js"></script>
@@ -49,7 +50,8 @@
     <script src="js/controller/adminPrices.js"></script>
     <script src="js/controller/adminPlays.js"></script>
     <script src="js/controller/adminRooms.js"></script>
-    <script src="js/controller/statsController.js"></script>
+    <!-- Maybe we have a situation here -->
+    <script src="js/controller/adminStats.js"></script>
     <script src="js/controller/confirm.js"></script>
     <script src="js/controller/reset.js"></script>
     <script src="js/controller/buy.js"></script>
@@ -109,7 +111,7 @@
                                 <div class="row">
                                     <div class="col s9 m9 l9">
                                         <h5>{{film.title}}</h5> <!-- titolo -->
-                                        <h6>{{film.date}}, {{film.time}}</h6> <!-- data -->
+                                        <h6>{{film.date | date: 'dd/MM/yyyy'}}, {{film.time}}</h6> <!-- data -->
                                     </div>
                                     <i ng-click="cc.removeFromCart($index)" class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
                                 </div>
@@ -231,7 +233,7 @@
                             </div>
                         </div>
                         <h4>Benvenuto</h4>
-                        <h5>{{user.name}}</h5>
+                        <h5><span>{{user.firstName}}</span> <span>{{user.secondName}}</span></h5>
                         <h6>{{user.email}}</h6>
                         <div class="row btn-your-data-container">
                             <button ng-click="c.toUserArea(); tab.closeTab();" class="btn col s12 m12 l12 yellow accent-4 black-text waves-effect waves-light"><i class="mdi-action-assignment right"></i>I tuoi dati</button>
