@@ -1,3 +1,5 @@
+<link type="text/css" rel="stylesheet" href="../css/svg-theatre.css">
+
 <div class="row white-text">
 
     <div class="row">
@@ -7,7 +9,7 @@
     </div>
 
     <div class="row">
-        <div class="center-align black-text">
+        <div class="center-align white-text">
             {{ctrl.newRoom | json}}
         </div>
     </div>
@@ -16,26 +18,35 @@
         <form class="col s12 offset-m2 m8 offset-l3 l6 center-align">
             <div class="row">
                 <div class="input-field col s5 m5 l5">
-                    <input id="row" type="number" class="validate" ng-model="ctrl.newRoom.row">
+                    <input id="row" type="number" class="validate" ng-model="ctrl.newRoom.rows">
                     <label for="row">Righe</label>
                 </div>
                 <h4 class="col s2 m2 l2"> x </h4>
                 <div class="input-field col s5 m5 l5">
-                    <input id="column" type="number" class="validate" ng-model="ctrl.newRoom.column">
+                    <input id="column" type="number" class="validate" ng-model="ctrl.newRoom.columns">
                     <label for="column">Colonne</label>
                 </div>
             </div>
-
             <div class="row">
+                <a class="btn yellow accent-4 waves-effect waves-light" ng-click="ctrl.generateMap()">GENERA MAPPA</a>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col s12 m12 l12"> <!-- mappa -->
+                <map o="ctrl.shared_obj"></map><!-- will be filled by js -->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="center-align">
                 <a class="btn-large waves-effect waves-light yellow accent-4 black-text" href="#admin/rooms">INDIETRO
                     <i class="mdi-navigation-arrow-back left"></i>
                 </a>
                 <a class="btn-large waves-effect waves-light green white-text" href="" ng-click="ctrl.addRoom(ctrl.newRoom)">REGISTRA
                     <i class="mdi-action-home right"></i>
                 </a>
-
             </div>
+        </div>
 
-        </form>
     </div>
 </div>
