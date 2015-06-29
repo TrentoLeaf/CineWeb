@@ -14,13 +14,13 @@
                 <h4>Dati utente</h4>
             </div>
             <div class="col s12 offset-m1 m5 offset-l1 l3">
-                <h6>Nome: {{ctrl.user.firstName}}</h6>
+                <h6>Nome: {{user.firstName}}</h6>
             </div>
             <div class="col s12 offset-m1 m5 offset-l1 l3">
-                <h6>Cognome: {{ctrl.user.secondName}}</h6>
+                <h6>Cognome: {{user.secondName}}</h6>
             </div>
             <div class="col s12 offset-m1 m5 offset-l1 l3">
-                <h6>Email: {{ctrl.user.email}}</h6>
+                <h6>Email: {{user.email}}</h6>
             </div>
 
         </div>
@@ -40,7 +40,7 @@
                                     <i class="mdi-action-shopping-basket"></i>ACQUISTO
                                 </div>
                                 <div class="col s6 m6 l6 right-align">
-                                    Data: {{ctrl.aaa}}
+                                    <span>Data: {{ctrl.aaa}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                                     <i class="mdi-action-shopping-basket"></i>ACQUISTO
                                 </div>
                                 <div class="col s6 m6 l6 right-align">
-                                    Data: {{ctrl.aaa}}
+                                    <span>Data: {{ctrl.aaa}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
                                 </div>
                             </div>
                         </div>
@@ -137,7 +137,7 @@
                                     <i class="mdi-action-shopping-basket"></i>ACQUISTO
                                 </div>
                                 <div class="col s6 m6 l6 right-align">
-                                    Data: {{ctrl.aaa}}
+                                    <span>Data: {{ctrl.aaa}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
                                 </div>
                             </div>
                         </div>
@@ -197,7 +197,7 @@
         </div>
         <div class="row white-text"> <!-- credito -->
             <div class="col s12 offset-m1 m10 offset-l1 l10">
-                <h4>Credito disponibile: {{ctrl.user.credit|currency:"€ "}}</h4>
+                <h4>Credito disponibile: {{user.credit|currency:"€ "}}</h4>
             </div>
         </div>
 

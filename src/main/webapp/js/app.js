@@ -237,7 +237,7 @@ $(document).ready(function () {
                 CompletePlays.playsByDate().then(
                     function (data) {
                         $rootScope.playsByDate = data;
-                        console.log("PLAYS LAODED");
+                        console.log("PLAYS LOADED");
                         console.log(data);
                     },
                     function (error) {
