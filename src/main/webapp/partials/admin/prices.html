@@ -7,14 +7,30 @@
     </div>
 
     <div class="row center-align">
-        <div class="container">
+        <div class="container"><!--
+            <div class="center-align hide-on-large-only">
+                <div class="row">
+                    <span class="left-align">T = tipologia</span>
+                    <span class="right-align">P = prezzo</span>
+                </div>
+                <div class="row">
+                    <span class="left-align">M = modifica</span>
+                    <span class="right-align">C = cancella</span>
+                </div>
+            </div>-->
             <table class="adminTable bordered responsive-table">
-                <thead>
+                <thead class="">
                 <th class="yellow-text text-accent-4">Tipologia</th>
                 <th class="yellow-text text-accent-4">Prezzo</th>
                 <th class="yellow-text text-accent-4">Modifica</th>
                 <th class="yellow-text text-accent-4">Cancella</th>
                 </thead>
+<!--                <thead class="hide-on-large-only">
+                <th class="yellow-text text-accent-4">T</th>
+                <th class="yellow-text text-accent-4">P</th>
+                <th class="yellow-text text-accent-4">M</th>
+                <th class="yellow-text text-accent-4">C</th>
+                </thead>-->
                 <tbody>
                 <tr ng-repeat="ticket in tickets">
                     <td>{{ticket.type}}</td>
