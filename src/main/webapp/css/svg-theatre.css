@@ -79,3 +79,10 @@
   fill: #e8c800; }
 .seat-best .seat_sitting {
   fill: #ffcd00; }
+
+.seat-hidden .seat_back {
+  fill: transparent; }
+.seat-hidden .seat_arm {
+  fill: transparent; }
+.seat-hidden .seat_sitting {
+  fill: transparent; }

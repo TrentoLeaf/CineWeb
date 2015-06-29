@@ -167,3 +167,18 @@ $color-seat-sitting-best: rgb(255,205,0);
         fill: $color-seat-sitting-best;
     }
 }
+
+.seat-hidden {
+
+    .seat_back {
+        fill: rgba(0,0,0,0);
+    }
+
+    .seat_arm {
+        fill: rgba(0,0,0,0);
+    }
+
+    .seat_sitting {
+        fill: rgba(0,0,0,0);
+    }
+}

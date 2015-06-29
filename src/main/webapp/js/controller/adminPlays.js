@@ -69,9 +69,11 @@
 
                 Rooms.getRoomByID(ctrl.currentPlay.rid)
                     .success(function (data) {
+                        ctrl.shared_obj.editable = false;
                         ctrl.shared_obj.mapTheatre = data.seats;
                     })
                     .error(function () {
+                        ctrl.shared_obj.editable = false;
                         ctrl.shared_obj.mapTheatre = [];
                     });
 
