@@ -1,6 +1,8 @@
 package tk.trentoleaf.cineweb.db;
 
+import org.eclipse.jetty.server.Server;
 import tk.trentoleaf.cineweb.beans.model.*;
+import tk.trentoleaf.cineweb.exceptions.db.BadRoomException;
 import tk.trentoleaf.cineweb.exceptions.db.DBException;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 
@@ -122,6 +124,58 @@ public class RoomsDB {
         } catch (SQLException e) {
             throw DBException.factory(e);
         }
+    }
+
+    // create a new room given the matrix of places
+    public void createRoom(RoomStatus roomStatus) throws DBException, BadRoomException {
+
+        // check dimensions
+        final int rows = roomStatus.getRows();
+        final int cols = roomStatus.getColumns();
+        final int[][] seats = roomStatus.getSeats();
+
+        // check null pointer exceptions
+        try {
+
+            // check rows
+            if (seats.length != rows) {
+                throw new BadRoomException();
+            }
+
+            // check cols
+            for (int[] col : seats) {
+                if (col.length != cols) {
+                    throw new BadRoomException();
+                }
+            }
+
+            // check rows
+            for (int[] col : seats) {
+                for (int seat : col) {
+                    if (seat != SeatCode.MISSING.getValue() && seat != SeatCode.AVAILABLE.getValue()) {
+                        throw new BadRoomException();
+                    }
+                }
+            }
+
+        } catch (NullPointerException e) {
+            throw new BadRoomException();
+        }
+
+        // extract missing places
+        final List<Seat> missing = new ArrayList<>();
+
+        // convert matrix to missing places
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (seats[i][j] == SeatCode.MISSING.getValue()) {
+                    missing.add(new Seat(i, j));
+                }
+            }
+        }
+
+        final Room created = createRoom(rows, cols, missing);
+        roomStatus.setRid(created.getRid());
     }
 
     // get the room list
