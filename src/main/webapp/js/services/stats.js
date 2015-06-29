@@ -14,7 +14,7 @@
                 topUsers: function () {
                     return $http.get(BASE_USERS + '/top')
                         .success(function (data) {
-                            $log.info(data);
+                            $log.info('TOP USERS OK: ' + data);
                         })
                         .error(function (data, status) {
                             $log.warn('TOP USERS NOT RETRIVED: ' + status + " " + data.error);
