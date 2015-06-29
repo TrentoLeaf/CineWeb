@@ -27,8 +27,8 @@ $(document).ready(function () {
 (function () {
     'use strict';
 
-    angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule', 'roomsModule',
-        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule', 'adminStats'])
+    angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'pricesModule', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule', 'roomsModule',
+        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'confirmModule', 'resetModule', 'buyModule', 'mapModule', 'adminStats'])
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -160,7 +160,7 @@ $(document).ready(function () {
             }
         })
 
-        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', function ($rootScope, $location, Prices, StorageService, Auth) {
+        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', 'CompletePlays', function ($rootScope, $location, Prices, StorageService, Auth, CompletePlays) {
 
             // redirect only if needed
             var redirect = function (path) {
@@ -229,6 +229,28 @@ $(document).ready(function () {
             // load the prices
             $rootScope.tickets = [];
             $rootScope.loadPrices();
+
+
+            /* init of plays */
+
+            var loadPlaysByDate = function () {
+                CompletePlays.playsByDate().then(
+                    function (data) {
+                        $rootScope.playsByDate = data;
+                        console.log("PLAYS LAODED");
+                        console.log(data);
+                    },
+                    function (error) {
+                        // TODO: handle error
+                    }
+                );
+            };
+
+            loadPlaysByDate();
+
+
+
+
 
 
 

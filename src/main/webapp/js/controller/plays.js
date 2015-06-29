@@ -2,15 +2,12 @@
     "use strict";
 
     angular.module('PlaysModule', ['filmsPlaysModule'])
-        .controller('PlaysController', ['$location', 'CompletePlays', function ($location, CompletePlays) {
+        .controller('PlaysController', ['$rootScope', '$location', 'CompletePlays', function ($rootScope, $location, CompletePlays) {
             this.current = {};
             this.show_trailer_for_current = "Guarda il Trailer";
 
             var ctrl = this;
 
-            CompletePlays.playsByDate().then(function (data) {
-                console.log(data);
-            });
 
             this.archive = [
                 {
@@ -60,16 +57,6 @@
                 }
             ];
 
-            this.loadData = function () {
-                CompletePlays.playsByDate().then(
-                    function (data) {
-                        ctrl.archive = data;
-                    },
-                    function (error) {
-                        // TODO: handle error
-                    }
-                );
-            };
 
             this.isNow = function (date) {
                 var act = new Date();
@@ -78,7 +65,7 @@
             };
 
             this.setCurrent = function (date, film) {
-                this.current = this.archive[date].films[film];
+                this.current = $rootScope.playsByDate[date].films[film];
                 this.current['date'] = date;
                 $('#modal').openModal();
             };
