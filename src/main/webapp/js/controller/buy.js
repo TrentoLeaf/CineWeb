@@ -6,7 +6,7 @@
 
             var ctrl = this;
 
-            this.go = true; // TODO da settare a false
+            this.go = false;
             this.error = "";
 
             // errori
@@ -17,7 +17,7 @@
             function setError(error) {
                 switch (error) {
                     case OK :  ctrl.error = ""; break;
-                    case ERROR_NO_MORE_SEATS : ctrl.error = "Sembra che tu stia cercando di acquistare più bigleitti di quelli disponibili. Per favore, ricontrolla il carrello."; break;
+                    case ERROR_NO_MORE_SEATS : ctrl.error = "Sembra che tu stia cercando di acquistare più biglieitti di quelli disponibili. Per favore, ricontrolla il carrello."; break;
                     case ERROR_NO_MORE_PLAY : ctrl.error = "Sembra che tu stia cercando di acquistare una proiezione non più disponibile. Cancella il contenuto del carrello e prova a riempirlo di nuovo."; break;
                 }
             }
@@ -45,16 +45,20 @@
                     $location.path('/login');
                 }
 
+                $('.buy-seats-loader').addClass('active');
+                ctrl.go=false;
 
                 // chiamata AJAX per inivare dati di acquisto e poter procedere
                 /*     BUYER.miachiamata1()
                  .success(function(data) {
+                 $('.buy-seats-loader').removeClass('active');
                  ctrl.go= true;
                  setError(OK);
                  // salva i dati ricevuti dal server in data_from_server
                  $rootScope.data_from_server = data;
                  this.next_buy();
                  }).error(function(error) {
+                 $('.buy-seats-loader').removeClass('active');
                  ctrl.go= false;
                  switch (error) {
                  case ERROR_NO_MORE_SEATS:  setError(ERROR_NO_MORE_SEATS);  break;

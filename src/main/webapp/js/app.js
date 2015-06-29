@@ -238,7 +238,7 @@ $(document).ready(function () {
 
             /* init of plays */
 
-            var loadPlaysByDate = function () {
+            $rootScope.loadPlaysByDate = function () {
                 CompletePlays.playsByDate().then(
                     function (data) {
                         $rootScope.playsByDate = data;
@@ -251,7 +251,7 @@ $(document).ready(function () {
                 );
             };
 
-            loadPlaysByDate();
+            $rootScope.loadPlaysByDate();
 
 
             /* init of cart */
