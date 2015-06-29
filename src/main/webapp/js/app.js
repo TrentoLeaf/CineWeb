@@ -105,7 +105,7 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when ('/admin/rooms/new_room',{
                 templateUrl: '../partials/admin/new_room.html',
-                controller: 'AdminRoomsController',
+                controller: 'AdminNewRoomController',
                 controllerAs: 'ctrl'
             }).when ('/admin/stats',{
                 templateUrl: '../partials/admin/stats.html',

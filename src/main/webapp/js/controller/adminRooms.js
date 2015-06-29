@@ -2,17 +2,44 @@
     'use strict';
 
     angular.module('adminRooms', ['filmsPlaysModule'])
+        .controller ('AdminNewRoomController', ['$rootScope', '$location', 'Rooms', function ($rootScope, $location, Rooms) {
+
+        var ctrl = this;
+        this.newRoom = {};
+        this.shared_obj = {};
+        this.matrix = [];
+
+        this.createMatrix = function(rows, columns) {
+            for(var i=0; i<rows; i++) {
+                ctrl.matrix[i] = [];
+                for(var j=0; j<columns; j++) {
+                    ctrl.matrix[i][j] = 1;
+                }
+            }
+        };
+
+        this.generateMap = function () {
+            ctrl.createMatrix(ctrl.newRoom.rows, ctrl.newRoom.columns);
+            ctrl.newRoom.seats = ctrl.matrix;
+            ctrl.matrix = [];
+            ctrl.shared_obj.mapTheatre = ctrl.newRoom.seats;
+        };
+
+    }])
 
 // TODO mancano le dipendenze dal servizio Room (che non esiste)
         .controller('AdminRoomsController', ['$rootScope', '$location', 'Rooms', function ($rootScope, $location, Rooms) {
 
             var ctrl = this;
             this.currentRoom = {};
+            this.newRoom = {};
+            this.newRoom.seats = [ctrl.newRoom.rows][ctrl.newRoom.columns];
             this.rooms = [];
             this.shared_obj = {};
             this.error = "";
 
             var init = function () {
+                console.log(ctrl.newRoom);
                 if ($rootScope.isUserLogged == false) {
                     $rootScope.afterLogin = "userArea";
                     $location.path('/login');
