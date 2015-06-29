@@ -2,10 +2,8 @@ package tk.trentoleaf.cineweb.rest;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
+import tk.trentoleaf.cineweb.beans.model.*;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.beans.model.Film;
-import tk.trentoleaf.cineweb.beans.model.Play;
-import tk.trentoleaf.cineweb.beans.model.Room;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;
@@ -13,6 +11,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -51,15 +50,27 @@ public class RestPlayTest extends MyJerseyTest {
         // create a play
         final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
         filmsDB.createFilm(f1);
-        final Room room = roomsDB.createRoom(3, 4);
-        final Play p1 = new Play(f1, room, DateTime.now(), true);
+        final Room room = roomsDB.createRoom(10, 10, Arrays.asList(new Seat(0, 0), new Seat(1, 1), new Seat(5, 5)));
+        final Play p1 = new Play(f1, room, DateTime.now().plusDays(1), true);
         playsDB.createPlay(p1);
 
-        // list of films
+        // list of plays
         final List<Play> plays = new ArrayList<>();
         plays.add(p1);
 
-        // get films
+        // create a booking -> to check free places
+        final User u1 = new User(true, Role.CLIENT, "aaa@email.com", "pass", "name", "name", 3);
+        usersDB.createUser(u1);
+        final Ticket t1 = new Ticket(p1, 2, 2, 9.33, "normale");
+        final Ticket t2 = new Ticket(p1, 3, 3, 8.50, "ridotto");
+        final Ticket t3 = new Ticket(p1, 4, 4, 8.50, "normale");
+        bookingsDB.createBooking(u1, Arrays.asList(t1, t2, t3));
+        bookingsDB.deleteTicket(t2);
+
+        // seats for p1
+        p1.setFree(95);
+
+        // get plays
         final Response r1 = getTarget().path("/plays").request(JSON).get();
         assertEquals(200, r1.getStatus());
         assertEquals(plays, r1.readEntity(new GenericType<List<Play>>() {

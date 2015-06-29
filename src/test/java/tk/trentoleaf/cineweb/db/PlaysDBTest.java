@@ -8,11 +8,13 @@ import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.Film;
 import tk.trentoleaf.cineweb.beans.model.Play;
 import tk.trentoleaf.cineweb.beans.model.Room;
+import tk.trentoleaf.cineweb.beans.model.Seat;
 import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.db.ForeignKeyException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
@@ -29,7 +31,7 @@ public class PlaysDBTest extends DBTest {
         filmsDB.createFilm(f1);
         filmsDB.createFilm(f2);
         final Room r1 = roomsDB.createRoom(23, 12);
-        final Room r2 = roomsDB.createRoom(2, 5);
+        final Room r2 = roomsDB.createRoom(2, 5, Arrays.asList(new Seat(0, 0), new Seat(1, 1)));
 
         // plays
         final Play p1 = new Play(f1, r2, DateTime.now(), true);
@@ -44,6 +46,12 @@ public class PlaysDBTest extends DBTest {
         playsDB.createPlay(p2);
         playsDB.createPlay(p3);
         playsDB.createPlay(p4);
+
+        // set free places
+        p1.setFree(8);
+        p2.setFree(8);
+        p3.setFree(23 * 12);
+        p4.setFree(23 * 12);
 
         // expected
         final List<Play> expected = new ArrayList<>();
@@ -117,6 +125,10 @@ public class PlaysDBTest extends DBTest {
         // remove 2, 4
         playsDB.deletePlay(p2);
         playsDB.deletePlay(p4);
+
+        // set free places
+        p1.setFree(2 * 5);
+        p3.setFree(23 * 12);
 
         // expected
         final List<Play> expected = new ArrayList<>();
