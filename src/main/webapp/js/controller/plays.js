@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('PlaysModule', ['filmsPlaysModule'])
-        .controller('PlaysController', ['$rootScope', '$location', 'CompletePlays', function ($rootScope, $location, CompletePlays) {
+        .controller('PlaysController', ['$rootScope', '$location', 'CompletePlays','$sce', function ($rootScope, $location, CompletePlays, $sce) {
             this.current = {};
             this.show_trailer_for_current = "Guarda il Trailer";
 
@@ -68,6 +68,10 @@
                 this.current = $rootScope.playsByDate[date].films[film];
                 this.current['date'] = date;
                 $('#modal').openModal();
+            };
+
+            this.trustSrc = function(src) {
+                return $sce.trustAsResourceUrl(src);
             };
 
             this.closeWindow = function () {

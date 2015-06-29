@@ -48,9 +48,8 @@
                         <button class='col s12 m4 l3 dropdown-button btn right grey darken-4 yellow-text text-accent-4' data-activates='buy_dropdown'>
                             ACQUISTA<i class="mdi-action-add-shopping-cart right"></i>
                         </button>
-
                         <!-- dropdown acquisto per orari diversi -->
-                        <ul id='buy_dropdown' class='dropdown-content'>
+                        <ul > <!--id='buy_dropdown' class='dropdown-content' -->
                             <span ng-repeat="play in ctrl.current.plays track by $index">
                             <li>
                                 <a class="grey-text text-darken-3"  ng-click="cc.addToCart(ctrl.current, $index); ctrl.closeWindow();">
@@ -58,10 +57,9 @@
                                     <i class="mdi-action-add-shopping-cart right"></i>ore: {{play.time}}
                                 </a>
                             </li>
-                            <li class="divider"></li>
                             </span>
+                            <li class="divider"></li>
                         </ul>
-
                         <script>
                             // TODO capire perchè non si può spostare da qui (altrimenti il dropdown non funziona)
                             // init dei dropdown
@@ -83,9 +81,9 @@
                             <iframe ng-hide="ctrl.show_trailer_for_current == 'Guarda il Trailer'"
                                     class="col s12 m12 l12"
                                     id="ytplayer" type="text/html"
-                                    src="https://www.youtube.com/watch?v=ydBjsZnHrwM"
-                                    frameborder="0"></iframe><!-- {{ctrl.current.trailer}} -->
-                        </div>
+                                    src="a"
+                                    frameborder="0"></iframe>
+                        </div><!--   ng-src="{{ctrl.trustSrc(ctrl.current.trailer)}}"-->
                     </div>
                     <div class="col s12 m12 l6">
                         <h5 class="modal-date">Data: <span>{{ctrl.current.date}}</span></h5>

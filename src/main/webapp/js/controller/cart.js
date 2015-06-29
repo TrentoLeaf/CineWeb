@@ -33,6 +33,7 @@
                     newFilm['time'] = film.plays[play_index].time;
                     newFilm['pid'] = film.plays[play_index].pid;
                     newFilm['rid'] = film.plays[play_index].rid;
+                    newFilm['free'] = film.plays[play_index].free;
 
                     $rootScope.cart.push(newFilm);
                     // anima l'icona del carrello dopo un acquisto carrello
