@@ -49,6 +49,10 @@ public class Ticket {
         this(tid, bid, play.getPid(), play.getRid(), x, y, price, type, false);
     }
 
+    public Ticket(int tid, int bid, Play play, int x, int y, double price, String type, boolean deleted) {
+        this(tid, bid, play.getPid(), play.getRid(), x, y, price, type, deleted);
+    }
+
     public int getTid() {
         return tid;
     }
