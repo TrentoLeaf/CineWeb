@@ -22,27 +22,36 @@
             </li>
             <!-- TEST TEST TEST TEST -->
 
-            <li class="col s12 m12 l12 card grey darken-4" style="padding: 5px;"> <!-- ng-repeat="room in qualcosa track by $index" -->
-                <div ng-click="ctrl.setCurrentRoom($index)">
-                    <div class="col s11 m11 l11 center-align">
-                        <h5><b>SALA {{room.name}}</b></h5>
-                    </div>
-                    <div class="col s1 m1 l1 center-align">
-                        <!-- <div class="row">
+            <!--            <li class="col s12 m12 l12 card grey darken-4" style="padding: 5px;"> &lt;!&ndash; ng-repeat="room in qualcosa track by $index" &ndash;&gt;
+                            <div ng-click="ctrl.setCurrentRoom($index)">
+                                <div class="col s11 m11 l11 center-align">
+                                    <h5><b>SALA {{room.name}}</b></h5>
+                                </div>
+                                <div class="col s1 m1 l1 center-align">
+                                    &lt;!&ndash; <div class="row">
 
-                        </div>
-                        <div class="row">
-                            <a ng-click="ctrl.open_delete_modal($index)" class="modal-trigger" data-target="modal_deleteAgree" href=""><i class="red-text mdi-action-delete"></i></a>
-                            <a ng-click="ctrl.open_modify_page($index)"><i class="yellow-text mdi-action-assignment"></i></a>
-                        </div> -->
-                    </div>
-                </div>
-            </li>
+                                    </div>
+                                    <div class="row">
+                                        <a ng-click="ctrl.open_delete_modal($index)" class="modal-trigger" data-target="modal_deleteAgree" href=""><i class="red-text mdi-action-delete"></i></a>
+                                        <a ng-click="ctrl.open_modify_page($index)"><i class="yellow-text mdi-action-assignment"></i></a>
+                                    </div> &ndash;&gt;
+                                </div>
+                            </div>
+                        </li>-->
             <!-- END TEST END TEST END TEST END TEST -->
         </ul>
 
     </div>
     <div class="col s12 m8 l8"> <!-- mappa -->
         <map o="ctrl.shared_obj"></map><!-- will be filled by js -->
+    </div>
+
+    <div class="row">
+        <div class="col s12 m12 l12 center-align">
+            <a class="btn green waves-effect waves-light" href="#admin/rooms/new_room">NUOVA STANZA
+                <i class="mdi-action-home"></i>
+            </a>
+        </div>
+
     </div>
 </div>

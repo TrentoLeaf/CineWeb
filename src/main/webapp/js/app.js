@@ -27,8 +27,9 @@ $(document).ready(function () {
 (function () {
     'use strict';
 
-    angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'pricesModule', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule', 'roomsModule',
-        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'confirmModule', 'resetModule', 'buyModule', 'mapModule', 'adminStats'])
+    angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule', 'roomsModule',
+        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'adminStats', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule'])
+
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -102,6 +103,10 @@ $(document).ready(function () {
             }).when ('/admin/rooms',{
                 templateUrl: '../partials/admin/rooms.html',
                 controller: 'AdminRoomsController',
+                controllerAs: 'ctrl'
+            }).when ('/admin/rooms/new_room',{
+                templateUrl: '../partials/admin/new_room.html',
+                controller: 'AdminNewRoomController',
                 controllerAs: 'ctrl'
             }).when ('/admin/stats',{
                 templateUrl: '../partials/admin/stats.html',
