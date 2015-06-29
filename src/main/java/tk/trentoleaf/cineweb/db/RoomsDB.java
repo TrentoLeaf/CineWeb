@@ -136,7 +136,7 @@ public class RoomsDB {
                 r.setRid(rs.getInt("rid"));
                 r.setRows(rs.getInt("rows"));
                 r.setColumns(rs.getInt("cols"));
-                r.setSeats(withPlaces ? getSeatsByRoom(r.getRid()) : new ArrayList<Seat>());
+                r.setSeats(withPlaces ? getSeatsByRoom(r.getRid()) : null);
                 rooms.add(r);
             }
         } catch (SQLException e) {

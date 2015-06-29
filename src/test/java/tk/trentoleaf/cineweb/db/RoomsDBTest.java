@@ -180,9 +180,9 @@ public class RoomsDBTest extends DBTest {
         final Room r3 = roomsDB.createRoom(4, 2);
 
         // remove seats
-        r1.setSeats(new ArrayList<Seat>());
-        r3.setSeats(new ArrayList<Seat>());
-        r2.setSeats(new ArrayList<Seat>());
+        r1.setSeats(null);
+        r3.setSeats(null);
+        r2.setSeats(null);
 
         // expected
         final List<Room> expected = new ArrayList<>(3);

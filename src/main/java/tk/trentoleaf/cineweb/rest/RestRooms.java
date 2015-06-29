@@ -25,6 +25,7 @@ public class RestRooms {
     private StatisticsDB statisticsDB = StatisticsDB.instance();
 
     @GET
+    @AdminArea
     @Compress
     public List<Room> getRooms() {
         return roomsDB.getRooms(false);

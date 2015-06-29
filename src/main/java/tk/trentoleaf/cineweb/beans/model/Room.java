@@ -104,6 +104,7 @@ public class Room implements Serializable {
         if (rid != room.rid) return false;
         if (rows != room.rows) return false;
         if (columns != room.columns) return false;
-        return CollectionUtils.isEqualCollection(this.seats, room.seats);
+        return !(seats != null ? !CollectionUtils.isEqualCollection(this.seats, room.seats) : room.seats != null);
     }
+
 }
