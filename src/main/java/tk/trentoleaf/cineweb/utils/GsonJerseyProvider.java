@@ -3,6 +3,7 @@ package tk.trentoleaf.cineweb.utils;
 import com.google.gson.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -31,22 +32,6 @@ public class GsonJerseyProvider implements MessageBodyWriter<Object>, MessageBod
     // get a GsonBuilder object with custom serializes
     private static GsonBuilder getGsonBuilderInstance() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-
-        // serialize LocalDate
-        gsonBuilder.registerTypeAdapter(LocalDate.class, new JsonSerializer<LocalDate>() {
-            @Override
-            public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
-                return src == null ? null : new JsonPrimitive(src.toString());
-            }
-        });
-
-        // deserialize LocalDate
-        gsonBuilder.registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
-            @Override
-            public LocalDate deserialize(JsonElement json, Type type, JsonDeserializationContext arg2) {
-                return new LocalDate(json.getAsString());
-            }
-        });
 
         // serialize DateTime
         gsonBuilder.registerTypeAdapter(DateTime.class, new JsonSerializer<DateTime>() {

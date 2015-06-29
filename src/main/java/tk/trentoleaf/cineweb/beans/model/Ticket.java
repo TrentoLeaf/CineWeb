@@ -7,8 +7,9 @@ package tk.trentoleaf.cineweb.beans.model;
 public class Ticket {
 
     private int tid;
-    private int bid;
-    private int pid;
+    private Integer bid;
+    private Integer pid;
+    private String title;
     private int rid;
     private int x;
     private int y;
@@ -75,6 +76,14 @@ public class Ticket {
 
     public void setPid(int pid) {
         this.pid = pid;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getRid() {
