@@ -5,36 +5,45 @@
         </div>
     </div>
 
-    <h4 class="black-text" ng-show="hidden">{{ctrl.currentFilm | json}}</h4>
+    <div class="row">
+        <form class="col s12 m8 offset-m2 l6 offset-l3 center-align">
+            <div class="row">
+                <div class="input-field">
+                    <input id="title" type="text" ng-model="ctrl.currentFilm.title">
+                    <label class="active" for="title">Titolo</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <input id="genre" type="text" ng-model="ctrl.currentFilm.genre">
+                    <label class="active" for="genre">Genere</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <input id="trailer" type="text" ng-model="ctrl.currentFilm.trailer">
+                    <label class="active" for="trailer">Trailer</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <input id="playbill" type="text" ng-model="ctrl.currentFilm.playbill">
+                    <label class="active" for="playbill">Locandina</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <textarea id="plot" class="materialize-textarea" ng-model="ctrl.currentFilm.plot"></textarea>
+                    <label class="active" for="plot">Trama</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <input id="duration" type="number" ng-model="ctrl.currentFilm.duration">
+                    <label class="active" for="duration">Durata</label>
+                </div>
+            </div>
 
-    <div class="row center">
-
-        <form class="col m6 offset-m3">
-
-            <div class="input-field center col m12">
-                <input id="title" type="text" ng-model="ctrl.currentFilm.title">
-                <label class="active" for="title">Titolo</label>
-            </div>
-            <div class="input-field center col m12">
-                <input id="genre" type="text" ng-model="ctrl.currentFilm.genre">
-                <label class="active" for="genre">Genere</label>
-            </div>
-            <div class="input-field center col m12">
-                <input id="trailer" type="text" ng-model="ctrl.currentFilm.trailer">
-                <label class="active" for="trailer">Trailer</label>
-            </div>
-            <div class="input-field center col m12">
-                <input id="playbill" type="text" ng-model="ctrl.currentFilm.playbill">
-                <label class="active" for="playbill">Locandina</label>
-            </div>
-            <div class="input-field center col m12">
-                <textarea id="plot" class="materialize-textarea" ng-model="ctrl.currentFilm.plot"></textarea>
-                <label class="active" for="plot">Trama</label>
-            </div>
-            <div class="input-field center col m12">
-                <input id="duration" type="number" ng-model="ctrl.currentFilm.duration">
-                <label class="active" for="duration">Durata</label>
-            </div>
 
             <div class="section">
                 <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/films">INDIETRO

@@ -1,7 +1,7 @@
 <div class="row white-text">
     <div class="col s12 m12 l12">
         <div class="row">
-            <h2 class="yellow-text text-accent-4 center-align">Films</h2>
+            <h2 id="page_title" class="yellow-text text-accent-4 center-align small">Films            <i class="mdi-action-help tooltipped" data-position="bottom" data-tooltip="Per visualizzare la trama e gli URL di locandina e trailer premi su modifica!"></i></h2>
         </div>
     </div>
 
@@ -13,15 +13,12 @@
     <div class="row">
         <div class="col s12 m12 l12">
             <div ng-hide="ctrl.loading">
-                <table class="adminTable bordered responsive-table">
+                <table class="adminTable bordered centered responsive-table">
                     <thead>
                     <tr>
                         <th><a class="yellow-text text-accent-4" href="">Fid</a></th>
                         <th><a class="yellow-text text-accent-4" href="">Titolo</a></th>
                         <th><a class="yellow-text text-accent-4" href="">Genere</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Trailer</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Locandina</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Trama</a></th>
                         <th><a class="yellow-text text-accent-4" href="">Durata</a></th>
                         <th><a class="yellow-text text-accent-4" href="">Modifica</a></th>
                         <th><a class="yellow-text text-accent-4" href="">Cancella</a></th>
@@ -32,9 +29,6 @@
                         <td>{{f.fid}}</td>
                         <td>{{f.title}}</td>
                         <td>{{f.genre}}</td>
-                        <td>{{f.trailer}}</td>
-                        <td>{{f.playbill}} €</td>
-                        <td class="truncate">{{f.plot}}</td>
                         <td>{{f.duration}}</td>
                         <td>
                             <a href="#admin/films/{{f.fid}}"><i class="yellow-text mdi-action-assignment"></i></a>
@@ -77,3 +71,7 @@
         <a ng-click="ctrl.deleteFilm(ctrl.tmpFilm); ctrl.close_modal();" class="modal-action waves-effect waves-green btn-flat">ACCETTA</a>
     </div>
 </div>
+
+<script>
+    $('.tooltipped').tooltip({delay: 50});
+</script>

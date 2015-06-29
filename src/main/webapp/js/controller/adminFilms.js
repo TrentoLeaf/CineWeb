@@ -91,7 +91,6 @@
                 $('#modal_film_delete').closeModal();
             };
 
-
             this.loadFilms();
 
         }]);
