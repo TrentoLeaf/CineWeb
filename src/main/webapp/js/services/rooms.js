@@ -8,7 +8,7 @@
 
             return {
                 getRoomsOnly: function () {
-                    return $http.post(BASE_ROOMS)
+                    return $http.get(BASE_ROOMS)
                         .success(function (data) {
                             $log.info('GET ROOMS OK: ' + data);
                             $log.info(data);
@@ -19,7 +19,7 @@
                 },
 
                 getRoomByID: function (id) {
-                    return $http.post(BASE_USERS + '/' + id)
+                    return $http.get(BASE_USERS + '/' + id)
                         .success(function (data) {
                             $log.info('GET ROOM OK: ' + data);
                         })

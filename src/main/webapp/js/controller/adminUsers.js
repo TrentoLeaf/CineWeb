@@ -35,6 +35,7 @@
             this.reverse = false;
 
             this.newUser = new Users();
+            this.newUser.enabled = true;
             this.verifyPassword = "";
             this.newUserRole = false;
             this.currentUser = {};
@@ -93,6 +94,7 @@
                     ctrl.newUser.$save(function (data) {
                         ctrl.users.push(data);
                         ctrl.newUser = new Users();
+                        ctrl.newUser.enabled = true;
                         console.log("Insertion succes");
                         console.log(data);
                         $location.path("/admin/users");

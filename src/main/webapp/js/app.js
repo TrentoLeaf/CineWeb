@@ -103,6 +103,10 @@ $(document).ready(function () {
                 templateUrl: '../partials/admin/rooms.html',
                 controller: 'AdminRoomsController',
                 controllerAs: 'ctrl'
+            }).when ('/admin/rooms/new_room',{
+                templateUrl: '../partials/admin/new_room.html',
+                controller: 'AdminNewRoomController',
+                controllerAs: 'ctrl'
             }).when ('/admin/stats',{
                 templateUrl: '../partials/admin/stats.html',
                 controller: 'AdminStatsController',
