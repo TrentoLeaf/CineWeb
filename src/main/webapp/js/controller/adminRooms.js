@@ -26,6 +26,7 @@
                 // TODO request al server tramite il servizio Room per ottenere tutte le sale
                 Rooms.getRoomsOnly()
                     .success(function (data) {
+                        console.log(data);
                         ctrl.rooms = data;
                     })
                     .error(function (error) {
