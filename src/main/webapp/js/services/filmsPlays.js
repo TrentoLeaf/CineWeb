@@ -36,7 +36,7 @@
             });
         }])
 
-        .factory('CompletePlays', ['Films', 'Plays', '$q', '$log', function (Films, Plays, $q, $log) {
+        .factory('CompletePlays', ['Films', 'Plays', '$q', '$log', '$filter', function (Films, Plays, $q, $log, $filter) {
             return {
 
                 playsByDate: function () {
@@ -51,10 +51,9 @@
                             // add films and date to play
                             var withDate = results[1].map(function (obj) {
                                 obj.date = obj.time.split("T")[0];
-                                obj.film = filmsObj[obj.fid];
+                                //obj.film = filmsObj[obj.fid];
                                 return obj;
                             });
-
 
                             var array = [];
 
@@ -62,13 +61,27 @@
                             for (var key in perDate) {
                                 if (perDate.hasOwnProperty(key)) {
                                     array.push({date: key, films: perDate[key]});
-                                    //alert(key + " -> " + p[key]);
                                 }
                             }
 
-                            //console.log(withDate);
-                            //console.log(perDate);
-                            //console.log(array);
+                            array.forEach(function (current) {
+                                var map = current.films.toArrayMap('fid');
+                                current.films = [];
+                                for (var key in map) {
+                                    if (map.hasOwnProperty(key)) {
+                                        var o = angular.copy(filmsObj[key]);
+                                        o.plays = map[key];
+                                        o.plays.map(function (t) {
+                                            delete t.date;
+                                            delete t.fid;
+                                            t.time = $filter('date')(t.time, 'HH:mm');
+                                            return t;
+                                        });
+                                        delete o.fid;
+                                        current.films.push(o);
+                                    }
+                                }
+                            });
 
                             deferred.resolve(array);
                         },

@@ -8,6 +8,10 @@
 
             var ctrl = this;
 
+            CompletePlays.playsByDate().then(function (data) {
+                console.log(data);
+            });
+
             this.archive = [
                 {
                     date: 'Data 1',
