@@ -249,11 +249,6 @@ $(document).ready(function () {
             loadPlaysByDate();
 
 
-
-
-
-
-
             /* init of cart */
 
             // load the cart from LocalStorage

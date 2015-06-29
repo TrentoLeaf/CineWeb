@@ -9,7 +9,7 @@
             var ctrl = this;
 
 
-            this.archive = [
+            this.archive = [ // TODO non serve più
                 {
                     date: 'Data 1',
                     films: [

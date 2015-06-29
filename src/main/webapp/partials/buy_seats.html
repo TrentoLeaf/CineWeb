@@ -3,66 +3,71 @@
 <div class="row">
 
 </div>
-<div class="row white-text">
-    <div class="col s12 m12 l12">
-        <h5 style="margin-top: 2em;">Seleziona i posti che vuoi riservare per questo spettacolo. Quando hai finito, clicca sul bottone avanti.</h5>
-    </div>
-</div>
-
-<div class="buy-seats">
+<div ng-show="ctrl.go">
     <div class="row white-text">
-        <div class="col s12 m6 l7"> <!-- mappa sala -->
-            <map o="buy.shared_obj"></map><!-- will be filled by js -->
+        <div class="col s12 m12 l12">
+            <h5 style="margin-top: 2em;">Seleziona i posti che vuoi riservare per questo spettacolo. Quando hai finito, clicca sul bottone avanti.</h5>
         </div>
-        <div class="col s12 m6 l5 center"> <!-- info biglietto -->
-            <div class="row">
-                <h5 class="yellow-text text-accent-4">{{buy.shared_obj.film.title}}</h5>
-                <h6>{{buy.shared_obj.film.date}} {{buy.shared_obj.film.time}}</h6>
+    </div>
+
+    <div class="buy-seats">
+        <div class="row white-text">
+            <div class="col s12 m6 l7"> <!-- mappa sala -->
+                <map o="buy.shared_obj"></map><!-- will be filled by js -->
             </div>
-            <div class="row">
-                <div class="item-image col offset-s1 s10 offset-m2 m8 offset-l2 l8">
-                    <img class="responsive-img" ng-src="{{buy.shared_obj.film.playbill}}" alt="locandina" />
+            <div class="col s12 m6 l5 center"> <!-- info biglietto -->
+                <div class="row">
+                    <h5 class="yellow-text text-accent-4">{{buy.shared_obj.film.title}}</h5>
+                    <h6>{{buy.shared_obj.film.date}} {{buy.shared_obj.film.time}}</h6>
+                </div>
+                <div class="row">
+                    <div class="item-image col offset-s1 s10 offset-m2 m8 offset-l2 l8">
+                        <img class="responsive-img" ng-src="{{buy.shared_obj.film.playbill}}" alt="locandina" />
+                    </div>
+                </div>
+                <div class="row">
+                    <h5>Posti rimasti da selezionare:</h5>
+                </div>
+                <div class="row">
+                    <h5 class="yellow-text text-accent-4" style="font-size: 4em;">{{buy.shared_obj.film.seats_selected}}</h5>
                 </div>
             </div>
-            <div class="row">
-                <h5>Posti rimasti da selezionare:</h5>
+        </div>
+        <div class="row"> <!-- bottoni -->
+            <div class="col s12 offset-m1 m3 offset-l1 l3 center">
+                <button ng-click="ctrl.open_modal();" class="btn modal-trigger red white-text waves-effect waves-light buy-btn" type="submit" data-target="modal_buy_cancel">Annulla
+                    <i class="mdi-navigation-cancel right"></i>
+                </button>
             </div>
-            <div class="row">
-                <h5 class="yellow-text text-accent-4" style="font-size: 4em;">{{buy.shared_obj.film.seats_selected}}</h5>
+            <div class="col s12 m4 l4">
+                &nbsp
             </div>
-        </div>
-    </div>
-    <div class="row"> <!-- bottoni -->
-        <div class="col s12 offset-m1 m3 offset-l1 l3 center">
-            <button ng-click="ctrl.open_modal();" class="btn modal-trigger red white-text waves-effect waves-light buy-btn" type="submit" data-target="modal_buy_cancel">Annulla
-                <i class="mdi-navigation-cancel right"></i>
-            </button>
-        </div>
-        <div class="col s12 m4 l4">
-            &nbsp
-        </div>
-        <div class="col s12 m3 l3 center">
-            <a ng-click="ctrl.save_seats();" class="btn green white-text waves-effect waves-light buy-btn" type="submit">Avanti
-                <i class="mdi-content-send white-text right"></i>
-                <div class="buy-loader preloader-wrapper xsmall left" style="margin-top: 6px;">
-                    <div class="spinner-layer spinner-blue-only spinner-white-only">
-                        <div class="circle-clipper left">
-                            <div class="circle"></div>
-                        </div><div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                        <div class="circle-clipper right">
+            <div class="col s12 m3 l3 center">
+                <a ng-click="ctrl.save_seats();" class="btn green white-text waves-effect waves-light buy-btn" type="submit">Avanti
+                    <i class="mdi-content-send white-text right"></i>
+                    <div class="buy-loader preloader-wrapper xsmall left" style="margin-top: 6px;">
+                        <div class="spinner-layer spinner-blue-only spinner-white-only">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
                             <div class="circle"></div>
                         </div>
+                            <div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
+        </div>
+        <div class="row">
         </div>
     </div>
-    <div class="row">
-    </div>
 </div>
+<div ng-hide="ctrl.go">
 
+    <h5>{{ctrl.error}}</h5>
+</div>
 
 <div id="modal_buy_cancel" class="modal">
     <div class="modal-content">

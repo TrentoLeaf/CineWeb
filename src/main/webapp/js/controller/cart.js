@@ -8,22 +8,21 @@
     angular.module('cartModule', ['pricesModule'])
         .controller('CartController', ['$rootScope', 'Prices', '$location', 'Auth', function ($rootScope, Prices, $location, Auth) {
 
-            this.addToCart = function (film, time_index) {
+            this.addToCart = function (film, play_index) {
 
                 // film: l'oggetto film da acquistare
-                // time_index: l'indice dell'ora (nell' array time di film) da prenotare
+                // play_index: l'indice dello spettacolo da prenotare
 
                 var duplicate = false;
 
-                // TODO controllo di non inserire dublicati
-                /* for (var i = 0; i< $rootScope.cart.length; i++) {
-                 // TODO assicurarsi che film abbia un fid e che i time siano diversi
-                 if (film.fid == $rootScope.cart[i].fid && (film.time[time_index] == $rootScope.cart[i].time)) {
-                 duplicate = true;
-                 i = $rootScope.cart.length;
-                 }
-                 console.log(duplicate);
-                 }*/
+
+                // controllo di non inserire un duplicato
+                for (var i = 0; i< $rootScope.cart.length; i++) {
+                    if (film.plays[play_index].pid == $rootScope.cart[i].pid) {
+                        duplicate = true;
+                        i = $rootScope.cart.length;
+                    }
+                }
 
                 if (!duplicate) {
                     // copio film per non sporcare i film in programmazione con valori del carrello
@@ -31,7 +30,10 @@
                     // aggiungo un dropdown con tipo e numero di biglietti
                     newFilm['tickets'] = [];
                     newFilm['tickets'].push({type: $rootScope.tickets[0].type, number: 1});
-                    newFilm['time'] = film['time'][time_index];
+                    newFilm['time'] = film.plays[play_index].time;
+                    newFilm['pid'] = film.plays[play_index].pid;
+                    newFilm['rid'] = film.plays[play_index].rid;
+
                     $rootScope.cart.push(newFilm);
                     // anima l'icona del carrello dopo un acquisto carrello
                     animateCartIcon();
@@ -59,27 +61,21 @@
 
                 $('.cart-loader').addClass('active');
 
-                // TODO semplificare (auth.me si può sostituire con $rootscope.isUserLogged)
                 // check if the user is already logged
-                Auth.me().then(
-                    function (data) {
+                if ($rootScope.isUserLogged) {
                         $('.cart-loader').removeClass('active');
-
                         // reset di afterLogin
                         $rootScope.afterLogin = "normal";
                         // vai alla pagina di acquisto
                         $location.path("/buy");
-
-                    },
-                    function () { /* not logged */
+                    } else { /* not logged */
                         $('.cart-loader').removeClass('active');
-
                         // setta afterLogin a buy (per ritornare alla procedura d'acquisto)
                         $rootScope.afterLogin = "buy";
                         // vai alla pagina di login
                         $location.path('/login');
                     }
-                );
+
 
             };
 
