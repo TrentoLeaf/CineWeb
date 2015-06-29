@@ -27,7 +27,7 @@ $(document).ready(function () {
 (function () {
     'use strict';
 
-    angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule',
+    angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule', 'roomsModule',
         'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule', 'adminStats'])
 
         .config(['$routeProvider', function ($routeProvider) {
@@ -215,7 +215,7 @@ $(document).ready(function () {
             console.log("INIT THE PRICES");
 
             // function to load the prices
-            var loadPrices = function () {
+            $rootScope.loadPrices = function () {
                 Prices.query(function (data) {
                     /* data.map(function (o) {
                      o.type = o.type.capitalizeFirstLetter();
@@ -228,7 +228,7 @@ $(document).ready(function () {
 
             // load the prices
             $rootScope.tickets = [];
-            loadPrices();
+            $rootScope.loadPrices();
 
 
 

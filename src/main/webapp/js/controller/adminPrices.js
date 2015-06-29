@@ -21,7 +21,6 @@
                     $rootScope.afterLogin = "userArea";
                     $location.path('/login');
                 }
-
             };
 
             // remove a priceClass
@@ -31,6 +30,7 @@
                 // better BEFORE calling this function
                 Test.delete({type: ctrl.tmpPrice.type}, function () {
                     // ok
+                    ctrl.updatePrices();
                     console.log("Price deletion success");
                 }, function () {
                     // fail
@@ -41,6 +41,7 @@
             this.addPrice = function () {
                 ctrl.newPrice.$save(function () {
                     ctrl.newPrice = new Test();
+                    ctrl.updatePrices();
                 }, function () {
                     // errors
                 });
@@ -73,6 +74,7 @@
 
                 Test.update({type: price.type}, price).$promise.then(function (data) {
                     // ok
+                    ctrl.updatePrices();
                     console.log("UPDATE OK ->");
                     console.log(data);
                 }, function () {
@@ -81,7 +83,13 @@
                 });
             };
 
+
+            this.updatePrices = function () {
+                $rootScope.loadPrices();
+            };
+
             init();
+
         }]);
 
 })();
