@@ -58,6 +58,16 @@ public class Film implements Serializable {
         this.duration = duration;
     }
 
+    public Film(String title, String genre, String trailer, int duration, String plot, String playbill) {
+        this.title = title;
+        this.genre = genre;
+        this.trailer = trailer;
+        this.playbill = playbill;
+        this.plot = plot;
+        this.duration = duration;
+    }
+
+
     public int getFid() {
         return fid;
     }
