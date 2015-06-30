@@ -13,6 +13,7 @@
 
         .factory('Rooms', ['BASE', '$http', '$q', '$log', function (BASE, $http, $q, $log) {
             var BASE_ROOMS = BASE + "/rooms";
+            var BASE_PLAYS = BASE + "/plays";
 
             return {
                 getRoomsOnly: function () {
@@ -33,6 +34,16 @@
                         })
                         .error(function (data, status) {
                             $log.warn('GET ROOM FAILED: ' + status + " " + data);
+                        });
+                },
+
+                getRoomStatus: function (id) {
+                    return $http.get(BASE_PLAYS + '/' + id + '/room')
+                        .success(function (data) {
+                            $log.info('GET ROOM STATUS OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('GET ROOM STATUS FAILED: ' + status + " " + data);
                         });
                 }
             }
