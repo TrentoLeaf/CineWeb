@@ -227,6 +227,10 @@
                 if (modificabile) { // modifica di una nuova sala, aggiunta sedia 'invisibile'
                     // set hidden
                     poltrona_svg.addClass('seat-hidden');
+                    posti_selezionati.push({
+                        row: poltrona_svg.attr('row'),
+                        col: poltrona_svg.attr('col')
+                    });
                     // set click handler
                     poltrona_svg.click(function () {
                         if (this.hasClass('seat-hidden')) {
