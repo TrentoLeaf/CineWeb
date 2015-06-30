@@ -3,60 +3,10 @@
 
     angular.module('PlaysModule', ['filmsPlaysModule'])
         .controller('PlaysController', ['$rootScope', '$location', 'CompletePlays','$sce', function ($rootScope, $location, CompletePlays, $sce) {
-            this.current = {};
-            this.show_trailer_for_current = "Trailer";
 
             var ctrl = this;
-
-
-            this.archive = [ // TODO non serve più
-                {
-                    date: 'Data 1',
-                    films: [
-                        {
-                            title: "Titolo 1sacsdfd ds ssdff dsfdsfsfd",
-                            date: "Data 1",
-                            time: ["17:00", "21:00"],
-                            gender: "Genere 1",
-                            playbill: "img/temporary/mad-max-fury-road-locandina-400x250.jpg",
-                            description: "Descrizione 1"
-                        },
-                        {
-                            title: "Titolo 2",
-                            date: "Data 1",
-                            time: ["17:00", "21:00", "22:00", "23:00", "24:00"],
-                            gender: "Genere 2",
-                            playbill: "img/temporary/terminator_genisys_ver9-201x298.jpg",
-                            description: "Descrizione 2"
-                        },
-                        {
-                            title: "Titolo 3",
-                            date: "Data 1",
-                            time: ["16:00"],
-                            gender: "Genere 3",
-                            playbill: "img/temporary/the-lazarus-effect-LOCANDINA-400x250.jpg",
-                            description: "Descrizione 3"
-                        },
-                        {
-                            title: "Titolo 4",
-                            date: "Data 1",
-                            time: ["17:00", "21:00"],
-                            gender: "Genere 4",
-                            playbill: "img/temporary/san-andreas-locandina-400x250.jpg",
-                            description: "Descrizione 4"
-                        },
-                        {
-                            title: "Titolo 5",
-                            date: "Data 1",
-                            time: ["17:00", "21:00"],
-                            gender: "Genere 5",
-                            playbill: "img/temporary/tomorrowland-il-mondo-di-domani-locandina-400x250.jpg",
-                            description: "Descrizione 5"
-                        }
-                    ]
-                }
-            ];
-
+            this.current = {};
+            this.show_trailer_for_current = "Trailer";
 
             this.isNow = function (date) {
                 var act = new Date();
@@ -71,6 +21,9 @@
             };
 
             this.trustSrc = function(src) {
+                if (src != undefined) {
+                    src = src.replace("watch?v=", "v/");
+                }
                 return $sce.trustAsResourceUrl(src);
             };
 
