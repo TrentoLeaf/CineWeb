@@ -10,6 +10,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.List;
 
@@ -112,9 +113,10 @@ public class RestRoot {
     @POST
     @Path("/load-example-data")
     @AdminArea
-    public synchronized void loadExampleData() {
+    public synchronized Response loadExampleData() {
         try {
 
+            int x = 3;
 
             // re-init db
             DB.instance().reset();
@@ -123,10 +125,17 @@ public class RestRoot {
             PricesDB.instance().loadDefaultPrices();
 
             // load example data
-            ManageData.instance().loadExampleData();
+            ManageData.instance().loadExampleData(x);
+
+            return Response.ok().build();
 
         } catch (Exception e) {
             e.printStackTrace();
+
+            return Response.status(500).build();
+
+
+
         }
     }
 }
