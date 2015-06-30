@@ -75,13 +75,13 @@
                             </button>
                         </div>
                         <div class="row">
-                            <img ng-show="ctrl.show_trailer_for_current == 'Guarda il Trailer'"
+                            <img ng-show="ctrl.show_trailer_for_current == 'Trailer'"
                                  class="responsive-img col s12 m12 l12" ng-src="{{ctrl.current.playbill}}"
                                  alt="Locandina">
                             <iframe ng-hide="ctrl.show_trailer_for_current == 'Trailer'"
                                     class="col s12 m12 l12"
                                     id="ytplayer" type="text/html"
-                                    src="{{ctrl.trustSrc(ctrl.current.trailer)}}"
+                                    ng-src="{{ctrl.trustSrc(ctrl.current.trailer)}}"
                                     frameborder="0"></iframe>
                         </div><!--   ng-src="{{ctrl.trustSrc(ctrl.current.trailer)}}"-->
                     </div>
