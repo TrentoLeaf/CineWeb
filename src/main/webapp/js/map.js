@@ -114,8 +114,19 @@
                     set_svg_seat(pp, mappa[i][j], spettacolo, posti_selezionati, modificabile);
 
                     snap.append(pp);
-                }
+                } else {    // make a not esixtent seat editable
+                    if (modificabile) {
+                        // get a seat
+                        var pp = seat.clone();
+                        pp.transform('t' + i_index + ',' + j_index); // set traslation
+                        // add attr row and column
+                        pp.attr({row: i.toString()});
+                        pp.attr({col: j.toString()});
 
+                        // set the type of seat
+                        set_svg_seat(pp, mappa[i][j], spettacolo, posti_selezionati, modificabile);
+                    }
+                }
                 // next seat
                 i_index += 55;
             }
@@ -211,6 +222,31 @@
             case  SEAT_BEST:
                 // set color
                 poltrona_svg.addClass('seat-best');
+                break;
+            case SEAT_NOT_EXIST:
+                if (modificabile) { // modifica di una nuova sala, aggiunta sedia 'invisibile'
+                    // set hidden
+                    poltrona_svg.addClass('seat-hidden');
+                    // set click handler
+                    poltrona_svg.click(function () {
+                        if (this.hasClass('seat-hidden')) {
+                            this.removeClass('seat-hidden');
+                            console.log("Poltrona visibile");
+                            posti_selezionati.splice({
+                                row: poltrona_svg.attr('row'),
+                                col: poltrona_svg.attr('col')
+                            }, 1);
+                        }
+                        else {
+                            this.addClass('seat-hidden');
+                            console.log("Poltrona nascosta");
+                            posti_selezionati.push({
+                                row: poltrona_svg.attr('row'),
+                                col: poltrona_svg.attr('col')
+                            });
+                        }
+                    });
+                }
                 break;
         }
 
