@@ -22,7 +22,34 @@
             <div class="col s12 offset-m1 m5 offset-l1 l3">
                 <h6>Email: {{user.email}}</h6>
             </div>
+        </div>
+        <div class="row white-text">
+            <div class="col s12 offset-m1 m10 offset-l1 l3 center-align">
+                <a ng-click="ctrl.pass()" class="white-text waves-effect waves-yellow btn-flat center-align">
+                    {{ctrl.passBtn}}<i class="mdi-action-lock right" ng-show="ctrl.passTrigger"></i>
+                </a>
+            </div>
+            <div>
+                <div ng-show="ctrl.passTrigger" class="input-field col s12 m3 l3">
+                    <input id="oldpassword" type="password" class="validate" ng-model="ctrl.oldPass">
+                    <label for="oldpassword">Vecchia Password</label>
+                </div>
+                <div ng-show="ctrl.passTrigger" class="input-field col s12 m3 l2">
+                    <input id="newpassword" type="password" class="validate" ng-model="ctrl.newPass">
+                    <label for="newpassword">Nuova Password</label>
+                </div>
 
+                <div ng-show="ctrl.passTrigger" class="input-field col s12 m3 l2">
+                    <input id="verpassword" type="password" class="validate" ng-model="ctrl.verifyPass">
+                    <label for="verpassword">Ripeti Password</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12 offset-m1 m10 offset-l1 l10 white-text">
+                <h6 class="">{{ctrl.result}}</h6>
+            </div>
         </div>
 
         <div class="row white-text"> <!-- cronologia acquisti -->
