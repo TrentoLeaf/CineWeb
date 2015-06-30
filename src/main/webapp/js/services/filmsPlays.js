@@ -73,6 +73,7 @@
                                         o.plays = map[key];
                                         o.plays.map(function (t) {
                                             delete t.fid;
+                                            o.date = t.date;
                                             t.time = $filter('date')(t.time, 'HH:mm');
                                             return t;
                                         });
