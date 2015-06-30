@@ -92,7 +92,7 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when ('/admin/plays/new',{
                 templateUrl: '../partials/admin/new_play.html',
-                controller: 'AdminPlaysController',
+                controller: 'AdminNewPlaysController',
                 controllerAs: 'ctrl'
             }).when ('/admin/plays/:pid', {
                 templateUrl: '../partials/admin/edit_play.html',

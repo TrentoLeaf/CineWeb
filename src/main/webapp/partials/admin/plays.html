@@ -107,13 +107,60 @@
     </div>
 </div>
 
+<div id="modal_edit" class="modal">
+    <div class="modal-content">
+        <h4>Modifica Proiezione</h4>
+        <p>{{ctrl.currentPlay}}</p>
+        <form>
+            <div class="row">
+                <div class="input-field col s12 m12 l12">
+                    <select ng-model="ctrl.currentPlay.fid">
+                        <option class="grey darken-3 yellow-text text-accent-4" ng-repeat="film in ctrl.films track by $index" ng-value="film.fid">{{film.title}}</option>
+                    </select>
+                    <label>Seleziona un film</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m12 l12">
+                    <input id="theatre" type="number" class="validate" ng-model="ctrl.currentPlay.rid">
+                    <label class="active" for="theatre">Sala</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6 m6 l6">
+                    <input id="date" type="date" class="datepicker" ng-model="ctrl.currentPlay.time">
+                    <label class="active" for="time">Data</label>
+                </div>
+                <div class="input-field col s6 m6 l6">
+                    <input id="time" type="time" ng-model="ctrl.currentPlay.time">
+                    <label class="active" for="time">Orario</label>
+                </div>
+            </div>
+
+            <div class="section center-align">
+                <div class="switch center-align">
+                    <label>
+                        2D
+                        <input type="checkbox" ng-model="ctrl.currentPlay._3d">
+                        <span class="lever center-align"></span>
+                        3D
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">ANNULLA</a>
+        <a ng-click="ctrl.editPlay()" class="modal-action modal-close waves-effect waves-green btn-flat">MODIFICA</a>
+    </div>
+</div>
+
 
 <div id="modal_deleteAgree" class="modal">
     <div class="modal-content">
         <h4>Cancellazione Proiezione</h4>
         <p>Sei sicuro di voler cancellare la seguente proiezione?</p>
         <ul>
-            <li><label for="modal_pid" class="left-align">Pid</label><div id="modal_pid">{{ctrl.currentPlay.pid}}</div></li>
             <li><label for="modal_fid" class="left-align">Titolo</label><div id="modal_fid">{{ctrl.currentPlay.title}}</div></li>
             <li><label for="modal_time" class="left-align">Data e ora</label><div id="modal_time">{{ctrl.currentPlay.date | date: 'dd/MM/yyyy'}}, {{ctrl.currentPlay.time}}</div></li>
             <li><label for="modal_rid" class="left-align">Sala</label><div id="modal_rid">{{ctrl.currentPlay.rid}}</div></li>
@@ -121,6 +168,13 @@
     </div>
     <div class="modal-footer">
         <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
-        <a ng-click="ctrl.deletePlay(ctrl.tmpPlay)" class="modal-action modal-close waves-effect waves-green btn-flat">ACCETTA</a>
+        <a ng-click="ctrl.deletePlay()" class="modal-action modal-close waves-effect waves-green btn-flat">ACCETTA</a>
     </div>
 </div>
+
+<script>
+
+    setTimeout(function () {
+        $('select').material_select();
+    },1000);
+</script>

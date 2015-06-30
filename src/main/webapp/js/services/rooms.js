@@ -3,6 +3,14 @@
 
     angular.module('roomsModule', ['constantsModule', 'ngResource'])
 
+        .factory('Theatre', ['BASE', '$resource', function (BASE, $resource) {
+            return $resource(BASE + '/rooms', {
+                addRoom: {
+                    method: 'POST'
+                }
+            });
+        }])
+
         .factory('Rooms', ['BASE', '$http', '$q', '$log', function (BASE, $http, $q, $log) {
             var BASE_ROOMS = BASE + "/rooms";
 

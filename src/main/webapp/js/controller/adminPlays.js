@@ -2,47 +2,58 @@
     'use strict';
 
     angular.module('adminPlays', ['filmsPlaysModule'])
+        .controller ('AdminNewPlaysController', ['Films', '$rootScope', '$location', 'Plays', function (Films, $rootScope, $location, Plays) {
 
-        .controller('AdminPlaysEditController', ['$routeParams', '$location', 'Plays', '$rootScope', function($routeParams, $location, Plays, $rootScope) {
+        var ctrl = this;
+        this.newPlay =  new Plays();
+        this.newPlay_3d = false;
+        this.films = [];
 
-            var ctrl = this;
-            this.currentPlay = {};
 
-            Plays.get({id:$routeParams.uid}).$promise.then(function (data) {
-                ctrl.currentPlay = data;
-            }, function () {
-                $location.path("/admin/plays");
+        this.loadFilms = function () {
+
+            Films.query(function (data) {
+                ctrl.films = data;
+                console.log(ctrl.films);
+            }, function (){
+                //Fail Case
             });
+        };
 
+        this.addPlay = function (data) {
+            if (ctrl.newPlay_3d) {
+                ctrl.newPlay._3d = true;
+            } else {
+                ctrl.newPlay._3d = false;
+            }
 
-            this.save = function () {
-                Plays.update({id: ctrl.currentPlay.pid}, ctrl.currentPlay).$promise.then(function (data) {
-                    // ok
-                    console.log("UPDATE OK ->");
-                    console.log(data);
-                    ctrl.updatePlays();
-                    $location.path("/admin/plays")
-                }, function () {
-                    // fail...
-                    console.log("UPDATE fail");
-                });
-            };
+            ctrl.newPlay.$save( function (data) {
+                ctrl.newPlay = new Plays();
+                console.log("Play insertion success");
+                ctrl.updatePlays();
+                $location.path("/admin/plays");
 
-            this.updatePlays = function () {
-                $rootScope.loadPlaysByDate();
-            };
+            }, function () {
+                //Fail Case
+                console.log("Play insertion fail");
+            });
+        };
 
-        }])
-        .controller('AdminPlaysController', ['$rootScope', '$location', 'Plays', 'Rooms', function ($rootScope, $location, Plays, Rooms) {
+        this.updatePlays = function () {
+            $rootScope.loadPlaysByDate();
+        };
+
+        this.loadFilms();
+    }])
+        .controller('AdminPlaysController', ['$rootScope', '$location', 'Plays', 'Rooms', 'Films', function ($rootScope, $location, Plays, Rooms, Films) {
 
 
             var ctrl = this;
-            this.newPlay = new Plays();
             this.currentPlay = {};
-            this.newPlay_3d = false;
             this.shared_obj = {};
+            this.films = [];
 
-            var init = function () {
+            this.init = function () {
                 if ($rootScope.isUserLogged == false) {
                     $rootScope.afterLogin = "userArea";
                     $location.path('/login');
@@ -50,13 +61,19 @@
 
                 ctrl.loading = true;
                 ctrl.currentPlay = {};
+                ctrl.loadFilms();
             };
 
-            this.loadPlay = function () {
+            this.loadFilms = function () {
 
-                init();
-
+                Films.query(function (data) {
+                    ctrl.films = data;
+                    console.log(ctrl.films);
+                }, function (){
+                    //Fail Case
+                });
             };
+
 
             this.setCurrentPlay = function (indexDate, indexFilm, indexPlay) {
 
@@ -80,25 +97,32 @@
                 // TODO selezionare la proiezione ($(elemento-giusto).addClass('admin-elem-active');), e togliere la vecchia selezione
             };
 
-            this.addPlay = function (data) {
-                if (ctrl.newPlay_3d) {
-                    ctrl.newPlay._3d = true;
-                } else {
-                    ctrl.newPlay._3d = false;
-                }
-
-                ctrl.newPlay.$save( function (data) {
-                    ctrl.plays.push(data);
-                    ctrl.newPlay = new Films();
-                    console.log("Play insertion success");
+            this.editPlay = function () {
+                Plays.update({id: ctrl.currentPlay.pid}, ctrl.currentPlay).$promise.then(function (data) {
+                    // ok
+                    console.log("UPDATE OK ->");
+                    console.log(data);
                     ctrl.updatePlays();
-                    $location.path("/admin/plays");
-
+                    $location.path("/admin/plays")
                 }, function () {
-                    //Fail Case
-                    console.log("Play insertion fail");
+                    // fail...
+                    console.log("UPDATE fail");
                 });
             };
+
+            this.deletePlay = function () {
+                Plays.delete({id: ctrl.currentPlay.pid}, function () {
+                    console.log("Play deletion success");
+                    ctrl.updatePlays();
+                }, function () {
+                    console.log("Play deletion fail");
+                });
+            };
+
+            this.updatePlays = function () {
+                $rootScope.loadPlaysByDate();
+            };
+
 
             this.open_delete_modal = function (indexDate, indexFilm, indexPlay) {
                 $('#modal_deleteAgree').openModal();
@@ -107,10 +131,9 @@
 
             this.open_modify_page = function (indexDate, indexFilm, indexPlay) {
                 // TODO change modal
-                $('#modal_deleteAgree').openModal();
+                $('#modal_edit').openModal();
                 ctrl.setCurrentPlay(indexDate, indexFilm, indexPlay);
-                // TODO chiaramente non funziona --> chiedere a Sam fare merge tra il controller sopra e questo
-                $location.path('/admin/plays/' + ctrl.currentPlay.pid);
+
             };
 
             this.playGenerator = function (indexDate, indexFilm, indexPlay) {
@@ -132,7 +155,7 @@
                 $rootScope.loadPlaysByDate();
             };
 
-            this.loadPlay();
+            this.init();
         }]);
 
 

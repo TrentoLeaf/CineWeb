@@ -76,7 +76,6 @@
                                             t.time = $filter('date')(t.time, 'HH:mm');
                                             return t;
                                         });
-                                        delete o.fid;
                                         current.films.push(o);
                                     }
                                 }

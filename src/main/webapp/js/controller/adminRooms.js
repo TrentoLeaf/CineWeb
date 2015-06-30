@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('adminRooms', ['filmsPlaysModule'])
-        .controller ('AdminNewRoomController', ['$rootScope', '$location', 'Rooms', function ($rootScope, $location, Rooms) {
+        .controller ('AdminNewRoomController', ['$rootScope', '$location', 'Rooms', 'Theatre', function ($rootScope, $location, Rooms, Theatre) {
 
         var ctrl = this;
         this.newRoom = {};
@@ -33,8 +33,10 @@
             ctrl.hiddenSeats = ctrl.shared_obj.selected_seats;
 
             // mette a 0 (non esistenti) in ctrl.newRoom.seats le poltrone che sono state selezionate (cioè quelle non esistenti)
-            for (var seat in ctrl.hiddenSeats) {
-                ctrl.newRoom.seats[seat.row][seat.col] = 0;
+            for (var seat = 0; seat < ctrl.hiddenSeats.length; seat++) {
+                var row = parseInt(ctrl.hiddenSeats[seat].row);
+                var col = parseInt(ctrl.hiddenSeats[seat].col);
+                ctrl.newRoom.seats[row][col] = 0;
             }
 
             ctrl.newRoom.rows = ctrl.newRoom.seats.length;
@@ -42,7 +44,8 @@
 
 
             // TODO inviare al server ctrl.newRoom (#domandona: chi lo sceglie il rid?)
-        }
+            Theatre.addRoom(ctrl.newRoom);
+        };
 
 
     }])

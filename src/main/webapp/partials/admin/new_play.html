@@ -7,7 +7,7 @@
     </div>
 
     <div class="row">
-        <div class="center-align black-text">
+        <div class="center-align white-text">
             {{ctrl.newPlay | json}}
         </div>
     </div>
@@ -15,15 +15,18 @@
     <div class="row">
         <form class="col s12 offset-m2 m8 offset-l3 l6 center-align">
             <div class="row">
-                <div class="input-field">
-                    <input id="fid" type="number" class="validate" ng-model="ctrl.newPlay.fid">
-                    <label for="fid">Fid</label>
+                <div class="input-field col s12 m12 l12">
+                    <select ng-model="ctrl.newPlay.fid">
+                        <option value="" disabled selected>Choose your option</option>
+                        <option class="grey darken-3 yellow-text text-accent-4" ng-repeat="film in ctrl.films track by $index" ng-value="film.fid">{{film.title}}</option>
+                    </select>
+                    <label>Seleziona un film</label>
                 </div>
             </div>
             <div class="row">
-                <div class="input-field">
-                    <input id="rid" type="number" class="validate" ng-model="ctrl.newPlay.rid">
-                    <label for="rid">Rid</label>
+                <div class="input-field col s12 m12 l12">
+                    <input id="theatre" type="number" class="validate" ng-model="ctrl.newPlay.rid">
+                    <label for="theatre">Sala</label>
                 </div>
             </div>
             <div class="row">
@@ -63,3 +66,10 @@
         </form>
     </div>
 </div>
+
+<script>
+
+   setTimeout(function () {
+       $('select').material_select();
+   },1000);
+</script>

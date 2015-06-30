@@ -46,7 +46,7 @@
                 }
 
                 $('.buy-seats-loader').addClass('active');
-                ctrl.go=false;
+                ctrl.go=true;
 
                 // chiamata AJAX per inivare dati di acquisto e poter procedere
                 /*     BUYER.miachiamata1()
