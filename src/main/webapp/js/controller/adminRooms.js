@@ -57,11 +57,12 @@
             this.newRoom = {};
             this.newRoom.seats = [ctrl.newRoom.rows][ctrl.newRoom.columns];
             this.rooms = [];
+            this.currentSelected = -1;
             this.shared_obj = {};
             this.error = "";
 
             var init = function () {
-                console.log(ctrl.newRoom);
+
                 if ($rootScope.isUserLogged == false) {
                     $rootScope.afterLogin = "userArea";
                     $location.path('/login');
@@ -86,8 +87,7 @@
             this.setCurrentRoom = function (index) {
                 ctrl.currentRoom = ctrl.rooms[index];
                 // TODO selezionare la sala ($(elemento-giusto).addClass('admin-elem-active');), e togliere la vecchia selezione
-
-
+                ctrl.currentSelected = index;
                 Rooms.getRoomByID(ctrl.currentRoom.rid)
                     .success(function (data) {
                         ctrl.shared_obj.editable = false;
@@ -101,6 +101,9 @@
 
             };
 
+            this.isSelected = function (index) {
+              return (ctrl.currentSelected == index);
+            };
 
             this.loadRooms();
 

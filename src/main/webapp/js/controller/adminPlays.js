@@ -50,6 +50,9 @@
 
             var ctrl = this;
             this.currentPlay = {};
+            this.currentSelectedDate = -1;
+            this.currentSelectedFilm = -1;
+            this.currentSelectedPlay = -1;
             this.shared_obj = {};
             this.films = [];
 
@@ -78,11 +81,9 @@
             this.setCurrentPlay = function (indexDate, indexFilm, indexPlay) {
 
                 ctrl.currentPlay = ctrl.playGenerator(indexDate, indexFilm, indexPlay);
-
-                // TODO rimuovere il commento qui sotto
-                //ctrl.tmpPlay = ctrl.plays[index];
-                // TODO recuperare la matrice della sala e metterla in ctrl.tmpPlay.theatreMap
-                //ctrl.tmpPlay.theatreMap = undefined;
+                ctrl.currentSelectedDate = indexDate;
+                ctrl.currentSelectedFilm = indexFilm;
+                ctrl.currentSelectedPlay = indexPlay;
 
                 Rooms.getRoomByID(ctrl.currentPlay.rid)
                     .success(function (data) {
@@ -93,8 +94,6 @@
                         ctrl.shared_obj.editable = false;
                         ctrl.shared_obj.mapTheatre = [];
                     });
-
-                // TODO selezionare la proiezione ($(elemento-giusto).addClass('admin-elem-active');), e togliere la vecchia selezione
             };
 
             this.editPlay = function () {
