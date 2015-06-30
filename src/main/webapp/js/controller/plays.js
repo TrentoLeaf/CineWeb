@@ -16,7 +16,6 @@
 
             this.setCurrent = function (date, film) {
                 this.current = $rootScope.playsByDate[date].films[film];
-                this.current['date'] = date;
                 $('#modal').openModal();
             };
 
@@ -30,7 +29,6 @@
             this.closeWindow = function () {
                 console.log("Close window...");
                 $('#modal').closeModal();
-                // TODO call setTab(1)
             };
 
             this.showTrailer = function () {
