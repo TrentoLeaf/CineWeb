@@ -124,7 +124,6 @@ public class ManageData {
         filmsDB.createFilm(f14);
         filmsDB.createFilm(f15);
         filmsDB.createFilm(f16);
-        filmsDB.createFilm(f16);
         filmsDB.createFilm(f17);
         filmsDB.createFilm(f18);
         filmsDB.createFilm(f19);
