@@ -4,7 +4,7 @@
     angular.module('PlaysModule', ['filmsPlaysModule'])
         .controller('PlaysController', ['$rootScope', '$location', 'CompletePlays','$sce', function ($rootScope, $location, CompletePlays, $sce) {
             this.current = {};
-            this.show_trailer_for_current = "Guarda il Trailer";
+            this.show_trailer_for_current = "Trailer";
 
             var ctrl = this;
 
@@ -81,10 +81,10 @@
             };
 
             this.showTrailer = function () {
-                if (this.show_trailer_for_current == "Guarda il Trailer") {
-                    this.show_trailer_for_current = "Guarda la Locandina";
+                if (this.show_trailer_for_current == "Trailer") {
+                    this.show_trailer_for_current = "Locandina";
                 } else {
-                    this.show_trailer_for_current = "Guarda il Trailer";
+                    this.show_trailer_for_current = "Trailer";
                 }
             };
 

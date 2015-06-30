@@ -43,8 +43,8 @@
 
             // TODO inviare al server ctrl.newRoom (#domandona: chi lo sceglie il rid?)
         }
-        
-        
+
+
     }])
 
         .controller('AdminRoomsController', ['$rootScope', '$location', 'Rooms', function ($rootScope, $location, Rooms) {
