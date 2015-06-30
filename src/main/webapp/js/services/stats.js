@@ -1,6 +1,4 @@
-/**
- * Created by Willo on 29/06/2015.
- */
+/*Created by Willo on 29/06/2015. */
 (function () {
     'use strict';
 

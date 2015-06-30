@@ -1,14 +1,6 @@
-/**
- * Created by Willo on 24/06/2015.
- */
+/*Created by Willo on 24/06/2015.*/
 (function () {
     'use strict';
-
-    /*Io devo fare:
-     * -Lista dei posti venduti per ciascuna programmazione
-     * -Lista incassi per film
-     * -Lista dei clienti che comprano di più
-     * */
 
     angular.module('adminStats', ['statsModule'])
         .controller('AdminStatsController', ['$location', 'Films', 'Stats', function ($location, Films, Stats) {
@@ -20,13 +12,10 @@
                 labels: [],
                 datasets: [
                     {
-                        label: "My dataset",
-                        fillColor: "rgba(242,54,255,0.2)",
-                        strokeColor: "rgba(242,54,255,1)",
-                        pointColor: "rgba(242,54,255,1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(242,54,255,1)",
+                        fillColor: "rgba(151,187,205,0.5)",
+                        strokeColor: "rgba(151,187,205,0.8)",
+                        highlightFill: "rgba(151,187,205,0.75)",
+                        highlightStroke: "rgba(151,187,205,1)",
                         data: []
                     }
                 ]
@@ -35,73 +24,64 @@
             this.topUsers = function () {
                 Stats.topUsers()
                     .success(function (data) {
-                        console.log('Sto parsando i dati di top user');
-                        /*Formato dati ricevuti
-                         "uid": 3,
-                         "firstName": "aaa",
-                         "secondName": "aaa",
-                         "tickets": 5,
-                         "spent": 35
-                         */
-                        for(var user = 0; user <= data.size ; user++){
-                            topClientsData.labels.push(data[user].firstName + ' ' + data[user].secondName);
-                            console.log("name "+data[user].firstName + ' ' + data[user].secondName);
-                            topClientsData.datasets.data.push(data[user].spent);
-                            console.log("spent "+data[user].spent);
+
+                        ctrl.error="";
+
+                        for (var user in data) {
+                            if (data[user].spent != undefined) {
+                                topClientsData.labels.push(data[user].firstName + ' ' + data[user].secondName);
+                                topClientsData.datasets[0].data.push(data[user].spent);
+                            }
                         }
-                        console.log('Fine parsing dati user');
+
+                        var ctx = $("#topClients").get(0).getContext("2d");
+                        var topClients = new Chart(ctx).Bar(topClientsData, {pointDot: false});
                     })
                     .error(function (error) {
-                        console.log('Errore in parse dati top users');
+                        ctrl.error = "Il caricamento dei dati è fallito.";
                     });
             };
 
-            this.topUsers();
+            var filmsIncomeData = [];
 
-            var ctx = document.getElementById("topClients").getContext("2d");
-            var topClients = new Chart(ctx).Bar(topClientsData, {pointDot: false});
-
-            var filmsIncomeData = {
-                labels: [],
-                datasets: [
-                    {
-                        label: "My dataset",
-                        fillColor: "rgba(151,187,205,0.2)",
-                        strokeColor: "rgba(151,187,205,1)",
-                        pointColor: "rgba(151,187,205,1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(151,187,205,1)",
-                        data: []
-                    }
-                ]
-            };
-
-            this.filmsIncomeData = function () {
+            this.filmsIncome = function () {
                 Stats.grossingFilms()
                     .success(function (data) {
-                        console.log('Sto parsando i dati di film income');
-                        /*Formato dati ricevuti
-                         "fid": 1,
-                         "title": "Teo",
-                         "grossing": 35
-                         */
-                        for(var film = 0; film <= data.size; film++){
-                            filmsIncomeData.labels.push(data[film].title);
-                            console.log("title "+data[film].title);
-                            filmsIncomeData.datasets.data.push(data[film].grossing);
-                            console.log("grossing "+data[film].grossing);
+                        var colors = [
+                            "#464646",
+                            "#E52323",
+                            "#1BB21B",
+                            "#1C82AF",
+                            "#E8C800"
+                        ];
+                        ctrl.error="";
+
+                        for (var film in data) {
+                            if (data[film].grossing != undefined) {
+                                filmsIncomeData.push(
+                                    {
+                                        label: data[film].title,
+                                        value: data[film].grossing,
+                                        color: colors[Math.floor(Math.random() * (colors.length - 0) + 0)]
+                                    }
+                                );
+
+                                console.log((Math.random() * (colors.length - 0) + 0));
+                                console.log(filmsIncomeData[film].color);
+                            }
                         }
-                        console.log('Fine parsing dati film');
+
+                        var ctx = $("#filmsIncome").get(0).getContext("2d");
+                        var topFilms = new Chart(ctx).Doughnut(filmsIncomeData, {
+                            animateScale: true
+                        });
                     })
                     .error(function (error) {
-                        console.log('Errore in parse dati film income');
+                        ctrl.error = 'Errore in parse dati film income';
                     });
             };
 
-            this.filmsIncomeData();
-
-            var ctx = document.getElementById("filmsIncome").getContext("2d");
-            var filmsIncome = new Chart(ctx).Doughnut(filmsIncomeData, {pointDot: true});
+            this.filmsIncome();
+            this.topUsers();
         }]);
 })();
