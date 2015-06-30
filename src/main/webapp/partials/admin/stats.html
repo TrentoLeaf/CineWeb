@@ -6,26 +6,32 @@
         </div>
     </div>
 
+    <div class="row">
+        <h5 class="red">{{ctrl.error}}</h5>
+    </div>
+
     <!-- Contenuto della pagina stat -->
     <div class="row container">
-
-        <div class="card">
-            <div class="card-image">
-                <canvas id="filmsIncome" ></canvas>
-            </div>
-            <div class="card-content">
-                <span class="card-title grey-text text-darken-4">Riepilogo incassi per film</span>
+        <div class="col s12 offest-m1 m10 offset-l2 l8">
+            <div class="card">
+                <div class="card-content center-align">
+                    <span class="card-title grey-text text-darken-4">Riepilogo incassi per film (in €)</span>
+                </div>
+                <div class="card-image center-align">
+                    <canvas id="filmsIncome" height="400px"></canvas>
+                </div>
             </div>
         </div>
     </div>
-
     <div class="row container">
-        <div class="card">
-            <div class="card-image">
-                <canvas id="topClients" ></canvas>
-            </div>
-            <div class="card-content">
-                <span class="card-title grey-text text-darken-4">Riepilogo acquisti per clienti</span>
+        <div class="col s12 offest-m1 m10 offset-l2 l8">
+            <div class="card">
+                <div class="card-content center-align">
+                    <span class="card-title grey-text text-darken-4">Riepilogo acquisti per clienti (in €)</span>
+                </div>
+                <div class="card-image center-align">
+                    <canvas id="topClients" height="400px"></canvas>
+                </div>
             </div>
         </div>
     </div>
