@@ -2,17 +2,14 @@
     "use strict";
 
     angular.module('PlaysModule', ['filmsPlaysModule'])
-        .controller('PlaysController', ['$location', 'CompletePlays', function ($location, CompletePlays) {
+        .controller('PlaysController', ['$rootScope', '$location', 'CompletePlays','$sce', function ($rootScope, $location, CompletePlays, $sce) {
             this.current = {};
-            this.show_trailer_for_current = "Guarda il Trailer";
+            this.show_trailer_for_current = "Trailer";
 
             var ctrl = this;
 
-            CompletePlays.playsByDate().then(function (data) {
-                console.log(data);
-            });
 
-            this.archive = [
+            this.archive = [ // TODO non serve più
                 {
                     date: 'Data 1',
                     films: [
@@ -60,16 +57,6 @@
                 }
             ];
 
-            this.loadData = function () {
-                CompletePlays.playsByDate().then(
-                    function (data) {
-                        ctrl.archive = data;
-                    },
-                    function (error) {
-                        // TODO: handle error
-                    }
-                );
-            };
 
             this.isNow = function (date) {
                 var act = new Date();
@@ -78,9 +65,13 @@
             };
 
             this.setCurrent = function (date, film) {
-                this.current = this.archive[date].films[film];
+                this.current = $rootScope.playsByDate[date].films[film];
                 this.current['date'] = date;
                 $('#modal').openModal();
+            };
+
+            this.trustSrc = function(src) {
+                return $sce.trustAsResourceUrl(src);
             };
 
             this.closeWindow = function () {
@@ -90,10 +81,10 @@
             };
 
             this.showTrailer = function () {
-                if (this.show_trailer_for_current == "Guarda il Trailer") {
-                    this.show_trailer_for_current = "Guarda la Locandina";
+                if (this.show_trailer_for_current == "Trailer") {
+                    this.show_trailer_for_current = "Locandina";
                 } else {
-                    this.show_trailer_for_current = "Guarda il Trailer";
+                    this.show_trailer_for_current = "Trailer";
                 }
             };
 

@@ -19,7 +19,7 @@
                 },
 
                 getRoomByID: function (id) {
-                    return $http.get(BASE_USERS + '/' + id)
+                    return $http.get(BASE_ROOMS + '/' + id)
                         .success(function (data) {
                             $log.info('GET ROOM OK: ' + data);
                         })

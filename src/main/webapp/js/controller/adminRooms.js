@@ -8,6 +8,7 @@
         this.newRoom = {};
         this.shared_obj = {};
         this.matrix = [];
+        this.hiddenSeats = [];
 
         this.createMatrix = function(rows, columns) {
             for(var i=0; i<rows; i++) {
@@ -22,12 +23,30 @@
             ctrl.createMatrix(ctrl.newRoom.rows, ctrl.newRoom.columns);
             ctrl.newRoom.seats = ctrl.matrix;
             ctrl.matrix = [];
+            // set parameters
+            ctrl.shared_obj.editable = true;
+            ctrl.shared_obj.selected_seats = [];
             ctrl.shared_obj.mapTheatre = ctrl.newRoom.seats;
         };
 
+        this.sendMap = function () {
+            ctrl.hiddenSeats = ctrl.shared_obj.selected_seats;
+
+            // mette a 0 (non esistenti) in ctrl.newRoom.seats le poltrone che sono state selezionate (cioè quelle non esistenti)
+            for (var seat in ctrl.hiddenSeats) {
+                ctrl.newRoom.seats[seat.row][seat.col] = 0;
+            }
+
+            ctrl.newRoom.rows = ctrl.newRoom.seats.length;
+            ctrl.newRoom.columns = ctrl.newRoom.seats[0].length;
+
+
+            // TODO inviare al server ctrl.newRoom (#domandona: chi lo sceglie il rid?)
+        }
+
+
     }])
 
-// TODO mancano le dipendenze dal servizio Room (che non esiste)
         .controller('AdminRoomsController', ['$rootScope', '$location', 'Rooms', function ($rootScope, $location, Rooms) {
 
             var ctrl = this;
@@ -50,7 +69,6 @@
 
             this.loadRooms = function () {
                 init();
-                // TODO request al server tramite il servizio Room per ottenere tutte le sale
                 Rooms.getRoomsOnly()
                     .success(function (data) {
                         console.log(data);
@@ -69,9 +87,11 @@
 
                 Rooms.getRoomByID(ctrl.currentRoom.rid)
                     .success(function (data) {
+                        ctrl.shared_obj.editable = false;
                         ctrl.shared_obj.mapTheatre = data.seats;
                     })
                     .error (function (error) {
+                    ctrl.shared_obj.editable = false;
                     ctrl.shared_obj.mapTheatre = [];
                 });
 

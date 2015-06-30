@@ -264,10 +264,10 @@ public class DB {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS films (" +
                     "fid SERIAL," +
-                    "title VARCHAR(100) NOT NULL," +
-                    "genre VARCHAR(20)," +
-                    "trailer VARCHAR(100)," +
-                    "playbill VARCHAR(100)," +
+                    "title TEXT NOT NULL," +
+                    "genre VARCHAR(100)," +
+                    "trailer TEXT," +
+                    "playbill TEXT," +
                     "plot TEXT," +
                     "duration INTEGER," +
                     "PRIMARY KEY (fid));");

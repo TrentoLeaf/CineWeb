@@ -94,8 +94,14 @@ public class PlaysDB {
     public List<Play> getPlays() throws DBException {
         final List<Play> plays = new ArrayList<>();
 
+        final String query = "WITH all_seats AS (SELECT pid, rid, x, y FROM plays NATURAL JOIN seats EXCEPT " +
+                "SELECT pid, rid, x ,y FROM plays NATURAL JOIN tickets WHERE deleted = FALSE), " +
+                "not_free AS (SELECT pid, rid, count(*) AS free FROM all_seats GROUP BY pid, rid) " +
+                "SELECT pid, rid, fid, time, _3d, free FROM plays NATURAL JOIN not_free;";
+
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
-            ResultSet rs = stm.executeQuery("SELECT pid, fid, rid, time, _3d FROM plays;");
+            //ResultSet rs = stm.executeQuery("SELECT pid, fid, rid, time, _3d FROM plays;");
+            ResultSet rs = stm.executeQuery(query);
 
             while (rs.next()) {
                 int pid = rs.getInt("pid");
@@ -103,7 +109,8 @@ public class PlaysDB {
                 int rid = rs.getInt("rid");
                 DateTime time = new DateTime(rs.getTimestamp("time").getTime());
                 boolean _3d = rs.getBoolean("_3d");
-                plays.add(new Play(pid, fid, rid, time, _3d));
+                int free = rs.getInt("free");
+                plays.add(new Play(pid, fid, rid, time, _3d, free));
             }
 
         } catch (SQLException e) {

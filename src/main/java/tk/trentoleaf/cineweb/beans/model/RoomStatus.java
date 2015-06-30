@@ -1,5 +1,8 @@
 package tk.trentoleaf.cineweb.beans.model;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 
 /**
@@ -12,9 +15,23 @@ import java.util.Arrays;
 public class RoomStatus {
 
     private int rid;
+
+    @Min(value = 1, message = "A room must have at least 1 row")
+    @Max(value = 50, message = "A room cat have at most 50 rows")
     private int rows;
+
+    @Min(value = 1, message = "A room must have at least 1 column")
+    @Max(value = 50, message = "A room cat have at most 50 columns")
     private int columns;
+
+    @NotNull(message = "Seats cannot be null")
     private int[][] seats;
+
+    /**
+     * Construct a new empty RoomStatus.
+     */
+    public RoomStatus() {
+    }
 
     /**
      * Constructor.
@@ -28,6 +45,38 @@ public class RoomStatus {
         this.rid = rid;
         this.rows = rows;
         this.columns = columns;
+        this.seats = seats;
+    }
+
+    public int getRid() {
+        return rid;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
+    public int[][] getSeats() {
+        return seats;
+    }
+
+    public void setRid(int rid) {
+        this.rid = rid;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public void setColumns(int columns) {
+        this.columns = columns;
+    }
+
+    public void setSeats(int[][] seats) {
         this.seats = seats;
     }
 

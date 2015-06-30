@@ -14,7 +14,7 @@
 
     /*  functions to manage the svg */
 
-    function generateSvg(mappa, spettacolo, posti_selezionati) {
+    function generateSvg(mappa, spettacolo, posti_selezionati, modificabile) {
         /* INPUT
          Tutti)
          mappa: mappa della sala
@@ -23,9 +23,11 @@
          posti_selezionati: array da riempire con i posti selezionati nell sala
          2) Lista posti già acquistati
          mappa: matrice con posti acquistati (uguali a SEAT_UNAVAILABLE)
+         modificabile: utile per sapere se si sta creando una nuova sala
          3) Posti migliori (best_seats)
          mappa: matrice con posti migiliori (uguali a SEAT_BEST)
          NOTA: variabili non usate, alla chiamata,  possono essere messe a null
+
          */
 
         // clean the content of the svg
@@ -109,7 +111,7 @@
                     pp.attr({col: j.toString()});
 
                     // set the type of seat
-                    set_svg_seat(pp, mappa[i][j], spettacolo, posti_selezionati);
+                    set_svg_seat(pp, mappa[i][j], spettacolo, posti_selezionati, modificabile);
 
                     snap.append(pp);
                 }
@@ -143,13 +145,12 @@
         $('.tooltipped').tooltip({delay: 300});
     }
 
-    function set_svg_seat (poltrona_svg, posto, spettacolo, posti_selezionati) {
+    function set_svg_seat (poltrona_svg, posto, spettacolo, posti_selezionati, modificabile) {
 
         switch (posto) {
 
             case SEAT_AVAILABLE:
                 if (spettacolo != undefined) { // only for selection
-
                     // set hover colors
                     poltrona_svg.hover(seatHoverIn, seatHoverOut);
 
@@ -158,7 +159,6 @@
                         if (this.hasClass('seat-selected')) {
                             this.removeClass('seat-selected');
                             this.hover(seatHoverIn, seatHoverOut);
-                            // TODO remove the id from list of selected seats
                             posti_selezionati.splice({
                                 row: poltrona_svg.attr('row'),
                                 col: poltrona_svg.attr('col')
@@ -180,6 +180,28 @@
                             }
                         }
                     });
+                } else {
+                    if (modificabile) { // creazione di una nuova sala
+                        // set click handler
+                        poltrona_svg.click(function () {
+                            if (this.hasClass('seat-hidden')) {
+                                this.removeClass('seat-hidden');
+                                console.log("Poltrona visibile");
+                                posti_selezionati.splice({
+                                    row: poltrona_svg.attr('row'),
+                                    col: poltrona_svg.attr('col')
+                                }, 1);
+                            }
+                            else {
+                                this.addClass('seat-hidden');
+                                console.log("Poltrona nascosta");
+                                posti_selezionati.push({
+                                    row: poltrona_svg.attr('row'),
+                                    col: poltrona_svg.attr('col')
+                                });
+                            }
+                        });
+                    }
                 }
                 break;
             case SEAT_UNAVAILABLE:
@@ -241,7 +263,7 @@
                         //NEW
                         if ((scope.o.film != undefined) && (scope.o.film.seats != undefined) && (scope.o.selected_seats != undefined)) {
                             console.log("GENERATING BUY MAP");
-                            generateSvg(scope.o.film.seats, scope.o.film, scope.o.selected_seats);
+                            generateSvg(scope.o.film.seats, scope.o.film, scope.o.selected_seats, false);
                         }
 
                     }, true);
@@ -252,7 +274,13 @@
                         // scope.o.mapTheatre: mappa (matrice) di una sala
                         if ((scope.o.mapTheatre != undefined)) {
                             console.log("GENERATING PLAY MAP");
-                            generateSvg(scope.o.mapTheatre, undefined, undefined);
+                            if (scope.o.editable != undefined) {
+                                if (!scope.o.editable) {
+                                    generateSvg(scope.o.mapTheatre, undefined, undefined, false);
+                                } else {
+                                    generateSvg(scope.o.mapTheatre, undefined, scope.o.selected_seats, true);
+                                }
+                            }
                         }
 
                     }, true);

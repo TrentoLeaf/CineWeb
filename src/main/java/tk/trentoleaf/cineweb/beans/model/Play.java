@@ -25,6 +25,9 @@ public class Play implements Serializable {
     @NotNull(message = "_3d cannot be null")
     private Boolean _3d;
 
+    // number of free places
+    private Integer free;
+
     /**
      * Construct an empty play.
      */
@@ -75,6 +78,25 @@ public class Play implements Serializable {
         this._3d = _3d;
     }
 
+    /**
+     * Construct a play.
+     *
+     * @param pid        The Play ID.
+     * @param fid        The played Film ID.
+     * @param rid        The room ID in which the film is played.
+     * @param time       When the film is played.
+     * @param _3d        True if the film is in 3D.
+     * @param free Number of free places for this play.
+     */
+    public Play(int pid, int fid, int rid, DateTime time, boolean _3d, Integer free) {
+        this.pid = pid;
+        this.fid = fid;
+        this.rid = rid;
+        this.time = time;
+        this._3d = _3d;
+        this.free = free;
+    }
+
     public int getPid() {
         return pid;
     }
@@ -107,12 +129,20 @@ public class Play implements Serializable {
         this.time = time;
     }
 
-    public boolean is_3d() {
+    public Boolean is_3d() {
         return _3d;
     }
 
-    public void set_3d(boolean _3d) {
+    public void set_3d(Boolean _3d) {
         this._3d = _3d;
+    }
+
+    public Integer getFree() {
+        return free;
+    }
+
+    public void setFree(Integer free) {
+        this.free = free;
     }
 
     @Override
@@ -130,7 +160,9 @@ public class Play implements Serializable {
         if (pid != play.pid) return false;
         if (fid != play.fid) return false;
         if (rid != play.rid) return false;
-        if (_3d != play._3d) return false;
-        return time.equals(play.time);
+        if (!time.equals(play.time)) return false;
+        if (!_3d.equals(play._3d)) return false;
+        return !(free != null ? !free.equals(play.free) : play.free != null);
     }
+
 }

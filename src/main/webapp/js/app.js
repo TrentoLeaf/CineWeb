@@ -28,7 +28,8 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule', 'roomsModule',
-        'registrationModule', 'meModule', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'adminStats', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule'])
+        'registrationModule', 'meModule', 'adminDashboard', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'adminStats', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule'])
+
 
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
@@ -70,7 +71,9 @@ $(document).ready(function () {
                 controller: 'ResetController',
                 controllerAs: 'ctrl'
             }).when ('/admin',{
-                templateUrl: '../partials/admin/dashboard.html'
+                templateUrl: '../partials/admin/dashboard.html',
+                controller: 'AdminDashboardController',
+                controllerAs: 'ctrl'
             }).when ('/admin/films',{
                 templateUrl: '../partials/admin/films.html',
                 controller: 'AdminFilmsController',
@@ -164,7 +167,7 @@ $(document).ready(function () {
             }
         })
 
-        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', function ($rootScope, $location, Prices, StorageService, Auth) {
+        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', 'CompletePlays', function ($rootScope, $location, Prices, StorageService, Auth, CompletePlays) {
 
             // redirect only if needed
             var redirect = function (path) {
@@ -234,6 +237,23 @@ $(document).ready(function () {
             $rootScope.tickets = [];
             $rootScope.loadPrices();
 
+
+            /* init of plays */
+
+            $rootScope.loadPlaysByDate = function () {
+                CompletePlays.playsByDate().then(
+                    function (data) {
+                        $rootScope.playsByDate = data;
+                        console.log("PLAYS LOADED");
+                        console.log(data);
+                    },
+                    function (error) {
+                        // TODO: handle error
+                    }
+                );
+            };
+
+            $rootScope.loadPlaysByDate();
 
 
             /* init of cart */

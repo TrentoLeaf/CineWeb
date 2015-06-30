@@ -3,7 +3,7 @@
 
     angular.module('adminPlays', ['filmsPlaysModule'])
 
-        .controller('AdminPlaysEditController', ['$routeParams', '$location', 'Plays', function($routeParams, $location, Plays) {
+        .controller('AdminPlaysEditController', ['$routeParams', '$location', 'Plays', '$rootScope', function($routeParams, $location, Plays, $rootScope) {
 
             var ctrl = this;
             this.currentPlay = {};
@@ -20,6 +20,7 @@
                     // ok
                     console.log("UPDATE OK ->");
                     console.log(data);
+                    ctrl.updatePlays();
                     $location.path("/admin/plays")
                 }, function () {
                     // fail...
@@ -27,16 +28,18 @@
                 });
             };
 
+            this.updatePlays = function () {
+                $rootScope.loadPlaysByDate();
+            };
 
         }])
-        .controller('AdminPlaysController', ['$rootScope', '$location', 'Plays', function ($rootScope, $location, Plays) {
+        .controller('AdminPlaysController', ['$rootScope', '$location', 'Plays', 'Rooms', function ($rootScope, $location, Plays, Rooms) {
 
 
             var ctrl = this;
             this.newPlay = new Plays();
-            this.tmpPlay = {};
+            this.currentPlay = {};
             this.newPlay_3d = false;
-            this.plays = [];
             this.shared_obj = {};
 
             var init = function () {
@@ -46,35 +49,33 @@
                 }
 
                 ctrl.loading = true;
-                ctrl.plays = [];
-                ctrl.tmpPlay = {};
+                ctrl.currentPlay = {};
             };
 
             this.loadPlay = function () {
 
                 init();
-                Plays.query(function (data) {
-                    ctrl.plays = data;
-                    ctrl.loading = false;
-                    console.log("PLAYS DOWNLOADED");
-                    console.log(data);
-                }, function (){
-                    //Fail Case
-                });
+
             };
 
-            this.setCurrentPlay = function (index) {
+            this.setCurrentPlay = function (indexDate, indexFilm, indexPlay) {
+
+                ctrl.currentPlay = ctrl.playGenerator(indexDate, indexFilm, indexPlay);
+
                 // TODO rimuovere il commento qui sotto
                 //ctrl.tmpPlay = ctrl.plays[index];
                 // TODO recuperare la matrice della sala e metterla in ctrl.tmpPlay.theatreMap
                 //ctrl.tmpPlay.theatreMap = undefined;
 
-
-                if (ctrl.tmpPlay.theatreMap == undefined) {
-                    ctrl.shared_obj.mapTheatre = [];
-                } else {
-                    ctrl.shared_obj.mapTheatre = ctrl.tmpPlay.theatreMap;
-                }
+                Rooms.getRoomByID(ctrl.currentPlay.rid)
+                    .success(function (data) {
+                        ctrl.shared_obj.editable = false;
+                        ctrl.shared_obj.mapTheatre = data.seats;
+                    })
+                    .error(function () {
+                        ctrl.shared_obj.editable = false;
+                        ctrl.shared_obj.mapTheatre = [];
+                    });
 
                 // TODO selezionare la proiezione ($(elemento-giusto).addClass('admin-elem-active');), e togliere la vecchia selezione
             };
@@ -84,12 +85,13 @@
                     ctrl.newPlay._3d = true;
                 } else {
                     ctrl.newPlay._3d = false;
-                };
+                }
 
                 ctrl.newPlay.$save( function (data) {
                     ctrl.plays.push(data);
                     ctrl.newPlay = new Films();
                     console.log("Play insertion success");
+                    ctrl.updatePlays();
                     $location.path("/admin/plays");
 
                 }, function () {
@@ -98,21 +100,39 @@
                 });
             };
 
-            this.open_delete_modal = function (index) {
+            this.open_delete_modal = function (indexDate, indexFilm, indexPlay) {
                 $('#modal_deleteAgree').openModal();
-                ctrl.tmpPlay = ctrl.plays[index];
+                ctrl.setCurrentPlay(indexDate, indexFilm, indexPlay);
             };
 
-            this.open_modify_page = function (index) {
+            this.open_modify_page = function (indexDate, indexFilm, indexPlay) {
                 // TODO change modal
                 $('#modal_deleteAgree').openModal();
-                ctrl.tmpPlay = ctrl.plays[index];
-                $location.path('/admin/plays/' + ctrl.tmpPlay.pid);
+                ctrl.setCurrentPlay(indexDate, indexFilm, indexPlay);
+                // TODO chiaramente non funziona --> chiedere a Sam fare merge tra il controller sopra e questo
+                $location.path('/admin/plays/' + ctrl.currentPlay.pid);
             };
 
+            this.playGenerator = function (indexDate, indexFilm, indexPlay) {
+                var tmpFilm = ctrl.cloneObject($rootScope.playsByDate[indexDate].films[indexFilm]);
+                tmpFilm.pid = tmpFilm.plays[indexPlay].pid;
+                tmpFilm.rid = tmpFilm.plays[indexPlay].rid;
+                tmpFilm.free = tmpFilm.plays[indexPlay].free;
+                tmpFilm.date = tmpFilm.plays[indexPlay].date;
+                tmpFilm.time = tmpFilm.plays[indexPlay].time;
+                delete tmpFilm.plays;
+                return tmpFilm;
+            };
+
+            this.cloneObject = function (obj) {
+                return (JSON.parse(JSON.stringify(obj)));
+            };
+
+            this.updatePlays = function () {
+                $rootScope.loadPlaysByDate();
+            };
 
             this.loadPlay();
-
         }]);
 
 

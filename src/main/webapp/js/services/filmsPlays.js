@@ -72,7 +72,6 @@
                                         var o = angular.copy(filmsObj[key]);
                                         o.plays = map[key];
                                         o.plays.map(function (t) {
-                                            delete t.date;
                                             delete t.fid;
                                             t.time = $filter('date')(t.time, 'HH:mm');
                                             return t;
