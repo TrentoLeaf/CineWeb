@@ -9,12 +9,6 @@
     </div>
 
     <div class="row">
-        <div class="center-align white-text">
-            {{ctrl.newRoom | json}}
-        </div>
-    </div>
-
-    <div class="row">
         <form class="col s12 offset-m2 m8 offset-l3 l6 center-align">
             <div class="row">
                 <div class="input-field col s5 m5 l5">
@@ -42,7 +36,7 @@
                 <a class="btn-large waves-effect waves-light yellow accent-4 black-text" href="#admin/rooms">INDIETRO
                     <i class="mdi-navigation-arrow-back left"></i>
                 </a>
-                <a class="btn-large waves-effect waves-light green white-text" href="" ng-click="ctrl.addRoom(ctrl.newRoom)">REGISTRA
+                <a class="btn-large waves-effect waves-light green white-text" ng-click="ctrl.sendMap()">REGISTRA
                     <i class="mdi-action-home right"></i>
                 </a>
             </div>

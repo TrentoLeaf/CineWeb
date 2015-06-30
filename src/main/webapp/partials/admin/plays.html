@@ -18,101 +18,40 @@
     <div class="row">
         <div class="col s12 m4 l4"> <!-- lista -->
             <!-- lista degli spettacoli da selezionare -->
-            <ul class="row grey darken-3" style="padding: 1em; border-radius: 2px;">
-                <li class="col s12 m12 l12 card grey darken-4" style="padding: 5px 10px 5px 0px;"> <!--inserire qua: ng-repeat="play in ctrl.plays track by $index" -->
-                    <div ng-click="ctrl.setCurrentPlay($index)">
-                        <div class="col s3 m2 l3 hide-on-med-only">
-                            <img class="responsive-img" ng-src="{{play.playbill}}" alt="locandina" />
-                        </div>
-                        <div class="col s8 m10 l8">
-                            <h6><b>czxcxz{{play.title}}</b></h6>
-                            <h6>Data: {{play.date}} Ore: {{play.time}}</h6>
-                            <h6>Sala: {{play.theatre}}</h6>
-                            <h6>Posti prenotati: {{play.booking}}</h6>
-                        </div>
-                        <div class="col s1 m1 l1 center-align">
-                            <div class="row">
+            <div ng-repeat="day in playsByDate track by $index" class="row grey darken-3" style="padding: 1em; border-radius: 2px;">
+                <h6 class="yellow-text text-accent-4">{{day.date | date:'EEEE, dd MMMM yyyy'}}</h6>
+                <ul>
+                    <div ng-repeat="film in day.films track by $index">
+                        <li class="col s12 m12 l12 card grey darken-4" style="padding: 5px 10px 5px 0px;" ng-repeat="play in film.plays track by $index" ng-class="{blue : ((ctrl.currentSelectedDate == $parent.$parent.$index) && (ctrl.currentSelectedFilm == $parent.$index) && (ctrl.currentSelectedPlay == $index)), grey : ((ctrl.currentSelectedDate != $parent.$parent.$index) || (ctrl.currentSelectedFilm != $parent.$index) || (ctrl.currentSelectedPlay != $index))}">
+                            <div ng-click="ctrl.setCurrentPlay($parent.$parent.$index, $parent.$index, $index)">
+                                <div class="col s3 m2 l3 hide-on-med-only">
+                                    <img class="responsive-img" ng-src="{{film.playbill}}" alt="locandina" />
+                                </div>
+                                <div class="col s8 m10 l8">
+                                    <h6><b>{{film.title}}</b></h6>
+                                    <h6>Data: {{play.date | date:'dd/MM/yyyy'}} Ora: {{play.time}}</h6>
+                                    <h6>Sala: {{play.rid}}</h6>
+                                    <h6>Posti liberi: {{play.free}}</h6>
+                                </div>
+                                <div class="col s1 m1 l1 center-align">
+                                    <div class="row">
 
+                                    </div>
+                                    <div class="row">
+                                        <a ng-click="ctrl.open_modify_page($parent.$parent.$index, $parent.$index, $index)"><i class="yellow-text mdi-action-assignment"></i></a>
+                                        <a ng-click="ctrl.open_delete_modal($parent.$parent.$index, $parent.$index, $index)" class="modal-trigger" data-target="modal_deleteAgree" href=""><i class="red-text mdi-action-delete"></i></a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="row">
-                                <a ng-click="ctrl.open_modify_page($index)"><i class="yellow-text mdi-action-assignment"></i></a>
-                                <a ng-click="ctrl.open_delete_modal($index)" class="modal-trigger" data-target="modal_deleteAgree" href=""><i class="red-text mdi-action-delete"></i></a>
-                            </div>
-                        </div>
+                        </li>
                     </div>
-                </li>
-                <h6 class="yellow-text text-accent-4">24 maggio 2015</h6>
-                <!-- TEST TEST TEST TEST -->
-                <li class="col s12 m12 l12 card grey darken-4" style="padding: 5px 10px 5px 0px;"> <!--inserire qua: ng-repeat="play in ctrl.plays track by $index" -->
-                    <div ng-click="ctrl.setCurrentPlay($index)">
-                        <div class="col s3 m2 l3 hide-on-med-only">
-                            <img class="responsive-img" ng-src="{{play.playbill}}" alt="locandina" />
-                        </div>
-                        <div class="col s8 m10 l8">
-                            <h6><b>czxcxz{{play.title}}</b></h6>
-                            <h6>Data: {{play.date}} Ore: {{play.time}}</h6>
-                            <h6>Sala: {{play.theatre}}</h6>
-                            <h6>Posti prenotati: {{play.booking}}</h6>
-                        </div>
-                        <div class="col s1 m1 l1 center-align">
-                            <div class="row">
-
-                            </div>
-                            <div class="row">
-                                <a ng-click="ctrl.open_modify_page($index)"><i class="yellow-text mdi-action-assignment"></i></a>
-                                <a ng-click="ctrl.open_delete_modal($index)" class="modal-trigger" data-target="modal_deleteAgree" href=""><i class="red-text mdi-action-delete"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <!-- END TEST END TEST END TEST END TEST -->
-            </ul>
-
+                </ul>
+            </div>
 
         </div>
         <div class="col s12 m8 l8"> <!-- mappa -->
             <map o="ctrl.shared_obj"></map><!-- will be filled by js -->
         </div>
-
-
-        <!--
-                    <div class="col s12 m12 l12">
-                        <div ng-hide="ctrl.loading">
-                            <table class="bordered center-align">
-                                <thead>
-                                <tr>
-                                    <td><a class="yellow-text text-accent-4" href="">Pid</a></td>
-                                    <td><a class="yellow-text text-accent-4" href="">Fid</a></td>
-                                    <td><a class="yellow-text text-accent-4" href="">Rid</a></td>
-                                    <td><a class="yellow-text text-accent-4" href="">Orario</a></td>
-                                    <td><a class="yellow-text text-accent-4" href="">Locandina</a></td>
-                                    <td><a class="yellow-text text-accent-4" href="">3d</a></td>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr class="white-text" ng-repeat="play in ctrl.plays">
-                                    <td>{{play.pid}}</td>
-                                    <td>{{play.fid}}</td>
-                                    <td>{{play.rid}}</td>
-                                    <td>{{play.time}}</td>
-                                    <td>{{play._3d}} €</td>
-                                    <td>
-                                        <a ng-click="ctrl.open_delete_modal($index)" class="modal-trigger" data-target="modal_deleteAgree" href=""><i class="red-text mdi-action-delete"></i></a>
-                                    </td>
-                                    <td>
-                                        <a href="#admin/plays/{{play.pid}}"><i class="yellow-text mdi-action-assignment"></i></a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-              -->
-
-
-
-
-
     </div>
 
 
@@ -128,21 +67,78 @@
     </div>
 </div>
 
+<div id="modal_edit" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <h4>Modifica Proiezione</h4>
+                <p>{{ctrl.currentPlay}}</p>
+            </div>
+        </div>
+        <form>
+            <div class="row">
+                <div class="input-field col s12 m12 l12">
+                    <select ng-model="ctrl.currentPlay.fid">
+                        <option class="grey darken-3 yellow-text text-accent-4" ng-repeat="film in ctrl.films track by $index" ng-value="film.fid">{{film.title}}</option>
+                    </select>
+                    <label>Seleziona un film</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m12 l12">
+                    <input id="theatre" type="number" class="validate" ng-model="ctrl.currentPlay.rid">
+                    <label class="active" for="theatre">Sala</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6 m6 l6">
+                    <input id="date" type="date" class="datepicker" ng-model="ctrl.currentPlay.time">
+                    <label class="active" for="time">Data</label>
+                </div>
+                <div class="input-field col s6 m6 l6">
+                    <input id="time" type="time" ng-model="ctrl.currentPlay.time">
+                    <label class="active" for="time">Orario</label>
+                </div>
+            </div>
 
-    <div id="modal_deleteAgree" class="modal">
-        <div class="modal-content">
-            <h4>Cancellazione Proiezione</h4>
-            <p>Sei sicuro di voler cancellare la seguente proiezione?</p>
-            <ul class="">
-                <li><label for="modal_pid" class="left-align">Pid</label><div id="modal_pid">{{ctrl.tmpPlay.pid}}</div></li>
-                <li><label for="modal_fid" class="left-align">Fid</label><div id="modal_fid">{{ctrl.tmpPlay.fid}}</div></li>
-                <li><label for="modal_rid" class="left-align">Rid</label><div id="modal_rid">{{ctrl.tmpPlay.rid}}</div></li>
-                <li><label for="modal_time" class="left-align">Orario</label><div id="modal_time">{{ctrl.tmpPlay.time}}</div></li>
-                <li><label for="modal_3d" class="left-align">3d</label><div id="modal_3d">{{ctrl.tmpPlay._3d}}</div></li>
-            </ul>
-        </div>
-        <div class="modal-footer">
-            <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
-            <a ng-click="ctrl.deletePlay(ctrl.tmpPlay)" class="modal-action modal-close waves-effect waves-green btn-flat">ACCETTA</a>
-        </div>
+            <div class="section center-align">
+                <div class="switch center-align">
+                    <label>
+                        2D
+                        <input type="checkbox" ng-model="ctrl.currentPlay._3d">
+                        <span class="lever center-align"></span>
+                        3D
+                    </label>
+                </div>
+            </div>
+        </form>
     </div>
+    <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">ANNULLA</a>
+        <a ng-click="ctrl.editPlay()" class="modal-action modal-close waves-effect waves-green btn-flat">MODIFICA</a>
+    </div>
+</div>
+
+
+<div id="modal_deleteAgree" class="modal">
+    <div class="modal-content">
+        <h4>Cancellazione Proiezione</h4>
+        <p>Sei sicuro di voler cancellare la seguente proiezione?</p>
+        <ul>
+            <li><label for="modal_fid" class="left-align">Titolo</label><div id="modal_fid">{{ctrl.currentPlay.title}}</div></li>
+            <li><label for="modal_time" class="left-align">Data e ora</label><div id="modal_time">{{ctrl.currentPlay.date | date: 'dd/MM/yyyy'}}, {{ctrl.currentPlay.time}}</div></li>
+            <li><label for="modal_rid" class="left-align">Sala</label><div id="modal_rid">{{ctrl.currentPlay.rid}}</div></li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
+        <a ng-click="ctrl.deletePlay()" class="modal-action modal-close waves-effect waves-green btn-flat">ACCETTA</a>
+    </div>
+</div>
+
+<script>
+
+    setTimeout(function () {
+        $('select').material_select();
+    },1000);
+</script>

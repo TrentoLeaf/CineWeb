@@ -85,7 +85,11 @@
 
 
             this.updatePrices = function () {
-                $rootScope.loadPrices();
+                /* //TODO non funziona --> Prices.query is not a function
+                 Prices.query(function (data) {
+                 $rootScope.tickets = data;
+                 });
+                 */
             };
 
             init();

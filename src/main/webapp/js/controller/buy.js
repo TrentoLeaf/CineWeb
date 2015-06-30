@@ -6,6 +6,22 @@
 
             var ctrl = this;
 
+            this.go = false;
+            this.error = "";
+
+            // errori
+            var OK = 0;
+            var ERROR_NO_MORE_SEATS = 1;
+            var ERROR_NO_MORE_PLAY = 2;
+
+            function setError(error) {
+                switch (error) {
+                    case OK :  ctrl.error = ""; break;
+                    case ERROR_NO_MORE_SEATS : ctrl.error = "Sembra che tu stia cercando di acquistare più biglieitti di quelli disponibili. Per favore, ricontrolla il carrello."; break;
+                    case ERROR_NO_MORE_PLAY : ctrl.error = "Sembra che tu stia cercando di acquistare una proiezione non più disponibile. Cancella il contenuto del carrello e prova a riempirlo di nuovo."; break;
+                }
+            }
+
             /* film di cui si stanno attualmente selezionando i posti, contiene id, locandina, titolo, data-ora, num_posti */
             $rootScope.buy.shared_obj.selected_seats = [];
             /* array di oggetti. Gli oggetti sono i posti selezionati */
@@ -18,22 +34,40 @@
                 $rootScope.buy.data_to_server = [];
                 $rootScope.buy.data_from_server_index = -1;
 
-                console.log("start index: " + $rootScope.buy.data_from_server_index);
-                console.log($rootScope.buy.shared_obj.film);
 
-                // TODO controlla se è loggato
                 /* se loggato prosegui col codice, altrimenti redirect alla pagina di login*/
+                if ($rootScope.isUserLogged) {
+                    $rootScope.afterLogin = "normal";
+                } else { /* not logged */
+                    // setta afterLogin a buy (per ritornare alla procedura d'acquisto)
+                    $rootScope.afterLogin = "buy";
+                    // vai alla pagina di login
+                    $location.path('/login');
+                }
 
-                // TODO chiamata AJAX per inivare dati di acquisto e poter procedere
-                // TODO callback
-                // TODO salva i dati ricevuti dal server in data_from_server
-                // lancia procedura scelta biglietti
-                this.next_buy();
+                $('.buy-seats-loader').addClass('active');
+                ctrl.go=true;
 
+                // chiamata AJAX per inivare dati di acquisto e poter procedere
+                /*     BUYER.miachiamata1()
+                 .success(function(data) {
+                 $('.buy-seats-loader').removeClass('active');
+                 ctrl.go= true;
+                 setError(OK);
+                 // salva i dati ricevuti dal server in data_from_server
+                 $rootScope.data_from_server = data;
+                 this.next_buy();
+                 }).error(function(error) {
+                 $('.buy-seats-loader').removeClass('active');
+                 ctrl.go= false;
+                 switch (error) {
+                 case ERROR_NO_MORE_SEATS:  setError(ERROR_NO_MORE_SEATS);  break;
+                 case ERROR_NO_MORE_PLAY:  setError(ERROR_NO_MORE_PLAY);  break;
+                 }
+                 });
+                 */
 
-
-                // TODO errore
-                /* redirect pagina d'errore */
+                this.next_buy(); // tmp
             };
 
             /* per ogni spettacolo acquistato presenta la pagina di scelta dei posti. Rimanda poi alla pagina di riepilogo*/

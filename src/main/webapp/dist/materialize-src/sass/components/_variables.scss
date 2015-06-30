@@ -35,9 +35,9 @@ $collapsible-header-color: #fff !default;
 $collapsible-border-color: #ddd !default;
 
 /*** Dropdown ***/
-$dropdown-bg-color: #fff !default;
+$dropdown-bg-color: color("grey", "darken-3") !default; //edit by samdja
 $dropdown-hover-bg-color: #eee !default;
-$dropdown-color: $secondary-color !default;
+$dropdown-color: color("yellow","accent-4") !default; //edit by samdja
 
 /*** Fonts ***/
 $roboto-font-path: "../font/roboto/" !default;

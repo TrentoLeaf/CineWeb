@@ -32,9 +32,9 @@ $color-seat-back-hover: rgb(28,130,175);
 $color-seat-arm-hover: rgb(36,168,226);
 $color-seat-sitting-hover: rgb(82,202,255);
 
-$color-seat-back-best: rgb(200,171,0);
+$color-seat-back-best: rgb(200, 185, 0);
 $color-seat-arm-best: rgb(232,200,0);
-$color-seat-sitting-best: rgb(255,205,0);
+$color-seat-sitting-best: rgb(240, 205, 0);
 
 
 /* theatre classes */
@@ -165,5 +165,20 @@ $color-seat-sitting-best: rgb(255,205,0);
 
     .seat_sitting {
         fill: $color-seat-sitting-best;
+    }
+}
+
+.seat-hidden {
+
+    .seat_back {
+        fill: rgba(0,0,0,0);
+    }
+
+    .seat_arm {
+        fill: rgba(0,0,0,0);
+    }
+
+    .seat_sitting {
+        fill: rgba(0,0,0,0);
     }
 }

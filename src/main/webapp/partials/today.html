@@ -1,8 +1,8 @@
 <div ng-controller="CartController as cc">
-    <div ng-repeat="date in ctrl.archive">
+    <div ng-repeat="date in playsByDate">
         <div class="row">
             <div class="col s12 m12 l12 center-align">
-                <h2 class="yellow-text text-accent-4">{{date.date}}</h2>
+                <h2 class="yellow-text text-accent-4">{{date.date | date:'EEEE, dd MMMM yyyy'}}</h2>
             </div>
         </div>
 
@@ -17,9 +17,9 @@
                             <span class="card-title yellow-text text-accent-4 truncate">{{film.title}}</span>
                             <div class="card-times">
                                 <div class="col s12 m12 l12 center-align">
-                                    <h6>{{date.date}}</h6>
+                                    <h6>{{date.date | date: 'dd/MM/yyyy'}}</h6>
                                     <h6>ORE</h6>
-                                    <span class="btn-flat grey darken-4 yellow-text text-accent-4 time-badge" ng-repeat="time in film.time">{{time}}</span>
+                                    <span class="btn-flat grey darken-4 yellow-text text-accent-4 time-badge" ng-repeat="play in film.plays">{{play.time}}</span>
                                 </div>
                             </div>
                         </div>
@@ -48,20 +48,18 @@
                         <button class='col s12 m4 l3 dropdown-button btn right grey darken-4 yellow-text text-accent-4' data-activates='buy_dropdown'>
                             ACQUISTA<i class="mdi-action-add-shopping-cart right"></i>
                         </button>
-
                         <!-- dropdown acquisto per orari diversi -->
-                        <ul id='buy_dropdown' class='dropdown-content'>
-                            <span ng-repeat="tm in ctrl.current.time track by $index">
+                        <ul > <!--id='buy_dropdown' class='dropdown-content' -->
+                            <span ng-repeat="play in ctrl.current.plays track by $index">
                             <li>
                                 <a class="grey-text text-darken-3"  ng-click="cc.addToCart(ctrl.current, $index); ctrl.closeWindow();">
 
-                                    <i class="mdi-action-add-shopping-cart right"></i>ore: {{tm}}
+                                    <i class="mdi-action-add-shopping-cart right"></i>ore: {{play.time}}
                                 </a>
                             </li>
-                            <li class="divider"></li>
                             </span>
+                            <li class="divider"></li>
                         </ul>
-
                         <script>
                             // TODO capire perchè non si può spostare da qui (altrimenti il dropdown non funziona)
                             // init dei dropdown
@@ -80,20 +78,21 @@
                             <img ng-show="ctrl.show_trailer_for_current == 'Guarda il Trailer'"
                                  class="responsive-img col s12 m12 l12" ng-src="{{ctrl.current.playbill}}"
                                  alt="Locandina">
-                            <iframe ng-hide="ctrl.show_trailer_for_current == 'Guarda il Trailer'"
+                            <iframe ng-hide="ctrl.show_trailer_for_current == 'Trailer'"
                                     class="col s12 m12 l12"
                                     id="ytplayer" type="text/html"
-                                    src="https://www.youtube.com/embed/M7lc1UVf-VE"
-                                    frameborder="0"></iframe> <!-- {{ctrl.current.trailer}} -->
-                        </div>
+                                    src="{{ctrl.trustSrc(ctrl.current.trailer)}}"
+                                    frameborder="0"></iframe>
+                        </div><!--   ng-src="{{ctrl.trustSrc(ctrl.current.trailer)}}"-->
                     </div>
                     <div class="col s12 m12 l6">
                         <h5 class="modal-date">Data: <span>{{ctrl.current.date}}</span></h5>
+                        <h5>Durata: <span>{{ctrl.current.duration}} minuti</span></h5>
                         <h5>Orari:</h5>
-                        <span class="btn-flat grey darken-4 yellow-text text-accent-4 modal-time-badge" ng-repeat="time in ctrl.current.time">{{time}}</span>
+                        <span class="btn-flat grey darken-4 yellow-text text-accent-4 modal-time-badge" ng-repeat="play in ctrl.current.plays">{{play.time}}</span>
                         <h5>Descrizione:</h5>
 
-                        <p>{{ctrl.current.description}}</p>
+                        <p>{{ctrl.current.plot}}</p>
                     </div>
                 </div>
             </div>

@@ -5885,7 +5885,7 @@ button.btn-floating {
   display: block; }
 
 .dropdown-content {
-  background-color: #fff;
+  background-color: #2B2B2D;
   margin: 0;
   display: none;
   min-width: 100px;
@@ -5907,7 +5907,7 @@ button.btn-floating {
       background-color: #eee; }
     .dropdown-content li > a, .dropdown-content li > span {
       font-size: 1.2rem;
-      color: #26a69a;
+      color: #f1Ba5f;
       display: block;
       padding: 1rem 1rem; }
     .dropdown-content li > a > i {
