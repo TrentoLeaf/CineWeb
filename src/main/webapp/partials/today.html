@@ -81,7 +81,7 @@
                             <iframe ng-hide="ctrl.show_trailer_for_current == 'Trailer'"
                                     class="col s12 m12 l12"
                                     id="ytplayer" type="text/html"
-                                    src="{{ctrl.trustSrc(ctrl.current.trailer)}}"
+                                    ng-src="{{ctrl.trustSrc(ctrl.current.trailer)}}"
                                     frameborder="0"></iframe>
                         </div><!--   ng-src="{{ctrl.trustSrc(ctrl.current.trailer)}}"-->
                     </div>
