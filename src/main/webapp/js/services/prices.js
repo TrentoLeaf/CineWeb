@@ -5,7 +5,7 @@
         .factory('Prices', ['BASE', '$resource', function (BASE, $resource) {
             return $resource(BASE + '/prices/:type', {type: '@type'}, {
                 update: {
-                    method: 'PUT'
+                    method: 'POST'
                 }
             });
         }]);

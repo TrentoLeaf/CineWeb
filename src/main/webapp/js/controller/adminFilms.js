@@ -72,8 +72,8 @@
                 });
             };
 
-            this.deleteFilm = function (film) {
-                Films.delete({fid: film.fid}, function (){
+            this.deleteFilm = function () {
+                Films.delete({id: ctrl.tmpFilm.fid}, function (){
                     console.log("Film deletion success");
                 }, function () {
                     console.log("Film deletion fail");

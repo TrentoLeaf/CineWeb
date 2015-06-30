@@ -27,7 +27,7 @@
                 ctrl.newPlay._3d = false;
             }
 
-            ctrl.newPlay.$save( function (data) {
+            ctrl.newPlay.$save(function (data) {
                 ctrl.newPlay = new Plays();
                 console.log("Play insertion success");
                 ctrl.updatePlays();

@@ -5,7 +5,7 @@
         .controller ('AdminNewRoomController', ['$rootScope', '$location', 'Rooms', 'Theatre', function ($rootScope, $location, Rooms, Theatre) {
 
         var ctrl = this;
-        this.newRoom = {};
+        this.newRoom = new Theatre();
         this.shared_obj = {};
         this.matrix = [];
         this.hiddenSeats = [];
@@ -42,9 +42,24 @@
             ctrl.newRoom.rows = ctrl.newRoom.seats.length;
             ctrl.newRoom.columns = ctrl.newRoom.seats[0].length;
 
+            ctrl.newRoom.$save(function (data) {
+                console.log("Theatre add success");
+                ctrl.updateRoom();
+                $location.path('/admin/rooms');
+            }, function () {
+                console.log("Theatre add fail");
+            });
+        };
 
-            // TODO inviare al server ctrl.newRoom (#domandona: chi lo sceglie il rid?)
-            Theatre.addRoom(ctrl.newRoom);
+        this.updateRoom = function () {
+            Rooms.getRoomsOnly()
+                .success(function (data) {
+                    console.log(data);
+                    ctrl.rooms = data;
+                })
+                .error(function (error) {
+                    ctrl.error="Sale non caricate.";
+                });
         };
 
 
