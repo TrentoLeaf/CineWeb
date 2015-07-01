@@ -28,12 +28,13 @@
                     // copio film per non sporcare i film in programmazione con valori del carrello
                     var newFilm = this.cloneObject(film);
                     // aggiungo un dropdown con tipo e numero di biglietti
-                    newFilm['tickets'] = [];
-                    newFilm['tickets'].push({type: $rootScope.tickets[0].type, number: 1});
-                    newFilm['time'] = film.plays[play_index].time;
-                    newFilm['pid'] = film.plays[play_index].pid;
-                    newFilm['rid'] = film.plays[play_index].rid;
-                    newFilm['free'] = film.plays[play_index].free;
+                    newFilm.tickets = [];
+                    newFilm.tickets.push({type: $rootScope.tickets[0].type, number: 1});
+                    newFilm.time = film.plays[play_index].time;
+                    newFilm.pid = film.plays[play_index].pid;
+                    newFilm.rid = film.plays[play_index].rid;
+                    newFilm.free = film.plays[play_index].free;
+                    delete newFilm.date;
 
                     $rootScope.cart.push(newFilm);
                     // anima l'icona del carrello dopo un acquisto carrello

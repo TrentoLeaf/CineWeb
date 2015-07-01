@@ -27,7 +27,6 @@
                 });
             };
 
-
         }])
         .controller('AdminFilmsController', ['$rootScope', '$location', 'Films', function ($rootScope, $location, Films) {
 

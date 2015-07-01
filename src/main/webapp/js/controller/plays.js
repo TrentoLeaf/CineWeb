@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('PlaysModule', ['filmsPlaysModule'])
-        .controller('PlaysController', ['$rootScope', '$location', 'CompletePlays','$sce', function ($rootScope, $location, CompletePlays, $sce) {
+        .controller('PlaysController', ['$rootScope', '$location', 'CompletePlays', function ($rootScope, $location, CompletePlays) {
 
             var ctrl = this;
             this.current = {};
@@ -17,13 +17,6 @@
             this.setCurrent = function (date, film) {
                 this.current = $rootScope.playsByDate[date].films[film];
                 $('#modal').openModal();
-            };
-
-            this.trustSrc = function(src) {
-                if (src != undefined) {
-                    src = src.replace("watch?v=", "v/");
-                }
-                return $sce.trustAsResourceUrl(src);
             };
 
             this.closeWindow = function () {
