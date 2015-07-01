@@ -28,7 +28,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule', 'roomsModule',
-        'registrationModule', 'meModule', 'adminDashboard', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'adminStats', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule'])
+        'registrationModule', 'meModule', 'adminDashboard', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'adminStats', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule', 'buyProcedureModule'])
 
 
         .config(['$routeProvider', function ($routeProvider) {
@@ -276,7 +276,8 @@ $(document).ready(function () {
                 if ($rootScope.cart == null) {
                     $rootScope.cart = [];
                 }
-                console.log("cart loaded: " + $rootScope.cart);
+                console.log("cart loaded: ");
+                console.log($rootScope.cart);
             };
 
             // carrello che contiene oggetti film modificati
@@ -374,6 +375,7 @@ $(document).ready(function () {
                 complete_error : true
             };
 
+            $rootScope.buy.data_to_server.cart = [];
         }]);
 
 })();
