@@ -32,7 +32,7 @@
                 }
             };
 
-            // init drowdowns
+            // init drowdowns (direttiva che emette l'event alla fine del file)
             $scope.$on('dropdownRepeatEnd', function(scope, element, attrs){
                 $('.dropdown-button').dropdown();
                 console.log("DROPDOWN INIZIALIZZATI");

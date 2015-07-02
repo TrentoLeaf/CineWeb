@@ -17,8 +17,8 @@
             <div class="row">
                 <div class="input-field col s12 m12 l12">
                     <select ng-model="ctrl.newPlay.fid">
-                        <option value="" disabled selected>Choose your option</option>
-                        <option class="grey darken-3 yellow-text text-accent-4" ng-repeat="film in ctrl.films track by $index" ng-value="film.fid">{{film.title}}</option>
+                        <option disabled selected>Scegli un film</option>
+                        <option class="grey darken-3 yellow-text text-accent-4" ng-repeat="film in ctrl.films track by $index" on-select-repeat ng-value="film.fid">{{film.title}}</option>
                     </select>
                     <label>Seleziona un film</label>
                 </div>
@@ -66,10 +66,3 @@
         </form>
     </div>
 </div>
-
-<script>
-
-   setTimeout(function () {
-       $('select').material_select();
-   },1000);
-</script>

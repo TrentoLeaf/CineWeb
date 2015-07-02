@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('adminPlays', ['filmsPlaysModule'])
-        .controller ('AdminNewPlaysController', ['Films', '$rootScope', '$location', 'Plays', function (Films, $rootScope, $location, Plays) {
+        .controller ('AdminNewPlaysController', ['Films', '$rootScope', '$scope', '$location', 'Plays', function (Films, $rootScope, $scope, $location, Plays) {
 
         var ctrl = this;
         this.newPlay =  new Plays();
@@ -42,6 +42,16 @@
         this.updatePlays = function () {
             $rootScope.loadPlaysByDate();
         };
+
+
+        // init select (direttiva che emette l'event alla fine del file)
+        $scope.$on('selectRepeatEnd', function(scope, element, attrs){
+            setTimeout(function () {
+                $('select').material_select();
+                console.log("SELECT INIZIALIZZATI");
+            },50);
+        });
+
 
         this.loadFilms();
     }])
@@ -138,7 +148,17 @@
             };
 
             this.init();
-        }]);
+        }])
+
+        // direttiva per inizializzare i select
+        .directive('onSelectRepeat', function() {
+            return function(scope, element, attrs) {
+                if (scope.$last) {
+                    console.log("SELECT EMIT");
+                    scope.$emit('selectRepeatEnd', element, attrs);
+                }
+            };
+        });
 
 
 })();
