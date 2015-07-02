@@ -207,12 +207,10 @@ $(document).ready(function () {
             /* utils */
             $rootScope.trustSrcTrailerUrl = function(src) {
                 if (src != undefined) {
-                    src = src.replace("watch?v=", "v/");
+                    src = src.replace("watch?v=", "embed/");
                 }
                 return $sce.trustAsResourceUrl(src);
             };
-
-
 
 
             //updateTotal
