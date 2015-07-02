@@ -167,7 +167,7 @@ $(document).ready(function () {
             }
         })
 
-        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', 'CompletePlays', function ($rootScope, $location, Prices, StorageService, Auth, CompletePlays) {
+        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', function ($rootScope, $location, Prices, StorageService, Auth, CompletePlays, $sce) {
 
             // redirect only if needed
             var redirect = function (path) {
@@ -194,6 +194,18 @@ $(document).ready(function () {
                 }
 
             });
+
+
+            /* utils */
+            $rootScope.trustSrcTrailerUrl = function(src) {
+                if (src != undefined) {
+                    src = src.replace("watch?v=", "v/");
+                }
+                return $sce.trustAsResourceUrl(src);
+            };
+
+
+
 
             //updateTotal
             /*

@@ -9,14 +9,17 @@
         this.result = "";
 
         this.fuffa = function () {
-            this.result = "Caricamento...";
+            $('.data-loader').addClass('active');
+            this.result = "CARICAMENTO...";
             $http.post(BASE + '/load-example-data')
                 .success(function (data, status) {
-                    ctrl.result = "Caricamento...OK";
+                    $('.data-loader').removeClass('active');
+                    ctrl.result = "CARICAMENTO...OK";
                     $log.info('FUFFA DATA OK -> ' + status);
                 })
                 .error(function (data, status) {
-                    ctrl.result = "Errore";
+                    $('.data-loader').removeClass('active');
+                    ctrl.result = "ERRORE";
                     $log.warn('FUFFA NOT RETRIVED -> ' + status + " " + data.error());
                 });
         };

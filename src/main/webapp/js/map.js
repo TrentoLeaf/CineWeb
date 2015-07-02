@@ -220,8 +220,30 @@
                 poltrona_svg.addClass('seat-unavailable');
                 break;
             case  SEAT_BEST:
-                // set color
-                poltrona_svg.addClass('seat-best');
+                if (modificabile) { // creazione di una nuova sala. Tratto la poltrona gold come una poltrona normale
+                    // set click handler
+                    poltrona_svg.click(function () {
+                        if (this.hasClass('seat-hidden')) {
+                            this.removeClass('seat-hidden');
+                            console.log("Poltrona visibile");
+                            posti_selezionati.splice({
+                                row: poltrona_svg.attr('row'),
+                                col: poltrona_svg.attr('col')
+                            }, 1);
+                        }
+                        else {
+                            this.addClass('seat-hidden');
+                            console.log("Poltrona nascosta");
+                            posti_selezionati.push({
+                                row: poltrona_svg.attr('row'),
+                                col: poltrona_svg.attr('col')
+                            });
+                        }
+                    });
+                } else {
+                    // set color gold
+                    poltrona_svg.addClass('seat-best');
+                }
                 break;
             case SEAT_NOT_EXIST:
                 if (modificabile) { // modifica di una nuova sala, aggiunta sedia 'invisibile'

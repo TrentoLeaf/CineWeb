@@ -26,6 +26,13 @@
                 </div>
             </div>
             <div class="row">
+                <iframe class="col s12 m12 l12"
+                        id="ytplayer" type="text/html"
+                        ng-src="{{trustSrcTrailerUrl(ctrl.currentFilm.trailer)}}"
+                        frameborder="0">
+                </iframe>
+            </div>
+            <div class="row">
                 <div class="input-field">
                     <input id="playbill" type="text" ng-model="ctrl.currentFilm.playbill">
                     <label class="active" for="playbill">Locandina</label>

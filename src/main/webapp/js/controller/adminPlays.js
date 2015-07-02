@@ -124,15 +124,14 @@
 
 
             this.open_delete_modal = function (indexDate, indexFilm, indexPlay) {
-                $('#modal_deleteAgree').openModal();
                 ctrl.setCurrentPlay(indexDate, indexFilm, indexPlay);
+                $('#modal_deleteAgree').openModal();
             };
 
             this.open_modify_page = function (indexDate, indexFilm, indexPlay) {
                 // TODO change modal
-                $('#modal_edit').openModal();
                 ctrl.setCurrentPlay(indexDate, indexFilm, indexPlay);
-
+                $('#modal_edit').openModal();
             };
 
             this.playGenerator = function (indexDate, indexFilm, indexPlay) {
@@ -140,8 +139,8 @@
                 tmpFilm.pid = tmpFilm.plays[indexPlay].pid;
                 tmpFilm.rid = tmpFilm.plays[indexPlay].rid;
                 tmpFilm.free = tmpFilm.plays[indexPlay].free;
-                tmpFilm.date = tmpFilm.plays[indexPlay].date;
-                tmpFilm.time = tmpFilm.plays[indexPlay].time;
+                tmpFilm.time = new Date(tmpFilm.plays[indexPlay].time);
+                delete tmpFilm.date;
                 delete tmpFilm.plays;
                 return tmpFilm;
             };
