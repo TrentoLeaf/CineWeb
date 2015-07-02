@@ -96,19 +96,6 @@
                     });
             };
 
-            this.editPlay = function () {
-                Plays.update({id: ctrl.currentPlay.pid}, ctrl.currentPlay).$promise.then(function (data) {
-                    // ok
-                    console.log("UPDATE OK ->");
-                    console.log(data);
-                    ctrl.updatePlays();
-                    $location.path("/admin/plays")
-                }, function () {
-                    // fail...
-                    console.log("UPDATE fail");
-                });
-            };
-
             this.deletePlay = function () {
                 Plays.delete({id: ctrl.currentPlay.pid}, function () {
                     console.log("Play deletion success");
@@ -127,11 +114,8 @@
                 ctrl.setCurrentPlay(indexDate, indexFilm, indexPlay);
                 $('#modal_deleteAgree').openModal();
             };
-
-            this.open_modify_page = function (indexDate, indexFilm, indexPlay) {
-                // TODO change modal
-                ctrl.setCurrentPlay(indexDate, indexFilm, indexPlay);
-                $('#modal_edit').openModal();
+            this.close_delete_modal = function () {
+                $('#modal_deleteAgree').closeModal();
             };
 
             this.playGenerator = function (indexDate, indexFilm, indexPlay) {
