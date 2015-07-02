@@ -1,0 +1,76 @@
+<div class="row">
+    <div class="col s12 m12 l12 center-align">
+        <h2 class="yellow-text text-accent-4">Carrello</h2>
+    </div>
+</div>
+<div class="row white-text"> <!-- Contenuto carrello -->
+    <ul  class="cart-items col s12 m12 l12"> <!-- lista dei film acquistati -->
+        <li ng-repeat="film in cart track by $index" class="cart-item row grey darken-3" style="margin-bottom: 2em;"> <!-- singolo film acquistato (oggetto da duplicare) -->
+            <div class="item-image col s4 m4 l4 center-align"> <!-- locandina -->
+                <img class="responsive-img" ng-src="{{film.playbill}}" alt="locandina" style="margin-top: 1em;" />
+            </div>
+            <div class="item-details col s8 m8 l8"> <!-- titolo, data, doropdowns -->
+                <div class="row">
+                    <div class="col s9 m9 l9">
+                        <h5>{{film.title}}</h5> <!-- titolo -->
+                        <h6>{{film.time | date: 'dd/MM/yyyy, hh:mm'}}</h6> <!-- data -->
+                        <h6>SALA {{film.rid}}</h6> <!-- sala -->
+                    </div>
+                    <i ng-click="cc.removeFromCart($index)" class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
+                </div>
+                <div class="col s12 m12 l12 item-ticket-counter-container">
+                    <p>Rimangono {{film.free}} biglietti.</p>
+                </div>
+                <div class="row item-ticket-labels">
+                    <div class="col s7 m7 l7">
+                        <label>Tipologia</label>
+                    </div>
+                    <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4">
+                        <label>Quantità</label>
+                    </div>
+                </div>
+                <div ng-repeat="drop in cart[$index].tickets track by $index" class="row"> <!-- dropdowns -->
+                    <div class="col s7 m7 l7"> <!-- dropdown tipologia biglietto -->
+                        <select class="browser-default black-text" ng-model="cart[$parent.$index].tickets[$index].type">
+                            <option ng-repeat="ticket in tickets" value="{{ticket.type}}">{{ticket.type}}</option>
+                        </select>
+                    </div>
+                    <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4"> <!-- dropdown quantità biglietti -->
+                        <input ng-model="cart[$parent.$index].tickets[$index].number" class="center-align" type="number" value="" min="0">
+                    </div>
+                </div>
+
+
+                <div class="row"> <!-- pulsante di aggiunta tipologia -->
+                    <a ng-click="cc.addDropDown($index)" class="col s12 m12 l12  white-text waves-effect waves-yellow btn-flat center-align">Aggiungi tipologia</a>
+                </div>
+            </div>
+        </li>  <!-- END singolo film acquistato -->
+    </ul> <!-- END lista acquisti -->
+
+</div>
+<div class="side-cart-actions row white-text"> <!-- div in fondo con bottone compra e totale -->
+    <div class="side-cart-total row">
+        <h5 class="col s7 m7 l7">Totale:</h5>
+        <h5 class="total col s5 m5 l5 right-align">{{total | currency:"€ "}}</h5>
+    </div>
+    <div>
+        <button ng-hide="cartLength() == 0" ng-click="cc.proceed();" id="btn-go-to-buy" class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui
+            <i class="mdi-navigation-chevron-right right"></i>
+
+            <div class="cart-loader preloader-wrapper small left" style="margin-top: 9px;">
+                <div class="spinner-layer spinner-blue-only spinner-white-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </button>
+    </div>
+</div>
+

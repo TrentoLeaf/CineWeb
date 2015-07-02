@@ -50,7 +50,7 @@
 
             // aggiunge un nuovo selettore per tipo e numero di biglietti
             this.addDropDown = function (film) {
-                if (($rootScope.cart[film].tickets.length) < 4) {
+                if (($rootScope.cart[film].tickets.length) < $rootScope.tickets.length) {
                     $rootScope.cart[film].tickets.push({type: $rootScope.tickets[0].type, number: 1});
                 }
                 //   $rootScope.updateTotal();

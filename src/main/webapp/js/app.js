@@ -46,6 +46,14 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when('/info', {
                 templateUrl: '../partials/info.html'
+            }).when('/cart_mobile', {
+                templateUrl: '../partials/cart_mobile.html',
+                controller: 'CartController',
+                controllerAs: 'cc'
+            }).when('/login_mobile', {
+                templateUrl: '../partials/login_mobile.html',
+                controller: 'LoginController',
+                controllerAs: 'c'
             }).when('/registration', {
                 templateUrl: '../partials/registration.html',
                 controller: 'RegistrationCtrl',
