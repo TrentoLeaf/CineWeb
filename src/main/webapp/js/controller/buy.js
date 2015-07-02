@@ -12,11 +12,13 @@
             // errori
             var OK = 0;
             var ERROR = 1;
+            var NOTHING = 2;
 
             function setError(error) {
                 switch (error) {
                     case OK :  ctrl.error = ""; break;
                     case ERROR : ctrl.error = "Sembra che tu sia cercando di acquistare proiezioni o biglietti non più disponibili. Per favore, ricontrolla il carrello."; break;
+                    case NOTHING : ctrl.error = ""; break;
                 }
             }
 
@@ -34,6 +36,7 @@
 
 
                 $('.buy-seats-loader').addClass('active');
+                setError(NOTHING);
                 ctrl.go=false;
 
                 // check if the user is already logged

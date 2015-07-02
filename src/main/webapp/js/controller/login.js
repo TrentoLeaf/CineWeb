@@ -24,7 +24,6 @@
                         //save basic user data
                         $rootScope.user = user;
                         setError("");
-
                         // redirect all' ultima pagina
                         switch ($rootScope.afterLogin) {
                             case "normal":
@@ -87,7 +86,7 @@
 
             this.setAfterLogin = function (type) {
                 $rootScope.afterLogin = type;
-            }
+            };
 
             this.change = function (email, oldPass, newPass) {
                 Auth.changePassword(email, oldPass, newPass).then(
