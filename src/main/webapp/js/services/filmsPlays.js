@@ -73,9 +73,11 @@
                                         o.plays = map[key];
                                         o.plays.map(function (t) {
                                             delete t.fid;
+                                            delete t.date;
                                             t.time = $filter('date')(t.time, 'HH:mm');
                                             return t;
                                         });
+                                        o.date = current.date;
                                         current.films.push(o);
                                     }
                                 }

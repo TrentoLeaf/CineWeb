@@ -272,24 +272,24 @@ public class RoomsDBTest extends DBTest {
         bookingsDB.createBooking(u1, tickets);
 
         // status
-        final int x = SeatCode.MISSING.getValue();
-        final int _ = SeatCode.AVAILABLE.getValue();
-        final int o = SeatCode.UNAVAILABLE.getValue();
+        final int xx = SeatCode.MISSING.getValue();
+        final int __ = SeatCode.AVAILABLE.getValue();
+        final int oo = SeatCode.UNAVAILABLE.getValue();
 
         // expected room r1 status (during p1)
         final int[][] s1 = {
-                {x, _, o, _, _},
-                {_, x, o, _, _},
-                {_, o, x, _, _},
-                {_, _, _, _, _}
+                {xx, __, oo, __, __},
+                {__, xx, oo, __, __},
+                {__, oo, xx, __, __},
+                {__, __, __, __, __}
         };
         final RoomStatus st1 = new RoomStatus(r1.getRid(), r1.getRows(), r1.getColumns(), s1);
 
         // expected room r2 status (during p2)
         final int[][] s2 = {
-                {_, _, _},
-                {_, _, _},
-                {_, _, _}
+                {__, __, __},
+                {__, __, __},
+                {__, __, __}
         };
         final RoomStatus st2 = new RoomStatus(r2.getRid(), r2.getRows(), r2.getColumns(), s2);
 

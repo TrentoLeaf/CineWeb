@@ -8,9 +8,6 @@
   #title {
     font-size: 1.5rem; } }
 
-.boxSelected {
-  background-color: yellow !important; }
-
 .userLoggedLine {
   height: 4px;
   margin: 0px;

@@ -1,5 +1,5 @@
 <div ng-controller="CartController as cc">
-    <div ng-repeat="date in playsByDate">
+    <div ng-repeat="date in playsByDate track by $index">
         <div class="row">
             <div class="col s12 m12 l12 center-align">
                 <h2 class="yellow-text text-accent-4">{{date.date | date:'EEEE, dd MMMM yyyy'}}</h2>
@@ -8,7 +8,7 @@
 
         <ul class="row">
             <div class="col s12 m11 l11">
-                <li class="col s12 offset-m1 m5 offset-l1 l3 play" ng-repeat="film in date.films">
+                <li class="col s12 offset-m1 m5 offset-l1 l3 play" ng-repeat="film in date.films track by $index">
                     <div class="card grey darken-3">
                         <div class="card-image">
                             <img class="responsive-img play-playbill" ng-src="{{film.playbill}}" alt="Locandina">
@@ -17,7 +17,7 @@
                             <span class="card-title yellow-text text-accent-4 truncate">{{film.title}}</span>
                             <div class="card-times">
                                 <div class="col s12 m12 l12 center-align">
-                                    <h6>{{date.date | date: 'dd/MM/yyyy'}}</h6>
+                                    <h6>{{film.date | date: 'dd/MM/yyyy'}}</h6>
                                     <h6>ORE</h6>
                                     <span class="btn-flat grey darken-4 yellow-text text-accent-4 time-badge" ng-repeat="play in film.plays">{{play.time}}</span>
                                 </div>
@@ -49,21 +49,24 @@
                             ACQUISTA<i class="mdi-action-add-shopping-cart right"></i>
                         </button>
                         <!-- dropdown acquisto per orari diversi -->
-                        <ul > <!--id='buy_dropdown' class='dropdown-content' -->
+                        <ul id='buy_dropdown' class='dropdown-content'>
                             <span ng-repeat="play in ctrl.current.plays track by $index">
-                            <li>
-                                <a class="grey-text text-darken-3"  ng-click="cc.addToCart(ctrl.current, $index); ctrl.closeWindow();">
-
-                                    <i class="mdi-action-add-shopping-cart right"></i>ore: {{play.time}}
-                                </a>
-                            </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a class=""  ng-click="cc.addToCart(ctrl.current, $index); ctrl.closeWindow();">
+                                        <i class="mdi-action-add-shopping-cart right"></i>ORE: {{play.time}} SALA: {{play.rid}}
+                                    </a>
+                                </li>
                             </span>
-                            <li class="divider"></li>
                         </ul>
                         <script>
                             // TODO capire perchè non si può spostare da qui (altrimenti il dropdown non funziona)
                             // init dei dropdown
                             $('.dropdown-button').dropdown();
+                            /*setTimeout(function () {
+                                $('.dropdown-button').dropdown();
+                            },1500);
+*/
                         </script>
                     </div>
                 </div>
@@ -75,18 +78,19 @@
                             </button>
                         </div>
                         <div class="row">
-                            <img ng-show="ctrl.show_trailer_for_current == 'Guarda il Trailer'"
+                            <img ng-show="ctrl.show_trailer_for_current == 'Trailer'"
                                  class="responsive-img col s12 m12 l12" ng-src="{{ctrl.current.playbill}}"
                                  alt="Locandina">
                             <iframe ng-hide="ctrl.show_trailer_for_current == 'Trailer'"
                                     class="col s12 m12 l12"
                                     id="ytplayer" type="text/html"
-                                    src="{{ctrl.trustSrc(ctrl.current.trailer)}}"
+                                    ng-src="{{ctrl.trustSrc(ctrl.current.trailer)}}"
                                     frameborder="0"></iframe>
-                        </div><!--   ng-src="{{ctrl.trustSrc(ctrl.current.trailer)}}"-->
+                        </div>
+                        <!--   ng-src="{{ctrl.trustSrc(ctrl.current.trailer)}}"-->
                     </div>
                     <div class="col s12 m12 l6">
-                        <h5 class="modal-date">Data: <span>{{ctrl.current.date}}</span></h5>
+                        <h5>Data: <span>{{ctrl.current.date | date: 'dd/MM/yyyy'}}</span></h5>
                         <h5>Durata: <span>{{ctrl.current.duration}} minuti</span></h5>
                         <h5>Orari:</h5>
                         <span class="btn-flat grey darken-4 yellow-text text-accent-4 modal-time-badge" ng-repeat="play in ctrl.current.plays">{{play.time}}</span>
