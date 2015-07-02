@@ -116,7 +116,7 @@ public class RestRoot {
     public synchronized Response loadExampleData() {
         try {
 
-            int x = 3;
+            int x = 100;
 
             // re-init db
             DB.instance().reset();

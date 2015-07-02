@@ -9,6 +9,7 @@ import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class ManageData {
 
@@ -103,8 +104,6 @@ public class ManageData {
         final Film f26 = new Film("Spirited Away", "action", "https://www.youtube.com/watch?v=ByXuk9QqQkk",x, "During her family's move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.", "http://ia.media-imdb.com/images/M/MV5BMjYxMDcyMzIzNl5BMl5BanBnXkFtZTYwNDg2MDU3._V1__SX629_SY905_.jpg");
         final Film f27 = new Film("How to Train Your Dragon 2", "fantasy", "https://www.youtube.com/watch?v=Z9a4PvzlqoQ",x, "When Hiccup and Toothless discover an ice cave that is home to hundreds of new wild dragons and the mysterious Dragon Rider, the two friends find themselves at the center of a battle to protect the peace.", "http://ia.media-imdb.com/images/M/MV5BMzMwMTAwODczN15BMl5BanBnXkFtZTgwMDk2NDA4MTE@._V1__SX629_SY905_.jpg");
         final Film f28 = new Film("Gone Girl", "action", "https://www.youtube.com/watch?v=esGn-xKFZdU",x, "With his wife's disappearance having become the focus of an intense media circus, a man sees the spotlight turned on him when it's suspected that he may not be innocent.", "http://ia.media-imdb.com/images/M/MV5BMTk0MDQ3MzAzOV5BMl5BanBnXkFtZTgwNzU1NzE3MjE@._V1__SX629_SY905_.jpg");
-        final Film f29 = new Film("Neighbors", "action", "https://www.youtube.com/watch?v=kL5c2szf3E4",x, "After they are forced to live next to a fraternity house, a couple with a newborn baby do whatever they can to take them down.", "http://ia.media-imdb.com/images/M/MV5BOTQ0OTkzODgyNF5BMl5BanBnXkFtZTgwOTA3OTE4MDE@._V1__SX629_SY905_.jpg");
-        final Film f30 = new Film("The Fault in Our Stars", "action", "https://www.youtube.com/watch?v=9ItBvH5J6ss",x, "Two teens, both who have different cancer conditions, fall in love after meeting at a cancer support group.", "http://ia.media-imdb.com/images/M/MV5BMjA4NzkxNzc5Ml5BMl5BanBnXkFtZTgwNzQ3OTMxMTE@._V1__SX629_SY905_.jpg");
 
 
         //add films
@@ -136,8 +135,6 @@ public class ManageData {
         filmsDB.createFilm(f26);
         filmsDB.createFilm(f27);
         filmsDB.createFilm(f28);
-        filmsDB.createFilm(f29);
-        filmsDB.createFilm(f30);
 
 
         //create rooms
@@ -148,7 +145,7 @@ public class ManageData {
 
 
 
-        createPlay(3);
+        createPlay(x);
 
         //createTicketsForR1();
         final List<Ticket> tickets = new ArrayList<>();
@@ -179,15 +176,39 @@ public class ManageData {
 
         Boolean glasses3D = false;
 
+        Random rand = new Random();
+        int randomNumber = 0;
+        int j=0;//used for change day
+
         List<Film> films = filmsDB.getFilms();
-        for (int i = 0; i < films.size()-1; i++) {
-            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(i * x), glasses3D));
+        for (int i = 0; i < films.size()-1 && (films.size()%4)==0; i++) {
+            randomNumber=rand.nextInt(10);
+            //create 3 play with one film on the first room
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber+(x*1)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber+(x*2)).plusDays(j), glasses3D));
             glasses3D = !glasses3D;
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(i * x), glasses3D));
+            i++;
+            randomNumber=rand.nextInt(10);
+            //create 3 play with one film on the second room
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber+(x*1)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber+(x*2)).plusDays(j), glasses3D));
             glasses3D = !glasses3D;
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(i * x), glasses3D));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(i * x), glasses3D));
+            i++;
+            randomNumber=rand.nextInt(10);
+            //create 3 play with one film on the third room
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber+(x*1)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber+(x*2)).plusDays(j), glasses3D));
+            i++;
+            randomNumber=rand.nextInt(10);
+            //create 3 play with one film on the fourth room
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber+(x*1)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber+(x*2)).plusDays(j), glasses3D));
             glasses3D = !glasses3D;
+            j++;
         }
     }
 
