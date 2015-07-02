@@ -2,17 +2,12 @@
     'use strict';
 
     angular.module('adminPrices', ['pricesModule'])
-        .controller('AdminPricesController', ['$location', '$rootScope', 'Prices', '$resource', function ($location, Prices, $rootScope, $resource) {
-
-            var Test = $resource('api/prices/:id', {type: '@id'}, {
-                update: {
-                    method: 'PUT'
-                }
-            });
+        .controller('AdminPricesController', ['$location', '$rootScope', 'Prices', function ($location, $rootScope, Prices) {
 
             var ctrl = this;
-            this.newPrice = new Test();
-            this.tmpPrice = new Test();
+            this.newPrice = {};
+            this.tmpPrice = {};
+            this.prices = [];
 
             console.log(this.newPrice);
 
@@ -23,12 +18,19 @@
                 }
             };
 
+            this.loadPrices = function () {
+                console.log(Prices);
+                Prices.getList().then(function (result) {
+                    ctrl.prices = result.data;
+
+                });
+            };
+
             // remove a priceClass
             this.deletePrice = function () {
 
-                console.log(Test);
                 // better BEFORE calling this function
-                Test.delete({type: ctrl.tmpPrice.type}, function () {
+                Prices.delete(ctrl.tmpPrice).then( function () {
                     // ok
                     ctrl.updatePrices();
                     console.log("Price deletion success");
@@ -39,8 +41,8 @@
 
 
             this.addPrice = function () {
-                ctrl.newPrice.$save(function () {
-                    ctrl.newPrice = new Test();
+                Prices.save(ctrl.newPrice).then(function () {
+                    ctrl.newPrice = {};
                     ctrl.updatePrices();
                 }, function () {
                     // errors
@@ -62,6 +64,7 @@
              */
             this.open_edit_modal = function (data) {
                 ctrl.tmpPrice = data;
+                ctrl.tmpPrice.id =
                 $('#modal_price_edit').openModal();
             };
 
@@ -72,7 +75,7 @@
 
             this.editPrice = function (price) {
 
-                Test.update({type: price.type}, price).$promise.then(function (data) {
+                Prices.update(price).then(function (data) {
                     // ok
                     ctrl.updatePrices();
                     console.log("UPDATE OK ->");
@@ -93,6 +96,7 @@
             };
 
             init();
+            this.loadPrices();
 
         }]);
 
