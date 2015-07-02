@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('PlaysModule', ['filmsPlaysModule'])
-        .controller('PlaysController', ['$rootScope', '$location', 'CompletePlays', function ($rootScope, $location, CompletePlays) {
+        .controller('PlaysController', ['$rootScope', '$scope', '$location', 'CompletePlays', function ($rootScope, $scope, $location, CompletePlays) {
 
             var ctrl = this;
             this.current = {};
@@ -32,9 +32,25 @@
                 }
             };
 
+            // init drowdowns
+            $scope.$on('dropdownRepeatEnd', function(scope, element, attrs){
+                $('.dropdown-button').dropdown();
+                console.log("DROPDOWN INIZIALIZZATI");
+            });
+
             this.log = function () {
                 console.log("pllog");
             };
 
-        }]);
+        }])
+
+        // direttiva per inizializzare i dropdown
+        .directive('onDropdownRepeat', function() {
+            return function(scope, element, attrs) {
+                if (scope.$last) {
+                    console.log("DROPDOWN EMIT");
+                    scope.$emit('dropdownRepeatEnd', element, attrs);
+                }
+            };
+        });
 })();
