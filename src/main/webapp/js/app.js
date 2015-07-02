@@ -241,11 +241,10 @@ $(document).ready(function () {
 
             // function to load the prices
             $rootScope.loadPrices = function () {
-                Prices.query(function (data) {
-                    /* data.map(function (o) {
-                     o.type = o.type.capitalizeFirstLetter();
-                     });*/
-                    $rootScope.tickets = data;
+                console.log(Prices);
+                console.log(angular.copy(Prices));
+                Prices.getList().then(function (result) {
+                    $rootScope.tickets = result.data;
                     // when data is ready re-update the total of the cart
                     $rootScope.updateTotal();
                 });

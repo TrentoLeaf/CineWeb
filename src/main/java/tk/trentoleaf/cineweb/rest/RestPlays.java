@@ -71,6 +71,8 @@ public class RestPlays {
             return Response.ok().build();
         } catch (EntryNotFoundException e) {
             throw NotFoundException.PLAY_NOT_FOUND;
+        } catch (ForeignKeyException e) {
+            throw new ConflictException("Cannot delete this play: there are booked seats");
         }
     }
 

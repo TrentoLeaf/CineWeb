@@ -32,16 +32,16 @@
                 <th class="yellow-text text-accent-4">C</th>
                 </thead>-->
                 <tbody>
-                <tr ng-repeat="ticket in tickets">
-                    <td>{{ticket.type}}</td>
-                    <td>{{ticket.price | currency:"€ "}}</td>
+                <tr ng-repeat="price in ctrl.prices">
+                    <td>{{price.type}}</td>
+                    <td>{{price.price | currency:"€ "}}</td>
                     <td>
-                        <a ng-click="ctrl.open_edit_modal(ticket)" class="modal-trigger"  data-target="modal_price_edit">
+                        <a ng-click="ctrl.open_edit_modal(price)" class="modal-trigger"  data-target="modal_price_edit">
                             <i class="yellow-text mdi-editor-mode-edit"></i>
                         </a>
                     </td>
                     <td>
-                        <a ng-click="ctrl.open_delete_modal(ticket)"  class="modal-trigger" data-target="modal_price_delete">
+                        <a ng-click="ctrl.open_delete_modal(price)"  class="modal-trigger" data-target="modal_price_delete">
                             <i class="mdi-action-delete red-text"></i> <!--Remove content -->
                         </a>
                     </td>

@@ -7,6 +7,8 @@ import tk.trentoleaf.cineweb.beans.model.FilmGrossing;
 import tk.trentoleaf.cineweb.db.FilmsDB;
 import tk.trentoleaf.cineweb.db.StatisticsDB;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.db.ForeignKeyException;
+import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
 
 import javax.validation.Valid;
@@ -85,6 +87,8 @@ public class RestFilms {
             return Response.ok().build();
         } catch (EntryNotFoundException e) {
             throw NotFoundException.FILM_NOT_FOUND;
+        } catch (ForeignKeyException e) {
+            throw new ConflictException("Cannot delete this films because of existing plays");
         }
     }
 
