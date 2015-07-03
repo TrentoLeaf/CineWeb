@@ -19,12 +19,12 @@
                 Auth.login(email, password)
                     .success(function (user) {
 
-                        // set isUserLogged var
-                        $rootScope.isUserLogged = true;
+                        setError("");
                         //save basic user data
                         $rootScope.user = user;
-                        setError("");
-
+                        // set isUserLogged var
+                        $rootScope.isUserLogged = true;
+                        
                         // redirect all' ultima pagina
                         switch ($rootScope.afterLogin) {
                             case "normal":

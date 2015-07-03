@@ -159,6 +159,13 @@ main .content-div {
     margin-bottom: 0px; }
   main .content-div .buy-summary .buy-btn {
     width: 100%; }
+  main .content-div .plays-list {
+    padding: 1em;
+    border-radius: 2px; }
+    @media only screen and (min-width: 600px) {
+      main .content-div .plays-list {
+        height: 800px;
+        overflow: auto; } }
 
 #modal {
   max-height: 80%;

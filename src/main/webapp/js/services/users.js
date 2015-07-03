@@ -13,6 +13,7 @@
 
         .factory('Auth', ['BASE', '$http', '$q', '$log', function (BASE, $http, $q, $log) {
             var BASE_USERS = BASE + "/users";
+            var BASE_BOOKINGS = BASE + "/bookings";
 
             return {
                 login: function (email, password) {
@@ -106,6 +107,16 @@
                         })
                         .error(function (data, status) {
                             $log.warn('ME FAILED: ' + status + " " + data);
+                        });
+                },
+
+                my_bookings: function () {
+                    return $http.get(BASE_BOOKINGS + "/my")
+                        .success(function (data) {
+                            $log.info('MY OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('MY FAILED: ' + status + " " + data);
                         });
                 }
             }

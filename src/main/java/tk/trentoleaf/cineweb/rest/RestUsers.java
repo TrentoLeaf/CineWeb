@@ -84,7 +84,7 @@ public class RestUsers {
                 final HttpSession session = request.getSession(true);
                 session.setAttribute(Utils.UID, user.getUid());
 
-                return Response.ok(new LoginOk(user)).build();
+                return Response.ok(new UserDetails(usersDB.getUser(user.getUid()))).build();
             }
 
             // login failed

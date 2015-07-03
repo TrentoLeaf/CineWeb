@@ -60,24 +60,24 @@
         <div class="row">
             <div class="col s12 offset-m1 m10 offset-l1 l10 ">
                 <ul class="collapsible" data-collapsible="expandable">
-                    <li> <!--TODO  ng-repeat -->
+                    <li ng-repeat="buy in ctrl.bookings" on-collapsible-repeat>
                         <div class="collapsible-header grey darken-3 white-text">
                             <div class="row">
                                 <div class="col s6 m6 l6">
                                     <i class="mdi-action-shopping-basket"></i>ACQUISTO
                                 </div>
                                 <div class="col s6 m6 l6 right-align">
-                                    <span>Data: {{ctrl.aaa}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
+                                    <span>Data: {{buy.time | date: 'dd/MM/yyyy'}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="collapsible-body white">
                             <div class="row">
                                 <div class="col s6 m6 l6">
-                                    <h5>Credito usato: {{ctrl.aaaa|currency:"€ "}}</h5>
+                                    <h5>Credito usato: {{buy.payedWithCredit | currency:"€ "}}</h5>
                                 </div>
                                 <div class="col s6 m6 l6 right-align">
-                                    <h5>Totale: {{ctrl.aaaaa|currency:"€ "}}</h5>
+                                    <h5>Totale: {{ buy.total | currency:"€ "}}</h5>
                                 </div>
                             </div>
                             <div class="row">
@@ -86,22 +86,14 @@
                                     <tr>
                                         <th>Film</th>
                                         <th>Tipologia</th>
-                                        <th>Quantità</th>
                                         <th>Prezzo</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr> <!-- TODO ng-repaet tabella -->
-                                        <td><span>Titolo1</span></td>
-                                        <td><span>Normale</span></td>
-                                        <td><span>2</span></td>
-                                        <td><span>12.50</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>Titolo2</span></td>
-                                        <td><span>Normale</span></td>
-                                        <td><span>2</span></td>
-                                        <td><span>12.50</span></td>
+                                    <tr ng-repeat="ticket in buy.tickets">
+                                        <td><span>{{ticket.title}}</span></td>
+                                        <td><span>{{ticket.type}}</span></td>
+                                        <td><span>{{ticket.price}}</span></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -210,14 +202,6 @@
                 </ul>
             </div>
         </div>
-
-        <!-- TODO spostare -->
-        <script>
-            $('.collapsible').collapsible({
-                accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-            });
-        </script>
-
 
         <div class="row">
 
