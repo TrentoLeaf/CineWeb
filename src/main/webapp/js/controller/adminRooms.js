@@ -103,7 +103,7 @@
                 ctrl.currentRoom = ctrl.rooms[index];
                 // TODO selezionare la sala ($(elemento-giusto).addClass('admin-elem-active');), e togliere la vecchia selezione
                 ctrl.currentSelected = index;
-                Rooms.getRoomByID(ctrl.currentRoom.rid)
+                Rooms.getRoomTopByID(ctrl.currentRoom.rid)
                     .success(function (data) {
                         ctrl.shared_obj.editable = false;
                         ctrl.shared_obj.mapTheatre = data.seats;

@@ -36,7 +36,7 @@ public class RestRooms {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{id}/top")
     @AdminArea
     @Compress
     public RoomStatus getTopSeats(@PathParam("id") int id) {
