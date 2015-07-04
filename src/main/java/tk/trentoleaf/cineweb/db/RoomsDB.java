@@ -312,7 +312,7 @@ public class RoomsDB {
     }
 
     // edit a room
-    public void editRoom(RoomStatus room) throws BadRoomException {
+    public void editRoom(RoomStatus room) throws DBException, BadRoomException {
 
         // check room
         if (!isRoomValid(room)) {
