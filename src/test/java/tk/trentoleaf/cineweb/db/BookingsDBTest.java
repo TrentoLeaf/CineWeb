@@ -7,6 +7,7 @@ import tk.trentoleaf.cineweb.beans.model.*;
 import tk.trentoleaf.cineweb.exceptions.db.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -43,6 +44,9 @@ public class BookingsDBTest extends DBTest {
         tickets.add(t1);
         tickets.add(t2);
         tickets.add(t3);
+        t1.setTitle(f1.getTitle());
+        t2.setTitle(f1.getTitle());
+        t3.setTitle(f1.getTitle());
 
         // create a booking
         final Booking booking = bookingsDB.createBooking(u1, tickets);
@@ -88,6 +92,9 @@ public class BookingsDBTest extends DBTest {
         tickets.add(t1);
         tickets.add(t2);
         tickets.add(t3);
+        t1.setTitle(f1.getTitle());
+        t2.setTitle(f1.getTitle());
+        t3.setTitle(f1.getTitle());
 
         // create a booking
         final Booking booking = bookingsDB.createBooking(u1, tickets);
@@ -99,11 +106,13 @@ public class BookingsDBTest extends DBTest {
 
         // expected bookings
         final List<Booking> expected = new ArrayList<>();
-        final List<Ticket> tt = new ArrayList<>();
-        tt.add(new Ticket(t1.getTid(), booking.getBid(), p1, 1, 2, 4, "normale"));
-        tt.add(new Ticket(t3.getTid(), booking.getBid(), p2, 0, 2, 6, "normale"));
-        tt.add(new Ticket(t2.getTid(), booking.getBid(), p2, 1, 2, 5, "ridotto"));
-        final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, tt);
+        final Ticket tt1 = new Ticket(t1.getTid(), booking.getBid(), p1, 1, 2, 4, "normale");
+        final Ticket tt2 = new Ticket(t3.getTid(), booking.getBid(), p2, 0, 2, 6, "normale");
+        final Ticket tt3 = new Ticket(t2.getTid(), booking.getBid(), p2, 1, 2, 5, "ridotto");
+        tt1.setTitle(f1.getTitle());
+        tt2.setTitle(f1.getTitle());
+        tt3.setTitle(f1.getTitle());
+        final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, Arrays.asList(tt1, tt2, tt3));
         expected.add(b);
 
         // current
@@ -261,6 +270,9 @@ public class BookingsDBTest extends DBTest {
         tickets.add(t1);
         tickets.add(t2);
         tickets.add(t3);
+        t1.setTitle(f1.getTitle());
+        t2.setTitle(f1.getTitle());
+        t3.setTitle(f1.getTitle());
 
         // create a booking
         final Booking booking = bookingsDB.createBooking(u1, tickets);

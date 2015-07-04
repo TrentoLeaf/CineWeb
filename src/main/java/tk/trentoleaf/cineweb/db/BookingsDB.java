@@ -208,9 +208,13 @@ public class BookingsDB {
                 bookings.add(b);
             }
 
+            // TODO: add title!
+
             // q2
-            final String q2 = "SELECT tid, pid, rid, x, y, price, type, FALSE AS deleted FROM tickets WHERE bid = ?" +
-                    "UNION SELECT tid, pid, rid, x, y, price, type, TRUE AS deleted FROM deleted_tickets WHERE bid = ?;";
+            final String q2 = "SELECT tid, pid, title, rid, x, y, price, type, FALSE AS deleted FROM tickets " +
+                    "NATURAL JOIN plays NATURAL JOIN films WHERE bid = ?" +
+                    "UNION SELECT tid, pid, title, rid, x, y, price, type, TRUE AS deleted FROM deleted_tickets " +
+                    "NATURAL JOIN plays NATURAL JOIN films WHERE bid = ?;";
 
             // iterate over bookings
             for (Booking b : bookings) {
@@ -230,6 +234,7 @@ public class BookingsDB {
                         t.setTid(prs.getInt("tid"));
                         t.setBid(b.getBid());
                         t.setPid(prs.getInt("pid"));
+                        t.setTitle(prs.getString("title"));
                         t.setRid(prs.getInt("rid"));
                         t.setX(prs.getInt("x"));
                         t.setY(prs.getInt("y"));
