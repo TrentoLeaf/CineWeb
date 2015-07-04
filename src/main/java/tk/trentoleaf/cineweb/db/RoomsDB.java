@@ -353,6 +353,9 @@ public class RoomsDB {
             // remove seats
             final String removeSeat = "DELETE FROM seats WHERE rid = ? AND x = ? AND y = ?;";
 
+            // update room
+            final String updateRoom = "UPDATE rooms SET rows = ?, cols = ? WHERE rid = ?;";
+
             // insert seats
             for (Seat s : seatsToAdd) {
 
@@ -395,6 +398,24 @@ public class RoomsDB {
                     // throw the exception
                     throw DBException.factory(e);
                 }
+            }
+
+            // update room dimension
+            try (PreparedStatement stm = connection.prepareStatement(updateRoom)) {
+                stm.setInt(1, room.getRows());
+                stm.setInt(2, room.getColumns());
+                stm.setInt(3, room.getRid());
+
+                int n = stm.executeUpdate();
+                assert n == 1;
+
+            } catch (SQLException e) {
+
+                // if errors -> rollback
+                connection.rollback();
+
+                // throw the exception
+                throw DBException.factory(e);
             }
 
             // execute sql
