@@ -87,7 +87,7 @@ public class GsonJerseyProvider implements MessageBodyWriter<Object>, MessageBod
 
     @Override
     public void writeTo(Object object, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-                        MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
+                        MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException {
         try (OutputStreamWriter writer = new OutputStreamWriter(entityStream, UTF_8)) {
             getGsonInstance().toJson(object, genericType, writer);
         }
