@@ -90,13 +90,16 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr ng-repeat="ticket in buy.tickets">
+                                    <tr ng-repeat="ticket in buy.tickets" ng-class="{ 'red-text' : ticket.disabled}">
                                         <td><span>{{ticket.title}}</span></td>
                                         <td><span>{{ticket.type}}</span></td>
                                         <td><span>{{ticket.price}}</span></td>
                                     </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="row">
+                                <span>Nota: i biglietti in rosso sono stati annullati.</span>
                             </div>
                         </div>
                     </li>
@@ -138,7 +141,7 @@
                                         <td><span>2</span></td>
                                         <td><span>12.50</span></td>
                                     </tr>
-                                    <tr>
+                                    <tr ng-class="{'red-text' : 1 == 1}">
                                         <td><span>Titolo2</span></td>
                                         <td><span>Normale</span></td>
                                         <td><span>2</span></td>
@@ -146,6 +149,9 @@
                                     </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="row">
+                                <span>Nota: i biglietti in rosso sono stati annullati.</span>
                             </div>
                         </div>
                     </li>
