@@ -1,5 +1,6 @@
 package tk.trentoleaf.cineweb.db;
 
+import org.apache.commons.collections4.CollectionUtils;
 import tk.trentoleaf.cineweb.beans.model.*;
 import tk.trentoleaf.cineweb.exceptions.db.BadRoomException;
 import tk.trentoleaf.cineweb.exceptions.db.DBException;
@@ -42,7 +43,7 @@ public class RoomsDB {
     public Room createRoom(int rows, int cols, List<Seat> missingSeats) throws DBException {
         try (Connection connection = db.getConnection()) {
 
-            // create a transaction to ensure TodoDB consistency
+            // create a transaction to ensure DB consistency
             connection.setAutoCommit(false);
 
             // query
@@ -125,8 +126,8 @@ public class RoomsDB {
         }
     }
 
-    // create a new room given the matrix of places
-    public void createRoom(RoomStatus roomStatus) throws DBException, BadRoomException {
+    // check if the given room is valid
+    private boolean isRoomValid(RoomStatus roomStatus) {
 
         // check dimensions
         final int rows = roomStatus.getRows();
@@ -138,13 +139,13 @@ public class RoomsDB {
 
             // check rows
             if (seats.length != rows) {
-                throw new BadRoomException();
+                return false;
             }
 
             // check cols
             for (int[] col : seats) {
                 if (col.length != cols) {
-                    throw new BadRoomException();
+                    return false;
                 }
             }
 
@@ -152,14 +153,30 @@ public class RoomsDB {
             for (int[] col : seats) {
                 for (int seat : col) {
                     if (seat != SeatCode.MISSING.getValue() && seat != SeatCode.AVAILABLE.getValue()) {
-                        throw new BadRoomException();
+                        return false;
                     }
                 }
             }
 
+            // if here -> ok
+            return true;
+
         } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    // create a new room given the matrix of places
+    public void createRoom(RoomStatus roomStatus) throws DBException, BadRoomException {
+
+        // check room
+        if (!isRoomValid(roomStatus)) {
             throw new BadRoomException();
         }
+
+        final int rows = roomStatus.getRows();
+        final int cols = roomStatus.getColumns();
+        final int[][] seats = roomStatus.getSeats();
 
         // extract missing places
         final List<Seat> missing = new ArrayList<>();
@@ -197,50 +214,6 @@ public class RoomsDB {
         }
 
         return rooms;
-    }
-
-    // delete room
-    // NB: throw an exception if the room is referenced in any table
-    public void deleteRoom(int rid) throws DBException, EntryNotFoundException {
-        try (Connection connection = db.getConnection()) {
-
-            // create a transaction to ensure DB consistency
-            connection.setAutoCommit(false);
-
-            // delete seats for this room
-            final String seatsQuery = "DELETE FROM seats WHERE rid = ?;";
-
-            try (PreparedStatement seatsStm = connection.prepareStatement(seatsQuery)) {
-
-                seatsStm.setInt(1, rid);
-                seatsStm.execute();
-
-                // now remove the room
-                final String roomQuery = "DELETE FROM rooms WHERE rid = ?;";
-
-                try (PreparedStatement roomStm = connection.prepareStatement(roomQuery)) {
-                    roomStm.setInt(1, rid);
-                    int rows = roomStm.executeUpdate();
-
-                    if (rows != 1) {
-                        throw new EntryNotFoundException();
-                    }
-                }
-
-                // execute sql
-                connection.commit();
-
-            } catch (SQLException | EntryNotFoundException e) {
-
-                // if error -> rollback
-                connection.rollback();
-
-                // throw the exception
-                throw e;
-            }
-        } catch (SQLException e) {
-            throw DBException.factory(e);
-        }
     }
 
     // get the existing seats for a given room
@@ -337,5 +310,144 @@ public class RoomsDB {
             throw DBException.factory(e);
         }
     }
+
+    // edit a room
+    public void editRoom(RoomStatus room) throws BadRoomException {
+
+        // check room
+        if (!isRoomValid(room)) {
+            throw new BadRoomException();
+        }
+
+        // get the old status of the room
+        final List<Seat> oldSeats = getSeatsByRoom(room.getRid());
+
+        // convert roomStatus to a list of present and absent places
+        final List<Seat> newSeats = new ArrayList<>();
+
+        final int rows = room.getRows();
+        final int cols = room.getColumns();
+        final int[][] seats = room.getSeats();
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (seats[i][j] == SeatCode.AVAILABLE.getValue()) {
+                    newSeats.add(new Seat(room.getRid(), i, j));
+                }
+            }
+        }
+
+        // extract places to add and remove
+        final List<Seat> seatsToAdd = (List<Seat>) CollectionUtils.subtract(newSeats, oldSeats);
+        final List<Seat> seatsToRemove = (List<Seat>) CollectionUtils.subtract(oldSeats, newSeats);
+
+        // update db
+        try (Connection connection = db.getConnection()) {
+
+            // create a transaction to ensure DB consistency
+            connection.setAutoCommit(false);
+
+            // insert seats
+            final String insertSeat = "INSERT INTO seats (rid, x, y) VALUES (?, ?, ?);";
+
+            // remove seats
+            final String removeSeat = "DELETE FROM seats WHERE rid = ? AND x = ? AND y = ?;";
+
+            // insert seats
+            for (Seat s : seatsToAdd) {
+
+                // query to insert a new seat
+                try (PreparedStatement stm = connection.prepareStatement(insertSeat)) {
+                    stm.setInt(1, s.getRid());
+                    stm.setInt(2, s.getX());
+                    stm.setInt(3, s.getY());
+
+                    int n = stm.executeUpdate();
+                    assert n == 1;
+
+                } catch (SQLException e) {
+
+                    // if errors -> rollback
+                    connection.rollback();
+
+                    // throw the exception
+                    throw DBException.factory(e);
+                }
+            }
+
+            // remove seats
+            for (Seat s : seatsToRemove) {
+
+                // query to insert a new seat
+                try (PreparedStatement stm = connection.prepareStatement(removeSeat)) {
+                    stm.setInt(1, s.getRid());
+                    stm.setInt(2, s.getX());
+                    stm.setInt(3, s.getY());
+
+                    int n = stm.executeUpdate();
+                    assert n == 1;
+
+                } catch (SQLException e) {
+
+                    // if errors -> rollback
+                    connection.rollback();
+
+                    // throw the exception
+                    throw DBException.factory(e);
+                }
+            }
+
+            // execute sql
+            connection.commit();
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
+    }
+
+    // delete room
+    // NB: throw an exception if the room is referenced in any table
+    public void deleteRoom(int rid) throws DBException, EntryNotFoundException {
+        try (Connection connection = db.getConnection()) {
+
+            // create a transaction to ensure DB consistency
+            connection.setAutoCommit(false);
+
+            // delete seats for this room
+            final String seatsQuery = "DELETE FROM seats WHERE rid = ?;";
+
+            try (PreparedStatement seatsStm = connection.prepareStatement(seatsQuery)) {
+
+                seatsStm.setInt(1, rid);
+                seatsStm.execute();
+
+                // now remove the room
+                final String roomQuery = "DELETE FROM rooms WHERE rid = ?;";
+
+                try (PreparedStatement roomStm = connection.prepareStatement(roomQuery)) {
+                    roomStm.setInt(1, rid);
+                    int rows = roomStm.executeUpdate();
+
+                    if (rows != 1) {
+                        throw new EntryNotFoundException();
+                    }
+                }
+
+                // execute sql
+                connection.commit();
+
+            } catch (SQLException | EntryNotFoundException e) {
+
+                // if error -> rollback
+                connection.rollback();
+
+                // throw the exception
+                throw e;
+            }
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
+    }
+
 
 }
