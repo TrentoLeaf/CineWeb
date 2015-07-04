@@ -118,9 +118,9 @@ public class FilmsDBTest extends DBTest {
         // edit film 2
         f2.setTitle("New title");
         f2.setGenre("Wowo");
-        f2.setTrailer(null);
+        f2.setTrailer("http://trailer.com");
         f2.setPlaybill("http:////");
-        f2.setPlot(null);
+        f2.setPlot("a very long plot...");
         f2.setDuration(33);
 
         // update

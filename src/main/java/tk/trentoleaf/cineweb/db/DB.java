@@ -77,7 +77,7 @@ public class DB {
             connectionPool = getConnectionPool();
         }
 
-        // initialize the TodoDB
+        // initialize the DB -> create tables, indexes if not exists
         init();
     }
 
@@ -109,6 +109,7 @@ public class DB {
         createTablePlays();
         createTableBookings();
         createTableTickets();
+        createTableDeletedTickets();
         createTablePrices();
     }
 
@@ -117,6 +118,7 @@ public class DB {
 
         // drop tables
         dropTablePrices();
+        dropTableDeletedTickets();
         dropTableTickets();
         dropTableBookings();
         dropTablePlays();
@@ -173,7 +175,7 @@ public class DB {
             try (Statement createStm = connection.createStatement()) {
                 createStm.execute("CREATE TABLE IF NOT EXISTS roles (" +
                         "roleid CITEXT PRIMARY KEY," +
-                        "description VARCHAR(200));");
+                        "description TEXT NOT NULL);");
             }
 
             // insert roles
@@ -184,7 +186,7 @@ public class DB {
                     insertStm.setString(2, r.getDescription());
                     insertStm.execute();
                 } catch (PSQLException e) {
-                    logger.warning("Role " + r.getRoleID() + " already exists... SKIP");
+                    logger.info("Role " + r.getRoleID() + " already exists... SKIP");
                 }
             }
         }
@@ -195,21 +197,24 @@ public class DB {
         try (Connection connection = getConnection()) {
             try (Statement stm = connection.createStatement()) {
                 stm.execute("CREATE TABLE IF NOT EXISTS users (" +
-                        "uid SERIAL PRIMARY KEY," +
-                        "enabled BOOLEAN," +
-                        "roleid CITEXT REFERENCES roles(roleid)," +
-                        "email CITEXT UNIQUE NOT NULL," +
+                        "uid SERIAL," +
+                        "enabled BOOLEAN NOT NULL," +
+                        "roleid CITEXT NOT NULL," +
+                        "email CITEXT NOT NULL," +
                         "pass VARCHAR(60) NOT NULL," +
-                        "first_name VARCHAR(100)," +
-                        "second_name VARCHAR(100)," +
-                        "credit DOUBLE PRECISION DEFAULT 0);");
+                        "first_name VARCHAR(100) NOT NULL," +
+                        "second_name VARCHAR(100) NOT NULL," +
+                        "credit DOUBLE PRECISION NOT NULL DEFAULT 0," +
+                        "PRIMARY KEY(uid)," +
+                        "FOREIGN KEY(roleid) REFERENCES roles(roleid)," +
+                        "UNIQUE(email));");
             }
             // index on email already exists -> unique constraint
             try (Statement stm = connection.createStatement()) {
                 stm.execute("CREATE INDEX users_role ON users (uid, roleid);");
             } catch (SQLException e) {
                 // do nothing -> index already exists
-                logger.warning("Cannot create index users_role -> already exists");
+                logger.info("Cannot create index users_role -> already exists");
             }
         }
     }
@@ -219,7 +224,7 @@ public class DB {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS registration_codes (" +
                     "uid INTEGER," +
-                    "code CHAR(64)," +
+                    "code CHAR(64) NOT NULL," +
                     "PRIMARY KEY(uid)," +
                     "FOREIGN KEY(uid) REFERENCES users(uid) ON DELETE CASCADE);");
         }
@@ -230,7 +235,7 @@ public class DB {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS resets (" +
                     "code CHAR(64)," +
-                    "uid INTEGER," +
+                    "uid INTEGER NOT NULL," +
                     "expiration TIMESTAMP NOT NULL," +
                     "PRIMARY KEY(code)," +
                     "FOREIGN KEY(uid) REFERENCES users(uid) ON DELETE CASCADE);");
@@ -241,9 +246,10 @@ public class DB {
     private void createTableRooms() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS rooms (" +
-                    "rid SERIAL PRIMARY KEY," +
+                    "rid SERIAL," +
                     "rows INTEGER NOT NULL," +
-                    "cols INTEGER NOT NULL);");
+                    "cols INTEGER NOT NULL," +
+                    "PRIMARY KEY(rid));");
         }
     }
 
@@ -256,6 +262,7 @@ public class DB {
                     "y INTEGER," +
                     "PRIMARY KEY (rid, x, y)," +
                     "FOREIGN KEY (rid) REFERENCES rooms(rid) ON DELETE CASCADE)");
+            // TODO: cosa succede se cancello stanza? si cancellano i ticket oppure no?
         }
     }
 
@@ -265,11 +272,11 @@ public class DB {
             stm.execute("CREATE TABLE IF NOT EXISTS films (" +
                     "fid SERIAL," +
                     "title TEXT NOT NULL," +
-                    "genre VARCHAR(100)," +
-                    "trailer TEXT," +
-                    "playbill TEXT," +
-                    "plot TEXT," +
-                    "duration INTEGER," +
+                    "genre VARCHAR(100) NOT NULL," +
+                    "trailer TEXT NOT NULL," +
+                    "playbill TEXT NOT NULL," +
+                    "plot TEXT NOT NULL," +
+                    "duration INTEGER NOT NULL," +
                     "PRIMARY KEY (fid));");
         }
     }
@@ -279,8 +286,8 @@ public class DB {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS plays (" +
                     "pid SERIAL," +
-                    "fid INTEGER," +
-                    "rid INTEGER," +
+                    "fid INTEGER NOT NULL," +
+                    "rid INTEGER NOT NULL," +
                     "time TIMESTAMP NOT NULL," +
                     "_3d BOOLEAN NOT NULL," +
                     "PRIMARY KEY (pid)," +
@@ -294,11 +301,11 @@ public class DB {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS bookings (" +
                     "bid SERIAL," +
-                    "uid INTEGER," +
+                    "uid INTEGER NOT NULL," +
                     "booking_time TIMESTAMP NOT NULL," +
-                    "payed_with_credit DOUBLE PRECISION," +
+                    "payed_with_credit DOUBLE PRECISION NOT NULL," +
                     "PRIMARY KEY (bid)," +
-                    "FOREIGN KEY (uid) REFERENCES users(uid));");
+                    "FOREIGN KEY (uid) REFERENCES users(uid) ON DELETE RESTRICT);");
         }
     }
 
@@ -307,30 +314,44 @@ public class DB {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("CREATE TABLE IF NOT EXISTS tickets (" +
                     "tid SERIAL," +
-                    "bid INTEGER," +
-                    "pid INTEGER," +
-                    "rid INTEGER," +
-                    "x INTEGER," +
-                    "y INTEGER," +
+                    "bid INTEGER NOT NULL," +
+                    "pid INTEGER NOT NULL," +
+                    "rid INTEGER NOT NULL," +
+                    "x INTEGER NOT NULL," +
+                    "y INTEGER NOT NULL," +
                     "price DOUBLE PRECISION NOT NULL," +
                     "type TEXT NOT NULL," +
-                    "deleted BOOLEAN NOT NULL DEFAULT FALSE," +
                     "PRIMARY KEY (tid)," +
                     "FOREIGN KEY (bid) REFERENCES bookings(bid)," +
                     "FOREIGN KEY (pid) REFERENCES plays(pid), " +
                     "FOREIGN KEY (rid, x, y) REFERENCES seats(rid, x, y));");
             try {
                 // create unique index to enforce db consistency
-                stm.execute("CREATE UNIQUE INDEX tickets_unique ON tickets (pid, rid, x, y) WHERE NOT deleted");
+                stm.execute("CREATE UNIQUE INDEX tickets_unique ON tickets (pid, rid, x, y)");
             } catch (SQLException e) {
                 if (e.getSQLState().equals("42P07")) {
                     // the index already exists
-                    logger.warning("Index tickets_unique already exists... SKIP");
+                    logger.info("Index tickets_unique already exists... SKIP");
                 } else {
                     // other error
                     throw e;
                 }
             }
+        }
+    }
+
+    // create table deleted tickets
+    private void createTableDeletedTickets() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            stm.execute("CREATE TABLE IF NOT EXISTS deleted_tickets (" +
+                    "tid INTEGER NOT NULL," +
+                    "bid INTEGER NOT NULL," +
+                    "pid INTEGER NOT NULL," +
+                    "rid INTEGER NOT NULL," +
+                    "x INTEGER NOT NULL," +
+                    "y INTEGER NOT NULL," +
+                    "price DOUBLE PRECISION NOT NULL," +
+                    "type TEXT NOT NULL);");
         }
     }
 
@@ -410,6 +431,13 @@ public class DB {
     private void dropTableTickets() throws SQLException {
         try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
             stm.execute("DROP TABLE IF EXISTS tickets;");
+        }
+    }
+
+    // drop table deleted tickets
+    private void dropTableDeletedTickets() throws SQLException {
+        try (Connection connection = getConnection(); Statement stm = connection.createStatement()) {
+            stm.execute("DROP TABLE IF EXISTS deleted_tickets;");
         }
     }
 

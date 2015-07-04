@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import tk.trentoleaf.cineweb.annotations.rest.AdminArea;
 import tk.trentoleaf.cineweb.beans.model.*;
 import tk.trentoleaf.cineweb.db.*;
+import tk.trentoleaf.cineweb.utils.ExampleData;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -125,7 +126,7 @@ public class RestRoot {
             PricesDB.instance().loadDefaultPrices();
 
             // load example data
-            ManageData.instance().loadExampleData(x);
+            ExampleData.instance().loadExampleData(x);
 
             return Response.ok().build();
 

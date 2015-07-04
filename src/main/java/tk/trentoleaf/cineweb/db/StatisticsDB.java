@@ -42,7 +42,7 @@ public class StatisticsDB {
         final List<FilmGrossing> gg = new ArrayList<>();
 
         final String query = "WITH tmp AS (SELECT fid, title, SUM(price) AS grossing FROM films NATURAL JOIN plays " +
-                "NATURAL JOIN tickets WHERE deleted = FALSE GROUP BY fid, title) " +
+                "NATURAL JOIN tickets GROUP BY fid, title) " +
                 "SELECT fid, title, grossing FROM films NATURAL LEFT JOIN tmp;";
 
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
@@ -68,7 +68,7 @@ public class StatisticsDB {
         final List<TopClient> topClients = new ArrayList<>();
 
         final String query = "SELECT uid, first_name, second_name, COUNT(tid) AS tickets, SUM(price) AS spent " +
-                "FROM users NATURAL JOIN bookings NATURAL JOIN tickets WHERE deleted = FALSE " +
+                "FROM users NATURAL JOIN bookings NATURAL JOIN tickets " +
                 "GROUP BY uid, first_name, second_name ORDER BY COUNT(tid) DESC LIMIT 10;";
 
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
@@ -131,7 +131,7 @@ public class StatisticsDB {
                     }
 
                     // query for top seats
-                    final String topSeats = "SELECT x, y FROM tickets WHERE deleted = FALSE AND rid = ? GROUP BY x, y ORDER BY count(*) DESC LIMIT 10;";
+                    final String topSeats = "SELECT x, y FROM tickets WHERE rid = ? GROUP BY x, y ORDER BY count(*) DESC LIMIT 10;";
 
                     // find top seats
                     try (PreparedStatement stm2 = connection.prepareStatement(topSeats)) {

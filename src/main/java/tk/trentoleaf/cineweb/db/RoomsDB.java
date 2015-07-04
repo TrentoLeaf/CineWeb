@@ -1,6 +1,5 @@
 package tk.trentoleaf.cineweb.db;
 
-import org.eclipse.jetty.server.Server;
 import tk.trentoleaf.cineweb.beans.model.*;
 import tk.trentoleaf.cineweb.exceptions.db.BadRoomException;
 import tk.trentoleaf.cineweb.exceptions.db.DBException;
@@ -271,7 +270,7 @@ public class RoomsDB {
         final List<SeatStatus> seats = new ArrayList<>();
 
         // query
-        final String query = "WITH t1 AS (SELECT * FROM tickets WHERE pid = ? AND deleted = FALSE)," +
+        final String query = "WITH t1 AS (SELECT * FROM tickets WHERE pid = ?)," +
                 "t2 AS (SELECT rid, x, y FROM seats WHERE rid = (SELECT rid FROM plays WHERE pid = ?)) " +
                 "SELECT rid, x, y, (tid IS NOT NULL) AS reserved FROM t2 NATURAL LEFT JOIN t1;";
 
