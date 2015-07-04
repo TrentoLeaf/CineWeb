@@ -292,7 +292,8 @@ public class DB {
                     "_3d BOOLEAN NOT NULL," +
                     "PRIMARY KEY (pid)," +
                     "FOREIGN KEY (fid) REFERENCES films(fid)," +
-                    "FOREIGN KEY (rid) REFERENCES rooms(rid));");
+                    "FOREIGN KEY (rid) REFERENCES rooms(rid)," +
+                    "UNIQUE (pid, rid));");
         }
     }
 
@@ -324,19 +325,9 @@ public class DB {
                     "PRIMARY KEY (tid)," +
                     "FOREIGN KEY (bid) REFERENCES bookings(bid)," +
                     "FOREIGN KEY (pid) REFERENCES plays(pid), " +
-                    "FOREIGN KEY (rid, x, y) REFERENCES seats(rid, x, y));");
-            try {
-                // create unique index to enforce db consistency
-                stm.execute("CREATE UNIQUE INDEX tickets_unique ON tickets (pid, rid, x, y)");
-            } catch (SQLException e) {
-                if (e.getSQLState().equals("42P07")) {
-                    // the index already exists
-                    logger.info("Index tickets_unique already exists... SKIP");
-                } else {
-                    // other error
-                    throw e;
-                }
-            }
+                    "FOREIGN KEY (pid, rid) REFERENCES plays(pid, rid)," +
+                    "FOREIGN KEY (rid, x, y) REFERENCES seats(rid, x, y)," +
+                    "UNIQUE(pid, rid, x, y));");
         }
     }
 
