@@ -4,10 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.*;
-import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.db.PlayGoneException;
-import tk.trentoleaf.cineweb.exceptions.db.UniqueViolationException;
-import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.db.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,6 +209,30 @@ public class BookingsDBTest extends DBTest {
         tt1.add(t3);
 
         // create a booking -> a play is already gone...
+        bookingsDB.createBooking(u1, tt1);
+    }
+
+    @Test(expected = ForeignKeyException.class)
+    public void createBookingFail4() throws Exception {
+
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni", 0);
+        usersDB.createUser(u1);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        filmsDB.createFilm(f1);
+
+        final Room r1 = roomsDB.createRoom(4, 5);
+        final Room r2 = roomsDB.createRoom(2, 3);
+
+        final Play p1 = new Play(f1, r1, DateTime.now().plusMinutes(10), true);
+        playsDB.createPlay(p1);
+
+        // tickets to buy
+        final Ticket t1 = new Ticket(p1.getPid(), r2.getRid(), 1, 2, 9.33, "normale", false);
+        final List<Ticket> tt1 = new ArrayList<>();
+        tt1.add(t1);
+
+        // create a booking -> fails... wrong rid (p1 is in r1, requested r2)
         bookingsDB.createBooking(u1, tt1);
     }
 
