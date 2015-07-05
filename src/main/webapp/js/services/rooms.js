@@ -37,6 +37,16 @@
                         });
                 },
 
+                getRoomTopByID: function (id) {
+                    return $http.get(BASE_ROOMS + '/' + id + '/top')
+                        .success(function (data) {
+                            $log.info('GET ROOM top OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('GET ROOM top FAILED: ' + status + " " + data);
+                        });
+                },
+
                 getRoomStatus: function (id) {
                     return $http.get(BASE_PLAYS + '/' + id + '/room')
                         .success(function (data) {

@@ -1,7 +1,8 @@
-package tk.trentoleaf.cineweb.db;
+package tk.trentoleaf.cineweb.utils;
 
 import org.joda.time.DateTime;
 import tk.trentoleaf.cineweb.beans.model.*;
+import tk.trentoleaf.cineweb.db.*;
 import tk.trentoleaf.cineweb.exceptions.db.AnotherFilmScheduledException;
 import tk.trentoleaf.cineweb.exceptions.db.PlayGoneException;
 import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
@@ -11,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class ManageData {
+public class ExampleData {
 
     // dbs
     private UsersDB usersDB = UsersDB.instance();
@@ -20,19 +21,19 @@ public class ManageData {
     private RoomsDB roomsDB = RoomsDB.instance();
     private BookingsDB bookingsDB = BookingsDB.instance();
 
-    private static ManageData instance;
+    private static ExampleData instance;
 
     // singleton
-    public static ManageData instance() {
+    public static ExampleData instance() {
         if (instance == null) {
-            instance = new ManageData();
+            instance = new ExampleData();
         }
         return instance;
 
     }
 
     // singleton
-    protected ManageData() {
+    protected ExampleData() {
     }
 
     public void loadExampleData(int x) throws AnotherFilmScheduledException, UserNotFoundException, PlayGoneException {

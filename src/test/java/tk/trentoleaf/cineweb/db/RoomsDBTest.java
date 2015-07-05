@@ -198,50 +198,6 @@ public class RoomsDBTest extends DBTest {
     }
 
     @Test
-    public void deleteRoomSuccess() throws Exception {
-
-        // save some rooms
-        final Room r1 = roomsDB.createRoom(23, 3);
-        final Room r2 = roomsDB.createRoom(10, 3);
-        final Room r3 = roomsDB.createRoom(4, 2);
-
-        // remove room 2
-        roomsDB.deleteRoom(r2.getRid());
-
-        // expected
-        final List<Room> expected = new ArrayList<>(3);
-        expected.add(r3);
-        expected.add(r1);
-
-        // current
-        final List<Room> current = roomsDB.getRooms(true);
-
-        // test
-        assertTrue(CollectionUtils.isEqualCollection(expected, current));
-    }
-
-    @Test(expected = ForeignKeyException.class)
-    public void deleteRoomFail1() throws Exception {
-
-        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
-        filmsDB.createFilm(f1);
-        final Room r1 = roomsDB.createRoom(23, 12);
-
-        final Play p1 = new Play(f1, r1, DateTime.now(), true);
-        playsDB.createPlay(p1);
-
-        // test delete
-        roomsDB.deleteRoom(r1.getRid());
-    }
-
-    @Test(expected = EntryNotFoundException.class)
-    public void deleteRoomFail2() throws Exception {
-
-        // test delete
-        roomsDB.deleteRoom(234);
-    }
-
-    @Test
     public void getSeatsByPlay() throws Exception {
 
         final User u1 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
@@ -303,6 +259,167 @@ public class RoomsDBTest extends DBTest {
     @Test(expected = EntryNotFoundException.class)
     public void getSeatsByPlayFail() throws Exception {
         roomsDB.getRoomStatusByPlay(214);
+    }
+
+    @Test
+    public void editRoomSuccess() throws Exception {
+
+        final int o = SeatCode.AVAILABLE.getValue();
+        final int x = SeatCode.MISSING.getValue();
+
+        // room to create
+        final int[][] oldSeats = {
+                {o, o, x, x, x},
+                {o, x, x, x, o},
+                {x, x, x, o, o}
+        };
+
+        // create room
+        final RoomStatus oldRoom = new RoomStatus(3, 5, oldSeats);
+        roomsDB.createRoom(oldRoom);
+        final int rid = oldRoom.getRid();
+
+        // check room
+        final List<Seat> presentSeats = roomsDB.getSeatsByRoom(oldRoom.getRid());
+        assertTrue(CollectionUtils.isEqualCollection(Arrays.asList(new Seat(rid, 0, 0), new Seat(rid, 0, 1),
+                new Seat(rid, 1, 0), new Seat(rid, 1, 4), new Seat(rid, 2, 3), new Seat(rid, 2, 4)), presentSeats));
+
+        // new room
+        // changed seats -> (0,0), (1,2), (2,4)
+        final int[][] newSeats = {
+                {x, o, x, x, x},
+                {o, x, o, x, o},
+                {x, x, x, o, x}
+        };
+        final RoomStatus newRoom = new RoomStatus(rid, 3, 5, newSeats);
+
+        // edit room
+        roomsDB.editRoom(newRoom);
+
+        // check
+        final List<Seat> nowSeats = roomsDB.getSeatsByRoom(oldRoom.getRid());
+        assertTrue(CollectionUtils.isEqualCollection(Arrays.asList(new Seat(rid, 0, 1),
+                new Seat(rid, 1, 0), new Seat(rid, 1, 2), new Seat(rid, 1, 4), new Seat(rid, 2, 3)), nowSeats));
+    }
+
+
+    @Test
+    public void deleteRoomSuccess() throws Exception {
+
+        // save some rooms
+        final Room r1 = roomsDB.createRoom(23, 3);
+        final Room r2 = roomsDB.createRoom(10, 3);
+        final Room r3 = roomsDB.createRoom(4, 2);
+
+        // remove room 2
+        roomsDB.deleteRoom(r2.getRid());
+
+        // expected
+        final List<Room> expected = new ArrayList<>(3);
+        expected.add(r3);
+        expected.add(r1);
+
+        // current
+        final List<Room> current = roomsDB.getRooms(true);
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(expected, current));
+    }
+
+    @Test
+    public void deleteRoomSuccess2() throws Exception {
+
+        final User u1 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        usersDB.createUser(u1);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        filmsDB.createFilm(f1);
+
+        final List<Seat> m1 = Arrays.asList(new Seat(0, 0), new Seat(1, 1), new Seat(2, 2));
+        final Room r1 = roomsDB.createRoom(4, 5, m1);
+        final Room r2 = roomsDB.createRoom(3, 3);
+        final Room r3 = roomsDB.createRoom(5, 3);
+
+        final Play p1 = new Play(f1, r1, DateTime.now().plusMinutes(10), true);
+        playsDB.createPlay(p1);
+        final Play p2 = new Play(f1, r2, DateTime.now().plusMinutes(200), true);
+        playsDB.createPlay(p2);
+
+        // tickets to buy
+        final Ticket t1 = new Ticket(p1, 1, 2, 9.33, "normale");
+        final Ticket t2 = new Ticket(p1, 2, 1, 8.50, "ridotto");
+        final Ticket t3 = new Ticket(p2, 0, 2, 8.50, "normale");
+        final List<Ticket> tickets = new ArrayList<>();
+        tickets.add(t1);
+        tickets.add(t2);
+        tickets.add(t3);
+
+        // create a booking
+        bookingsDB.createBooking(u1, tickets);
+
+        // delete tickets of p2
+        bookingsDB.deleteTicket(t3);
+
+        // delete play of r2
+        playsDB.deletePlay(p2);
+
+        // should pass...
+        roomsDB.deleteRoom(r2.getRid());
+
+        // test
+        assertTrue(CollectionUtils.isEqualCollection(Arrays.asList(r1, r3), roomsDB.getRooms(true)));
+    }
+
+    @Test(expected = ForeignKeyException.class)
+    public void deleteRoomFail1() throws Exception {
+
+        final Film f1 = new Film("Teo alla ricerca della pizza perduta", "fantasy", "http://aaa.com", "http://aaaa.org", "trama moltooo lunga", 120);
+        filmsDB.createFilm(f1);
+        final Room r1 = roomsDB.createRoom(23, 12);
+
+        final Play p1 = new Play(f1, r1, DateTime.now(), true);
+        playsDB.createPlay(p1);
+
+        // test delete
+        roomsDB.deleteRoom(r1.getRid());
+    }
+
+    @Test(expected = EntryNotFoundException.class)
+    public void deleteRoomFail2() throws Exception {
+
+        // test delete
+        roomsDB.deleteRoom(234);
+    }
+
+    @Test(expected = ForeignKeyException.class)
+    public void deleteRoomFail3() throws Exception {
+
+        final User u1 = new User(true, Role.CLIENT, "davide@pippo.com", "dada", "Davide", "Pedranz");
+        usersDB.createUser(u1);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        filmsDB.createFilm(f1);
+
+        final List<Seat> m1 = Arrays.asList(new Seat(0, 0), new Seat(1, 1), new Seat(2, 2));
+        final Room r1 = roomsDB.createRoom(4, 5, m1);
+
+        final Play p1 = new Play(f1, r1, DateTime.now().plusMinutes(10), true);
+        playsDB.createPlay(p1);
+
+        // tickets to buy
+        final Ticket t1 = new Ticket(p1, 1, 2, 9.33, "normale");
+        final Ticket t2 = new Ticket(p1, 2, 1, 8.50, "ridotto");
+        final Ticket t3 = new Ticket(p1, 0, 2, 8.50, "normale");
+        final List<Ticket> tickets = new ArrayList<>();
+        tickets.add(t1);
+        tickets.add(t2);
+        tickets.add(t3);
+
+        // create a booking
+        bookingsDB.createBooking(u1, tickets);
+
+        // should fail...
+        roomsDB.deleteRoom(r1.getRid());
     }
 
 }

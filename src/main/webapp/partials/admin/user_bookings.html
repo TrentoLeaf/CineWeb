@@ -1,0 +1,90 @@
+<div>
+
+    <div class="row">
+        <div class="col s12 m12 l12 center-align">
+            <h2 class="yellow-text text-accent-4">Acquisti Utente</h2>
+        </div>
+    </div>
+
+    <div class="row white-text"> <!-- cronologia acquisti -->
+        <div class="col s12 offset-m1 m10 offset-l1 l10">
+            <h4>Cronologia acquisti</h4>
+        </div>
+    </div>
+    <div class="row">
+        <h6>{{ctrl.status_msg}}</h6>
+    </div>
+    <div class="row">
+        <div class="col s12 offset-m1 m10 offset-l1 l10 ">
+            <ul class="collapsible" data-collapsible="expandable">
+                <li ng-repeat="buy in ctrl.bookings" on-collapsible-repeat>
+                    <div class="collapsible-header grey darken-3 white-text">
+                        <div class="row">
+                            <div class="col s6 m6 l6">
+                                <i class="mdi-action-shopping-basket"></i>ACQUISTO
+                            </div>
+                            <div class="col s6 m6 l6 right-align">
+                                <span>Data: {{buy.time | date: 'dd/MM/yyyy'}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapsible-body white">
+                        <div class="row">
+                            <div class="col s6 m6 l6">
+                                <h5>Credito usato: {{buy.payedWithCredit | currency:"€ "}}</h5>
+                            </div>
+                            <div class="col s6 m6 l6 right-align">
+                                <h5>Totale: {{buy.total | currency:"€ "}}</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table class="summaryTable">
+                                <thead>
+                                <tr>
+                                    <th>Film</th>
+                                    <th>Sala</th>
+                                    <th>Posto</th>
+                                    <th>Tipologia</th>
+                                    <th>Prezzo</th>
+                                    <th>Annulla</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="ticket in buy.tickets" ng-class="{ 'red-text' : ticket.disabled}">
+                                    <td><span>{{ticket.title}}</span></td>
+                                    <td><span>{{ticket.rid}}</span></td>
+                                    <td><span>{{ctrl.intToChar(ticket.x)}}{{ticket.y+1}}</span></td>
+                                    <td><span>{{ticket.type}}</span></td>
+                                    <td><span>{{ticket.price}}</span></td>
+                                    <td>
+                                        <a ng-click="ctrl.modifyTicketStatus($parent.$index, $index)">
+                                            <i ng-hide="ticket.disabled" class="red-text mdi-action-delete"></i>
+                                            <i ng-show="ticket.disabled" class="green-text mdi-action-check-circle"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <span>Nota: i biglietti in rosso sono stati annullati.</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+
+    </div>
+    <div class="row">
+
+    </div>
+    <div class="row center-align">
+        <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/users">INDIETRO
+            <i class="mdi-navigation-arrow-back left"></i>
+        </a>
+    </div>
+
+</div>

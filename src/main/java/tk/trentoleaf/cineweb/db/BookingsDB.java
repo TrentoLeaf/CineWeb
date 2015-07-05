@@ -117,8 +117,8 @@ public class BookingsDB {
                     final String q4 = "SELECT COUNT(*) FROM plays WHERE pid = ? AND time >= now();";
 
                     // query to insert a new ticket
-                    final String q5 = "INSERT INTO tickets (tid, bid, pid, rid, x, y, price, type, deleted) " +
-                            "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, FALSE) RETURNING tid";
+                    final String q5 = "INSERT INTO tickets (tid, bid, pid, rid, x, y, price, type) " +
+                            "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?) RETURNING tid";
 
                     // insert every ticket
                     for (Ticket ticket : tickets) {
@@ -208,8 +208,13 @@ public class BookingsDB {
                 bookings.add(b);
             }
 
+            // TODO: add title!
+
             // q2
-            final String q2 = "SELECT tid, pid, rid, x, y, price, type, deleted FROM tickets WHERE bid = ?;";
+            final String q2 = "SELECT tid, pid, title, rid, x, y, price, type, FALSE AS deleted FROM tickets " +
+                    "NATURAL JOIN plays NATURAL JOIN films WHERE bid = ?" +
+                    "UNION SELECT tid, pid, title, rid, x, y, price, type, TRUE AS deleted FROM deleted_tickets " +
+                    "NATURAL JOIN plays NATURAL JOIN films WHERE bid = ?;";
 
             // iterate over bookings
             for (Booking b : bookings) {
@@ -221,6 +226,7 @@ public class BookingsDB {
                 // get the tickets
                 try (PreparedStatement pstm = connection.prepareStatement(q2)) {
                     pstm.setInt(1, b.getBid());
+                    pstm.setInt(2, b.getBid());
 
                     ResultSet prs = pstm.executeQuery();
                     while (prs.next()) {
@@ -228,6 +234,7 @@ public class BookingsDB {
                         t.setTid(prs.getInt("tid"));
                         t.setBid(b.getBid());
                         t.setPid(prs.getInt("pid"));
+                        t.setTitle(prs.getString("title"));
                         t.setRid(prs.getInt("rid"));
                         t.setX(prs.getInt("x"));
                         t.setY(prs.getInt("y"));
@@ -263,7 +270,8 @@ public class BookingsDB {
             connection.setAutoCommit(false);
 
             // query to mark the ticket as deleted
-            final String query = "UPDATE tickets SET deleted = TRUE WHERE tid = ? AND deleted = FALSE;";
+            final String query = "WITH tt AS (DELETE FROM tickets WHERE tid = ? RETURNING *) " +
+                    "INSERT INTO deleted_tickets SELECT * FROM tt;";
 
             // esecute query
             try (PreparedStatement stm = connection.prepareStatement(query)) {
@@ -276,7 +284,7 @@ public class BookingsDB {
                 }
 
                 // query to update the buyer user
-                final String queryUser = "WITH tmp AS (SELECT uid, price FROM tickets NATURAL JOIN bookings WHERE tid = ?)" +
+                final String queryUser = "WITH tmp AS (SELECT uid, price FROM deleted_tickets NATURAL JOIN bookings WHERE tid = ?)" +
                         "UPDATE users SET credit = credit + (SELECT price * 0.8 FROM tmp) WHERE uid = (SELECT uid FROM tmp);";
 
                 // update user balance

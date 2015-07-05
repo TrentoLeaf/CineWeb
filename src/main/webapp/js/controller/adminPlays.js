@@ -148,17 +148,6 @@
             };
 
             this.init();
-        }])
-
-        // direttiva per inizializzare i select
-        .directive('onSelectRepeat', function() {
-            return function(scope, element, attrs) {
-                if (scope.$last) {
-                    console.log("SELECT EMIT");
-                    scope.$emit('selectRepeatEnd', element, attrs);
-                }
-            };
-        });
-
+        }]);
 
 })();

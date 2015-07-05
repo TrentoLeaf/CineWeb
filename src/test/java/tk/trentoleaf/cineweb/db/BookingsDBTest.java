@@ -4,12 +4,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.*;
-import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
-import tk.trentoleaf.cineweb.exceptions.db.PlayGoneException;
-import tk.trentoleaf.cineweb.exceptions.db.UniqueViolationException;
-import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.db.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -46,6 +44,9 @@ public class BookingsDBTest extends DBTest {
         tickets.add(t1);
         tickets.add(t2);
         tickets.add(t3);
+        t1.setTitle(f1.getTitle());
+        t2.setTitle(f1.getTitle());
+        t3.setTitle(f1.getTitle());
 
         // create a booking
         final Booking booking = bookingsDB.createBooking(u1, tickets);
@@ -91,6 +92,9 @@ public class BookingsDBTest extends DBTest {
         tickets.add(t1);
         tickets.add(t2);
         tickets.add(t3);
+        t1.setTitle(f1.getTitle());
+        t2.setTitle(f1.getTitle());
+        t3.setTitle(f1.getTitle());
 
         // create a booking
         final Booking booking = bookingsDB.createBooking(u1, tickets);
@@ -102,11 +106,13 @@ public class BookingsDBTest extends DBTest {
 
         // expected bookings
         final List<Booking> expected = new ArrayList<>();
-        final List<Ticket> tt = new ArrayList<>();
-        tt.add(new Ticket(t1.getTid(), booking.getBid(), p1, 1, 2, 4, "normale"));
-        tt.add(new Ticket(t3.getTid(), booking.getBid(), p2, 0, 2, 6, "normale"));
-        tt.add(new Ticket(t2.getTid(), booking.getBid(), p2, 1, 2, 5, "ridotto"));
-        final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, tt);
+        final Ticket tt1 = new Ticket(t1.getTid(), booking.getBid(), p1, 1, 2, 4, "normale");
+        final Ticket tt2 = new Ticket(t3.getTid(), booking.getBid(), p2, 0, 2, 6, "normale");
+        final Ticket tt3 = new Ticket(t2.getTid(), booking.getBid(), p2, 1, 2, 5, "ridotto");
+        tt1.setTitle(f1.getTitle());
+        tt2.setTitle(f1.getTitle());
+        tt3.setTitle(f1.getTitle());
+        final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, Arrays.asList(tt1, tt2, tt3));
         expected.add(b);
 
         // current
@@ -215,6 +221,30 @@ public class BookingsDBTest extends DBTest {
         bookingsDB.createBooking(u1, tt1);
     }
 
+    @Test(expected = ForeignKeyException.class)
+    public void createBookingFail4() throws Exception {
+
+        final User u1 = new User(true, Role.ADMIN, "teo@teo.com", "teo", "Matteo", "Zeni", 0);
+        usersDB.createUser(u1);
+
+        final Film f1 = new Film("Teo", "fantasy", "http://aaa.com", "http://bbb.org", "trama", 60);
+        filmsDB.createFilm(f1);
+
+        final Room r1 = roomsDB.createRoom(4, 5);
+        final Room r2 = roomsDB.createRoom(2, 3);
+
+        final Play p1 = new Play(f1, r1, DateTime.now().plusMinutes(10), true);
+        playsDB.createPlay(p1);
+
+        // tickets to buy
+        final Ticket t1 = new Ticket(p1.getPid(), r2.getRid(), 1, 2, 9.33, "normale", false);
+        final List<Ticket> tt1 = new ArrayList<>();
+        tt1.add(t1);
+
+        // create a booking -> fails... wrong rid (p1 is in r1, requested r2)
+        bookingsDB.createBooking(u1, tt1);
+    }
+
     @Test
     public void deleteTicketSuccess() throws Exception {
 
@@ -240,6 +270,9 @@ public class BookingsDBTest extends DBTest {
         tickets.add(t1);
         tickets.add(t2);
         tickets.add(t3);
+        t1.setTitle(f1.getTitle());
+        t2.setTitle(f1.getTitle());
+        t3.setTitle(f1.getTitle());
 
         // create a booking
         final Booking booking = bookingsDB.createBooking(u1, tickets);
