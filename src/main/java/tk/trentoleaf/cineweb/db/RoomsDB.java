@@ -236,6 +236,59 @@ public class RoomsDB {
         return seats;
     }
 
+    // seats by room
+    public RoomStatus getSeatsByRoomAllPlays(int rid) throws DBException, EntryNotFoundException {
+        try (Connection connection = db.getConnection()) {
+
+            // find the room
+            try (PreparedStatement stm1 = connection.prepareStatement("SELECT rows, cols FROM rooms WHERE rid = ?;")) {
+                stm1.setInt(1, rid);
+
+                final ResultSet rs1 = stm1.executeQuery();
+                if (rs1.next()) {
+
+                    // get room dimensions
+                    final int rows = rs1.getInt("rows");
+                    final int cols = rs1.getInt("cols");
+
+                    // prepare result matrix -> default: missing place
+                    final int[][] result = new int[rows][cols];
+                    for (int[] col : result) {
+                        Arrays.fill(col, SeatCode.MISSING.getValue());
+                    }
+
+                    // find presents seats (with and without reservations)
+                    final String query = "SELECT DISTINCT x, y, (tid IS NOT NULL) AS has_reservations " +
+                            "FROM seats NATURAL LEFT JOIN tickets WHERE rid = ? ORDER BY x, y;";
+
+                    try (PreparedStatement stm2 = connection.prepareStatement(query)) {
+                        stm2.setInt(1, rid);
+
+                        final ResultSet rs2 = stm2.executeQuery();
+                        while (rs2.next()) {
+
+                            // get seat
+                            final int x = rs2.getInt("x");
+                            final int y = rs2.getInt("y");
+
+                            // set seat status
+                            result[x][y] = rs2.getBoolean("has_reservations") ? SeatCode.UNAVAILABLE.getValue() : SeatCode.AVAILABLE.getValue();
+                        }
+                    }
+
+                    // return the room
+                    return new RoomStatus(rid, rows, cols, result);
+                }
+
+                // not found
+                throw new EntryNotFoundException();
+            }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
+    }
+
     // get a list of all seats by a Play
     public List<SeatStatus> getSeatsByPlay(int pid) throws DBException {
 
@@ -272,7 +325,7 @@ public class RoomsDB {
     // get the status of a room
     public RoomStatus getRoomStatusByPlay(int pid) throws DBException, EntryNotFoundException {
 
-        // find the wright room
+        // find the right room
         final String query = "SELECT rid, rows, cols FROM rooms WHERE rid = (SELECT rid FROM plays WHERE pid = ?)";
 
         try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {

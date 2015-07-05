@@ -36,6 +36,18 @@ public class RestRooms {
     }
 
     @GET
+    @Path("/{id}")
+    @AdminArea
+    @Compress
+    public RoomStatus getRoom(@PathParam("id") int id) {
+        try {
+            return roomsDB.getSeatsByRoomAllPlays(id);
+        } catch (EntryNotFoundException e) {
+            throw NotFoundException.GENERIC;
+        }
+    }
+
+    @GET
     @Path("/{id}/top")
     @AdminArea
     @Compress
