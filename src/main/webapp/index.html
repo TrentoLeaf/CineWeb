@@ -69,7 +69,8 @@
                 <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#info">Informazioni</a></li>
             </ul>
 
-            <ul class="right hide-on-med-and-down">
+            <!-- right navbar -->
+            <ul class="right hide-on-small-only">
                 <li ng-show="user.role == 'admin'">
                     <a href="#admin" ng-click="tab.setTab(-1)" class="yellow-text text-accent-4">
                         <i class="medium mdi-action-settings"></i>
@@ -80,13 +81,14 @@
                 <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle" style="height:60px"></i></a><hr ng-show="isUserLogged" class ="userLoggedLine green"></li>
             </ul>
 
-            <ul class="right hide-on-large-only">
+            <!-- right navbar small for mobile -->
+            <ul class="right hide-on-med-and-up">
                 <li>
-                    <a href="#cart_mobile" style="height: 64px;"><i class="cart-icon yellow-text text-accent-4 mdi-action-shopping-cart"></i>
+                    <a href="#cart_mobile" style="height: 64px; padding: 5px;"><i class="cart-icon yellow-text text-accent-4 mdi-action-shopping-cart"></i>
                     <span ng-hide="cart.length == 0" class="cart-badge grey darken-3 white-text">&nbsp;{{cart.length}}&nbsp;</span></a>
                 </li>
                 <li>
-                    <a href="#admin" ng-show="user.role == 'admin'"><i class="yellow-text text-accent-4 mdi-action-settings"></i></a>
+                    <a href="#admin" ng-show="user.role == 'admin'" style="padding: 5px;"><i class="yellow-text text-accent-4 mdi-action-settings"></i></a>
                 </li>
             </ul>
 
