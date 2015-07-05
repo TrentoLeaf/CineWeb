@@ -28,12 +28,12 @@
             };
         }])
 
-        .controller('AdminUserBookingsController', ['$routeParams', '$scope', '$location', 'Users', 'Auth', function($routeParams, $scope, $location, Users, Auth) {
+        .controller('AdminUserBookingsController', ['$routeParams', '$scope', '$location', '$anchorScroll', 'Users', 'Auth', function($routeParams, $scope, $location, $anchorScroll, Users, Auth) {
 
             var ctrl = this;
             this.bookings = [];
             this.uid = $routeParams.uid;
-
+            this.currentTid = -1;
             this.status_msg = "";
 
             // convert 0 to A, 1 to B, ...
@@ -63,28 +63,39 @@
                     });
 
             };
+            
+            this.modifyTicketStatus = function () {
 
+                ctrl.status_msg = "Un momento...";
 
-            this.modifyTicketStatus = function (booking_index, ticket_index) {
+                Auth.deleteTicket(ctrl.currentTid)
+                    .success(function () {
+                        ctrl.status_msg = "Modifica eseguita.";
+                        // update bookings
+                        ctrl.getBookings();
+                        $anchorScroll();
+                    })
+                    .error(function () {
+                        ctrl.status_msg = "Modifica fallita.";
+                        // update bookings
+                        ctrl.getBookings();
+                        $anchorScroll();
+                    });
 
+                ctrl.close_delete_modal();
+            };
+
+            this.open_modal_confirm = function (booking_index, ticket_index) {
                 if (! ctrl.bookings[booking_index].tickets[ticket_index].deleted) {
-                    ctrl.status_msg = "Un momento...";
+                    // set tid
+                    ctrl.currentTid = ctrl.bookings[booking_index].tickets[ticket_index].tid;
 
-                    var tid = ctrl.bookings[booking_index].tickets[ticket_index].tid;
-
-                    Auth.deleteTicket(tid)
-                        .success(function () {
-                            ctrl.status_msg = "Modifica eseguita.";
-                            // update bookings
-                            ctrl.getBookings();
-                        })
-                        .error(function () {
-                            ctrl.status_msg = "Modifica fallita.";
-                            // update bookings
-                            ctrl.getBookings();
-                        });
-
+                    $('#modal_delete_ticket_confirm').openModal();
                 }
+            };
+
+            this.close_delete_modal = function () {
+                $('#modal_delete_ticket_confirm').closeModal();
             };
 
             // init collapsible

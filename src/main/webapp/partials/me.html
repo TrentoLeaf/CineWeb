@@ -90,7 +90,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr ng-repeat="ticket in buy.tickets" ng-class="{ 'red-text' : ticket.disabled}">
+                                    <tr ng-repeat="ticket in buy.tickets" ng-class="{ 'red-text' : ticket.deleted}">
                                         <td><span>{{ticket.title}}</span></td>
                                         <td><span>{{ticket.type}}</span></td>
                                         <td><span>{{ticket.price}}</span></td>

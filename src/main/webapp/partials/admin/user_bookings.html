@@ -11,8 +11,10 @@
             <h4>Cronologia acquisti</h4>
         </div>
     </div>
-    <div class="row">
-        <h6>{{ctrl.status_msg}}</h6>
+    <div class="row white-text">
+        <div class="col s12 offset-m1 m10 offset-l1 l10">
+            <h6>{{ctrl.status_msg}}</h6>
+        </div>
     </div>
     <div class="row">
         <div class="col s12 offset-m1 m10 offset-l1 l10 ">
@@ -50,14 +52,14 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="ticket in buy.tickets" ng-class="{ 'red-text' : ticket.disabled}">
+                                <tr ng-repeat="ticket in buy.tickets" ng-class="{'red-text' : ticket.deleted}">
                                     <td><span>{{ticket.title}}</span></td>
                                     <td><span>{{ticket.rid}}</span></td>
                                     <td><span>{{ctrl.intToChar(ticket.x)}}{{ticket.y+1}}</span></td>
                                     <td><span>{{ticket.type}}</span></td>
                                     <td><span>{{ticket.price}}</span></td>
                                     <td>
-                                        <a ng-click="ctrl.modifyTicketStatus($parent.$index, $index)">
+                                        <a ng-click="ctrl.open_modal_confirm($parent.$index, $index)">
                                             <i class="red-text mdi-action-delete"></i>
                                         </a>
                                     </td>
@@ -86,4 +88,16 @@
         </a>
     </div>
 
+</div>
+
+<!-- modal delete ticket confirm-->
+<div id="modal_delete_ticket_confirm" class="modal">
+    <div class="modal-content">
+        <h4>Cancellazione Biglietto</h4>
+        <p>Sei sicuro di voler annullare il biglietto?</p>
+    </div>
+    <div class="modal-footer">
+        <a ng-click="ctrl.close_delete_modal()" class="modal-action waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
+        <a ng-click="ctrl.modifyTicketStatus()" class="modal-action waves-effect waves-green btn-flat">ACCETTA</a>
+    </div>
 </div>
