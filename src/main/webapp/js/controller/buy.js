@@ -46,7 +46,7 @@
                     $rootScope.afterLogin = "normal";
 
                     //verificare che il server dia l'ok  e che tutti i valori e spettacoli siano giusti
-                    BuyProcedure.proceed($rootScope.cart, $rootScope.user)
+                    BuyProcedure.proceed($rootScope.cart)
                         .success(function () {  // tutto ok
                             $('.buy-seats-loader').removeClass('active');
                             setError(OK);

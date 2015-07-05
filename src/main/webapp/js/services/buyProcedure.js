@@ -4,14 +4,12 @@
     angular.module('buyProcedureModule', ['constantsModule'])
 
         .factory('BuyProcedure', ['BASE', '$http', '$q', '$log', function (BASE, $http, $q, $log) {
-            var BASE_PROCEED = BASE + "/buyProceed";
-            var BASE_PAY = BASE + "/buyPay";
+            var BASE_PROCEED = BASE + "/buy/proceed";
+            var BASE_PAY = BASE + "/buy/pay";
             return {
-                proceed: function (cart, user) {
-                    return $http.post(BASE_PROCEED, {
-                        cart: cart,
-                        userid: user.email
-                    })
+
+                proceed: function (cart) {
+                    return $http.post(BASE_PROCEED, {cart: cart})
                         .success(function (data) {
                             $log.info('BUY PROCEDURE OK: ' + data);
                             $log.info(data);

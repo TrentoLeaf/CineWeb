@@ -10,7 +10,6 @@ import tk.trentoleaf.cineweb.utils.Utils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import java.util.List;
@@ -47,12 +46,6 @@ public class RestBookings {
 
         // return my bookings
         return bookingsDB.getBookingsByUser(uid);
-    }
-
-    @POST
-    @UserArea
-    public void addBooking() {
-        // TODO!
     }
 
 }

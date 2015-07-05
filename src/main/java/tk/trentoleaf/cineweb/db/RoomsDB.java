@@ -264,6 +264,27 @@ public class RoomsDB {
         return seats;
     }
 
+    // number of free places by play
+    public int freePlacesByPlay(int pid) throws DBException {
+
+        final String query = "WITH free_seats AS (SELECT x, y FROM seats WHERE rid = (SELECT rid FROM plays WHERE pid = ?)" +
+                " EXCEPT SELECT x, y FROM tickets WHERE pid = ?) SELECT count(*) FROM free_seats;";
+
+        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, pid);
+            stm.setInt(2, pid);
+
+            final ResultSet rs = stm.executeQuery();
+            rs.next();
+
+            return rs.getInt(1);
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
+
+    }
+
     // get a list of all seats by a Play
     public List<SeatStatus> getSeatsByPlay(int pid) throws DBException {
 
