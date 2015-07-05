@@ -8,15 +8,14 @@ import tk.trentoleaf.cineweb.db.RoomsDB;
 import tk.trentoleaf.cineweb.db.StatisticsDB;
 import tk.trentoleaf.cineweb.exceptions.db.BadRoomException;
 import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.db.ForeignKeyException;
 import tk.trentoleaf.cineweb.exceptions.rest.BadRequestException;
+import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import java.util.List;
 
 /**
@@ -36,9 +35,20 @@ public class RestRooms {
         return roomsDB.getRooms(false);
     }
 
-    // TODO -> test
     @GET
     @Path("/{id}")
+    @AdminArea
+    @Compress
+    public RoomStatus getRoom(@PathParam("id") int id) {
+        try {
+            return roomsDB.getSeatsByRoomAllPlays(id);
+        } catch (EntryNotFoundException e) {
+            throw NotFoundException.GENERIC;
+        }
+    }
+
+    @GET
+    @Path("/{id}/top")
     @AdminArea
     @Compress
     public RoomStatus getTopSeats(@PathParam("id") int id) {
@@ -57,6 +67,34 @@ public class RestRooms {
             return room;
         } catch (BadRoomException e) {
             throw new BadRequestException("Bad room");
+        }
+    }
+
+    @PUT
+    @Path("/{id}")
+    @AdminArea
+    public RoomStatus editRoom(@PathParam("id") int id, @NotNull(message = "Bad room object") @Valid RoomStatus room) {
+        try {
+            room.setRid(id);
+            roomsDB.editRoom(room);
+            return room;
+        } catch (BadRoomException e) {
+            throw new BadRequestException("Bad room");
+        } catch (ForeignKeyException e) {
+            throw new ConflictException("Cannot edit this room: there are reserved seats.");
+        }
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @AdminArea
+    public void deleteRoom(@PathParam("id") int id) {
+        try {
+            roomsDB.deleteRoom(id);
+        } catch (EntryNotFoundException e) {
+            throw new NotFoundException("Room not found");
+        } catch (ForeignKeyException e) {
+            throw new ConflictException("Cannot delete this room: there are reserved seats.");
         }
     }
 

@@ -134,6 +134,10 @@ $(document).ready(function () {
                 templateUrl: '../partials/admin/edit_user.html',
                 controller: 'AdminUsersEditController',
                 controllerAs: 'ctrl'
+            }).when('/admin/users/bookings/:uid', {
+                templateUrl: '../partials/admin/user_bookings.html',
+                controller: 'AdminUserBookingsController',
+                controllerAs: 'ctrl'
             }).when('/buy', {
                 templateUrl: '../partials/buy_seats.html',
                 controller: 'BuySeatController',
@@ -174,6 +178,37 @@ $(document).ready(function () {
                 }
             }
         })
+
+        // direttiva per inizializzare i dropdown
+        .directive('onDropdownRepeat', function() {
+            return function(scope, element, attrs) {
+                if (scope.$last) {
+                    console.log("DROPDOWN EMIT");
+                    scope.$emit('dropdownRepeatEnd', element, attrs);
+                }
+            };
+        })
+
+        // direttiva per inizializzare i collapsible
+        .directive('onCollapsibleRepeat', function() {
+            return function (scope, element, attrs) {
+                if (scope.$last) {
+                    console.log("collapsible EMIT");
+                    scope.$emit('collapsibleRepeatEnd', element, attrs);
+                }
+            };
+        })
+
+        // direttiva per inizializzare i select
+        .directive('onSelectRepeat', function() {
+            return function(scope, element, attrs) {
+                if (scope.$last) {
+                    console.log("SELECT EMIT");
+                    scope.$emit('selectRepeatEnd', element, attrs);
+                }
+            };
+        })
+
 
         .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', function ($rootScope, $location, Prices, StorageService, Auth, CompletePlays, $sce) {
 

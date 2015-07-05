@@ -56,7 +56,7 @@
                         for (var i=0; i < ctrl.bookings.length; i++) {
                             var buy = ctrl.bookings[i];
                             var total = 0;
-                            for (var j=0; buy.tickets.length; j++) {
+                            for (var j=0; j < buy.tickets.length; j++) {
                                 // TODO rivedere perchè mi mancano i dati
                                 if (buy.tickets[j].price != undefined) {
                                     total += buy.tickets[j].price;
@@ -84,17 +84,6 @@
 
             // when page loads -> load user info
             $timeout(this.loadUserBookings, 1000);
-        }])
-
-        // direttiva per inizializzare i collapsible
-        .directive('onCollapsibleRepeat', function() {
-            return function(scope, element, attrs) {
-                console.log("collapsible HAng");
-                if (scope.$last) {
-                    console.log("collapsible EMIT");
-                    scope.$emit('collapsibleRepeatEnd', element, attrs);
-                }
-            };
-        });
+        }]);
 
 })();

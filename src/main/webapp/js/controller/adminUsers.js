@@ -26,9 +26,73 @@
                     console.log("UPDATE fail");
                 });
             };
+        }])
+
+        .controller('AdminUserBookingsController', ['$routeParams', '$scope', '$location', 'Users', 'Auth', function($routeParams, $scope, $location, Users, Auth) {
+
+            var ctrl = this;
+            this.bookings = [];
+            this.uid = $routeParams.uid;
+
+            this.status_msg = "";
+
+            this.intToChar = function (i) {
+                return String.fromCharCode('A'.charCodeAt() + parseInt(i));
+            };
+
+            this.getBookings = function () {
+                Auth.user_bookings($routeParams.uid)
+                    .success(function (data) {
+                        ctrl.bookings = data;
+
+                        // calculate total of every buy
+                        for (var i=0; i < ctrl.bookings.length; i++) {
+                            var buy = ctrl.bookings[i];
+                            var total = 0;
+                            for (var j=0; j < buy.tickets.length; j++) {
+                                // TODO rivedere perchè mi mancano i dati
+                                if (buy.tickets[j].price != undefined) {
+                                    total += buy.tickets[j].price;
+                                }
+                            }
+                            buy.total = total;
+                        }
+
+                    })
+                    .error(function () {
+                    });
+
+            };
 
 
-        }]).controller('AdminUsersController', ['$rootScope', '$location', 'Users', function ($rootScope, $location, Users) {
+            this.modifyTicketStatus = function (booking_index, ticket_index) {
+
+                ctrl.status_msg = "";
+
+                var bid = ctrl.bookings[booking_index].bid;
+                var tid = ctrl.bookings[booking_index].tickets[ticket_index].tid;
+
+                //TODO fare richiesta
+                // ctrl.status_msg = "Modifica eseguita/modifica fallita";
+
+
+                // update bookings
+                ctrl.getBookings();
+            };
+
+            // init collapsible
+            $scope.$on('collapsibleRepeatEnd', function(scope, element, attrs){
+                $('.collapsible').collapsible({
+                    accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+                });
+                console.log("collapsible INIZIALIZZATI");
+            });
+
+
+            ctrl.getBookings();
+        }])
+
+        .controller('AdminUsersController', ['$rootScope', '$location', 'Users', function ($rootScope, $location, Users) {
 
             var ctrl = this;
             this.order = 'uid';

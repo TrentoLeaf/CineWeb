@@ -95,7 +95,7 @@ public class PlaysDB {
         final List<Play> plays = new ArrayList<>();
 
         final String query = "WITH all_seats AS (SELECT pid, rid, x, y FROM plays NATURAL JOIN seats EXCEPT " +
-                "SELECT pid, rid, x ,y FROM plays NATURAL JOIN tickets WHERE deleted = FALSE), " +
+                "SELECT pid, rid, x ,y FROM plays NATURAL JOIN tickets), " +
                 "not_free AS (SELECT pid, rid, count(*) AS free FROM all_seats GROUP BY pid, rid) " +
                 "SELECT pid, rid, fid, time, _3d, free FROM plays NATURAL JOIN not_free;";
 

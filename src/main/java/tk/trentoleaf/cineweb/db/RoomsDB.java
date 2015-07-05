@@ -1,6 +1,6 @@
 package tk.trentoleaf.cineweb.db;
 
-import org.eclipse.jetty.server.Server;
+import org.apache.commons.collections4.CollectionUtils;
 import tk.trentoleaf.cineweb.beans.model.*;
 import tk.trentoleaf.cineweb.exceptions.db.BadRoomException;
 import tk.trentoleaf.cineweb.exceptions.db.DBException;
@@ -43,7 +43,7 @@ public class RoomsDB {
     public Room createRoom(int rows, int cols, List<Seat> missingSeats) throws DBException {
         try (Connection connection = db.getConnection()) {
 
-            // create a transaction to ensure TodoDB consistency
+            // create a transaction to ensure DB consistency
             connection.setAutoCommit(false);
 
             // query
@@ -126,8 +126,8 @@ public class RoomsDB {
         }
     }
 
-    // create a new room given the matrix of places
-    public void createRoom(RoomStatus roomStatus) throws DBException, BadRoomException {
+    // check if the given room is valid
+    private boolean isRoomValid(RoomStatus roomStatus) {
 
         // check dimensions
         final int rows = roomStatus.getRows();
@@ -139,13 +139,13 @@ public class RoomsDB {
 
             // check rows
             if (seats.length != rows) {
-                throw new BadRoomException();
+                return false;
             }
 
             // check cols
             for (int[] col : seats) {
                 if (col.length != cols) {
-                    throw new BadRoomException();
+                    return false;
                 }
             }
 
@@ -153,14 +153,30 @@ public class RoomsDB {
             for (int[] col : seats) {
                 for (int seat : col) {
                     if (seat != SeatCode.MISSING.getValue() && seat != SeatCode.AVAILABLE.getValue()) {
-                        throw new BadRoomException();
+                        return false;
                     }
                 }
             }
 
+            // if here -> ok
+            return true;
+
         } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    // create a new room given the matrix of places
+    public void createRoom(RoomStatus roomStatus) throws DBException, BadRoomException {
+
+        // check room
+        if (!isRoomValid(roomStatus)) {
             throw new BadRoomException();
         }
+
+        final int rows = roomStatus.getRows();
+        final int cols = roomStatus.getColumns();
+        final int[][] seats = roomStatus.getSeats();
 
         // extract missing places
         final List<Seat> missing = new ArrayList<>();
@@ -198,6 +214,269 @@ public class RoomsDB {
         }
 
         return rooms;
+    }
+
+    // get the existing seats for a given room
+    public List<Seat> getSeatsByRoom(int rid) throws DBException {
+        final List<Seat> seats = new ArrayList<>();
+        final String query = "SELECT x, y FROM seats WHERE rid = ?;";
+
+        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, rid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                int x = rs.getInt("x");
+                int y = rs.getInt("y");
+                seats.add(new Seat(rid, x, y));
+            }
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
+
+        return seats;
+    }
+
+    // seats by room
+    public RoomStatus getSeatsByRoomAllPlays(int rid) throws DBException, EntryNotFoundException {
+        try (Connection connection = db.getConnection()) {
+
+            // find the room
+            try (PreparedStatement stm1 = connection.prepareStatement("SELECT rows, cols FROM rooms WHERE rid = ?;")) {
+                stm1.setInt(1, rid);
+
+                final ResultSet rs1 = stm1.executeQuery();
+                if (rs1.next()) {
+
+                    // get room dimensions
+                    final int rows = rs1.getInt("rows");
+                    final int cols = rs1.getInt("cols");
+
+                    // prepare result matrix -> default: missing place
+                    final int[][] result = new int[rows][cols];
+                    for (int[] col : result) {
+                        Arrays.fill(col, SeatCode.MISSING.getValue());
+                    }
+
+                    // find presents seats (with and without reservations)
+                    final String query = "SELECT DISTINCT x, y, (tid IS NOT NULL) AS has_reservations " +
+                            "FROM seats NATURAL LEFT JOIN tickets WHERE rid = ? ORDER BY x, y;";
+
+                    try (PreparedStatement stm2 = connection.prepareStatement(query)) {
+                        stm2.setInt(1, rid);
+
+                        final ResultSet rs2 = stm2.executeQuery();
+                        while (rs2.next()) {
+
+                            // get seat
+                            final int x = rs2.getInt("x");
+                            final int y = rs2.getInt("y");
+
+                            // set seat status
+                            result[x][y] = rs2.getBoolean("has_reservations") ? SeatCode.UNAVAILABLE.getValue() : SeatCode.AVAILABLE.getValue();
+                        }
+                    }
+
+                    // return the room
+                    return new RoomStatus(rid, rows, cols, result);
+                }
+
+                // not found
+                throw new EntryNotFoundException();
+            }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
+    }
+
+    // get a list of all seats by a Play
+    public List<SeatStatus> getSeatsByPlay(int pid) throws DBException {
+
+        // list of results
+        final List<SeatStatus> seats = new ArrayList<>();
+
+        // query
+        final String query = "WITH t1 AS (SELECT * FROM tickets WHERE pid = ?)," +
+                "t2 AS (SELECT rid, x, y FROM seats WHERE rid = (SELECT rid FROM plays WHERE pid = ?)) " +
+                "SELECT rid, x, y, (tid IS NOT NULL) AS reserved FROM t2 NATURAL LEFT JOIN t1;";
+
+        // execute query
+        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, pid);
+            stm.setInt(2, pid);
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                seats.add(new SeatStatus(rs.getInt("rid"), rs.getInt("x"), rs.getInt("y"), rs.getBoolean("reserved")));
+            }
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
+
+        // return seats
+        return seats;
+    }
+
+    // get the status of a room
+    public RoomStatus getRoomStatusByPlay(Play play) throws DBException, EntryNotFoundException {
+        return getRoomStatusByPlay(play.getPid());
+    }
+
+    // get the status of a room
+    public RoomStatus getRoomStatusByPlay(int pid) throws DBException, EntryNotFoundException {
+
+        // find the right room
+        final String query = "SELECT rid, rows, cols FROM rooms WHERE rid = (SELECT rid FROM plays WHERE pid = ?)";
+
+        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, pid);
+
+            final ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+
+                // get rid
+                final int rid = rs.getInt("rid");
+
+                // get room dimensions
+                final int rows = rs.getInt("rows");
+                final int cols = rs.getInt("cols");
+
+                // prepare result matrix
+                final int[][] result = new int[rows][cols];
+                for (int[] col : result) {
+                    Arrays.fill(col, SeatCode.MISSING.getValue());
+                }
+
+                // get presents seats status
+                final List<SeatStatus> seats = getSeatsByPlay(pid);
+                for (SeatStatus s : seats) {
+                    result[s.getX()][s.getY()] = s.isReserved() ? SeatCode.UNAVAILABLE.getValue() : SeatCode.AVAILABLE.getValue();
+                }
+
+                return new RoomStatus(rid, rows, cols, result);
+            }
+
+            // not found
+            throw new EntryNotFoundException();
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
+    }
+
+    // edit a room
+    public void editRoom(RoomStatus room) throws DBException, BadRoomException {
+
+        // check room
+        if (!isRoomValid(room)) {
+            throw new BadRoomException();
+        }
+
+        // get the old status of the room
+        final List<Seat> oldSeats = getSeatsByRoom(room.getRid());
+
+        // convert roomStatus to a list of present and absent places
+        final List<Seat> newSeats = new ArrayList<>();
+
+        final int rows = room.getRows();
+        final int cols = room.getColumns();
+        final int[][] seats = room.getSeats();
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (seats[i][j] == SeatCode.AVAILABLE.getValue()) {
+                    newSeats.add(new Seat(room.getRid(), i, j));
+                }
+            }
+        }
+
+        // extract places to add and remove
+        final List<Seat> seatsToAdd = (List<Seat>) CollectionUtils.subtract(newSeats, oldSeats);
+        final List<Seat> seatsToRemove = (List<Seat>) CollectionUtils.subtract(oldSeats, newSeats);
+
+        // update db
+        try (Connection connection = db.getConnection()) {
+
+            // create a transaction to ensure DB consistency
+            connection.setAutoCommit(false);
+
+            // insert seats
+            final String insertSeat = "INSERT INTO seats (rid, x, y) VALUES (?, ?, ?);";
+
+            // remove seats
+            final String removeSeat = "DELETE FROM seats WHERE rid = ? AND x = ? AND y = ?;";
+
+            // update room
+            final String updateRoom = "UPDATE rooms SET rows = ?, cols = ? WHERE rid = ?;";
+
+            // insert seats
+            for (Seat s : seatsToAdd) {
+
+                // query to insert a new seat
+                try (PreparedStatement stm = connection.prepareStatement(insertSeat)) {
+                    stm.setInt(1, s.getRid());
+                    stm.setInt(2, s.getX());
+                    stm.setInt(3, s.getY());
+
+                    int n = stm.executeUpdate();
+                    assert n == 1;
+
+                } catch (SQLException e) {
+
+                    // if errors -> rollback
+                    connection.rollback();
+
+                    // throw the exception
+                    throw DBException.factory(e);
+                }
+            }
+
+            // remove seats
+            for (Seat s : seatsToRemove) {
+
+                // query to insert a new seat
+                try (PreparedStatement stm = connection.prepareStatement(removeSeat)) {
+                    stm.setInt(1, s.getRid());
+                    stm.setInt(2, s.getX());
+                    stm.setInt(3, s.getY());
+
+                    int n = stm.executeUpdate();
+                    assert n == 1;
+
+                } catch (SQLException e) {
+
+                    // if errors -> rollback
+                    connection.rollback();
+
+                    // throw the exception
+                    throw DBException.factory(e);
+                }
+            }
+
+            // update room dimension
+            try (PreparedStatement stm = connection.prepareStatement(updateRoom)) {
+                stm.setInt(1, room.getRows());
+                stm.setInt(2, room.getColumns());
+                stm.setInt(3, room.getRid());
+
+                int n = stm.executeUpdate();
+                assert n == 1;
+
+            } catch (SQLException e) {
+
+                // if errors -> rollback
+                connection.rollback();
+
+                // throw the exception
+                throw DBException.factory(e);
+            }
+
+            // execute sql
+            connection.commit();
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
     }
 
     // delete room
@@ -244,99 +523,5 @@ public class RoomsDB {
         }
     }
 
-    // get the existing seats for a given room
-    public List<Seat> getSeatsByRoom(int rid) throws DBException {
-        final List<Seat> seats = new ArrayList<>();
-        final String query = "SELECT x, y FROM seats WHERE rid = ?;";
-
-        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setInt(1, rid);
-            ResultSet rs = stm.executeQuery();
-            while (rs.next()) {
-                int x = rs.getInt("x");
-                int y = rs.getInt("y");
-                seats.add(new Seat(rid, x, y));
-            }
-        } catch (SQLException e) {
-            throw DBException.factory(e);
-        }
-
-        return seats;
-    }
-
-    // get a list of all seats by a Play
-    public List<SeatStatus> getSeatsByPlay(int pid) throws DBException {
-
-        // list of results
-        final List<SeatStatus> seats = new ArrayList<>();
-
-        // query
-        final String query = "WITH t1 AS (SELECT * FROM tickets WHERE pid = ? AND deleted = FALSE)," +
-                "t2 AS (SELECT rid, x, y FROM seats WHERE rid = (SELECT rid FROM plays WHERE pid = ?)) " +
-                "SELECT rid, x, y, (tid IS NOT NULL) AS reserved FROM t2 NATURAL LEFT JOIN t1;";
-
-        // execute query
-        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setInt(1, pid);
-            stm.setInt(2, pid);
-            ResultSet rs = stm.executeQuery();
-
-            while (rs.next()) {
-                seats.add(new SeatStatus(rs.getInt("rid"), rs.getInt("x"), rs.getInt("y"), rs.getBoolean("reserved")));
-            }
-        } catch (SQLException e) {
-            throw DBException.factory(e);
-        }
-
-        // return seats
-        return seats;
-    }
-
-    // get the status of a room
-    public RoomStatus getRoomStatusByPlay(Play play) throws DBException, EntryNotFoundException {
-        return getRoomStatusByPlay(play.getPid());
-    }
-
-    // get the status of a room
-    public RoomStatus getRoomStatusByPlay(int pid) throws DBException, EntryNotFoundException {
-
-        // find the wright room
-        final String query = "SELECT rid, rows, cols FROM rooms WHERE rid = (SELECT rid FROM plays WHERE pid = ?)";
-
-        try (Connection connection = db.getConnection(); PreparedStatement stm = connection.prepareStatement(query)) {
-            stm.setInt(1, pid);
-
-            final ResultSet rs = stm.executeQuery();
-            if (rs.next()) {
-
-                // get rid
-                final int rid = rs.getInt("rid");
-
-                // get room dimensions
-                final int rows = rs.getInt("rows");
-                final int cols = rs.getInt("cols");
-
-                // prepare result matrix
-                final int[][] result = new int[rows][cols];
-                for (int[] col : result) {
-                    Arrays.fill(col, SeatCode.MISSING.getValue());
-                }
-
-                // get presents seats status
-                final List<SeatStatus> seats = getSeatsByPlay(pid);
-                for (SeatStatus s : seats) {
-                    result[s.getX()][s.getY()] = s.isReserved() ? SeatCode.UNAVAILABLE.getValue() : SeatCode.AVAILABLE.getValue();
-                }
-
-                return new RoomStatus(rid, rows, cols, result);
-            }
-
-            // not found
-            throw new EntryNotFoundException();
-
-        } catch (SQLException e) {
-            throw DBException.factory(e);
-        }
-    }
 
 }

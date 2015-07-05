@@ -36,16 +36,27 @@ public class RoomStatus {
     /**
      * Constructor.
      *
+     * @param rows    Number of rows in the Room.
+     * @param columns Number of columns in the Room.
+     * @param seats   Matrix of the seats (each number corresponds to a seat status).
+     */
+    public RoomStatus(int rows, int columns, int[][] seats) {
+        this.rows = rows;
+        this.columns = columns;
+        this.seats = seats;
+    }
+
+    /**
+     * Constructor.
+     *
      * @param rid     Room ID.
      * @param rows    Number of rows in the Room.
      * @param columns Number of columns in the Room.
      * @param seats   Matrix of the seats (each number corresponds to a seat status).
      */
     public RoomStatus(int rid, int rows, int columns, int[][] seats) {
+        this(rows, columns, seats);
         this.rid = rid;
-        this.rows = rows;
-        this.columns = columns;
-        this.seats = seats;
     }
 
     public int getRid() {
