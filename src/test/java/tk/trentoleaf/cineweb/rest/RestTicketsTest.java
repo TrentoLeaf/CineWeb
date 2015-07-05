@@ -9,6 +9,7 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -53,11 +54,14 @@ public class RestTicketsTest extends MyJerseyTest {
 
         // expected bookings
         final List<Booking> expected = new ArrayList<>();
-        final List<Ticket> tt = new ArrayList<>();
-        tt.add(new Ticket(t1.getTid(), booking.getBid(), p1, 1, 2, 4, "normale"));
-        tt.add(new Ticket(t2.getTid(), booking.getBid(), p2, 1, 2, 5, "ridotto"));
-        tt.add(new Ticket(t3.getTid(), booking.getBid(), p2, 0, 2, 6, "normale", true));
-        final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, tt);
+        final Ticket tt1 = new Ticket(t1.getTid(), booking.getBid(), p1, 1, 2, 4, "normale");
+        final Ticket tt2 = new Ticket(t2.getTid(), booking.getBid(), p2, 1, 2, 5, "ridotto");
+        final Ticket tt3 = new Ticket(t3.getTid(), booking.getBid(), p2, 0, 2, 6, "normale", true);
+        tt1.setTitle(f1.getTitle());
+        tt2.setTitle(f1.getTitle());
+        tt3.setTitle(f1.getTitle());
+
+        final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, Arrays.asList(tt1, tt2, tt3));
         expected.add(b);
 
         // current
@@ -109,11 +113,14 @@ public class RestTicketsTest extends MyJerseyTest {
 
         // expected bookings
         final List<Booking> expected = new ArrayList<>();
-        final List<Ticket> tt = new ArrayList<>();
-        tt.add(new Ticket(t1.getTid(), booking.getBid(), p1, 1, 2, 4, "normale"));
-        tt.add(new Ticket(t2.getTid(), booking.getBid(), p2, 1, 2, 5, "ridotto"));
-        tt.add(new Ticket(t3.getTid(), booking.getBid(), p2, 0, 2, 6, "normale", true));
-        final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, tt);
+        final Ticket tt1 = new Ticket(t1.getTid(), booking.getBid(), p1, 1, 2, 4, "normale");
+        final Ticket tt2 = new Ticket(t2.getTid(), booking.getBid(), p2, 1, 2, 5, "ridotto");
+        final Ticket tt3 = new Ticket(t3.getTid(), booking.getBid(), p2, 0, 2, 6, "normale", true);
+        tt1.setTitle(f1.getTitle());
+        tt2.setTitle(f1.getTitle());
+        tt3.setTitle(f1.getTitle());
+
+        final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, Arrays.asList(tt1, tt2, tt3));
         expected.add(b);
 
         // current
