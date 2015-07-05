@@ -19,6 +19,7 @@
                     <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('secondName')">Cognome</a></th>
                     <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('credit')">Credito</a></th>
                     <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Confermato</a></th>
+                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Acquisti</a></th>
                     <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Modifica</a></th>
                     <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Cancella</a></th>
                 </tr>
@@ -31,6 +32,11 @@
                     <td>{{u.secondName}}</td>
                     <td>{{u.credit}} €</td>
                     <td>{{u.enabled}}</td>
+                    <td>
+                        <a href="#admin/users/bookings/{{u.uid}}">
+                            <i class="yellow-text mdi-action-shopping-basket"></i>
+                        </a>
+                    </td>
                     <td>
                         <a href="#admin/users/{{u.uid}}">
                             <i class="yellow-text mdi-action-assignment"></i>

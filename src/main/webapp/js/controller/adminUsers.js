@@ -26,9 +26,35 @@
                     console.log("UPDATE fail");
                 });
             };
+        }])
+
+        .controller('AdminUserBookingsController', ['$routeParams', '$location', 'Users', function($routeParams, $location, Users) {
+
+            var ctrl = this;
+            this.bookings = {};
+
+            Users.user_bookings({id:$routeParams.uid})
+                .success(function (data) {
+                    ctrl.bookings = data;
+                })
+                .error(function () {
+                });
 
 
-        }]).controller('AdminUsersController', ['$rootScope', '$location', 'Users', function ($rootScope, $location, Users) {
+            this.modifyTicketStatus = function () {
+               /* Users.update({id: c.currentUser.uid}, c.currentUser).$promise.then(function (data) {
+                    // ok
+                    console.log("UPDATE OK ->");
+                    console.log(data);
+                    $location.path("/admin/users")
+                }, function () {
+                    // fail...
+                    console.log("UPDATE fail");
+                });*/
+            };
+        }])
+
+        .controller('AdminUsersController', ['$rootScope', '$location', 'Users', function ($rootScope, $location, Users) {
 
             var ctrl = this;
             this.order = 'uid';

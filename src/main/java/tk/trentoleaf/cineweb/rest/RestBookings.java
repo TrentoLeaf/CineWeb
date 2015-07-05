@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import java.util.List;
 
@@ -33,6 +34,19 @@ public class RestBookings {
     public List<Booking> getBookings() {
         return bookingsDB.getBookings();
     }
+
+
+    // TODO fatto da Andrea...chiassà se funziona
+    @GET
+    @Path("/{id}")
+    @AdminArea
+    @Compress
+    public List<Booking> getUserBookings(@PathParam("id") int uid) {
+
+        // return user bookings
+        return bookingsDB.getBookingsByUser(uid);
+    }
+
 
     @GET
     @Path("/my")

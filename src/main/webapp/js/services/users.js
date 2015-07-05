@@ -118,6 +118,16 @@
                         .error(function (data, status) {
                             $log.warn('MY FAILED: ' + status + " " + data);
                         });
+                },
+
+                user_bookings: function (uid) {
+                    return $http.get(BASE_BOOKINGS + "/" + uid)
+                        .success(function (data) {
+                            $log.info('MY OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('MY FAILED: ' + status + " " + data);
+                        });
                 }
             }
         }]);

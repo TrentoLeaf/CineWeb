@@ -134,6 +134,10 @@ $(document).ready(function () {
                 templateUrl: '../partials/admin/edit_user.html',
                 controller: 'AdminUsersEditController',
                 controllerAs: 'ctrl'
+            }).when('/admin/users/bookings/:uid', {
+                templateUrl: '../partials/admin/user_bookings.html',
+                controller: 'AdminUserBookingsController',
+                controllerAs: 'ctrl'
             }).when('/buy', {
                 templateUrl: '../partials/buy_seats.html',
                 controller: 'BuySeatController',
