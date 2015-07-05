@@ -63,7 +63,7 @@
                     });
 
             };
-            
+
             this.modifyTicketStatus = function () {
 
                 ctrl.status_msg = "Un momento...";

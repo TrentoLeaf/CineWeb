@@ -96,6 +96,9 @@ main {
   padding: 0px 2px 1px 2px;
   border-radius: 10px;
   font-weight: bold; }
+  @media only screen and (max-width: 600px) {
+    .cart-badge {
+      top: -70px; } }
 
 footer {
   margin-top: 0px !important; }
