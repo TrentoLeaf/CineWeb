@@ -6,31 +6,18 @@
         </div>
     </div>
 
-    <div class="row white-text"> <!-- dati utente -->
-        <div class="col s12 offset-m1 m10 offset-l1 l10">
-            <h4>Dati utente</h4>
-        </div>
-        <div class="col s12 offset-m1 m5 offset-l1 l3">
-            <h6>Nome: {{user.firstName}}</h6>
-        </div>
-        <div class="col s12 offset-m1 m5 offset-l1 l3">
-            <h6>Cognome: {{user.secondName}}</h6>
-        </div>
-        <div class="col s12 offset-m1 m5 offset-l1 l3">
-            <h6>Email: {{user.email}}</h6>
-        </div>
-    </div>
-
-
     <div class="row white-text"> <!-- cronologia acquisti -->
         <div class="col s12 offset-m1 m10 offset-l1 l10">
             <h4>Cronologia acquisti</h4>
         </div>
     </div>
     <div class="row">
+        <h6>{{ctrl.status_msg}}</h6>
+    </div>
+    <div class="row">
         <div class="col s12 offset-m1 m10 offset-l1 l10 ">
             <ul class="collapsible" data-collapsible="expandable">
-                <li ng-repeat="buy in ctrl.bookings track by $index" on-collapsible-repeat>
+                <li ng-repeat="buy in ctrl.bookings" on-collapsible-repeat>
                     <div class="collapsible-header grey darken-3 white-text">
                         <div class="row">
                             <div class="col s6 m6 l6">
@@ -47,7 +34,7 @@
                                 <h5>Credito usato: {{buy.payedWithCredit | currency:"€ "}}</h5>
                             </div>
                             <div class="col s6 m6 l6 right-align">
-                                <h5>Totale: {{ buy.total | currency:"€ "}}</h5>
+                                <h5>Totale: {{buy.total | currency:"€ "}}</h5>
                             </div>
                         </div>
                         <div class="row">
@@ -55,126 +42,35 @@
                                 <thead>
                                 <tr>
                                     <th>Film</th>
+                                    <th>Sala</th>
+                                    <th>Posto</th>
                                     <th>Tipologia</th>
                                     <th>Prezzo</th>
                                     <th>Annulla</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="ticket in buy.tickets track by $index" ng-class="{'red-text' : ticket.deleted}">
+                                <tr ng-repeat="ticket in buy.tickets" ng-class="{ 'red-text' : ticket.disabled}">
                                     <td><span>{{ticket.title}}</span></td>
+                                    <td><span>{{ticket.rid}}</span></td>
+                                    <td><span>{{ctrl.intToChar(ticket.x)}}{{ticket.y+1}}</span></td>
                                     <td><span>{{ticket.type}}</span></td>
                                     <td><span>{{ticket.price}}</span></td>
                                     <td>
                                         <a ng-click="ctrl.modifyTicketStatus($parent.$index, $index)">
-                                            <i class="red-text mdi-action-delete"></i>
+                                            <i ng-hide="ticket.disabled" class="red-text mdi-action-delete"></i>
+                                            <i ng-show="ticket.disabled" class="green-text mdi-action-check-circle"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                </li>
-                <!-- TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST -->
-                <li>
-                    <div class="collapsible-header grey darken-3 white-text">
                         <div class="row">
-                            <div class="col s6 m6 l6">
-                                <i class="mdi-action-shopping-basket"></i>ACQUISTO
-                            </div>
-                            <div class="col s6 m6 l6 right-align">
-                                <span>Data: {{ctrl.aaa}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="collapsible-body white">
-                        <div class="row">
-                            <div class="col s6 m6 l6">
-                                <h5>Credito usato: {{ctrl.aaaa|currency:"€ "}}</h5>
-                            </div>
-                            <div class="col s6 m6 l6 right-align">
-                                <h5>Totale: {{ctrl.aaaaa|currency:"€ "}}</h5>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <table class="summaryTable">
-                                <thead>
-                                <tr>
-                                    <th>Film</th>
-                                    <th>Tipologia</th>
-                                    <th>Quantità</th>
-                                    <th>Prezzo</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><span>Titolo1</span></td>
-                                    <td><span>Normale</span></td>
-                                    <td><span>2</span></td>
-                                    <td><span>12.50</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span>Titolo2</span></td>
-                                    <td><span>Normale</span></td>
-                                    <td><span>2</span></td>
-                                    <td><span>12.50</span></td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <span>Nota: i biglietti in rosso sono stati annullati.</span>
                         </div>
                     </div>
                 </li>
-                <li>
-                    <div class="collapsible-header grey darken-3 white-text">
-                        <div class="row">
-                            <div class="col s6 m6 l6">
-                                <i class="mdi-action-shopping-basket"></i>ACQUISTO
-                            </div>
-                            <div class="col s6 m6 l6 right-align">
-                                <span>Data: {{ctrl.aaa}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="collapsible-body white">
-                        <div class="row">
-                            <div class="col s6 m6 l6">
-                                <h5>Credito usato: {{ctrl.aaaa|currency:"€ "}}</h5>
-                            </div>
-                            <div class="col s6 m6 l6 right-align">
-                                <h5>Totale: {{ctrl.aaaaa|currency:"€ "}}</h5>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <table class="summaryTable">
-                                <thead>
-                                <tr>
-                                    <th>Film</th>
-                                    <th>Tipologia</th>
-                                    <th>Quantità</th>
-                                    <th>Prezzo</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><span>Titolo1</span></td>
-                                    <td><span>Normale</span></td>
-                                    <td><span>2</span></td>
-                                    <td><span>12.50</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span>Titolo2</span></td>
-                                    <td><span>Normale</span></td>
-                                    <td><span>2</span></td>
-                                    <td><span>12.50</span></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- END TEST END TEST END TEST END TEST END TEST END TEST END TEST -->
             </ul>
         </div>
     </div>
@@ -182,13 +78,13 @@
     <div class="row">
 
     </div>
-    <div class="row white-text"> <!-- credito -->
-        <div class="col s12 offset-m1 m10 offset-l1 l10">
-            <h4>Credito disponibile: {{user.credit|currency:"€ "}}</h4>
-        </div>
+    <div class="row">
+
     </div>
-
-
-
+    <div class="row center-align">
+        <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/users">INDIETRO
+            <i class="mdi-navigation-arrow-back left"></i>
+        </a>
+    </div>
 
 </div>

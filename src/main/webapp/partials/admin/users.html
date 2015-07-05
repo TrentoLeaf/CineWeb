@@ -4,77 +4,80 @@
             <h2 class="center-align yellow-text text-accent-4">Utenti</h2>
         </div>
     </div>
-    <div class="row">
-        <div class="col s12 m12 l12 center-align" ng-show="ctrl.loading">
+    <div class="row" ng-show="ctrl.loading">
+        <div class="col s12 m12 l12 center-align">
             <img src="../../img/popcorn.svg" class="popcorn" alt="Loading"/>
             <h3 class="yellow-text text-accent-4">Caricamento in corso...</h3>
         </div>
-        <div class="col s12 m12 l12" ng-hide="ctrl.loading">
-            <table class="adminTable bordered centered responsive-table">
-                <thead>
-                <tr>
-                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('uid')">Id</a></th>
-                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('email')">Email</a></th>
-                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('firstName')">Nome</a></th>
-                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('secondName')">Cognome</a></th>
-                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('credit')">Credito</a></th>
-                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Confermato</a></th>
-                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Acquisti</a></th>
-                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Modifica</a></th>
-                    <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Cancella</a></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="white-text" ng-repeat="u in ctrl.users track by $index | orderBy:ctrl.order:ctrl.reverse">
-                    <td>{{u.uid}}</td>
-                    <td>{{u.email}}</td>
-                    <td>{{u.firstName}}</td>
-                    <td>{{u.secondName}}</td>
-                    <td>{{u.credit}} €</td>
-                    <td>{{u.enabled}}</td>
-                    <td>
-                        <a href="#admin/users/bookings/{{u.uid}}">
-                            <i class="yellow-text mdi-action-shopping-basket"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="#admin/users/{{u.uid}}">
-                            <i class="yellow-text mdi-action-assignment"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a ng-click="ctrl.open_user_delete_modal($index)" class="modal-trigger" data-target="modal_user_delete">
-                            <i class="red-text mdi-action-delete"></i>
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
-    <div class="row">
+    <div  ng-hide="ctrl.loading">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <table class="adminTable bordered centered responsive-table">
+                    <thead>
+                    <tr>
+                        <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('uid')">Id</a></th>
+                        <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('email')">Email</a></th>
+                        <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('firstName')">Nome</a></th>
+                        <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('secondName')">Cognome</a></th>
+                        <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('credit')">Credito</a></th>
+                        <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Confermato</a></th>
+                        <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Acquisti</a></th>
+                        <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Modifica</a></th>
+                        <th><a class="yellow-text text-accent-4" href="" ng-click="ctrl.setOrder('enabled')">Cancella</a></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="white-text" ng-repeat="u in ctrl.users track by $index | orderBy:ctrl.order:ctrl.reverse">
+                        <td>{{u.uid}}</td>
+                        <td>{{u.email}}</td>
+                        <td>{{u.firstName}}</td>
+                        <td>{{u.secondName}}</td>
+                        <td>{{u.credit}} €</td>
+                        <td>{{u.enabled}}</td>
+                        <td>
+                            <a href="#admin/users/bookings/{{u.uid}}">
+                                <i class="blue-text mdi-action-shopping-basket"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#admin/users/{{u.uid}}">
+                                <i class="yellow-text mdi-action-assignment"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a ng-click="ctrl.open_user_delete_modal($index)" class="modal-trigger" data-target="modal_user_delete">
+                                <i class="red-text mdi-action-delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
 
+        </div>
+        <div class="row">
+            <div class="col s12 m4 l4 center-align">
+                <a class="btn green white-text waves-effect waves-light"
+                   ng-click="ctrl.loadUsers()" style="margin-bottom: 1em;">RELOAD
+                    <i class="mdi-navigation-refresh"></i>
+                </a>
+            </div>
+            <div class="col s12 m4 l4 center-align">
+                <a class="btn green white-text waves-effect waves-light"
+                   ng-click="ctrl.editUser(ctrl.users[0])" style="margin-bottom: 1em;">EDIT EXAMPLE
+                    <i class="mdi-editor-mode-edit"></i>
+                </a>
+            </div>
+            <div class="col s12 m4 l4 center-align">
+                <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/users/new" style="margin-bottom: 1em;">NUOVO UTENTE
+                    <i class="mdi-social-person-add"></i>
+                </a>
+            </div>
+        </div>
     </div>
-    <div class="row">
-        <div class="col s12 m4 l4 center-align">
-            <a class="btn green white-text waves-effect waves-light"
-               ng-click="ctrl.loadUsers()" style="margin-bottom: 1em;">RELOAD
-                <i class="mdi-navigation-refresh"></i>
-            </a>
-        </div>
-        <div class="col s12 m4 l4 center-align">
-            <a class="btn green white-text waves-effect waves-light"
-               ng-click="ctrl.editUser(ctrl.users[0])" style="margin-bottom: 1em;">EDIT EXAMPLE
-                <i class="mdi-editor-mode-edit"></i>
-            </a>
-        </div>
-        <div class="col s12 m4 l4 center-align">
-            <a class="btn waves-effect waves-light yellow accent-4 black-text" href="#admin/users/new" style="margin-bottom: 1em;">NUOVO UTENTE
-                <i class="mdi-social-person-add"></i>
-            </a>
-        </div>
-    </div>
-
 
 </div>
 

@@ -42,15 +42,6 @@
                 console.log("pllog");
             };
 
-        }])
+        }]);
 
-        // direttiva per inizializzare i dropdown
-        .directive('onDropdownRepeat', function() {
-            return function(scope, element, attrs) {
-                if (scope.$last) {
-                    console.log("DROPDOWN EMIT");
-                    scope.$emit('dropdownRepeatEnd', element, attrs);
-                }
-            };
-        });
 })();

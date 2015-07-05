@@ -36,7 +36,7 @@ public class RestBookings {
     }
 
 
-    // TODO fatto da Andrea...chiassà se funziona
+    // TODO fatto da Andrea...avrà fatto errori?
     @GET
     @Path("/{id}")
     @AdminArea
