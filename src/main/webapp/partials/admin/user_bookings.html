@@ -58,8 +58,7 @@
                                     <td><span>{{ticket.price}}</span></td>
                                     <td>
                                         <a ng-click="ctrl.modifyTicketStatus($parent.$index, $index)">
-                                            <i ng-hide="ticket.disabled" class="red-text mdi-action-delete"></i>
-                                            <i ng-show="ticket.disabled" class="green-text mdi-action-check-circle"></i>
+                                            <i class="red-text mdi-action-delete"></i>
                                         </a>
                                     </td>
                                 </tr>

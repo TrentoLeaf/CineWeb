@@ -36,6 +36,7 @@
 
             this.status_msg = "";
 
+            // convert 0 to A, 1 to B, ...
             this.intToChar = function (i) {
                 return String.fromCharCode('A'.charCodeAt() + parseInt(i));
             };
@@ -50,7 +51,6 @@
                             var buy = ctrl.bookings[i];
                             var total = 0;
                             for (var j=0; j < buy.tickets.length; j++) {
-                                // TODO rivedere perchè mi mancano i dati
                                 if (buy.tickets[j].price != undefined) {
                                     total += buy.tickets[j].price;
                                 }
@@ -67,17 +67,24 @@
 
             this.modifyTicketStatus = function (booking_index, ticket_index) {
 
-                ctrl.status_msg = "";
+                if (! ctrl.bookings[booking_index].tickets[ticket_index].deleted) {
+                    ctrl.status_msg = "Un momento...";
 
-                var bid = ctrl.bookings[booking_index].bid;
-                var tid = ctrl.bookings[booking_index].tickets[ticket_index].tid;
+                    var tid = ctrl.bookings[booking_index].tickets[ticket_index].tid;
 
-                //TODO fare richiesta
-                // ctrl.status_msg = "Modifica eseguita/modifica fallita";
+                    Auth.deleteTicket(tid)
+                        .success(function () {
+                            ctrl.status_msg = "Modifica eseguita.";
+                            // update bookings
+                            ctrl.getBookings();
+                        })
+                        .error(function () {
+                            ctrl.status_msg = "Modifica fallita.";
+                            // update bookings
+                            ctrl.getBookings();
+                        });
 
-
-                // update bookings
-                ctrl.getBookings();
+                }
             };
 
             // init collapsible
