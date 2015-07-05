@@ -71,7 +71,7 @@ public class RestBuy {
 
         // if error -> return the updated cart
         if (error) {
-            return Response.status(409).entity(cart).build();
+            return Response.status(409).entity(cart.getCart()).build();
         }
 
         // if here, everything went just fine
