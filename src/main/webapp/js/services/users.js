@@ -14,6 +14,7 @@
         .factory('Auth', ['BASE', '$http', '$q', '$log', function (BASE, $http, $q, $log) {
             var BASE_USERS = BASE + "/users";
             var BASE_BOOKINGS = BASE + "/bookings";
+            var BASE_TICKETS = BASE + "/tickets";
 
             return {
                 login: function (email, password) {
@@ -127,6 +128,16 @@
                         })
                         .error(function (data, status) {
                             $log.warn('BOOKING_USER FAILED: ' + status + " " + data);
+                        });
+                },
+
+                deleteTicket: function (tid) {
+                    return $http.delete(BASE_TICKETS + "/" + tid)
+                        .success(function (data) {
+                            $log.info('DELETE TICKET OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('DELETE TICKET FAILED: ' + status + " " + data);
                         });
                 }
             }
