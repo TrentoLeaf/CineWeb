@@ -19,7 +19,7 @@
             this.pass = function () {
                 if (ctrl.passTrigger) { // cambio password
                     if (ctrl.newPass == ctrl.verifyPass) {
-                        Auth.changePassword(user.email, ctrl.oldPass, ctrl.newPass)
+                        Auth.changePassword($rootScope.user.email, ctrl.oldPass, ctrl.newPass)
                             .success(function () {
                                 ctrl.result = "Password cambiata con successo.";
                                 ctrl.passBtn = "Cambia Password";
