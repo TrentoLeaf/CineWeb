@@ -11,7 +11,7 @@ public class TicketItem {
     @SafeString(message = "Type must be a valid ticket type")
     private String type;
 
-    @NotNull
+    @NotNull(message = "Message cannot be null")
     @Min(value = 1, message = "Cannot specify a quantity less than 1")
     private Integer number;
 

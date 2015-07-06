@@ -5,13 +5,13 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class Cart {
+public class CheckCart {
 
     @NotNull(message = "Missing cart object")
     @Valid
     private List<CartItem> cart;
 
-    public Cart() {
+    public CheckCart() {
     }
 
     public List<CartItem> getCart() {
