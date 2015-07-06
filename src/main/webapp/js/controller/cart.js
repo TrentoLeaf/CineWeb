@@ -6,7 +6,8 @@
     };
 
     angular.module('cartModule', ['pricesModule'])
-        .controller('CartController', ['$rootScope', 'Prices', '$location', 'Auth', function ($rootScope, Prices, $location, Auth) {
+        .controller('CartController', ['$rootScope', 'Prices', '$location', 'Auth', 'BuyProcedure', function ($rootScope, Prices, $location, Auth, BuyProcedure) {
+
 
             this.addToCart = function (film, play_index) {
 
@@ -35,6 +36,11 @@
                     newFilm.rid = film.plays[play_index].rid;
                     newFilm.free = film.plays[play_index].free;
                     delete newFilm.date;
+                    delete newFilm.plays;
+                    delete newFilm.genre;
+                    delete newFilm.trailer;
+                    delete newFilm.plot;
+                    delete newFilm.duration;
 
                     $rootScope.cart.push(newFilm);
                     // anima l'icona del carrello dopo un acquisto carrello
@@ -59,25 +65,10 @@
 
             this.proceed = function () {
 
-                // TODO verificare che il server dia l'ok  e che tutti i valori e spettacoli siano giusti
-
                 $('.cart-loader').addClass('active');
-
-                // check if the user is already logged
-                if ($rootScope.isUserLogged) {
-                        $('.cart-loader').removeClass('active');
-                        // reset di afterLogin
-                        $rootScope.afterLogin = "normal";
-                        // vai alla pagina di acquisto
-                        $location.path("/buy");
-                    } else { /* not logged */
-                        $('.cart-loader').removeClass('active');
-                        // setta afterLogin a buy (per ritornare alla procedura d'acquisto)
-                        $rootScope.afterLogin = "buy";
-                        // vai alla pagina di login
-                        $location.path('/login');
-                    }
-
+                $('.cart-loader').removeClass('active');
+                // vai alla pagina di acquisto
+                $location.path("/buy");
 
             };
 

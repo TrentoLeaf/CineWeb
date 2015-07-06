@@ -8,55 +8,57 @@
                 <h2 class="yellow-text text-accent-4">Profilo</h2>
             </div>
         </div>
-
         <div class="row white-text"> <!-- dati utente -->
             <div class="col s12 offset-m1 m10 offset-l1 l10">
                 <h4>Dati utente</h4>
             </div>
             <div class="col s12 offset-m1 m5 offset-l1 l3">
-                <h6>Nome: {{user.firstName}}</h6>
+                <h6>NOME: {{user.firstName}}</h6>
             </div>
             <div class="col s12 offset-m1 m5 offset-l1 l3">
-                <h6>Cognome: {{user.secondName}}</h6>
+                <h6>COGNOME: {{user.secondName}}</h6>
             </div>
             <div class="col s12 offset-m1 m5 offset-l1 l3">
-                <h6>Email: {{user.email}}</h6>
+                <h6>EMAIL: {{user.email}}</h6>
             </div>
         </div>
-        <div class="row white-text">
-            <div class="col s12 offset-m1 m10 offset-l1 l3 center-align">
-                <a ng-click="ctrl.pass()" class="white-text waves-effect waves-yellow btn-flat center-align">
-                    {{ctrl.passBtn}}<i class="mdi-action-lock right" ng-show="ctrl.passTrigger"></i>
-                </a>
-            </div>
-            <div>
-                <div ng-show="ctrl.passTrigger" class="input-field col s12 m3 l3">
-                    <input id="oldpassword" type="password" class="validate" ng-model="ctrl.oldPass">
-                    <label for="oldpassword">Vecchia Password</label>
+        <div class="row"> <!-- cambio password -->
+            <div class="col s12 offset-m1 m10 offset-l1 l10 grey darken-3" style="border-radius: 2px;">
+                <div class="row white-text">
+                    <div class="col s12 m5 l4">
+                        <a ng-click="ctrl.pass()" class="white-text waves-effect waves-yellow btn yellow accent-4"
+                           style="margin-top:20px;">
+                            {{ctrl.passBtn}}<i class="mdi-action-lock right" ng-show="ctrl.passTrigger"></i>
+                        </a>
+                    </div>
+                    <div class="col s12 m7 l8 white-text">
+                        <h6 style="margin-top:35px;">{{ctrl.result}}</h6>
+                    </div>
                 </div>
-                <div ng-show="ctrl.passTrigger" class="input-field col s12 m3 l2">
-                    <input id="newpassword" type="password" class="validate" ng-model="ctrl.newPass">
-                    <label for="newpassword">Nuova Password</label>
+                <div class="row" ng-show="ctrl.passTrigger">
+                    <div ng-show="ctrl.passTrigger" class="input-field col s12 m4 l4">
+                        <input id="oldpassword" type="password" class="validate" ng-model="ctrl.oldPass">
+                        <label for="oldpassword">Vecchia Password</label>
+                    </div>
+                    <div ng-show="ctrl.passTrigger" class="input-field col s12 m4 l4">
+                        <input id="newpassword" type="password" class="validate" ng-model="ctrl.newPass">
+                        <label for="newpassword">Nuova Password</label>
+                    </div>
+
+                    <div ng-show="ctrl.passTrigger" class="input-field col s12 m4 l4">
+                        <input id="verpassword" type="password" class="validate" ng-model="ctrl.verifyPass">
+                        <label for="verpassword">Ripeti Password</label>
+                    </div>
                 </div>
-
-                <div ng-show="ctrl.passTrigger" class="input-field col s12 m3 l2">
-                    <input id="verpassword" type="password" class="validate" ng-model="ctrl.verifyPass">
-                    <label for="verpassword">Ripeti Password</label>
-                </div>
             </div>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col s12 offset-m1 m10 offset-l1 l10 white-text">
-                <h6 class="">{{ctrl.result}}</h6>
-            </div>
+    <div class="row white-text"> <!-- cronologia acquisti -->
+        <div class="col s12 offset-m1 m10 offset-l1 l10">
+            <h4>Cronologia acquisti</h4>
         </div>
-
-        <div class="row white-text"> <!-- cronologia acquisti -->
-            <div class="col s12 offset-m1 m10 offset-l1 l10">
-                <h4>Cronologia acquisti</h4>
-            </div>
-        </div>
+        <<<<<<< HEAD
         <div class="row">
             <div class="col s12 offset-m1 m10 offset-l1 l10 ">
                 <ul class="collapsible" data-collapsible="expandable">
@@ -67,7 +69,8 @@
                                     <i class="mdi-action-shopping-basket"></i>ACQUISTO
                                 </div>
                                 <div class="col s6 m6 l6 right-align">
-                                    <span>Data: {{buy.time | date: 'dd/MM/yyyy'}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
+                                    <span>Data: {{buy.time | date: 'dd/MM/yyyy'}}</span><i
+                                        class="mdi-hardware-keyboard-arrow-down right"></i>
                                 </div>
                             </div>
                         </div>
@@ -103,113 +106,12 @@
                             </div>
                         </div>
                     </li>
-                    <!-- TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST -->
-                    <li>
-                        <div class="collapsible-header grey darken-3 white-text">
-                            <div class="row">
-                                <div class="col s6 m6 l6">
-                                    <i class="mdi-action-shopping-basket"></i>ACQUISTO
-                                </div>
-                                <div class="col s6 m6 l6 right-align">
-                                    <span>Data: {{ctrl.aaa}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="collapsible-body white">
-                            <div class="row">
-                                <div class="col s6 m6 l6">
-                                    <h5>Credito usato: {{ctrl.aaaa|currency:"€ "}}</h5>
-                                </div>
-                                <div class="col s6 m6 l6 right-align">
-                                    <h5>Totale: {{ctrl.aaaaa|currency:"€ "}}</h5>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <table class="summaryTable">
-                                    <thead>
-                                    <tr>
-                                        <th>Film</th>
-                                        <th>Tipologia</th>
-                                        <th>Quantità</th>
-                                        <th>Prezzo</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td><span>Titolo1</span></td>
-                                        <td><span>Normale</span></td>
-                                        <td><span>2</span></td>
-                                        <td><span>12.50</span></td>
-                                    </tr>
-                                    <tr ng-class="{'red-text' : 1 == 1}">
-                                        <td><span>Titolo2</span></td>
-                                        <td><span>Normale</span></td>
-                                        <td><span>2</span></td>
-                                        <td><span>12.50</span></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <span>Nota: i biglietti in rosso sono stati annullati.</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header grey darken-3 white-text">
-                            <div class="row">
-                                <div class="col s6 m6 l6">
-                                    <i class="mdi-action-shopping-basket"></i>ACQUISTO
-                                </div>
-                                <div class="col s6 m6 l6 right-align">
-                                    <span>Data: {{ctrl.aaa}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="collapsible-body white">
-                            <div class="row">
-                                <div class="col s6 m6 l6">
-                                    <h5>Credito usato: {{ctrl.aaaa|currency:"€ "}}</h5>
-                                </div>
-                                <div class="col s6 m6 l6 right-align">
-                                    <h5>Totale: {{ctrl.aaaaa|currency:"€ "}}</h5>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <table class="summaryTable">
-                                    <thead>
-                                    <tr>
-                                        <th>Film</th>
-                                        <th>Tipologia</th>
-                                        <th>Quantità</th>
-                                        <th>Prezzo</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td><span>Titolo1</span></td>
-                                        <td><span>Normale</span></td>
-                                        <td><span>2</span></td>
-                                        <td><span>12.50</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>Titolo2</span></td>
-                                        <td><span>Normale</span></td>
-                                        <td><span>2</span></td>
-                                        <td><span>12.50</span></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- END TEST END TEST END TEST END TEST END TEST END TEST END TEST -->
                 </ul>
             </div>
         </div>
 
         <div class="row">
+
 
         </div>
         <div class="row white-text"> <!-- credito -->
@@ -219,7 +121,6 @@
         </div>
 
     </div>
-
 
 
 </div>

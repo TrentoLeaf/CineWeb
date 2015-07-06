@@ -24,7 +24,7 @@
                         $rootScope.user = user;
                         // set isUserLogged var
                         $rootScope.isUserLogged = true;
-                        
+
                         // redirect all' ultima pagina
                         switch ($rootScope.afterLogin) {
                             case "normal":
@@ -62,7 +62,7 @@
 
             this.logout = function () {
                 Auth.logout()
-                    .success( function () {
+                    .success(function () {
                         console.log("LOGINCONTROLLER --> LOGOUT success");
                         setError("");
                         $rootScope.isUserLogged = false;
@@ -71,7 +71,7 @@
                         ctrl.pass = "";
                         $location.path('/today');
                     })
-                    .error( function () {
+                    .error(function () {
                         console.log("LOGINCONTROLLER --> LOGOUT failed");
                         // logout fallito
                         // setError("Logout fallito. Riprova.");
@@ -87,7 +87,7 @@
 
             this.setAfterLogin = function (type) {
                 $rootScope.afterLogin = type;
-            }
+            };
 
             this.change = function (email, oldPass, newPass) {
                 Auth.changePassword(email, oldPass, newPass).then(
@@ -140,11 +140,11 @@
                     $('.pass-rec-loader').removeClass('active');
                 } else {
                     Auth.forgotPassword(ctrl.mailForPassRecovery)
-                        .success(function() {
+                        .success(function () {
                             ctrl.set_rec_pass_msg(REC_PASS_SUCCESS);
                             $('.pass-rec-loader').removeClass('active');
                         })
-                        .error(function() {
+                        .error(function () {
                             ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_EXIST);
                             $('.pass-rec-loader').removeClass('active');
                         });

@@ -2,8 +2,6 @@ package tk.trentoleaf.cineweb.utils;
 
 import com.google.gson.*;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -45,7 +43,11 @@ public class GsonJerseyProvider implements MessageBodyWriter<Object>, MessageBod
         gsonBuilder.registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
             @Override
             public DateTime deserialize(JsonElement json, Type type, JsonDeserializationContext arg2) {
-                return new DateTime(json.getAsString());
+                try {
+                    return new DateTime(json.getAsString());
+                } catch (IllegalArgumentException e) {
+                    return null;
+                }
             }
         });
 

@@ -10,7 +10,6 @@ import tk.trentoleaf.cineweb.utils.Utils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
@@ -35,8 +34,6 @@ public class RestBookings {
         return bookingsDB.getBookings();
     }
 
-
-    // TODO fatto da Andrea...avrà fatto errori?
     @GET
     @Path("/{id}")
     @AdminArea
@@ -46,7 +43,6 @@ public class RestBookings {
         // return user bookings
         return bookingsDB.getBookingsByUser(uid);
     }
-
 
     @GET
     @Path("/my")
@@ -61,12 +57,6 @@ public class RestBookings {
 
         // return my bookings
         return bookingsDB.getBookingsByUser(uid);
-    }
-
-    @POST
-    @UserArea
-    public void addBooking() {
-        // TODO!
     }
 
 }

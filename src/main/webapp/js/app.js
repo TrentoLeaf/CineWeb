@@ -28,7 +28,7 @@ $(document).ready(function () {
     'use strict';
 
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule', 'roomsModule',
-        'registrationModule', 'meModule', 'adminDashboard', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'adminStats', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule'])
+        'registrationModule', 'meModule', 'adminDashboard', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'adminStats', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule', 'buyProcedureModule'])
 
 
         .config(['$routeProvider', function ($routeProvider) {
@@ -142,6 +142,8 @@ $(document).ready(function () {
                 templateUrl: '../partials/buy_seats.html',
                 controller: 'BuySeatController',
                 controllerAs: 'ctrl'
+            }).when('/buy_start_error', {
+                templateUrl: '../partials/buy_seats_error.html'
             }).when('/buy_last_step', {
                 templateUrl: '../partials/buy_summary.html',
                 controller: 'BuySummaryController',
@@ -264,7 +266,7 @@ $(document).ready(function () {
                                 num = num + $rootScope.cart[i].tickets[k].number;
                             }
                         }
-                        $rootScope.total = $rootScope.total + ($rootScope.tickets[j]['price'] * num);
+                        $rootScope.total = $rootScope.total + ($rootScope.tickets[j].price * num);
                     }
                 }
                 console.log("NEW TOTAL: " + $rootScope.total);
@@ -316,7 +318,8 @@ $(document).ready(function () {
                 if ($rootScope.cart == null) {
                     $rootScope.cart = [];
                 }
-                console.log("cart loaded: " + $rootScope.cart);
+                console.log("cart loaded: ");
+                console.log($rootScope.cart);
             };
 
             // carrello che contiene oggetti film modificati
@@ -414,6 +417,7 @@ $(document).ready(function () {
                 complete_error : true
             };
 
+            $rootScope.buy.data_to_server.cart = [];
         }]);
 
 })();

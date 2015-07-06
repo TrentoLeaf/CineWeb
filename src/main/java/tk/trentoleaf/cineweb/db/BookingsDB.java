@@ -208,8 +208,6 @@ public class BookingsDB {
                 bookings.add(b);
             }
 
-            // TODO: add title!
-
             // q2
             final String q2 = "SELECT tid, pid, title, rid, x, y, price, type, FALSE AS deleted FROM tickets " +
                     "NATURAL JOIN plays NATURAL JOIN films WHERE bid = ?" +

@@ -15,10 +15,10 @@
         <div class="row">
             <div class="col s12 offset-m1 m10 offset-l1 l10">
                 <h4>Biglietti acquistati</h4>
-                <div class="row" ng-repeat = "play in buy.data_to_server">
+                <div class="row" ng-repeat = "play in buy.data_to_server.cart">
                     <div>
                         <h5 class="yellow-text text-accent-4">{{play.title}}</h5>
-                        <h6>{{play.date}} {{play.time}}</h6>
+                        <h6>{{play.time | date: 'dd/MM/yyyy, hh:mm'}}</h6>
                         <table class="summaryTable">
                             <thead>
                             <tr>
@@ -28,10 +28,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="ticket in nonsodove2">
+                            <tr ng-repeat="ticket in play.tickets">
                                 <td>{{ticket.type}}</td>
                                 <td>{{ticket.number}}</td>
-                                <td>{{ticket.price}}</td>
+                                <td>nonc'e{{ticket.price}}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -121,17 +121,17 @@
         <div class="row">
             <div class="col s12 offset-m1 m4 offset-l1 l4">
                 <div class="input-field">
-                    <input id="credit_card" type="number" length="16">
+                    <input id="credit_card" type="text" length="16" ng-model="ctrl.cd.number">
                     <label for="credit_card">Carta di credito</label>
                 </div>
             </div>
             <div class="col s12 offset-m1 m5 offset-l2 l4">
                 <div class="input-field col s6 m6 l6">
-                    <input id="month" type="number">
+                    <input id="month" type="number" ng-model="ctrl.cd.month">
                     <label for="month">Mese di scadenza</label>
                 </div>
                 <div class="input-field col s6 m6 l6">
-                    <input id="year" type="number">
+                    <input id="year" type="number" ng-model="ctrl.cd.year">
                     <label for="year">Anno di scadenza</label>
                 </div>
             </div>
@@ -139,14 +139,14 @@
         <div class="row">
             <div class="col s12 offset-m1 m4 offset-l1 l4">
                 <div class="input-field">
-                    <input id="holder" type="text" class="validate">
+                    <input id="holder" type="text" class="validate" ng-model="ctrl.cd.name">
                     <label for="holder">Intestatario</label>
                 </div>
             </div>
             <div class="col s12 offset-m1 m5 offset-l2 l4">
                 <div class="input-field">
-                    <input id="cvv" type="number" length="4">
-                    <label for="cvv">CVV <i class="mdi-action-help tooltipped" data-position="right" data-tooltip="Codice di sicurezza posto sul retro della carta di credito"></i></label>
+                    <input id="cvv" type="text" length="4" ng-model="ctrl.cd.cvv">
+                    <label for="cvv">CVV<i class="mdi-action-help tooltipped" data-position="right" data-tooltip="Codice di sicurezza posto sul retro della carta di credito"></i></label>
                 </div>
             </div>
         </div>
@@ -156,12 +156,12 @@
         <div class="row buy-summary-total-container">
             <div class="col s12 offset-m1 m10 offset-l1 l10">
                 <h4 class="col s7 m7 l7">Totale:</h4>
-                <h4 class="total col s5 m5 l5 right-align">{{nonsodove3.total | currency:"€ "}}€ 34.00</h4>
+                <h4 class="total col s5 m5 l5 right-align">{{ctrl.importToPay | currency:"€ "}}</h4>
             </div>
         </div>
         <div class="row"> <!-- nota credito accumulato -->
             <div class="col s12 offset-m1 m10 offset-l1 l10">
-                <p>Nota: Attualmente hai a disposizione {{user.credito}} € di credito.
+                <p>Nota: Attualmente hai a disposizione {{user.credit}} € di credito.
                     Parte dell'importo da pagare verrà quindi scalato dal tuo credito.
                     Il totale è stato calcolato tenendo conto del tuo credito accumulato.
                 </p>
