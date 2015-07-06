@@ -32,6 +32,7 @@
                 $rootScope.buy.shared_obj.film = {};
                 $rootScope.buy.shared_obj.selected_seats = [];
                 $rootScope.buy.data_to_server = [];
+                $rootScope.buy.data_to_server.cart = [];
                 $rootScope.buy.data_from_server_index = -1;
 
 
@@ -50,8 +51,10 @@
                         .success(function () {  // tutto ok
                             $('.buy-seats-loader').removeClass('active');
                             setError(OK);
-                            $rootScope.cart = [];
-                            $rootScope.buy.data_from_server = $rootScope.cart;
+                            //TODO capire perchè l'ho messo: $rootScope.cart = [];
+                            $rootScope.buy.data_from_server = ctrl.cloneObject($rootScope.cart);
+                            console.log("successo, data from server ");
+                            console.log($rootScope.buy.data_from_server);
                             // procedi
                             ctrl.go=true;
                             ctrl.next_buy();
@@ -60,8 +63,15 @@
                             // ricarico il carrello
                             $rootScope.cart = data;
                             $('.buy-seats-loader').removeClass('active');
+
+                            console.log("errore, data from server ");
+                            console.log($rootScope.buy.data_from_server);
                             ctrl.go= false;
                             setError(ERROR);
+
+                            // redirect alla pagina di errore
+                            $location.path("/buy_start_error");
+
 
                         });
 
@@ -75,7 +85,7 @@
 
 
 
-                this.next_buy(); //tmp
+             //TODO remove   this.next_buy(); //tmp
 
             };
 
@@ -85,6 +95,7 @@
                 $rootScope.buy.shared_obj.selected_seats = [];
                 // next film in cart
                 $rootScope.buy.data_from_server_index++;
+
                 if ($rootScope.buy.data_from_server_index < $rootScope.buy.data_from_server.length) {
 
                     $rootScope.buy.shared_obj.film = $rootScope.buy.data_from_server[$rootScope.buy.data_from_server_index];
@@ -98,6 +109,7 @@
                     // richiedi la sala
                     Rooms.getRoomStatus($rootScope.buy.shared_obj.film.rid)
                         .success(function (data) {
+                            $rootScope.buy.shared_obj.selected_seats = [];
                             $rootScope.buy.shared_obj.film.seats = data.seats;
                         })
                         .error(function () {
@@ -125,13 +137,13 @@
             this.save_seats = function () {
                 $('.buy-loader').addClass('active');
                 // creo un nuovo oggetto
-                this.ff = this.cloneObject($rootScope.buy.shared_obj.film);
+                ctrl.ff = ctrl.cloneObject($rootScope.buy.shared_obj.film);
                 // aggiungo allo spettacolo i posti selezionati
-                this.ff.selected_seats = $rootScope.buy.shared_obj.selected_seats;
-                delete this.ff.seats;
-                delete this.ff.seats_selected;
+                ctrl.ff.selected_seats = $rootScope.buy.shared_obj.selected_seats;
+                delete ctrl.ff.seats;
+                delete ctrl.ff.seats_selected;
                 // salvo l'oggetto nell'array che inverò al server una volta completate le scelte dei posti di tutti gli spettacoli
-                $rootScope.buy.data_to_server.cart.push(this.ff);
+                $rootScope.buy.data_to_server.cart.push(ctrl.ff);
                 this.next_buy();
             };
 
@@ -168,16 +180,20 @@
         .controller('BuySummaryController', ['$rootScope', '$location', 'BuyProcedure', function ($rootScope, $location, BuyProcedure) {
 
             var ctrl = this;
-            this.cd = {
-            };
+            this.cd = {};
+            this.importToPay = 0;
             // messaggi
             this.error_msg = "";
             this.ERROR_CARD = "I dati inseriti sembrano non essere validi. Controlla.";
+
             this.pay = function () {
                 $('.buy-loader').addClass('active');
+
                 // salvo i dati
-                $rootScope.buy.data_to_server.userid = $rootScope.user.email;
                 $rootScope.buy.data_to_server.creditCard = ctrl.cd;
+
+                console.log("CREDIT CARD");
+                console.log(ctrl.cd);
 
                 // paga
                 BuyProcedure.pay($rootScope.buy.data_to_server)
@@ -202,8 +218,8 @@
                     });
 
 
-                $rootScope.buy.complete_error = false; // temp
-                $location.path('/buy_complete'); // temp
+                $rootScope.buy.complete_error = false; // TODO temp
+                $location.path('/buy_complete'); // TODO temp
             };
 
             this.open_modal = function () {
@@ -226,6 +242,40 @@
                 $location.path('/today');
             };
 
+            // calculate the total import to pay
+            this.calcImport = function () {
+                var credit = $rootScope.user.credit;
+                var cart = $rootScope.buy.data_to_server.cart;
+                var total = -1;
+
+                if (cart != undefined) {
+                    total = 0;
+                    for (var i = 0; i < cart.length; i++) {
+                        for (var j = 0; j < $rootScope.tickets.length; j++) {
+                            var num = 0;
+                            for (var k = 0; k < cart[i].tickets.length; k++) {
+                                if (cart[i].tickets[k].type == $rootScope.tickets[j].type) {
+                                    num = num + cart[i].tickets[k].number;
+                                }
+                            }
+                            total = total + ($rootScope.tickets[j].price * num);
+                        }
+                    }
+                }
+
+                if (credit != undefined) {
+                    if (total > credit) {
+                        ctrl.importToPay = total - credit;
+                    } else {
+                        ctrl.importToPay = 0;
+                    }
+                } else {
+                    ctrl.importToPay = total;
+                }
+            };
+
+
+            ctrl.calcImport();
         }])
 
         .controller('BuyCompleteController', ['$rootScope', function($rootScope) {
