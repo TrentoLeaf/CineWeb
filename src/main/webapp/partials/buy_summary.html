@@ -121,7 +121,7 @@
         <div class="row">
             <div class="col s12 offset-m1 m4 offset-l1 l4">
                 <div class="input-field">
-                    <input id="credit_card" type="number" length="16" ng-model="ctrl.cd.number">
+                    <input id="credit_card" type="text" length="16" ng-model="ctrl.cd.number">
                     <label for="credit_card">Carta di credito</label>
                 </div>
             </div>
@@ -145,8 +145,8 @@
             </div>
             <div class="col s12 offset-m1 m5 offset-l2 l4">
                 <div class="input-field">
-                    <input id="cvv" type="number" length="4" ng-model="ctrl.cd.cvv">
-                    <label for="cvv">CVV <i class="mdi-action-help tooltipped" data-position="right" data-tooltip="Codice di sicurezza posto sul retro della carta di credito"></i></label>
+                    <input id="cvv" type="text" length="4" ng-model="ctrl.cd.cvv">
+                    <label for="cvv">CVV<i class="mdi-action-help tooltipped" data-position="right" data-tooltip="Codice di sicurezza posto sul retro della carta di credito"></i></label>
                 </div>
             </div>
         </div>
@@ -156,12 +156,12 @@
         <div class="row buy-summary-total-container">
             <div class="col s12 offset-m1 m10 offset-l1 l10">
                 <h4 class="col s7 m7 l7">Totale:</h4>
-                <h4 class="total col s5 m5 l5 right-align">{{nonsodove3.total | currency:"€ "}}€ 34.00</h4>
+                <h4 class="total col s5 m5 l5 right-align">{{ctrl.importToPay | currency:"€ "}}</h4>
             </div>
         </div>
         <div class="row"> <!-- nota credito accumulato -->
             <div class="col s12 offset-m1 m10 offset-l1 l10">
-                <p>Nota: Attualmente hai a disposizione {{user.credito}} € di credito.
+                <p>Nota: Attualmente hai a disposizione {{user.credit}} € di credito.
                     Parte dell'importo da pagare verrà quindi scalato dal tuo credito.
                     Il totale è stato calcolato tenendo conto del tuo credito accumulato.
                 </p>

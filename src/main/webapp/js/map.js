@@ -167,7 +167,10 @@
 
                     // set click handler
                     poltrona_svg.click(function () {
+                        console.log("poltrona cliccata");
+
                         if (this.hasClass('seat-selected')) {
+                            console.log("era selezionata");
                             this.removeClass('seat-selected');
                             this.hover(seatHoverIn, seatHoverOut);
                             posti_selezionati.splice({
@@ -177,8 +180,9 @@
                             spettacolo.seats_selected++;
                         }
                         else {
-
+                            console.log("non era selezionata");
                             if (spettacolo.seats_selected > 0) {
+                                console.log("ss > 0");
                                 this.addClass('seat-selected');
                                 this.removeClass('seat-hover');
                                 this.unhover(seatHoverIn, seatHoverOut);
@@ -349,21 +353,6 @@
 
                 }
             }
-        })
-
-        .controller('MapController', function () {
-            // TODO serve questo controller?
-            this.test = {
-                a: 123,
-                b: "pippo",
-                c: [1, 4, 5]
-            };
-
-            this.do = function () {
-                this.test.b = "pluto";
-                this.test.d = this.test.d || [];
-                this.test.d.push(21);
-            };
         });
 
 })();

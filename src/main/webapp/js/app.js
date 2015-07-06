@@ -223,7 +223,7 @@ $(document).ready(function () {
                                 num = num + $rootScope.cart[i].tickets[k].number;
                             }
                         }
-                        $rootScope.total = $rootScope.total + ($rootScope.tickets[j]['price'] * num);
+                        $rootScope.total = $rootScope.total + ($rootScope.tickets[j].price * num);
                     }
                 }
                 console.log("NEW TOTAL: " + $rootScope.total);
