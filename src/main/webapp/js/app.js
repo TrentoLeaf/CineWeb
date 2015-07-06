@@ -40,10 +40,6 @@ $(document).ready(function () {
                 templateUrl: '../partials/today.html',
                 controller: 'PlaysController',
                 controllerAs: 'ctrl'
-            }).when('/soon', {
-                templateUrl: '../partials/soon.html',
-                controller: 'PlaysController',
-                controllerAs: 'ctrl'
             }).when('/info', {
                 templateUrl: '../partials/info.html'
             }).when('/cart_mobile', {
@@ -78,47 +74,47 @@ $(document).ready(function () {
                 templateUrl: '../partials/reset.html',
                 controller: 'ResetController',
                 controllerAs: 'ctrl'
-            }).when ('/admin',{
+            }).when('/admin', {
                 templateUrl: '../partials/admin/dashboard.html',
                 controller: 'AdminDashboardController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/films',{
+            }).when('/admin/films', {
                 templateUrl: '../partials/admin/films.html',
                 controller: 'AdminFilmsController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/films/new',{
+            }).when('/admin/films/new', {
                 templateUrl: '../partials/admin/new_film.html',
                 controller: 'AdminFilmsController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/films/:fid',{
+            }).when('/admin/films/:fid', {
                 templateUrl: '../partials/admin/edit_film.html',
                 controller: 'AdminFilmsEditController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/plays',{
+            }).when('/admin/plays', {
                 templateUrl: '../partials/admin/plays.html',
                 controller: 'AdminPlaysController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/plays/new',{
+            }).when('/admin/plays/new', {
                 templateUrl: '../partials/admin/new_play.html',
                 controller: 'AdminNewPlaysController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/plays/:pid', {
+            }).when('/admin/plays/:pid', {
                 templateUrl: '../partials/admin/edit_play.html',
                 controller: 'AdminPlaysEditController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/prices',{
+            }).when('/admin/prices', {
                 templateUrl: '../partials/admin/prices.html',
                 controller: 'AdminPricesController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/rooms',{
+            }).when('/admin/rooms', {
                 templateUrl: '../partials/admin/rooms.html',
                 controller: 'AdminRoomsController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/rooms/new_room',{
+            }).when('/admin/rooms/new_room', {
                 templateUrl: '../partials/admin/new_room.html',
                 controller: 'AdminNewRoomController',
                 controllerAs: 'ctrl'
-            }).when ('/admin/stats',{
+            }).when('/admin/stats', {
                 templateUrl: '../partials/admin/stats.html',
                 controller: 'AdminStatsController',
                 controllerAs: 'ctrl'
@@ -182,8 +178,8 @@ $(document).ready(function () {
         })
 
         // direttiva per inizializzare i dropdown
-        .directive('onDropdownRepeat', function() {
-            return function(scope, element, attrs) {
+        .directive('onDropdownRepeat', function () {
+            return function (scope, element, attrs) {
                 if (scope.$last) {
                     console.log("DROPDOWN EMIT");
                     scope.$emit('dropdownRepeatEnd', element, attrs);
@@ -192,7 +188,7 @@ $(document).ready(function () {
         })
 
         // direttiva per inizializzare i collapsible
-        .directive('onCollapsibleRepeat', function() {
+        .directive('onCollapsibleRepeat', function () {
             return function (scope, element, attrs) {
                 if (scope.$last) {
                     console.log("collapsible EMIT");
@@ -202,8 +198,8 @@ $(document).ready(function () {
         })
 
         // direttiva per inizializzare i select
-        .directive('onSelectRepeat', function() {
-            return function(scope, element, attrs) {
+        .directive('onSelectRepeat', function () {
+            return function (scope, element, attrs) {
                 if (scope.$last) {
                     console.log("SELECT EMIT");
                     scope.$emit('selectRepeatEnd', element, attrs);
@@ -242,7 +238,7 @@ $(document).ready(function () {
 
 
             /* utils */
-            $rootScope.trustSrcTrailerUrl = function(src) {
+            $rootScope.trustSrcTrailerUrl = function (src) {
                 if (src != undefined) {
                     src = src.replace("watch?v=", "embed/");
                 }
@@ -329,7 +325,9 @@ $(document).ready(function () {
             loadCart();
 
             // when cart is changed, save it and update the total
-            $rootScope.$watch(function() {return $rootScope.cart;}, function(cart) {
+            $rootScope.$watch(function () {
+                return $rootScope.cart;
+            }, function (cart) {
 
                 $rootScope.updateTotal();
                 StorageService.saveCart(cart);
@@ -337,7 +335,7 @@ $(document).ready(function () {
             }, true);
 
 
-            $rootScope.cartLength  = function () {
+            $rootScope.cartLength = function () {
                 return $rootScope.cart.length;
             };
 
@@ -374,9 +372,9 @@ $(document).ready(function () {
                 shared_obj: {},
 
                 data_from_server: [],
-                data_from_server_index  : -1,
-                data_to_server : {},
-                complete_error : true
+                data_from_server_index: -1,
+                data_to_server: {},
+                complete_error: true
             };
 
             $rootScope.buy.data_to_server.cart = [];
