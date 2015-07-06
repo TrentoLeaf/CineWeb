@@ -284,7 +284,7 @@
         poltrona_svg.addClass('tooltipped');
         var row = intToChar(parseInt(poltrona_svg.attr('row')));
         var col = parseInt(poltrona_svg.attr('col')) + 1;
-        poltrona_svg.attr('data-position', "right");
+        poltrona_svg.attr('data-position', "top");
         poltrona_svg.attr('data-tooltip', row + col);
     }
 

@@ -130,6 +130,8 @@ $(document).ready(function () {
                 templateUrl: '../partials/buy_seats.html',
                 controller: 'BuySeatController',
                 controllerAs: 'ctrl'
+            }).when('/buy_start_error', {
+                templateUrl: '../partials/buy_seats_error.html'
             }).when('/buy_last_step', {
                 templateUrl: '../partials/buy_summary.html',
                 controller: 'BuySummaryController',

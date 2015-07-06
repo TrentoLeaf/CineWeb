@@ -69,6 +69,10 @@
                             ctrl.go= false;
                             setError(ERROR);
 
+                            // redirect alla pagina di errore
+                            $location.path("/buy_start_error");
+
+
                         });
 
                 } else { /* not logged */
