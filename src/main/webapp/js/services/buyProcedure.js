@@ -19,8 +19,11 @@
                         });
                 },
 
-                pay: function (data_to_server) {
-                    return $http.post(BASE_PAY, data_to_server)
+                pay: function (creditCard, cart) {
+                    return $http.post(BASE_PAY, {
+                        creditCard: creditCard,
+                        cart: cart
+                    })
                         .success(function (data) {
                             $log.info('BUY PAY OK: ' + data);
                         })

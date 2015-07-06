@@ -103,13 +103,12 @@ public class RestBuy {
 
         // check PayCart format
         if (!cart.isValidCart()) {
-            throw new BadRequestException("Bad cart object: missing selected_seats");
+            throw new BadRequestException("Bad cart object: missing or bad selected_seats");
         }
 
         // check credit card
         if (!cart.isValidCreditCard()) {
             // error credit card!
-            // TODO!
             throw new BadRequestException("Bad credit card");
         }
 
@@ -164,16 +163,19 @@ public class RestBuy {
 
                 // copy requested tickets (prices)
                 final List<Price> prices = new ArrayList<>();
-                for (TicketItem t : item.getTickets()) {
+                Iterator<TicketItem> ticketItemIterator = item.getTickets().iterator();
+
+                while (ticketItemIterator.hasNext()) {
+                    TicketItem t = ticketItemIterator.next();
                     try {
                         Price price = pricesDB.getPrice(t.getType());
+                        t.setSingleCost(price.getPrice());
                         for (int i = 0; i < t.getNumber(); i++) {
                             prices.add(price);
                         }
                     } catch (EntryNotFoundException e) {
-                        iterator.remove();
+                        ticketItemIterator.remove();
                         error = true;
-                        break;
                     }
                 }
 
@@ -201,20 +203,12 @@ public class RestBuy {
         // try to save the booking
         try {
             bookingsDB.createBooking(uid, tickets);
-        } catch (UserNotFoundException e) {
-            // not possible
-            error = true;
-        } catch (PlayGoneException e) {
-            // TODO
-            error = true;
-        } catch (ForeignKeyException | UniqueViolationException e) {
-            // TODO!
+        } catch (UserNotFoundException | PlayGoneException | DBException e) {
             error = true;
         }
 
-        // if any error -> return it
+        // if any error -> return the updated cart
         if (error) {
-            // TODO!
             return Response.status(409).entity(cart.getCart()).build();
         }
 
