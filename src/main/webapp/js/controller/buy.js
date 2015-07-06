@@ -78,7 +78,6 @@
                             // redirect alla pagina di errore
                             $location.path("/buy_start_error");
 
-
                         });
 
                 } else { /* not logged */
@@ -126,13 +125,11 @@
 
                     $('.buy-loader').removeClass('active');
                     // back to top of page
-                    $location.hash('main-content');
                     $anchorScroll();
                 }
                 else { // scelta dei posti terminata
                     $('.buy-loader').removeClass('active');
                     // back to top of page
-                    $location.hash('main-content');
                     $anchorScroll();
                     // Redirect alla pagina di riepilogo
                     $location.path('/buy_last_step');
@@ -152,7 +149,7 @@
                     // creo un nuovo oggetto
                     ctrl.ff = ctrl.cloneObject($rootScope.buy.shared_obj.film);
                     // aggiungo allo spettacolo i posti selezionati
-                    ctrl.ff.selected_seats = $rootScope.buy.shared_obj.selected_seats;
+                    ctrl.ff.selected_seats = ctrl.cloneObject($rootScope.buy.shared_obj.selected_seats);
                     delete ctrl.ff.seats;
                     delete ctrl.ff.seats_selected;
                     // salvo l'oggetto nell'array che inverò al server una volta completate le scelte dei posti di tutti gli spettacoli
@@ -212,14 +209,16 @@
                 ctrl.error_msg = "";
 
 
-                // parse selected_seats in int
+                // parse selected_seats to int
                 for (var i = 0; i < $rootScope.buy.data_to_server.cart.length; i++) {
-                    var ss = $rootScope.buy.data_to_server.cart[i].selected_seats;
-                    for (var j = 0; j < ss.length; j++) {
-                        var string_oby = ss[j];
+
+                    for (var j = 0; j < $rootScope.buy.data_to_server.cart[i].selected_seats.length; j++) {
+                        var string_oby = $rootScope.buy.data_to_server.cart[i].selected_seats[j];
 
                         var row = parseInt(string_oby.row);
                         var col = parseInt(string_oby.col);
+
+                        console.log("PARSED selected_seats: row " + row + " col " + col);
 
                         console.log("ROW STRING " + string_oby.row);
 

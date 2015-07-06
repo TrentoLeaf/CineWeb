@@ -208,7 +208,7 @@ $(document).ready(function () {
         })
 
 
-        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', function ($rootScope, $location, Prices, StorageService, Auth, CompletePlays, $sce) {
+        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
 
             // redirect only if needed
             var redirect = function (path) {
@@ -235,6 +235,33 @@ $(document).ready(function () {
                 }
 
             });
+
+
+            /* init of login data */
+            $rootScope.user = {};
+            $rootScope.isUserLogged = false;
+            $rootScope.loginError = "";
+            $rootScope.afterLogin = "normal"; // variabile per sapere dove redirigere dopo un login (normal, buy, userArea)
+
+            // request to server the data of a logged user. If the user isn't logged set the login variables.
+            var retriveLoginData = function () {
+                Auth.me()
+                    .success(function (user) {
+                        console.log("THE USER IS ALREADY LOGGED");
+                        console.log(user);
+
+                        $rootScope.isUserLogged = true;
+                        //save basic user data
+                        $rootScope.user = user;
+                    }).error(function (error) {
+                        console.log("THE USER IS NOT LOGGED");
+
+                        $rootScope.isUserLogged = false;
+                        $rootScope.user = {};
+                    });
+            };
+
+            retriveLoginData();
 
 
             /* utils */
@@ -316,6 +343,21 @@ $(document).ready(function () {
                 }
                 console.log("cart loaded: ");
                 console.log($rootScope.cart);
+
+
+                // ask to server if the cart loaded is valid
+                BuyProcedure.proceed($rootScope.cart)
+                    .success(function () {  // tutto ok
+
+                    })
+                    .error(function (data) {    // biglietti o spettacoli non più disponibili
+                        // ricarico il carrello fornitomi dal server
+                        $rootScope.cart = data;
+                    });
+
+                console.log("cart checked: ");
+                console.log($rootScope.cart);
+
             };
 
             // carrello che contiene oggetti film modificati
@@ -338,32 +380,6 @@ $(document).ready(function () {
             $rootScope.cartLength = function () {
                 return $rootScope.cart.length;
             };
-
-            /* init of login data */
-            $rootScope.user = {};
-            $rootScope.isUserLogged = false;
-            $rootScope.loginError = "";
-            $rootScope.afterLogin = "normal"; // variabile per sapere dove redirigere dopo un login (normal, buy, userArea)
-
-            // request to server the data of a logged user. If the user isn't logged set the login variables.
-            var retriveLoginData = function () {
-                Auth.me()
-                    .success(function (user) {
-                        console.log("THE USER IS ALREADY LOGGED");
-                        console.log(user);
-
-                        $rootScope.isUserLogged = true;
-                        //save basic user data
-                        $rootScope.user = user;
-                    }).error(function (error) {
-                        console.log("THE USER IS NOT LOGGED");
-
-                        $rootScope.isUserLogged = false;
-                        $rootScope.user = {};
-                    });
-            };
-
-            retriveLoginData();
 
 
             /* init buy variables */
