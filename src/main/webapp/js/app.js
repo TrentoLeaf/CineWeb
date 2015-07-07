@@ -114,6 +114,10 @@ $(document).ready(function () {
                 templateUrl: '../partials/admin/new_room.html',
                 controller: 'AdminNewRoomController',
                 controllerAs: 'ctrl'
+            }).when('/admin/rooms/edit_room/:rid', {
+                templateUrl: '../partials/admin/edit_room.html',
+                controller: 'AdminEditRoomController',
+                controllerAs: 'ctrl'
             }).when('/admin/stats', {
                 templateUrl: '../partials/admin/stats.html',
                 controller: 'AdminStatsController',

@@ -257,6 +257,11 @@
                         row: poltrona_svg.attr('row'),
                         col: poltrona_svg.attr('col')
                     });
+                    // add the seat to the hidden_seats list
+                    posti_selezionati.push({
+                        row: poltrona_svg.attr('row'),
+                        col: poltrona_svg.attr('col')
+                    });
                     // set click handler
                     poltrona_svg.click(function () {
                         if (this.hasClass('seat-hidden')) {
@@ -326,7 +331,7 @@
                         console.log(seats);
                         console.log(scope.seats);
 
-                        //NEW
+
                         if ((scope.o.film != undefined) && (scope.o.film.seats != undefined) && (scope.o.selected_seats != undefined)) {
                             console.log("GENERATING BUY MAP");
                             generateSvg(scope.o.film.seats, scope.o.film, scope.o.selected_seats, false);

@@ -15,10 +15,12 @@
             <!-- lista degli spettacoli da selezionare -->
             <ul class="row grey darken-3" style="padding: 1em; border-radius: 2px;">
                 <li class="col s12 m12 l12 card grey darken-4" style="padding: 5px;" ng-repeat="room in ctrl.rooms track by $index"  ng-class="{blue : ctrl.currentSelected == $index, grey : ctrl.currentSelected != $index}">
-                    <div class="col s11 m11 l11 center-align" ng-click="ctrl.setCurrentRoom($index)">
-                        <h5><b>SALA {{room.rid}}</b></h5>
-                    </div>
-                    <div class="col s1 m1 l1 center-align">
+                    <div class="col s12 m12 l12 center-align" ng-click="ctrl.setCurrentRoom($index)">
+                        <h5><b>SALA {{room.rid}}</b>
+                            <a href="#admin/rooms/edit_room/{{room.rid}}">
+                                <i class="yellow-text mdi-action-assignment right"></i>
+                            </a>
+                        </h5>
                     </div>
                 </li>
             </ul>
