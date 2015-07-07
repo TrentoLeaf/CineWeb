@@ -24,9 +24,9 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="ticket in play.tickets">
-                                <td>{{ticket.type}}</td>
-                                <td>{{ticket.number}}</td>
-                                <td>nonc'e{{ticket.price}}</td>
+                                <td><span>{{ticket.type}}</span></td>
+                                <td><span>{{ticket.number}}</span></td>
+                                <td><span>{{ticket.price | currency: "€ "}}</span></td>
                             </tr>
                             </tbody>
                         </table>
@@ -46,7 +46,7 @@
             <div class="col s12 offset-m1 m4 offset-l1 l4">
                 <div class="input-field">
                     <input id="credit_card" type="text" length="16" ng-model="ctrl.cd.number">
-                    <label for="credit_card">Carta di credito</label>
+                    <label for="credit_card">Carta di credito<i class="mdi-action-help tooltipped" data-position="right" data-tooltip="Un numero valido: 4532843091602419"></i></label>
                 </div>
             </div>
             <div class="col s12 offset-m1 m5 offset-l2 l4">

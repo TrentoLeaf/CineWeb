@@ -88,9 +88,6 @@
                     $location.path('/login');
                 }
 
-
-                //TODO remove   this.next_buy(); //tmp
-
             };
 
             /* per ogni spettacolo acquistato presenta la pagina di scelta dei posti. Rimanda poi alla pagina di riepilogo*/
@@ -231,14 +228,9 @@
                     }
                 }
 
-
-                console.log("PRIMAPRIMA");
-                console.log($rootScope.buy.data_to_server);
-
-
                 console.log("COSA INVIO A DAVIDE");
-                console.log($rootScope.buy.data_to_server);
-
+                console.log("CART");
+                console.log($rootScope.buy.data_to_server.cart);
                 console.log("CREDIT CARD");
                 console.log(ctrl.cd);
 
@@ -264,9 +256,6 @@
                         }
                     });
 
-
-                //  $rootScope.buy.complete_error = false; // TODO temp
-                //  $location.path('/buy_complete'); // TODO temp
             };
 
             this.open_modal = function () {
@@ -290,7 +279,7 @@
             };
 
             // calculate the total import to pay
-            this.calcImport = function () {
+            this.calcImportAndPrices = function () {
                 var credit = $rootScope.user.credit;
                 var cart = $rootScope.buy.data_to_server.cart;
                 var total = -1;
@@ -303,6 +292,8 @@
                             for (var k = 0; k < cart[i].tickets.length; k++) {
                                 if (cart[i].tickets[k].type == $rootScope.tickets[j].type) {
                                     num = num + cart[i].tickets[k].number;
+                                    // set the price of a ticket
+                                    cart[i].tickets[k].price = $rootScope.tickets[j].price * cart[i].tickets[k].number;
                                 }
                             }
                             total = total + ($rootScope.tickets[j].price * num);
@@ -322,7 +313,7 @@
             };
 
 
-            ctrl.calcImport();
+            ctrl.calcImportAndPrices();
         }])
 
         .controller('BuyCompleteController', ['$rootScope', function ($rootScope) {
@@ -343,7 +334,6 @@
                     this.buy_complete_msg = this.BUY_COMPLETE_ERROR;
                 }
             };
-
 
             this.setCompleteMsg($rootScope.buy.complete_error);
 
