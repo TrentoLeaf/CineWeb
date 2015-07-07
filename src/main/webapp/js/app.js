@@ -212,7 +212,7 @@ $(document).ready(function () {
         })
 
 
-        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
+        .run(['$rootScope', '$location', '$anchorScroll', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, $anchorScroll, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
 
             // redirect only if needed
             var redirect = function (path) {
@@ -240,6 +240,11 @@ $(document).ready(function () {
 
             });
 
+
+            /* set listener for route change auto sroll to up*/
+            $rootScope.$on("$routeChangeSuccess", function(){
+                $anchorScroll();
+            });
 
             /* init of login data */
             $rootScope.user = {};
