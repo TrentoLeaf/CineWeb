@@ -158,6 +158,8 @@ $(document).ready(function () {
                 controllerAs: 'ctrl'
             }).when('/error', {
                 templateUrl: '../partials/error.html'
+            }).when('/popcorn', {
+                templateUrl: '../partials/popcorn.html'
             }).otherwise({
                 redirectTo: '/error'
             });

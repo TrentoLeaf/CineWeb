@@ -100,6 +100,9 @@ main {
     .cart-badge {
       top: -70px; } }
 
+.angular-google-map-container {
+  height: 400px; }
+
 footer {
   margin-top: 0px !important; }
 
