@@ -5,6 +5,8 @@
         .controller ('AdminNewPlaysController', ['Films', '$rootScope', '$scope', '$location', 'Plays', function (Films, $rootScope, $scope, $location, Plays) {
 
         var ctrl = this;
+        this.status = "";
+        this.error_message = false;
         this.newPlay =  new Plays();
         this.newPlay_3d = false;
         this.films = [];
@@ -16,7 +18,8 @@
                 ctrl.films = data;
                 console.log(ctrl.films);
             }, function (){
-                //Fail Case
+                ctrl.error_message = true;
+                ctrl.setStatus("Errore durante il caricamento dei film");
             });
         };
 
@@ -33,9 +36,18 @@
                 ctrl.updatePlays();
                 $location.path("/admin/plays");
 
-            }, function () {
-                //Fail Case
-                console.log("Play insertion fail");
+            }, function (response) {
+                if(response.status == 409) {
+                    ctrl.error_message = true;
+                    ctrl.setStatus("Esiste già una proiezione in questa sala per questo preciso orario");
+                } else if (response.status == 400) {
+                    ctrl.error_message = true;
+                    ctrl.setStatus("I dati inseriti non sono corretti, riprova");
+                } else {
+                    ctrl.error_message = true;
+                    ctrl.setStatus("Qualcosa è andato storto, riprova");
+                }
+                $("html, body").animate({ scrollTop: 0 }, "fast");
             });
         };
 
@@ -52,6 +64,20 @@
             },50);
         });
 
+        this.setStatus = function (status) {
+            ctrl.setStatusClass();
+            ctrl.status = status;
+        };
+
+        this.setStatusClass = function () {
+            if(ctrl.error_message) {
+                $('#plays_message').removeClass("green-text white-text");
+                $('#plays_message').addClass("red-text");
+            } else {
+                $('#plays_message').removeClass("red-text white-text");
+                $('#plays_message').addClass("green-text");
+            };
+        };
 
         this.loadFilms();
     }])
@@ -59,6 +85,8 @@
 
 
             var ctrl = this;
+            this.status = "";
+            this.error_message = false;
             this.currentPlay = {};
             this.currentSelectedDate = -1;
             this.currentSelectedFilm = -1;
@@ -71,7 +99,6 @@
                     $rootScope.afterLogin = "userArea";
                     $location.path('/login');
                 }
-
                 ctrl.loading = true;
                 ctrl.currentPlay = {};
                 ctrl.loadFilms();
@@ -83,7 +110,8 @@
                     ctrl.films = data;
                     console.log(ctrl.films);
                 }, function (){
-                    //Fail Case
+                    ctrl.error_message = true;
+                    ctrl.setStatus("Errore durante il caricamento dei film");
                 });
             };
 
@@ -100,18 +128,33 @@
                         ctrl.shared_obj.editable = false;
                         ctrl.shared_obj.mapTheatre = data.seats;
                     })
-                    .error(function () {
+                    .error(function (data, status) {
                         ctrl.shared_obj.editable = false;
                         ctrl.shared_obj.mapTheatre = [];
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Errore durante il caricamento della mappa");
+                        $("html, body").animate({ scrollTop: 0 }, "fast");
                     });
             };
 
             this.deletePlay = function () {
-                Plays.delete({id: ctrl.currentPlay.pid}, function () {
+                Plays.delete({id: ctrl.currentPlay.pid}).$promise.then(function () {
                     console.log("Play deletion success");
                     ctrl.updatePlays();
-                }, function () {
-                    console.log("Play deletion fail");
+                    ctrl.close_delete_modal();
+                    ctrl.error_message = false;
+                    ctrl.setStatus("Proiezione cancellata con successo");
+                    $("html, body").animate({ scrollTop: 0 }, "fast");
+                }, function (response) {
+                    if (response.status == 409) {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Impossibile cancellare la proiezione, alcuni posti sono già prenotati");
+                    } else {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Si è verificato un errore, riprova");
+                    }
+                    ctrl.close_delete_modal();
+                    $("html, body").animate({ scrollTop: 0 }, "fast");
                 });
             };
 
@@ -145,6 +188,21 @@
 
             this.updatePlays = function () {
                 $rootScope.loadPlaysByDate();
+            };
+
+            this.setStatus = function (status) {
+                ctrl.setStatusClass();
+                ctrl.status = status;
+            };
+
+            this.setStatusClass = function () {
+                if(ctrl.error_message) {
+                    $('#plays_message').removeClass("green-text white-text");
+                    $('#plays_message').addClass("red-text");
+                } else {
+                    $('#plays_message').removeClass("red-text white-text");
+                    $('#plays_message').addClass("green-text");
+                };
             };
 
             this.init();

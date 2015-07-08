@@ -7,6 +7,8 @@
 
             var c = this;
             this.currentUser = {};
+            this.status = "";
+            this.error_message = false;
 
             Users.get({id:$routeParams.uid}).$promise.then(function (data) {
                 c.currentUser = data;
@@ -21,10 +23,32 @@
                     console.log("UPDATE OK ->");
                     console.log(data);
                     $location.path("/admin/users")
-                }, function () {
-                    // fail...
-                    console.log("UPDATE fail");
-                });
+                }, function (response) {
+                    if (response.status == 409) {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Email già in uso");
+                    } else if (response.status == 400) {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("I dati inseriti non sono validi");
+                    } else {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Qualcosa è andato storto, riprova");
+                    }
+                })
+            };
+            this.setStatus = function (status) {
+                ctrl.setStatusClass();
+                ctrl.status = status;
+            };
+
+            this.setStatusClass = function () {
+                if(ctrl.error_message) {
+                    $('#user_edit_message').removeClass("green-text white-text");
+                    $('#user_edit_message').addClass("red-text");
+                } else {
+                    $('#user_edit_message').removeClass("red-text white-text");
+                    $('#user_edit_message').addClass("green-text");
+                }
             };
         }])
 
@@ -112,9 +136,13 @@
 
         .controller('AdminUsersController', ['$rootScope', '$location', 'Users', function ($rootScope, $location, Users) {
 
+
             var ctrl = this;
             this.order = 'uid';
             this.reverse = false;
+
+            this.status = "";
+            this.error_message = false;
 
             this.newUser = new Users();
             this.newUser.enabled = true;
@@ -159,8 +187,19 @@
                 Users.delete({id: user.uid}, function () {
                     // ok
                     ctrl.users.splice(ctrl.users.indexOf(user), 1);
-                }, function () {
+                    ctrl.error_message = false;
+                    ctrl.setStatus("Utente cancellato con successo");
+                    $("html, body").animate({ scrollTop: 0 }, "fast");
+                }, function (response) {
                     // fail
+                    if (response.status == 404) {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Impossibile procedere alla cancellazione, utente non trovato");
+                    } else {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Qualcosa è andato storto, riprova");
+                    }
+                    $("html, body").animate({ scrollTop: 0 }, "fast");
                 });
             };
 
@@ -180,8 +219,18 @@
                         console.log("Insertion succes");
                         console.log(data);
                         $location.path("/admin/users");
-                    }, function() {
-                        console.log("Insertion failed");
+                    }, function(response) {
+                        if (response.status == 409) {
+                            ctrl.error_message = true;
+                            ctrl.setStatus("Email già in uso");
+                        } else if (response.status == 400) {
+                            ctrl.error_message = true;
+                            ctrl.setStatus("Controlla i dati inseriti");
+                        } else {
+                            ctrl.error_message = true;
+                            ctrl.setStatus("Qualcosa è andato storto, riprova");
+                        }
+                        $("html, body").animate({ scrollTop: 0 }, "fast");
                     });
                 } else {
                     ctrl.newUser.password = "";
@@ -190,19 +239,6 @@
                     $('#password').addClass("invalid");
                     $('#verifyPassword').addClass("invalid");
                 }
-            };
-
-            // edit a given user
-            this.editUser = function (user) {
-                user.firstName = Math.random().toString(36).substring(7);
-                Users.update({id: user.uid}, user).$promise.then(function (data) {
-                    // ok
-                    console.log("UPDATE OK ->");
-                    console.log(data);
-                }, function () {
-                    // fail...
-                    console.log("UPDATE fail");
-                });
             };
 
             // load data at start
@@ -226,7 +262,20 @@
                 $('#password').focus();
             };
 
+            this.setStatus = function (status) {
+                ctrl.setStatusClass();
+                ctrl.status = status;
+            };
 
+            this.setStatusClass = function () {
+                if(ctrl.error_message) {
+                    $('#user_message').removeClass("green-text white-text");
+                    $('#user_message').addClass("red-text");
+                } else {
+                    $('#user_message').removeClass("red-text white-text");
+                    $('#user_message').addClass("green-text");
+                }
+            };
         }]);
 
 })();

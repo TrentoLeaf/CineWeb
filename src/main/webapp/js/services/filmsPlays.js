@@ -29,7 +29,7 @@
         }])
 
         .factory('Plays', ['BASE', '$resource', function (BASE, $resource) {
-            return $resource(BASE + '/plays/:id', {id: '@id'}, {
+            return  $resource(BASE + '/plays/:id', {id: '@id'}, {
                 update: {
                     method: 'PUT'
                 }

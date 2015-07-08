@@ -7,6 +7,9 @@
 
             var ctrl = this;
             this.currentFilm = {};
+            this.status = "";
+            this.error_message = false;
+
 
             Films.get({id:$routeParams.fid}).$promise.then(function (data) {
                 ctrl.currentFilm = data;
@@ -21,10 +24,27 @@
                     console.log("UPDATE OK ->");
                     console.log(data);
                     $location.path("/admin/films")
-                }, function () {
+                }, function (response) {
                     // fail...
-                    console.log("UPDATE fail");
+                    ctrl.error_message = true;
+                    ctrl.setStatus("Qualcosa è andato storto, riprova");
+                    $("html, body").animate({ scrollTop: 0 }, "fast");
                 });
+            };
+
+            this.setStatus = function (status) {
+                ctrl.setStatusClass();
+                ctrl.status = status;
+            };
+
+            this.setStatusClass = function () {
+                if(ctrl.error_message) {
+                    $('#film_edit_message').removeClass("green-text white-text");
+                    $('#film_edit_message').addClass("red-text");
+                } else {
+                    $('#film_edit_message').removeClass("red-text white-text");
+                    $('#film_edit_message').addClass("green-text");
+                }
             };
 
         }])
@@ -33,6 +53,8 @@
 
             var ctrl = this;
             this.newFilm = new Films();
+            this.status = "";
+            this.error_message = false;
 
 
             var init = function () {
@@ -54,6 +76,8 @@
                     ctrl.loading = false;
                 }, function (){
                     //Fail Case
+                    ctrl.error_message = true;
+                    ctrl.setStatus("Errore durante il caricamento dei film");
                 });
             };
 
@@ -65,17 +89,40 @@
                     console.log("Film insertion success");
                     $location.path("/admin/films");
 
-                }, function () {
+                }, function (response) {
                     //Fail Case
-                    console.log("Film insertion fail");
+                    if (response.status == 409) {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Film già esistente");
+                    } else if (response.status == 400) {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Controlla i dati inseriti");
+                    } else {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Qualcosa è andato storto, riprova");
+                    }
+                    $("html, body").animate({ scrollTop: 0 }, "fast");
                 });
             };
 
             this.deleteFilm = function () {
                 Films.delete({id: ctrl.tmpFilm.fid}, function (){
                     console.log("Film deletion success");
-                }, function () {
-                    console.log("Film deletion fail");
+                    ctrl.error_message = false;
+                    ctrl.setStatus("Film cancellato con successo");
+                    $("html, body").animate({ scrollTop: 0 }, "fast");
+                }, function (response) {
+                    if (response.status == 409) {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Impossibile cancellare il film, è attualmente in proiezione");
+                    } else if (response.status == 400){
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Impossibile procedere alla cancellazione, film non trovato");
+                    } else {
+                        ctrl.error_message = true;
+                        ctrl.setStatus("Qualcosa è andato storto, riprova");
+                    }
+                    $("html, body").animate({ scrollTop: 0 }, "fast");
                 });
 
             };
@@ -90,6 +137,21 @@
             };
 
             this.loadFilms();
+
+            this.setStatus = function (status) {
+                ctrl.setStatusClass();
+                ctrl.status = status;
+            };
+
+            this.setStatusClass = function () {
+                if(ctrl.error_message) {
+                    $('#film_message').removeClass("green-text white-text");
+                    $('#film_message').addClass("red-text");
+                } else {
+                    $('#film_message').removeClass("red-text white-text");
+                    $('#film_message').addClass("green-text");
+                }
+            };
 
         }]);
 
