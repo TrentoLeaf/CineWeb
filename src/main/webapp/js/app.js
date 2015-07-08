@@ -358,9 +358,14 @@ $(document).ready(function () {
                     .success(function () {  // tutto ok
 
                     })
-                    .error(function (data) {    // biglietti o spettacoli non più disponibili
-                        // ricarico il carrello fornitomi dal server
-                        $rootScope.cart = data;
+                    .error(function (data, status) {    // biglietti o spettacoli non più disponibili
+                        if (status == 409) {
+                            // ricarico il carrello fornitomi dal server
+                            $rootScope.cart = data;
+                        } else {
+                            // annullo il carrello
+                            $rootScope.cart = [];
+                        }
                     });
 
                 console.log("cart checked: ");

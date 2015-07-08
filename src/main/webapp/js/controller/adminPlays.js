@@ -11,6 +11,8 @@
         this.newPlay_3d = false;
         this.films = [];
 
+        this.date = "";
+        this.time = "21:00"; // NB: tiene conto solo dell'orario
 
         this.loadFilms = function () {
 
@@ -24,6 +26,15 @@
         };
 
         this.addPlay = function (data) {
+
+            console.log("data: " + ctrl.date);
+            console.log("tempo: " + ctrl.time);
+
+            // set the complete time (composition of ctrl.date + ctrl.time (taking only hours and minutes))
+            var new_time = new Date(ctrl.date + " " + ctrl.time);
+            console.log("newdata: " + new_time);
+            ctrl.newPlay.time = new_time;
+
             if (ctrl.newPlay_3d) {
                 ctrl.newPlay._3d = true;
             } else {
@@ -76,7 +87,7 @@
             } else {
                 $('#plays_message').removeClass("red-text white-text");
                 $('#plays_message').addClass("green-text");
-            };
+            }
         };
 
         this.loadFilms();

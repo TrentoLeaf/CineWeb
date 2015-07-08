@@ -35,12 +35,12 @@
             </div>
             <div class="row">
                 <div class="input-field col s6 m6 l6">
-                    <input id="date" type="date" class="datepicker" ng-model="ctrl.newPlay.time">
-                    <label class="active" for="time">Data</label>
+                    <input id="date-selector" type="date" class="datepicker" ng-model="ctrl.date">
+                    <label class="active" for="date-selector">Data</label>
                 </div>
                 <div class="input-field col s6 m6 l6">
-                    <input id="time" type="time" ng-model="ctrl.newPlay.time">
-                    <label class="active" for="time">Orario</label>
+                    <input id="time" type="text" ng-model="ctrl.time">
+                    <label class="active" for="time">Orario (hh:mm)</label>
                 </div>
             </div>
 
@@ -70,3 +70,16 @@
         </form>
     </div>
 </div>
+
+<script>
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+    if (isFirefox) {
+        $("#date-selector").removeClass("datepicker");
+        $("#date-selector").attr({type:"text", id: "date-selector-firefox"});
+    } else {
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15 // Creates a dropdown of 15 years to control year
+        });
+    }
+</script>
