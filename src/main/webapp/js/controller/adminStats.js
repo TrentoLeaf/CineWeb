@@ -48,11 +48,11 @@
                 Stats.grossingFilms()
                     .success(function (data) {
                         var colors = [
-                            "#464646",
                             "#E52323",
-                            "#1BB21B",
                             "#1C82AF",
-                            "#E8C800"
+                            "#E8C800",
+                            "#464646",
+                            "#1BB21B"
                         ];
                         ctrl.error="";
 
@@ -62,12 +62,9 @@
                                     {
                                         label: data[film].title,
                                         value: data[film].grossing,
-                                        color: colors[Math.floor(Math.random() * (colors.length - 0) + 0)]
+                                        color: colors[data.indexOf(data[film]) % colors.length]
                                     }
                                 );
-
-                                console.log((Math.random() * (colors.length - 0) + 0));
-                                console.log(filmsIncomeData[film].color);
                             }
                         }
 

@@ -1,5 +1,4 @@
 /* this CSS handle only SVG theatre attributes */
-@import url(https://fonts.googleapis.com/css?family=Lato:900);
 /* theatre colors */
 /* screen colors */
 /* seat colors */
@@ -23,7 +22,7 @@
   fill: rgba(70, 70, 70, 0); }
 
 .theatre_row_header_text {
-  font-family: Lato, sans-serif;
+  font-family: Roboto, Helvetica, sans-serif;
   font-weight: 900;
   font-size: 20px;
   fill: #f0f0f0;
@@ -33,7 +32,7 @@
   fill: rgba(70, 70, 70, 0); }
 
 .theatre_column_header_text {
-  font-family: Lato, sans-serif;
+  font-family: Roboto, Helvetica, sans-serif;
   font-weight: 900;
   font-size: 20px;
   fill: #f0f0f0;

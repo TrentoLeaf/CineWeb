@@ -123,7 +123,7 @@
                 ctrl.currentSelectedFilm = indexFilm;
                 ctrl.currentSelectedPlay = indexPlay;
 
-                Rooms.getRoomStatus(ctrl.currentPlay.rid)
+                Rooms.getRoomStatus(ctrl.currentPlay.pid)
                     .success(function (data) {
                         ctrl.shared_obj.editable = false;
                         ctrl.shared_obj.mapTheatre = data.seats;

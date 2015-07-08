@@ -57,7 +57,6 @@
                             var buy = ctrl.bookings[i];
                             var total = 0;
                             for (var j=0; j < buy.tickets.length; j++) {
-                                // TODO rivedere perchè mi mancano i dati
                                 if (buy.tickets[j].price != undefined) {
                                     total += buy.tickets[j].price;
                                 }

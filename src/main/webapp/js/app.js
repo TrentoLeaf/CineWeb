@@ -152,12 +152,10 @@ $(document).ready(function () {
                 templateUrl: '../partials/buy_complete.html',
                 controller: 'BuyCompleteController',
                 controllerAs: 'ctrl'
-            }).when('/test', {
-                templateUrl: '../partials/test.html',
-                controller: 'BuyController',
-                controllerAs: 'ctrl'
             }).when('/error', {
                 templateUrl: '../partials/error.html'
+            }).when('/popcorn', {
+                templateUrl: '../partials/popcorn.html'
             }).otherwise({
                 redirectTo: '/error'
             });
@@ -212,7 +210,7 @@ $(document).ready(function () {
         })
 
 
-        .run(['$rootScope', '$location', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
+        .run(['$rootScope', '$location', '$anchorScroll', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, $anchorScroll, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
 
             // redirect only if needed
             var redirect = function (path) {
@@ -240,6 +238,11 @@ $(document).ready(function () {
 
             });
 
+
+            /* set listener for route change auto sroll to up*/
+            $rootScope.$on("$routeChangeSuccess", function(){
+                $anchorScroll();
+            });
 
             /* init of login data */
             $rootScope.user = {};
@@ -329,7 +332,8 @@ $(document).ready(function () {
                         console.log(data);
                     },
                     function (error) {
-                        // TODO: handle error
+                        $rootScope.playsByDate = [];
+                        $location.path("/error");
                     }
                 );
             };

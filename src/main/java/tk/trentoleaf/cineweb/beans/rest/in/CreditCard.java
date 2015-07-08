@@ -1,16 +1,16 @@
 package tk.trentoleaf.cineweb.beans.rest.in;
 
+import org.hibernate.validator.constraints.CreditCardNumber;
 import org.hibernate.validator.constraints.Length;
 import tk.trentoleaf.cineweb.annotations.hibernate.SafeString;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 @SuppressWarnings("unused")
 public class CreditCard {
 
     @SafeString(message = "Number cannot be null")
+    @CreditCardNumber
     private String number;
 
     @SafeString(message = "Name cannot be null")
@@ -27,6 +27,7 @@ public class CreditCard {
     private Integer year;
 
     @SafeString(message = "Cvv cannot be null")
+    @Digits(integer=4, fraction=0)
     @Length(min = 3, max = 4, message = "Invalid cvv")
     private String cvv;
 

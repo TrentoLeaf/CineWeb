@@ -32,7 +32,7 @@
                 // better BEFORE calling this function
                 Prices.delete(ctrl.tmpPrice).then( function () {
                     // ok
-                    ctrl.updatePrices();
+                    ctrl.loadPrices();
                     console.log("Price deletion success");
                 }, function () {
                     // fail
@@ -43,7 +43,7 @@
             this.addPrice = function () {
                 Prices.save(ctrl.newPrice).then(function () {
                     ctrl.newPrice = {};
-                    ctrl.updatePrices();
+                    ctrl.loadPrices();
                 }, function () {
                     // errors
                 });
@@ -77,22 +77,13 @@
 
                 Prices.update(price).then(function (data) {
                     // ok
-                    ctrl.updatePrices();
+                    ctrl.loadPrices();
                     console.log("UPDATE OK ->");
                     console.log(data);
                 }, function () {
                     // fail...
                     console.log("UPDATE fail");
                 });
-            };
-
-
-            this.updatePrices = function () {
-                /* //TODO non funziona --> Prices.query is not a function
-                 Prices.query(function (data) {
-                 $rootScope.tickets = data;
-                 });
-                 */
             };
 
             init();
