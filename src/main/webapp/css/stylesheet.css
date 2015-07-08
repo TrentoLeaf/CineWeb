@@ -145,8 +145,11 @@ main .content-div {
   main .content-div .play {
     margin-bottom: 4em; }
     main .content-div .play .play-playbill {
-      min-height: 300px;
-      max-height: 300px; }
+      width: 100%;
+      height: auto; }
+    main .content-div .play .play-playbill-container {
+      overflow: hidden;
+      height: 264px; }
     main .content-div .play .card-times {
       overflow: auto;
       max-height: 100px;

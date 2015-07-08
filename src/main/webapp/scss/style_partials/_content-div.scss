@@ -12,8 +12,13 @@ main {
 
       // immagini locandina nel frame principale
       .play-playbill {
-        min-height: 300px;
-        max-height: 300px;
+        width: 100%;
+        height: auto;
+      }
+
+      .play-playbill-container {
+        overflow: hidden;
+        height: 264px;
       }
 
       .card-times {
