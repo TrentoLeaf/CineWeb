@@ -5,20 +5,20 @@
 
         .controller('AdminUsersEditController', ['$routeParams', '$location', 'Users', function($routeParams, $location, Users) {
 
-            var c = this;
+            var ctrl = this;
             this.currentUser = {};
             this.status = "";
             this.error_message = false;
 
             Users.get({id:$routeParams.uid}).$promise.then(function (data) {
-                c.currentUser = data;
+                ctrl.currentUser = data;
             }, function () {
                 $location.path("/admin/users");
             });
 
 
             this.save = function () {
-                Users.update({id: c.currentUser.uid}, c.currentUser).$promise.then(function (data) {
+                Users.update({id: ctrl.currentUser.uid}, ctrl.currentUser).$promise.then(function (data) {
                     // ok
                     console.log("UPDATE OK ->");
                     console.log(data);
