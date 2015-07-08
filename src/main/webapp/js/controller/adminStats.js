@@ -62,12 +62,9 @@
                                     {
                                         label: data[film].title,
                                         value: data[film].grossing,
-                                        color: colors[Math.floor(Math.random() * (colors.length - 0) + 0)]
+                                        color: colors[data.indexOf(data[film]) % colors.length]
                                     }
                                 );
-
-                                console.log((Math.random() * (colors.length - 0) + 0));
-                                console.log(filmsIncomeData[film].color);
                             }
                         }
 
