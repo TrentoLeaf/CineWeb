@@ -152,10 +152,6 @@ $(document).ready(function () {
                 templateUrl: '../partials/buy_complete.html',
                 controller: 'BuyCompleteController',
                 controllerAs: 'ctrl'
-            }).when('/test', {
-                templateUrl: '../partials/test.html',
-                controller: 'BuyController',
-                controllerAs: 'ctrl'
             }).when('/error', {
                 templateUrl: '../partials/error.html'
             }).when('/popcorn', {
@@ -336,7 +332,8 @@ $(document).ready(function () {
                         console.log(data);
                     },
                     function (error) {
-                        // TODO: handle error
+                        $rootScope.playsByDate = [];
+                        $location.path("/error");
                     }
                 );
             };

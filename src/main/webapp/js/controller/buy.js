@@ -57,7 +57,6 @@
                         .success(function () {  // tutto ok
                             $('.buy-seats-loader').removeClass('active');
                             setError(OK);
-                            //TODO capire perchè l'ho messo: $rootScope.cart = [];
                             $rootScope.buy.data_from_server = ctrl.cloneObject($rootScope.cart);
                             console.log("successo, data from server ");
                             console.log($rootScope.buy.data_from_server);
@@ -117,7 +116,8 @@
                             $rootScope.buy.shared_obj.film.seats = data.seats;
                         })
                         .error(function () {
-                            // TODO maledetto internet
+                            // redirect alla pagina d'errore generale
+                            $location.path("/error");
                         });
 
                     $('.buy-loader').removeClass('active');
