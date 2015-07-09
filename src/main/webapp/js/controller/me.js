@@ -80,6 +80,10 @@
                 console.log("collapsible INIZIALIZZATI");
             });
 
+            // convert 0 to A, 1 to B, ...
+            this.intToChar = function (i) {
+                return String.fromCharCode('A'.charCodeAt() + parseInt(i));
+            };
 
             // when page loads -> load user info
             $timeout(this.loadUserBookings, 1000);

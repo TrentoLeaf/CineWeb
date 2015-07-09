@@ -27,7 +27,7 @@
                         });
                 },
 
-                getRoomByID: function (id) {
+                getRoomEditableByID: function (id) {
                     return $http.get(BASE_ROOMS + '/' + id)
                         .success(function (data) {
                             $log.info('GET ROOM OK: ' + data);
@@ -54,6 +54,16 @@
                         })
                         .error(function (data, status) {
                             $log.warn('GET ROOM STATUS FAILED: ' + status + " " + data);
+                        });
+                },
+
+                editRoom: function (id, obj) {
+                    return $http.put(BASE_ROOMS + '/' + id, obj)
+                        .success(function (data) {
+                            $log.info('EDIT ROOM OK: ' + data);
+                        })
+                        .error(function (data, status) {
+                            $log.warn('EDIT ROOM FAILED: ' + status + " " + data);
                         });
                 }
             }

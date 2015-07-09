@@ -100,33 +100,29 @@
 
             // print the seats in row
             for (var j = 0; j < columns; j++) {
-                // check if seat exist
+
+                // mappa[i][j] contain the type of seat (AVAILABLE, ...)
+
+                // get a seat
+                var pp = seat.clone();
+                pp.transform('t' + i_index + ',' + j_index); // set traslation
+                // add attr row and column
+                pp.attr({row: i.toString()});
+                pp.attr({col: j.toString()});
+
+                // set the type and the handlers of the seat
+                set_svg_seat(pp, mappa[i][j], spettacolo, posti_selezionati, modificabile);
+
+                // append the seat to map
                 if (mappa[i][j] != SEAT_NOT_EXIST) {
-
-                    // get a seat
-                    var pp = seat.clone();
-                    pp.transform('t' + i_index + ',' + j_index); // set traslation
-                    // add attr row and column
-                    pp.attr({row: i.toString()});
-                    pp.attr({col: j.toString()});
-
-                    // set the type of seat
-                    set_svg_seat(pp, mappa[i][j], spettacolo, posti_selezionati, modificabile);
-
                     snap.append(pp);
-                } else {    // make a not esixtent seat editable
-                    if (modificabile) {
-                        // get a seat
-                        var pp = seat.clone();
-                        pp.transform('t' + i_index + ',' + j_index); // set traslation
-                        // add attr row and column
-                        pp.attr({row: i.toString()});
-                        pp.attr({col: j.toString()});
-
-                        // set the type of seat
-                        set_svg_seat(pp, mappa[i][j], spettacolo, posti_selezionati, modificabile);
-                    }
                 }
+
+                // append hidden seat to map only if map is editable
+                if (mappa[i][j] == SEAT_NOT_EXIST && modificabile) {
+                    snap.append(pp);
+                }
+
                 // next seat
                 i_index += 55;
             }
@@ -154,6 +150,9 @@
 
         // init the tooltips
         $('.tooltipped').tooltip({delay: 300});
+
+        console.log("POSTI INVISIBILI");
+        console.log(posti_selezionati);
     }
 
     function set_svg_seat (poltrona_svg, posto, spettacolo, posti_selezionati, modificabile) {
@@ -170,28 +169,34 @@
                         console.log("poltrona cliccata");
 
                         if (this.hasClass('seat-selected')) {
+                            // element to be removed
+                            var el ={
+                                row: poltrona_svg.attr('row'),
+                                col: poltrona_svg.attr('col')
+                            };
+                            // remove from list
+                            cancelFromList(el,posti_selezionati);
+
                             console.log("era selezionata");
                             this.removeClass('seat-selected');
                             this.hover(seatHoverIn, seatHoverOut);
-                            posti_selezionati.splice({
-                                row: poltrona_svg.attr('row'),
-                                col: poltrona_svg.attr('col')
-                            }, 1);
+
                             spettacolo.seats_selected++;
                         }
                         else {
                             console.log("non era selezionata");
                             if (spettacolo.seats_selected > 0) {
-                                console.log("ss > 0");
-                                this.addClass('seat-selected');
-                                this.removeClass('seat-hover');
-                                this.unhover(seatHoverIn, seatHoverOut);
 
                                 posti_selezionati.push({
                                     row: poltrona_svg.attr('row'),
                                     col: poltrona_svg.attr('col')
                                 });
                                 spettacolo.seats_selected--;
+
+                                console.log("ss > 0");
+                                this.addClass('seat-selected');
+                                this.removeClass('seat-hover');
+                                this.unhover(seatHoverIn, seatHoverOut);
                             }
                         }
                     });
@@ -200,20 +205,25 @@
                         // set click handler
                         poltrona_svg.click(function () {
                             if (this.hasClass('seat-hidden')) {
-                                this.removeClass('seat-hidden');
-                                console.log("Poltrona visibile");
-                                posti_selezionati.splice({
+
+                                // element to be removed
+                                var el ={
                                     row: poltrona_svg.attr('row'),
                                     col: poltrona_svg.attr('col')
-                                }, 1);
+                                };
+                                // remove from list
+                                cancelFromList(el,posti_selezionati);
+
+                                this.removeClass('seat-hidden');
+                                console.log("Poltrona visibile");
                             }
                             else {
-                                this.addClass('seat-hidden');
-                                console.log("Poltrona nascosta");
                                 posti_selezionati.push({
                                     row: poltrona_svg.attr('row'),
                                     col: poltrona_svg.attr('col')
                                 });
+                                this.addClass('seat-hidden');
+                                console.log("Poltrona nascosta");
                             }
                         });
                     }
@@ -228,20 +238,25 @@
                     // set click handler
                     poltrona_svg.click(function () {
                         if (this.hasClass('seat-hidden')) {
-                            this.removeClass('seat-hidden');
-                            console.log("Poltrona visibile");
-                            posti_selezionati.splice({
+
+                            // element to be removed
+                            var el ={
                                 row: poltrona_svg.attr('row'),
                                 col: poltrona_svg.attr('col')
-                            }, 1);
+                            };
+                            // remove from list
+                            cancelFromList(el,posti_selezionati);
+
+                            this.removeClass('seat-hidden');
+                            console.log("Poltrona visibile");
                         }
                         else {
-                            this.addClass('seat-hidden');
-                            console.log("Poltrona nascosta");
                             posti_selezionati.push({
                                 row: poltrona_svg.attr('row'),
                                 col: poltrona_svg.attr('col')
                             });
+                            this.addClass('seat-hidden');
+                            console.log("Poltrona nascosta");
                         }
                     });
                 } else {
@@ -253,32 +268,45 @@
                 if (modificabile) { // modifica di una nuova sala, aggiunta sedia 'invisibile'
                     // set hidden
                     poltrona_svg.addClass('seat-hidden');
-                    posti_selezionati.push({
-                        row: poltrona_svg.attr('row'),
-                        col: poltrona_svg.attr('col')
-                    });
                     // add the seat to the hidden_seats list
                     posti_selezionati.push({
                         row: poltrona_svg.attr('row'),
                         col: poltrona_svg.attr('col')
                     });
+
+                    console.log("adding: r " + poltrona_svg.attr('row') + " c " + poltrona_svg.attr('col'));
+
                     // set click handler
                     poltrona_svg.click(function () {
                         if (this.hasClass('seat-hidden')) {
-                            this.removeClass('seat-hidden');
-                            console.log("Poltrona visibile");
-                            posti_selezionati.splice({
+
+                            // element to be removed
+                            var el ={
                                 row: poltrona_svg.attr('row'),
                                 col: poltrona_svg.attr('col')
-                            }, 1);
+                            };
+                            // remove from list
+                            cancelFromList(el,posti_selezionati);
+
+                            this.removeClass('seat-hidden');
+
+                            console.log("Poltrona visibile");
+                            console.log("rimuovo: r " + poltrona_svg.attr('row') + " c " + poltrona_svg.attr('col'));
+                            console.log("POSTI INVISIBILI click su nasc");
+                            console.log(posti_selezionati);
                         }
                         else {
-                            this.addClass('seat-hidden');
-                            console.log("Poltrona nascosta");
                             posti_selezionati.push({
                                 row: poltrona_svg.attr('row'),
                                 col: poltrona_svg.attr('col')
                             });
+
+                            this.addClass('seat-hidden');
+
+                            console.log("Poltrona nascosta");
+                            console.log("aggiungo: r " + poltrona_svg.attr('row') + " c " + poltrona_svg.attr('col'));
+                            console.log("POSTI INVISIBILI click su nasc vis");
+                            console.log(posti_selezionati);
                         }
                     });
                 }
@@ -314,6 +342,23 @@
     function seatHoverOut() {
         this.removeClass('seat-hover');
     }
+
+    // cancella l'elemento el (oggetto righe-colonne) dalla lista di poltrone eliminate/selezionate (list)
+    function cancelFromList (el, list) {
+
+        // remove from list
+        for (var i=0; i < list.length; i++) {
+            console.log("cerco " + i + "r " + el.row + " " + list[i].row + " c " + el.col + " " + list[i].col);
+            if ((el.row == list[i].row) && (el.col == list[i].col)) {
+                console.log("trovato");
+                // remove the seat from list
+                list.splice(i, 1);
+                // end for
+                i = list.length;
+            }
+        }
+    }
+
 
     // angular directive
     angular.module('mapModule', [])

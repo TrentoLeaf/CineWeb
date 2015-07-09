@@ -85,6 +85,8 @@
                                     <thead>
                                     <tr>
                                         <th>Film</th>
+                                        <th>Sala</th>
+                                        <th>Posto</th>
                                         <th>Tipologia</th>
                                         <th>Prezzo</th>
                                     </tr>
@@ -92,6 +94,8 @@
                                     <tbody>
                                     <tr ng-repeat="ticket in buy.tickets" ng-class="{ 'red-text' : ticket.deleted}">
                                         <td><span>{{ticket.title}}</span></td>
+                                        <td><span>{{ticket.rid}}</span></td>
+                                        <td><span>{{ctrl.intToChar(ticket.x)}}{{ticket.y+1}}</span></td>
                                         <td><span>{{ticket.type}}</span></td>
                                         <td><span>{{ticket.price}}</span></td>
                                     </tr>

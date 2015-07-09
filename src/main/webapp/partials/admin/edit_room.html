@@ -8,22 +8,6 @@
     </div>
 
     <div class="row">
-        <form class="col s12 offset-m2 m8 offset-l3 l6 center-align">
-            <div class="row">
-                <div class="input-field col s5 m5 l5">
-                    <input id="row" type="number" class="validate" ng-model="ctrl.rows">
-                    <label for="row">Righe</label>
-                </div>
-                <h4 class="col s2 m2 l2"> x </h4>
-                <div class="input-field col s5 m5 l5">
-                    <input id="column" type="number" class="validate" ng-model="ctrl.cols">
-                    <label for="column">Colonne</label>
-                </div>
-            </div>
-            <div class="row">
-                <a class="btn yellow accent-4 waves-effect waves-light" ng-click="ctrl.generateNewMatrix()">RIGENERA MAPPA</a>
-            </div>
-        </form>
         <div class="row">
             <div class="col s12 m12 l12"> <!-- mappa -->
                 <map o="ctrl.shared_obj"></map><!-- will be filled by js -->
