@@ -78,34 +78,40 @@
         this.error_msg = "";
 
         this.getRoomMap = function () {
-            // TODO richiedre al server la matrice da visualizzare
-            // callback
-            //matrix =data;
-            // importante: set rows e cols prima di genmap
-            //generateMap();
-        };
 
+            ctrl.error_msg = "";
+
+            Rooms.getRoomEditableByID(ctrl.rid)
+                .success(function (data) {
+                    ctrl.matrix = data.seats;
+                    ctrl.rows = ctrl.matrix.length;
+                    ctrl.cols = ctrl.matrix[0].length;
+                    ctrl.generateMap();
+                })
+                .error(function () {
+                    ctrl.error_msg = "Non è stato possibile scaricare la mappa dal server.";
+                });
+        };
 
         this.generateMap = function () {
 
             // set parameters of shared_obj
             ctrl.shared_obj.editable = true;
             ctrl.shared_obj.selected_seats = []; // tha map directive will fill the array
-            ctrl.shared_obj.mapTheatre = matrix;
+            ctrl.shared_obj.mapTheatre = ctrl.matrix;
 
-        };
-
-        this.generateNewMatrix = function () {
-            /*
-             genera una nuova matrice di righe ctrl.rows e colonne ctrl.cols rispettando però i vincoli
-             dati dalla matrice originaria recuperata dal server
-             */
-            // todo fare...ma anche no
         };
 
         this.sendMap = function () {
+            ctrl.error_msg = "";
+            var rows = ctrl.matrix.length;
+            var cols = ctrl.matrix[0].length;
+
             $(".room-loader").addClass("active");
             ctrl.hiddenSeats = ctrl.shared_obj.selected_seats;
+
+            // sovrascrive la mappa con una nuova pulita (tutte poltrone disponibili)
+            ctrl.matrix = ctrl.createMatrix(rows, cols);
 
             // mette a 0 (non esistenti) in ctrl.newRoom.seats le poltrone che sono state selezionate (cioè quelle non esistenti)
             for (var seat = 0; seat < ctrl.hiddenSeats.length; seat++) {
@@ -114,28 +120,36 @@
                 ctrl.matrix[row][col] = 0;
             }
 
-            var rows = ctrl.matrix.length;
-            var cols = ctrl.matrix[0].length;
+            var obj = {
+                rows: rows,
+                columns: cols,
+                seats: ctrl.matrix
+            };
 
+            Rooms.editRoom(ctrl.rid, obj)
+                .success(function () {
+                    $(".room-loader").removeClass("active");
+                    $location.path("/admin/rooms");
+                })
+                .error(function (status) {
+                    $(".room-loader").removeClass("active");
+                    if (status == 409) {
+                        ctrl.error_msg = "Si sta cercando di modificare posti già prenotati.";
+                    } else {
+                        ctrl.error_msg = "Modifica della sala fallita.";
+                    }
+                });
+        };
 
-            //  TODO chiamata al giusto servizio per aggiungere la mappa modificata
-            //callback
-            // $(".room-loader").removeClass("active");
-            // $location.path("/admin/rooms");
-            //error
-            // $(".room-loader").removeClass("active");
-            // set error_msg
-
-
-
-
-            /*ctrl.newRoom.$save(function (data) {
-             console.log("Theatre add success");
-             ctrl.updateRoom();
-             $location.path('/admin/rooms');
-             }, function () {
-             console.log("Theatre add fail");
-             });*/
+        this.createMatrix = function(rows, columns) {
+            var matrix = [];
+            for(var i=0; i<rows; i++) {
+                matrix[i] = [];
+                for(var j=0; j<columns; j++) {
+                    matrix[i][j] = 1;
+                }
+            }
+            return matrix;
         };
 
 
@@ -190,10 +204,6 @@
                 });
 
 
-            };
-
-            this.isSelected = function (index) {
-                return (ctrl.currentSelected == index);
             };
 
             this.loadRooms();
