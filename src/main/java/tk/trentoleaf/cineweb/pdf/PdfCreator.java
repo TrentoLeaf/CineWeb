@@ -119,14 +119,14 @@ public class PdfCreator {
             canvas.beginText();
             canvas.setFontAndSize(baseFont, 16);
             canvas.setTextMatrix(97, tfy(147));
-            canvas.showText(data.getFilmTitle());
+            canvas.showText(data.getTitle());
             canvas.endText();
 
             // theatre
             canvas.beginText();
             canvas.setFontAndSize(baseFont, 20);
             canvas.setTextMatrix(123, tfy(197));
-            canvas.showText(data.getTheatre());
+            canvas.showText(data.getRoom());
             canvas.endText();
 
             // seat

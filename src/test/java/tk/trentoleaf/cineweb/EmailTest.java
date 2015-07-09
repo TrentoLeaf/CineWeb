@@ -1,6 +1,7 @@
 package tk.trentoleaf.cineweb;
 
 import com.sendgrid.SendGrid;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.Role;
 import tk.trentoleaf.cineweb.beans.model.User;
@@ -11,6 +12,10 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class EmailTest {
+
+    private FilmTicketData testData() {
+        return new FilmTicketData(12, "pippo@gmail.com", "Titolo film", 2, 3, 4, DateTime.now(), "intero", 34);
+    }
 
     @Test
     public void sendConfirmRegistrationTest() throws Exception {
@@ -52,9 +57,9 @@ public class EmailTest {
 
         // create tickets data
         ArrayList<FilmTicketData> plays = new ArrayList<>();
-        plays.add(new FilmTicketData());
-        plays.add(new FilmTicketData());
-        plays.add(new FilmTicketData());
+        plays.add(testData());
+        plays.add(testData());
+        plays.add(testData());
 
         // send email
         EmailSender sender = EmailSender.instance();

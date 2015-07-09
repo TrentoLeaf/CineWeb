@@ -9,10 +9,13 @@ import tk.trentoleaf.cineweb.pdf.FilmTicketData;
 import tk.trentoleaf.cineweb.pdf.PdfCreator;
 import tk.trentoleaf.cineweb.utils.Utils;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -182,7 +185,7 @@ public class EmailSender {
     }
 
     //send a pdf with the ticket
-    public SendGrid.Response sendTicketPDFEmail(URI uri, User user, ArrayList<FilmTicketData> data) throws SendGridException, IOException, DocumentException {
+    public SendGrid.Response sendTicketPDFEmail(URI uri, User user, List<FilmTicketData> data) throws SendGridException, IOException, DocumentException {
 
         // url logo
         final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
@@ -250,10 +253,10 @@ public class EmailSender {
         for (FilmTicketData d : data) {
             String tmpSummaryString = theStringSummary;
 
-            tmpSummaryString = tmpSummaryString.replace("{{titolo}}", d.getFilmTitle());
+            tmpSummaryString = tmpSummaryString.replace("{{titolo}}", d.getTitle());
             tmpSummaryString = tmpSummaryString.replace("{{data}}", d.getDate());
             tmpSummaryString = tmpSummaryString.replace("{{ora}}", d.getTime());
-            tmpSummaryString = tmpSummaryString.replace("{{sala}}", d.getTheatre());
+            tmpSummaryString = tmpSummaryString.replace("{{sala}}", d.getRoom());
             tmpSummaryString = tmpSummaryString.replace("{{posto}}", d.getSeat());
             tmpSummaryString = tmpSummaryString.replace("{{tipo}}", d.getType());
 
