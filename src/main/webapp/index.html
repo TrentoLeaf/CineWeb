@@ -62,7 +62,7 @@
 
 <body ng-controller="TabController as tab">
 <div class="navbar-fixed">
-    <nav class="black" role="navigation" id="header-navbar">
+    <nav class="grey darken-3" role="navigation" id="header-navbar">
         <div class="nav-wrapper">
             <a id="title" href="#home" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
             <ul class="left hide-on-med-and-down">
@@ -107,8 +107,9 @@
 </div>
 
 <!-- here the main content -->
-<main class="grey darken-4" id="main-content">
-    <div ng-click="tab.closeTab()" class="content-div grey darken-4" ng-view>
+<main id="main-content" style="background-image: url(img/tmpWilly/Untitled-4.jpg);background-repeat: no-repeat;
+    background-attachment: fixed; background-size: cover;">
+    <div ng-click="tab.closeTab()" class="content-div" ng-view>
 
     </div>
 
@@ -279,7 +280,7 @@
             </div>
         </div>
     </div>
-    <div class="footer-copyright black">
+    <div class="footer-copyright grey darken-4">
         <div class="container yellow-text text-accent-4">
             © 2015 TrentoLeaf+
             <a class="yellow-text text-accent-4 right" href="partials/about.html">About Us</a>
