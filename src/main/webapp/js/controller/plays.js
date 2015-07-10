@@ -6,8 +6,8 @@
 
             var ctrl = this;
             this.current = {};
-            this.show_trailer_for_current = "Trailer";
             this.alternate = false;
+            this.show_trailer_for_current = "Trailer";
 
             this.isNow = function (date) {
                 var act = new Date();
@@ -41,8 +41,11 @@
 
             // init tooltip per il suggerimento di acquisto (direttiva che emette l'event alla fine del file)
             $scope.$on('tooltipRepeatEnd', function(scope, element, attrs){
-                $('.tooltipped').tooltip({delay: 50});
-                console.log("TOOLTIP INIZIALIZZATI");
+                var mq = window.matchMedia( "(min-width: 992px)" );
+                if (mq.matches) {
+                    $('.tooltipped').tooltip({delay: 50});
+                    console.log("TOOLTIP INIZIALIZZATI");
+                }
             });
 
             this.log = function () {
