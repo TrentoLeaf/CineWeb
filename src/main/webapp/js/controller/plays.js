@@ -7,6 +7,7 @@
             var ctrl = this;
             this.current = {};
             this.show_trailer_for_current = "Trailer";
+            this.alternate = false;
 
             this.isNow = function (date) {
                 var act = new Date();
