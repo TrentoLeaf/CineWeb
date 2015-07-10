@@ -1,10 +1,10 @@
 (function () {
     'use strict';
 
+    /* servizio per il salvataggio in LocalStorage del carrello dell'utente */
     angular.module('storageModule', ['angular-locker'])
         .factory('StorageService', ['locker', function (locker) {
-
-            var CART = 'cart';
+            var CART = 'cart'; // chiave della coppia chiave-valore in LocalStorage
 
             return {
 

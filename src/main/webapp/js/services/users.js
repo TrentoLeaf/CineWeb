@@ -1,6 +1,7 @@
 (function () {
     'use strict';
 
+    /* modulo per la comunicazione con il server dei dati relativi all'utente */
     angular.module('usersModule', ['constantsModule', 'ngResource'])
 
         .factory('Users', ['BASE', '$resource', function (BASE, $resource) {
@@ -17,6 +18,7 @@
             var BASE_TICKETS = BASE + "/tickets";
 
             return {
+                /* invio dati di login */
                 login: function (email, password) {
                     return $http.post(BASE_USERS + '/login', {email: email, password: password})
                         .success(function (data) {
@@ -28,6 +30,7 @@
                         });
                 },
 
+                /* invio richiesta di logout */
                 logout: function () {
                     return $http.post(BASE_USERS + '/logout')
                         .success(function (data) {
@@ -38,6 +41,7 @@
                         });
                 },
 
+                /* richiesta normale cambio password */
                 changePassword: function (email, oldPassword, newPassword) {
                     return $http.post(BASE_USERS + '/change-password', {
                         email: email,
@@ -52,6 +56,7 @@
                         });
                 },
 
+                /* richiesta cambio password in seguito alla richiesta di recupero della password */
                 changePasswordWithCode: function (email, code, newPassword) {
                     return $http.post(BASE_USERS + '/change-password-code', {
                         email: email,
@@ -66,6 +71,7 @@
                         });
                 },
 
+                /* richiesta di registrazione */
                 registration: function (email, password, firstName, secondName) {
                     return $http.post(BASE_USERS + '/registration', {
                         email: email,
@@ -81,6 +87,7 @@
                         });
                 },
 
+                /* invia la conferma del click sull'url di registrazione */
                 confirmRegistration: function (code) {
                     return $http.post(BASE_USERS + '/confirm', {code: code})
                         .success(function (data) {
@@ -91,6 +98,7 @@
                         });
                 },
 
+                /* richiesta recupero password */
                 forgotPassword: function (email) {
                     return $http.post(BASE_USERS + "/forgot-password", {email: email})
                         .success(function (data) {
@@ -101,6 +109,7 @@
                         });
                 },
 
+                /* richiesta dati di base dell'utente */
                 me: function () {
                     return $http.get(BASE_USERS + "/me")
                         .success(function (data) {
@@ -111,6 +120,7 @@
                         });
                 },
 
+                /* richiesta cronologia acquisti dell'utente */
                 my_bookings: function () {
                     return $http.get(BASE_BOOKINGS + "/my")
                         .success(function (data) {
@@ -121,6 +131,7 @@
                         });
                 },
 
+                /* richiesta (admin) cronologia acquisti di un'utente*/
                 user_bookings: function (uid) {
                     return $http.get(BASE_BOOKINGS + "/" + uid)
                         .success(function (data) {
@@ -131,6 +142,7 @@
                         });
                 },
 
+                /* richiesta (admin) cancellazione biglietto */
                 deleteTicket: function (tid) {
                     return $http.delete(BASE_TICKETS + "/" + tid)
                         .success(function (data) {

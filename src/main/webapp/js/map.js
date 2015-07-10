@@ -185,6 +185,7 @@
                         }
                         else {
                             console.log("non era selezionata");
+                            // add to selected seats
                             if (spettacolo.seats_selected > 0) {
 
                                 posti_selezionati.push({
@@ -335,10 +336,12 @@
         return String.fromCharCode('A'.charCodeAt() + parseInt(i));
     }
 
+    /* add class hovering on a seat */
     function seatHoverIn() {
         this.addClass('seat-hover');
     }
 
+    /* remove class hovering on a seat */
     function seatHoverOut() {
         this.removeClass('seat-hover');
     }
@@ -360,7 +363,9 @@
     }
 
 
-    // angular directive
+    /* direttiva per la generazione delle mappe delle sale.
+     * Una mappa viene generata ogni qualvolta si ha un cambiamento nella matrice dei posti.
+     */
     angular.module('mapModule', [])
         .directive('map', function () {
             return {
@@ -370,21 +375,28 @@
                     o: '=o'
                 },
                 link: function (scope, element, attrs) {
-                    // gestione della mappa per la selezione dei posti
+                    /* scope.o.film: dati di un film
+                     * scope.o.film.seats: matrice posti (user buy mode)
+                     * scope.o.mapTheatre: matrice posti (admin side)
+                     * scope.o.film.selected_seats: array di posti selezionati (mode buy) / rimossi (mode edit - admin)
+                     * scope.o.editable: (T/F) richiesta di una mappa modificabile (admin)
+                     */
+
+                    // gestione della mappa per la selezione dei posti di uno spettacolo
                     scope.$watch('o.film.seats', function (seats) {
-                        // seats == scope.o.seats
+                        // seats == scope.o.seats: matrice dei posti
                         console.log(seats);
                         console.log(scope.seats);
 
-
                         if ((scope.o.film != undefined) && (scope.o.film.seats != undefined) && (scope.o.selected_seats != undefined)) {
                             console.log("GENERATING BUY MAP");
+                            // genera la mappa
                             generateSvg(scope.o.film.seats, scope.o.film, scope.o.selected_seats, false);
                         }
 
                     }, true);
 
-                    // gestione della mappa per i posti occupati di una sala e i posti migliori
+                    // gestione della mappa per i posti totali occupati di una sala, i posti migliori e la modifica della sala
                     scope.$watch('o.mapTheatre', function (map) {
 
                         // scope.o.mapTheatre: mappa (matrice) di una sala

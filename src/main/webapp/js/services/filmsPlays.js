@@ -18,8 +18,10 @@
         return map;
     };
 
+    /* modulo per la comunicazione con il server dei dati relativi alle proiezioni e ai films */
     angular.module('filmsPlaysModule', ['constantsModule', 'ngResource'])
 
+        /* metodi http per la gestione dei film */
         .factory('Films', ['BASE', '$resource', function (BASE, $resource) {
             return $resource(BASE + '/films/:id', {id: '@id'}, {
                 update: {
@@ -28,6 +30,7 @@
             });
         }])
 
+        /* metodi http per la gestione delle proiezioni */
         .factory('Plays', ['BASE', '$resource', function (BASE, $resource) {
             return  $resource(BASE + '/plays/:id', {id: '@id'}, {
                 update: {
@@ -39,10 +42,16 @@
         .factory('CompletePlays', ['Films', 'Plays', '$q', '$log', '$filter', function (Films, Plays, $q, $log, $filter) {
             return {
 
+                /* recupera la lista delle proiezioni disponibili sul server
+                 * raggruppandole per data
+                 */
                 playsByDate: function () {
                     var deferred = $q.defer();
 
+                    // richiesta sincrona di film e proiezioni
                     $q.all([Films.query().$promise, Plays.query().$promise]).then(
+
+                        // raggruppamento dati proiezioni e film
                         function (results) {
 
                             // map films: fid -> film
@@ -57,6 +66,7 @@
 
                             var array = [];
 
+                            // group by date
                             var perDate = withDate.toArrayMap("date");
                             for (var key in perDate) {
                                 if (perDate.hasOwnProperty(key)) {
@@ -64,6 +74,7 @@
                                 }
                             }
 
+                            // populate the array
                             array.forEach(function (current) {
                                 var map = current.films.toArrayMap('fid');
                                 current.films = [];
@@ -74,7 +85,6 @@
                                         o.plays.map(function (t) {
                                             delete t.fid;
                                             delete t.date;
-                                            //t.time = $filter('date')(t.time, 'HH:mm');
                                             return t;
                                         });
                                         o.date = current.date;
@@ -107,7 +117,6 @@
 
                     return deferred.promise;
                 }
-
             }
         }]);
 
