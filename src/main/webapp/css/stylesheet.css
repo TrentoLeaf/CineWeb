@@ -146,7 +146,8 @@ main .content-div {
     margin-bottom: 4em; }
     main .content-div .play .play-playbill {
       width: 100%;
-      height: auto; }
+      height: auto;
+      top: -100px; }
     main .content-div .play .play-playbill-container {
       overflow: hidden;
       height: 264px; }
