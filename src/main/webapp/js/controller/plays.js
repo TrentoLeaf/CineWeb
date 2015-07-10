@@ -39,6 +39,12 @@
                 console.log("DROPDOWN INIZIALIZZATI");
             });
 
+            // init tooltip per il suggerimento di acquisto (direttiva che emette l'event alla fine del file)
+            $scope.$on('tooltipRepeatEnd', function(scope, element, attrs){
+                $('.tooltipped').tooltip({delay: 50});
+                console.log("TOOLTIP INIZIALIZZATI");
+            });
+
             this.log = function () {
                 console.log("pllog");
             };

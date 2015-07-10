@@ -209,6 +209,16 @@ $(document).ready(function () {
             };
         })
 
+        // direttiva per inizializzare i tooltip
+        .directive('onTooltipRepeat', function () {
+            return function (scope, element, attrs) {
+                if (scope.$last) {
+                    console.log("TOOLTIP EMIT");
+                    scope.$emit('tooltipRepeatEnd', element, attrs);
+                }
+            };
+        })
+
 
         .run(['$rootScope', '$location', '$anchorScroll', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, $anchorScroll, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
 

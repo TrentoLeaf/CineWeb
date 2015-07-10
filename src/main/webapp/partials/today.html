@@ -10,7 +10,7 @@
             <div class="col s12 m11 l12">
                 <div ng-repeat="film in date.films track by $index">
                     <li class="col s12 offset-m1 m5 offset-l1 play" ng-class="{'l5' : ($index%2) == ctrl.alternate, 'l4' : ($index%2) != ctrl.alternate}">
-                       <!-- alternate in each row the l5/l4 class of a card -->
+                        <!-- alternate in each row the l5/l4 class of a card -->
                         {{($index%2)==0 ? ctrl.alternate = (!(ctrl.alternate)) : true;""}}
                         <div class="card grey darken-3">
                             <div class="card-image play-playbill-container">
@@ -20,7 +20,7 @@
                                 <span class="card-title yellow-text text-accent-4 truncate">{{film.title}}</span>
                                 <div class="card-times">
                                     <div class="col s12 m12 l12 center-align">
-                                        <span class="btn-flat grey darken-4 yellow-text text-accent-4 time-badge" ng-repeat="play in film.plays">{{play.time | date: 'HH:mm'}}</span>
+                                        <span class="btn-flat grey darken-4 yellow-text text-accent-4 time-badge tooltipped" data-position="top" data-tooltip="Clicca per acquistare" ng-repeat="play in film.plays track by $index" ng-click="cc.addToCart(film, $index)" on-tooltip-repeat>{{play.time | date: 'HH:mm'}}</span>
                                     </div>
                                 </div>
                                 <h6 class="yellow-text text-accent-4 right-align">{{date.date | date:'dd/MM/yyyy'}}</h6>
@@ -37,6 +37,7 @@
             </div>
         </ul>
     </div>
+
 
     <!-- Finestrella dei dettagli e acquista -->
     <div id="modal" class="modal grey-text text-darken-4">
