@@ -7,9 +7,11 @@
         </div>
 
         <ul class="row">
-            <div class="col s12 offset-m1 m10 l11">
+            <div class="col s12 offset-m1 m10 l12">
                 <div ng-repeat="film in date.films track by $index" on-tooltip-repeat>
-                    <li class="col s12 m5 offset-l1 l3 play">
+                    <li class="col s12 offset-l1 play" ng-class="{'l6 m7' : ($index%2) == ctrl.alternate, 'l3 m5' : ($index%2) != ctrl.alternate}">
+                        <!-- alternate in each row the l5/l4 class of a card -->
+                        {{($index%2)==0 ? ctrl.alternate = !(ctrl.alternate) : ctrl.alternate = ctrl.alternate;""}}
                         <div class="card grey darken-3">
                             <div class="card-image play-playbill-container">
                                 <img class="responsive-img play-playbill" ng-src="{{film.playbill}}" alt="Locandina">
