@@ -1,0 +1,8 @@
+Gentile {{nome}},
+
+In allegato i biglietti del cinema che ha acquistato sul sito di CineWeb.
+
+Le ricordiamo che il nostro team è a sua disposizione per qualsiasi dubbio o necessità.
+
+Cordiali Saluti,
+Il team di CineWeb
