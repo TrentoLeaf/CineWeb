@@ -55,42 +55,6 @@ public class EmailSender {
     }
 
     // send an email to confirm the registration
-    public void test() throws SendGridException {
-
-        // load images to put in the PDF
-        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("email/registration.html");
-
-        StringWriter writer = new StringWriter();
-        try {
-            IOUtils.copy(is, writer, "UTF-8");
-        } catch (IOException e) {
-
-        }
-        String theString = writer.toString();
-        theString = theString.replace("{{BASE_URL}}", "https://cineweb.herokuapp.com");
-
-
-        // create email
-        SendGrid.Email email = new SendGrid.Email();
-        email.setFrom(FROM);
-        email.addTo("davide.pedranz@gmail.com");
-        email.setSubject(WE + " - Conferma registrazione");
-        email.setHtml(theString);
-
-        // try to send, log failures
-        try {
-            SendGrid.Response response = sendgrid.send(email);
-
-            sendgrid.send(email);
-
-        } catch (SendGridException e) {
-            logger.severe(e.toString());
-            throw e;
-        }
-    }
-
-    // send an email to confirm the registration
     public SendGrid.Response sendRegistrationEmail(URI uri, User user, String verificationCode) throws SendGridException {
 
         // create url
@@ -105,7 +69,7 @@ public class EmailSender {
         try {
             IOUtils.copy(is, writer, Charset.forName("UTF-8"));
         } catch (IOException e) {
-
+            throw new SendGridException(e);
         }
 
         // modify the html mail
@@ -127,15 +91,8 @@ public class EmailSender {
                 "Per completare la Sua iscrizione clicchi su questo link: " + url + "\n");
         email.setHtml(theString);
 
-        // try to send, log failures
-        SendGrid.Response response;
-        try {
-            response = sendgrid.send(email);
-        } catch (SendGridException e) {
-            logger.severe(e.toString());
-            throw e;
-        }
-        return response;
+        // send the email
+        return sendgrid.send(email);
     }
 
     // send a password recover
@@ -153,7 +110,7 @@ public class EmailSender {
         try {
             IOUtils.copy(is, writer, Charset.forName("UTF-8"));
         } catch (IOException e) {
-
+            throw new SendGridException(e);
         }
 
         // modify the html mail
@@ -173,19 +130,12 @@ public class EmailSender {
                 "Per completare questa operazione clicchi sul seguente link: " + url + "\n");
         email.setHtml(theString);
 
-        // try to send, log failures
-        SendGrid.Response response;
-        try {
-            response = sendgrid.send(email);
-        } catch (SendGridException e) {
-            logger.severe(e.toString());
-            throw e;
-        }
-        return response;
+        // send the email
+        return sendgrid.send(email);
     }
 
     //send a pdf with the ticket
-    public SendGrid.Response sendTicketPDFEmail(URI uri, User user, List<FilmTicketData> data) throws SendGridException, IOException, DocumentException {
+    public SendGrid.Response sendTicketPDFEmail(URI uri, User user, List<FilmTicketData> data) throws SendGridException, DocumentException {
 
         // url logo
         final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
@@ -217,7 +167,7 @@ public class EmailSender {
 
         } catch (DocumentException | IOException e) {
             logger.severe(e.toString());
-            throw e;
+            throw new DocumentException(e);
         }
 
         // get the html mail
@@ -228,7 +178,7 @@ public class EmailSender {
         try {
             IOUtils.copy(is, writer, Charset.forName("UTF-8"));
         } catch (IOException e) {
-
+            throw new SendGridException(e);
         }
 
         // get the html snippet for tickets summary
@@ -238,9 +188,8 @@ public class EmailSender {
         try {
             IOUtils.copy(isSummary, writerSummary, Charset.forName("UTF-8"));
         } catch (IOException e) {
-
+            throw new SendGridException(e);
         }
-
 
         // modify the html mail
         String theString = writer.toString();
@@ -260,10 +209,9 @@ public class EmailSender {
             tmpSummaryString = tmpSummaryString.replace("{{posto}}", d.getSeat());
             tmpSummaryString = tmpSummaryString.replace("{{tipo}}", d.getType());
 
-            theString = theString.replace("{{riepilogo}}", tmpSummaryString+"{{riepilogo}}");
+            theString = theString.replace("{{riepilogo}}", tmpSummaryString + "{{riepilogo}}");
         }
         theString = theString.replace("{{riepilogo}}", "");
-
 
         // add the content to email
         email.setText("Gentile " + user.getFirstName() + ",\n" +
@@ -272,14 +220,8 @@ public class EmailSender {
                 "Cordiali Saluti. Cineweb.");
         email.setHtml(theString);
 
-        // try to send, log failures
-        SendGrid.Response response;
-        try {
-            response = sendgrid.send(email);
-        } catch (SendGridException e) {
-            logger.severe(e.toString());
-            throw e;
-        }
-        return response;
+        // send the email
+        return sendgrid.send(email);
     }
+
 }

@@ -226,7 +226,7 @@ public class RestBuy {
 
         } catch (UserNotFoundException | PlayGoneException | EntryNotFoundException | DBException e) {
             error = true;
-        } catch (SendGridException | DocumentException | IOException e) {
+        } catch (SendGridException | DocumentException e) {
             // TODO!
         }
 
