@@ -54,7 +54,7 @@
 
                     // processamento sincrono delle richieste
                     $q.all([ff, pp]).then(
-                        
+
                         // raggruppamento dati proiezioni e film
                         function (results) {
 
