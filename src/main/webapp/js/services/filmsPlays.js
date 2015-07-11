@@ -29,27 +29,30 @@
         }])
 
         .factory('Plays', ['BASE', '$resource', function (BASE, $resource) {
-            return  $resource(BASE + '/plays/:id', {id: '@id'}, {
+            return $resource(BASE + '/plays/:id', {id: '@id'}, {
                 update: {
                     method: 'PUT'
                 }
             });
         }])
 
-        .factory('CompletePlays', ['Films', 'Plays', '$q', '$log', '$filter', function (Films, Plays, $q, $log, $filter) {
+        .factory('CompletePlays', ['BASE', 'Films', '$http', '$q', function (BASE, Films, $http, $q) {
             return {
 
                 playsByDate: function () {
                     var deferred = $q.defer();
 
-                    $q.all([Films.query().$promise, Plays.query().$promise]).then(
+                    var ff = Films.query().$promise,
+                        pp = $http.get(BASE + "/plays/future");
+
+                    $q.all([ff, pp]).then(
                         function (results) {
 
                             // map films: fid -> film
                             var filmsObj = results[0].toMap("fid");
 
                             // add films and date to play
-                            var withDate = results[1].map(function (obj) {
+                            var withDate = results[1].data.map(function (obj) {
                                 obj.date = obj.time.split("T")[0];
                                 //obj.film = filmsObj[obj.fid];
                                 return obj;
@@ -84,7 +87,7 @@
                             });
 
                             // comparison by date function
-                            function compare(a,b) {
+                            function compare(a, b) {
                                 var dateA = new Date(a.date);
                                 var dateB = new Date(b.date);
 
