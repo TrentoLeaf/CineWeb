@@ -120,7 +120,7 @@ public class PlaysDB {
     }
 
     // get a list of not gone plays
-    public List<Play> getNotGonePlays() throws DBException {
+    public List<Play> getFuturePlays() throws DBException {
         final List<Play> plays = new ArrayList<>();
 
         final String query = "WITH all_seats AS (SELECT pid, rid, x, y FROM plays NATURAL JOIN seats EXCEPT " +

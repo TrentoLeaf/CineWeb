@@ -42,14 +42,14 @@
                 playsByDate: function () {
                     var deferred = $q.defer();
 
-                    var ff = Films.query().$promise,
+                    var ff = $http.get(BASE + "/films/future"),
                         pp = $http.get(BASE + "/plays/future");
 
                     $q.all([ff, pp]).then(
                         function (results) {
 
                             // map films: fid -> film
-                            var filmsObj = results[0].toMap("fid");
+                            var filmsObj = results[0].data.toMap("fid");
 
                             // add films and date to play
                             var withDate = results[1].data.map(function (obj) {

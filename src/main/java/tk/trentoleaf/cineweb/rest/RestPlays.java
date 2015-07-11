@@ -39,7 +39,7 @@ public class RestPlays {
     @Path("/future")
     @Compress
     public List<Play> getNotGonePlays() {
-        return playsDB.getNotGonePlays();
+        return playsDB.getFuturePlays();
     }
 
     @GET
