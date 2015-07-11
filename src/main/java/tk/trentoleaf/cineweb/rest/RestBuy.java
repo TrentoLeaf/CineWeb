@@ -3,11 +3,17 @@ package tk.trentoleaf.cineweb.rest;
 import com.itextpdf.text.DocumentException;
 import com.sendgrid.SendGridException;
 import tk.trentoleaf.cineweb.annotations.rest.UserArea;
-import tk.trentoleaf.cineweb.beans.model.*;
+import tk.trentoleaf.cineweb.beans.model.Play;
+import tk.trentoleaf.cineweb.beans.model.Price;
+import tk.trentoleaf.cineweb.beans.model.Ticket;
+import tk.trentoleaf.cineweb.beans.model.User;
 import tk.trentoleaf.cineweb.beans.rest.in.*;
 import tk.trentoleaf.cineweb.db.*;
 import tk.trentoleaf.cineweb.email.EmailSender;
-import tk.trentoleaf.cineweb.exceptions.db.*;
+import tk.trentoleaf.cineweb.exceptions.db.DBException;
+import tk.trentoleaf.cineweb.exceptions.db.EntryNotFoundException;
+import tk.trentoleaf.cineweb.exceptions.db.PlayGoneException;
+import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.rest.BadRequestException;
 import tk.trentoleaf.cineweb.pdf.FilmTicketData;
 import tk.trentoleaf.cineweb.utils.Utils;
@@ -21,19 +27,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Buy procedure end point.
+ * Buy procedure end point. 2 APIs are available.
+ * The first one allows to check the cart for old plays or missing seats.
+ * The second one allows to buy the tickets.
  */
 @Path("/buy")
 public class RestBuy {
-
-//    private static final int PLAYS_PROBLEMS = 1;
-//    private static final int WRONG_CREDITCARD = 2;
 
     // DB singleton
     private UsersDB usersDB = UsersDB.instance();
@@ -214,20 +218,21 @@ public class RestBuy {
             User user = usersDB.getUser(uid);
 
             // create tickets data
-            List<FilmTicketData> datas = new ArrayList<>();
+            List<FilmTicketData> data = new ArrayList<>();
             for (Ticket t : tickets) {
                 Play play = playsDB.getPlay(t.getPid());
-                datas.add(new FilmTicketData(t.getTid(), user.getEmail(), filmsDB.getFilm(play.getFid()).getTitle(),
+                data.add(new FilmTicketData(t.getTid(), user.getEmail(), filmsDB.getFilm(play.getFid()).getTitle(),
                         t.getRid(), t.getX(), t.getY(), play.getTime(), t.getType(), t.getPrice()));
             }
 
             // send the email
-            EmailSender.instance().sendTicketPDFEmail(uriInfo.getRequestUri(), user, datas);
+            EmailSender.instance().sendTicketPDFEmail(uriInfo.getRequestUri(), user, data);
 
-        } catch (UserNotFoundException | PlayGoneException | EntryNotFoundException | DBException e) {
+        } catch (UserNotFoundException | PlayGoneException | EntryNotFoundException |
+                DBException | SendGridException | DocumentException e) {
+
+            // something went wrong -> cancel the purchase
             error = true;
-        } catch (SendGridException | DocumentException | IOException e) {
-            // TODO!
         }
 
         // if any error -> return the updated cart

@@ -39,7 +39,6 @@ public class PlaysDB {
     // create play
     public void createPlay(Play play) throws DBException, AnotherFilmScheduledException {
 
-        // TODO: transaction
         boolean another = isAlreadyPlay(play.getRid(), play.getTime());
         if (another) {
             throw new AnotherFilmScheduledException();

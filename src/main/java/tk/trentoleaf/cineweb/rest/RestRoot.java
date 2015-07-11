@@ -126,7 +126,7 @@ public class RestRoot {
             PricesDB.instance().loadDefaultPrices();
 
             // load example data
-            ExampleData.instance().loadExampleData(x);
+            ExampleData.loadExampleData(x);
 
             return Response.ok().build();
 
@@ -134,7 +134,6 @@ public class RestRoot {
             e.printStackTrace();
 
             return Response.status(500).build();
-
 
 
         }
