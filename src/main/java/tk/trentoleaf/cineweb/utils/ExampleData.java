@@ -139,20 +139,24 @@ public final class ExampleData {
 
         createPlay(x);
 
-        //createTicketsForR1();
-        final List<Ticket> tickets = new ArrayList<>();
         final Ticket t1 = new Ticket(playsDB.getPlays().get(1), 1, 2, 8.5, "normale");
-        final Ticket t2 = new Ticket(playsDB.getPlays().get(1), 1, 3, 6.0, "ridotto");
-        final Ticket t3 = new Ticket(playsDB.getPlays().get(1), 1, 4, 8.5, "normale");
+        final Ticket t2 = new Ticket(playsDB.getPlays().get(4), 1, 3, 6.0, "ridotto");
+        final Ticket t3 = new Ticket(playsDB.getPlays().get(8), 1, 4, 8.5, "normale");
+
         // create a booking for Davide
-        bookingsDB.createBooking(a1, tickets);
+        bookingsDB.createBooking(a1, Arrays.asList(t1, t2, t3));
+
 
         final Ticket t4 = new Ticket(playsDB.getPlays().get(1), 4, 10, 8.5, "normale");
         // create a booking for Teo
-        bookingsDB.createBooking(a2, tickets);
+        bookingsDB.createBooking(a2, Arrays.asList(t4));
+
+        final List<Ticket> tickets = new ArrayList<>();
+
         final Ticket t5 = new Ticket(playsDB.getPlays().get(1), 5, 6, 8.5, "normale");
         // create a booking for Willi
-        bookingsDB.createBooking(a3, tickets);
+        bookingsDB.createBooking(a3, Arrays.asList(t5));
+
         final Ticket t6 = new Ticket(playsDB.getPlays().get(1), 6, 4, 8.5, "normale");
         // create a booking for Andrea
         bookingsDB.createBooking(a4, tickets);

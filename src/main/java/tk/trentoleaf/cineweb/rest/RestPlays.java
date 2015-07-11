@@ -62,7 +62,7 @@ public class RestPlays {
             return play;
         } catch (ForeignKeyException e) {
             throw new BadRequestException("Fid or rid not found");
-        } catch (AnotherFilmScheduledException e1) {
+        } catch (AnotherFilmScheduledException e) {
             throw new ConflictException("Another film already scheduled");
         }
     }
