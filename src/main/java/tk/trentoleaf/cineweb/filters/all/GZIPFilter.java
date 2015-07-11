@@ -14,9 +14,11 @@ import javax.servlet.http.*;
 @WebFilter(urlPatterns = {"", "*.html", "*.css", "*.js", "*.svg", "*.eot", "*.ttf"})
 public class GZIPFilter implements Filter {
 
+    @Override
     public void init(FilterConfig filterConfig) {
     }
 
+    @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         // get request and response
@@ -43,6 +45,7 @@ public class GZIPFilter implements Filter {
         chain.doFilter(req, res);
     }
 
+    @Override
     public void destroy() {
     }
 }

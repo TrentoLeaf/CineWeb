@@ -64,4 +64,18 @@ public class Utils {
         }
     }
 
+    /**
+     * Converts a number [0, n) to the corresponding letter:
+     * <ul>
+     * <li>0 -> A</li>
+     * <li>1 -> B</li>
+     * <li>...</li>
+     * </ul>
+     *
+     * @param number Number to convert.
+     * @return The corresponding letter.
+     */
+    public static String getCharForNumber(int number) {
+        return number > -1 && number < 26 ? String.valueOf((char) (number + 65)) : null;
+    }
 }
