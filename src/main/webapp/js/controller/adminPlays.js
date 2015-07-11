@@ -1,7 +1,9 @@
 (function () {
     'use strict';
 
+    /* modulo per la gestione delle proiezioni (admin) */
     angular.module('adminPlays', ['filmsPlaysModule'])
+        /* controller per un a nuova proiezione */
         .controller ('AdminNewPlaysController', ['Films', '$rootScope', '$scope', '$location', 'Plays', function (Films, $rootScope, $scope, $location, Plays) {
 
         var ctrl = this;
@@ -14,6 +16,7 @@
         this.date = "";
         this.time = "21:00"; // NB: tiene conto solo dell'orario
 
+        // carica tutti i film disponibili
         this.loadFilms = function () {
 
             Films.query(function (data) {
@@ -25,6 +28,7 @@
             });
         };
 
+        // invia richiesta nuova proiezione
         this.addPlay = function (data) {
 
             console.log("data: " + ctrl.date);
@@ -62,10 +66,10 @@
             });
         };
 
+        // aggiorna proiezioni esistenti
         this.updatePlays = function () {
             $rootScope.loadPlaysByDate();
         };
-
 
         // init select (direttiva che emette l'event alla fine del file)
         $scope.$on('selectRepeatEnd', function(scope, element, attrs){
@@ -75,11 +79,13 @@
             },50);
         });
 
+        // imposta un messaggio
         this.setStatus = function (status) {
             ctrl.setStatusClass();
             ctrl.status = status;
         };
 
+        // imposta il tipo di messaggio
         this.setStatusClass = function () {
             if(ctrl.error_message) {
                 $('#plays_message').removeClass("green-text white-text");
@@ -92,8 +98,8 @@
 
         this.loadFilms();
     }])
+        /* controller per la visualizzazione delle proiezioni (admin) */
         .controller('AdminPlaysController', ['$rootScope', '$location', 'Plays', 'Rooms', 'Films', function ($rootScope, $location, Plays, Rooms, Films) {
-
 
             var ctrl = this;
             this.status = "";
@@ -115,6 +121,7 @@
                 ctrl.loadFilms();
             };
 
+            // carica i film disponibili
             this.loadFilms = function () {
 
                 Films.query(function (data) {
@@ -127,6 +134,7 @@
             };
 
 
+            // recupera la sala relativa alla proiezione selezionata
             this.setCurrentPlay = function (indexDate, indexFilm, indexPlay) {
 
                 ctrl.currentPlay = ctrl.playGenerator(indexDate, indexFilm, indexPlay);
@@ -148,6 +156,7 @@
                     });
             };
 
+            // elimina una proiezione
             this.deletePlay = function () {
                 Plays.delete({id: ctrl.currentPlay.pid}).$promise.then(function () {
                     console.log("Play deletion success");
@@ -169,19 +178,18 @@
                 });
             };
 
-            this.updatePlays = function () {
-                $rootScope.loadPlaysByDate();
-            };
-
-
+            // apre modal conferma cancellazione
             this.open_delete_modal = function (indexDate, indexFilm, indexPlay) {
                 ctrl.setCurrentPlay(indexDate, indexFilm, indexPlay);
                 $('#modal_deleteAgree').openModal();
             };
+
+            // chiude modal conferma cancellazione
             this.close_delete_modal = function () {
                 $('#modal_deleteAgree').closeModal();
             };
 
+            // genera un oggetto contenente tutti i dati relativi ad una proiezione a partire dai dati dell'array complesso delle proiezioni
             this.playGenerator = function (indexDate, indexFilm, indexPlay) {
                 var tmpFilm = ctrl.cloneObject($rootScope.playsByDate[indexDate].films[indexFilm]);
                 tmpFilm.pid = tmpFilm.plays[indexPlay].pid;
@@ -193,19 +201,23 @@
                 return tmpFilm;
             };
 
+            // copia un oggetto
             this.cloneObject = function (obj) {
                 return (JSON.parse(JSON.stringify(obj)));
             };
 
+            // aggiorna la lista di proiezioni esistenti
             this.updatePlays = function () {
                 $rootScope.loadPlaysByDate();
             };
 
+            // imposta un messaggio
             this.setStatus = function (status) {
                 ctrl.setStatusClass();
                 ctrl.status = status;
             };
 
+            // imposta il tipo di messaggio
             this.setStatusClass = function () {
                 if(ctrl.error_message) {
                     $('#plays_message').removeClass("green-text white-text");
@@ -213,10 +225,9 @@
                 } else {
                     $('#plays_message').removeClass("red-text white-text");
                     $('#plays_message').addClass("green-text");
-                };
+                }
             };
 
             this.init();
         }]);
-
 })();
