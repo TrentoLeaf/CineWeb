@@ -1,15 +1,16 @@
 (function () {
     'use strict';
 
+    /* modulo per la gestione dei prezzi */
     angular.module('adminPrices', ['pricesModule'])
         .controller('AdminPricesController', ['$location', '$rootScope', 'Prices', function ($location, $rootScope, Prices) {
 
             var ctrl = this;
+            this.error_msg = "";
             this.newPrice = {};
             this.tmpPrice = {};
             this.prices = [];
 
-            console.log(this.newPrice);
 
             var init = function () {
                 if ($rootScope.isUserLogged == false) {
@@ -18,6 +19,7 @@
                 }
             };
 
+            // recupera i prezzi del server
             this.loadPrices = function () {
                 console.log(Prices);
                 Prices.getList().then(function (result) {
@@ -26,7 +28,7 @@
                 });
             };
 
-            // remove a priceClass
+            // elimina una tipologia di prezzo
             this.deletePrice = function () {
 
                 // better BEFORE calling this function
@@ -40,6 +42,7 @@
             };
 
 
+            // aggiunge un nuovo prezzo - tipologia
             this.addPrice = function () {
                 Prices.save(ctrl.newPrice).then(function () {
                     ctrl.newPrice = {};
@@ -49,41 +52,51 @@
                 });
             };
 
-
+            // apre modal conferma eliminazione
             this.open_delete_modal = function (data) {
                 ctrl.tmpPrice = data;
                 $('#modal_price_delete').openModal();
             };
 
+            // chiude modal conferma eliminazione
             this.close_delete_modal = function() {
                 $('#modal_price_delete').closeModal();
             };
 
-            /*
-             * Problema durante la modifica, i valori cambiano anche nella tabella ed è necessario fare un refresh
-             */
+            // apre modal modifica
             this.open_edit_modal = function (data) {
-                ctrl.tmpPrice = data;
-                ctrl.tmpPrice.id =
+                ctrl.tmpPrice = ctrl.cloneObject(data);
                 $('#modal_price_edit').openModal();
             };
 
+            // chiude modal modifica
             this.close_edit_modal = function() {
                 $('#modal_price_edit').closeModal();
             };
 
-
+            // invia richiesta modifica prezzo
             this.editPrice = function (price) {
+
+                ctrl.error_msg = "";
 
                 Prices.update(price).then(function (data) {
                     // ok
+                    ctrl.tmpPrice = {};
                     ctrl.loadPrices();
+                    ctrl.close_edit_modal();
+
                     console.log("UPDATE OK ->");
                     console.log(data);
                 }, function () {
                     // fail...
+                    ctrl.error_msg = "Modifica fallita."
                     console.log("UPDATE fail");
                 });
+            };
+
+            // copia un oggetto
+            this.cloneObject = function (obj) {
+                return (JSON.parse(JSON.stringify(obj)));
             };
 
             init();

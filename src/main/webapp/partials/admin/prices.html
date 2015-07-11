@@ -7,7 +7,8 @@
     </div>
 
     <div class="row center-align">
-        <div class="container"><!--
+        <div class="container">
+            <!--
             <div class="center-align hide-on-large-only">
                 <div class="row">
                     <span class="left-align">T = tipologia</span>
@@ -25,12 +26,12 @@
                 <th class="yellow-text text-accent-4">Modifica</th>
                 <th class="yellow-text text-accent-4">Cancella</th>
                 </thead>
-<!--                <thead class="hide-on-large-only">
-                <th class="yellow-text text-accent-4">T</th>
-                <th class="yellow-text text-accent-4">P</th>
-                <th class="yellow-text text-accent-4">M</th>
-                <th class="yellow-text text-accent-4">C</th>
-                </thead>-->
+                <!--                <thead class="hide-on-large-only">
+                                <th class="yellow-text text-accent-4">T</th>
+                                <th class="yellow-text text-accent-4">P</th>
+                                <th class="yellow-text text-accent-4">M</th>
+                                <th class="yellow-text text-accent-4">C</th>
+                                </thead>-->
                 <tbody>
                 <tr ng-repeat="price in ctrl.prices">
                     <td>{{price.type}}</td>
@@ -114,9 +115,12 @@
                 </div>
             </div>
         </form>
+        <div class="row center-align">
+            <h6 class="red-text">{{ctrl.error_msg}}</h6>
+        </div>
     </div>
     <div class="modal-footer">
         <a ng-click="ctrl.close_edit_modal()" class="modal-action waves-effect waves-red waves-red btn-flat">ANNULLA</a>
-        <a ng-click="ctrl.editPrice(ctrl.tmpPrice); ctrl.close_edit_modal();" class="modal-action waves-effect waves-green btn-flat">MODIFICA</a>
+        <a ng-click="ctrl.editPrice(ctrl.tmpPrice)" class="modal-action waves-effect waves-green btn-flat">MODIFICA</a>
     </div>
 </div>

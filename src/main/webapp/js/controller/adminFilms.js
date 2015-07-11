@@ -1,8 +1,10 @@
 (function () {
     'use strict';
 
+    /* modulo gestione film (admin)*/
     angular.module('adminFilms', ['filmsPlaysModule'])
 
+        /* controller per la modifica di un film */
         .controller('AdminFilmsEditController', ['$routeParams', '$location', 'Films', function($routeParams, $location, Films) {
 
             var ctrl = this;
@@ -10,7 +12,7 @@
             this.status = "";
             this.error_message = false;
 
-
+            // carica il film da modificare
             Films.get({id:$routeParams.fid}).$promise.then(function (data) {
                 ctrl.currentFilm = data;
             }, function () {
@@ -18,6 +20,7 @@
             });
 
 
+            // salva il film modificato nel db
             this.save = function () {
                 Films.update({id: ctrl.currentFilm.fid}, ctrl.currentFilm).$promise.then(function (data) {
                     // ok
@@ -32,11 +35,13 @@
                 });
             };
 
+            // imposta un messaggio
             this.setStatus = function (status) {
                 ctrl.setStatusClass();
                 ctrl.status = status;
             };
 
+            // impost il tipo di messaggio
             this.setStatusClass = function () {
                 if(ctrl.error_message) {
                     $('#film_edit_message').removeClass("green-text white-text");
@@ -48,6 +53,7 @@
             };
 
         }])
+        /* controller per la gestione dei film e la creazone di un nuovo film */
         .controller('AdminFilmsController', ['$rootScope', '$location', 'Films', function ($rootScope, $location, Films) {
 
 
@@ -67,6 +73,7 @@
                 ctrl.films = [];
             };
 
+            // carica i films
             this.loadFilms = function () {
 
                 init();
@@ -81,6 +88,7 @@
                 });
             };
 
+            // aggiunge un nuovo film al db
             this.addFilm = function () {
 
                 ctrl.newFilm.$save( function (data) {
@@ -105,6 +113,7 @@
                 });
             };
 
+            // cancella un film
             this.deleteFilm = function () {
                 Films.delete({id: ctrl.tmpFilm.fid}, function (){
                     console.log("Film deletion success");
@@ -127,22 +136,24 @@
 
             };
 
+            // apre modal conferma eliminazione
             this.open_modal = function (index) {
                 this.tmpFilm = this.films[index];
                 $('#modal_film_delete').openModal();
             };
 
+            // chiude modal conferma eliminazione
             this.close_modal = function () {
                 $('#modal_film_delete').closeModal();
             };
 
-            this.loadFilms();
-
+            // imposta un messaggio
             this.setStatus = function (status) {
                 ctrl.setStatusClass();
                 ctrl.status = status;
             };
 
+            // imposta il tipo di messaggio
             this.setStatusClass = function () {
                 if(ctrl.error_message) {
                     $('#film_message').removeClass("green-text white-text");
@@ -153,6 +164,7 @@
                 }
             };
 
+            this.loadFilms();
         }]);
 
 
