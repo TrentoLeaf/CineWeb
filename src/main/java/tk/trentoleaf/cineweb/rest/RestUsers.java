@@ -16,7 +16,6 @@ import tk.trentoleaf.cineweb.exceptions.db.UniqueViolationException;
 import tk.trentoleaf.cineweb.exceptions.db.UserAlreadyActivatedException;
 import tk.trentoleaf.cineweb.exceptions.db.UserNotFoundException;
 import tk.trentoleaf.cineweb.exceptions.db.WrongCredentialsException;
-import tk.trentoleaf.cineweb.exceptions.rest.AuthFailedException;
 import tk.trentoleaf.cineweb.exceptions.rest.BadRequestException;
 import tk.trentoleaf.cineweb.exceptions.rest.ConflictException;
 import tk.trentoleaf.cineweb.exceptions.rest.NotFoundException;
@@ -92,12 +91,12 @@ public class RestUsers {
             // login failed
             else {
                 invalidateSession();
-                throw new AuthFailedException();
+                throw NotFoundException.wrongCredentials();
             }
 
         } catch (UserNotFoundException e) {
             invalidateSession();
-            throw new AuthFailedException();
+            throw NotFoundException.wrongCredentials();
         }
     }
 
@@ -122,7 +121,7 @@ public class RestUsers {
             usersDB.changePasswordWithOldPassword(change.getEmail(), change.getOldPassword(), change.getNewPassword());
             return Response.ok().build();
         } catch (WrongCredentialsException e) {
-            throw new AuthFailedException();
+            throw NotFoundException.wrongCredentials();
         }
     }
 
@@ -150,7 +149,7 @@ public class RestUsers {
             }
 
         } catch (UniqueViolationException e) {
-            throw ConflictException.EMAIL_IN_USE;
+            throw ConflictException.emailInUse();
         }
 
         return Response.ok().build();
@@ -165,7 +164,7 @@ public class RestUsers {
             usersDB.confirmUser(confirmCode.getCode());
             return new ActivateUser(0, "User activated");
         } catch (UserNotFoundException e) {
-            throw NotFoundException.GENERIC;
+            throw new NotFoundException();
         } catch (UserAlreadyActivatedException e) {
             return new ActivateUser(1, "User already activated");
         }
@@ -198,7 +197,7 @@ public class RestUsers {
             return Response.ok().build();
 
         } catch (UserNotFoundException e) {
-            throw NotFoundException.USER_NOT_FOUND;
+            throw new NotFoundException();
         }
     }
 
@@ -211,7 +210,7 @@ public class RestUsers {
             usersDB.changePasswordWithCode(change.getEmail(), change.getCode(), change.getNewPassword());
             return Response.ok().build();
         } catch (WrongCredentialsException e) {
-            throw new AuthFailedException();
+            throw NotFoundException.wrongCredentials();
         }
     }
 
@@ -233,7 +232,7 @@ public class RestUsers {
             final User current = usersDB.getUser(uid);
             return new UserDetails(current);
         } catch (UserNotFoundException e) {
-            throw NotFoundException.USER_NOT_FOUND;
+            throw new NotFoundException();
         }
     }
 
@@ -251,7 +250,7 @@ public class RestUsers {
         try {
             return usersDB.getUser(uid);
         } catch (UserNotFoundException e) {
-            throw NotFoundException.USER_NOT_FOUND;
+            throw new NotFoundException();
         }
     }
 
@@ -278,7 +277,7 @@ public class RestUsers {
             user.removePassword();
             return user;
         } catch (UniqueViolationException e) {
-            throw ConflictException.EMAIL_IN_USE;
+            throw ConflictException.emailInUse();
         }
     }
 
@@ -293,9 +292,9 @@ public class RestUsers {
             usersDB.updateUser(user);
             return user;
         } catch (UniqueViolationException e) {
-            throw ConflictException.EMAIL_IN_USE;
+            throw ConflictException.emailInUse();
         } catch (UserNotFoundException ex) {
-            throw NotFoundException.USER_NOT_FOUND;
+            throw new NotFoundException();
         }
     }
 
@@ -307,7 +306,7 @@ public class RestUsers {
             usersDB.deleteUser(id);
             return Response.ok().build();
         } catch (UserNotFoundException e) {
-            throw NotFoundException.USER_NOT_FOUND;
+            throw new NotFoundException();
         }
     }
 

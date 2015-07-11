@@ -46,7 +46,7 @@ public class RestFilms {
         try {
             return filmsDB.getFilm(fid);
         } catch (EntryNotFoundException e) {
-            throw NotFoundException.FILM_NOT_FOUND;
+            throw new NotFoundException();
         }
     }
 
@@ -79,7 +79,7 @@ public class RestFilms {
             filmsDB.updateFilm(film);
             return film;
         } catch (EntryNotFoundException e) {
-            throw NotFoundException.FILM_NOT_FOUND;
+            throw new NotFoundException();
         }
     }
 
@@ -93,7 +93,7 @@ public class RestFilms {
             filmsDB.deleteFilm(id);
             return Response.ok().build();
         } catch (EntryNotFoundException e) {
-            throw NotFoundException.FILM_NOT_FOUND;
+            throw new NotFoundException();
         } catch (ForeignKeyException e) {
             throw new ConflictException("Cannot delete this films because of existing plays");
         }

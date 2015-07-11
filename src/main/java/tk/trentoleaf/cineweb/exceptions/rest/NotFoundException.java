@@ -1,13 +1,33 @@
 package tk.trentoleaf.cineweb.exceptions.rest;
 
+/**
+ * Exception that represent a REST error "Not found".
+ */
 public class NotFoundException extends RestException {
 
-    public static final NotFoundException GENERIC = new NotFoundException("Not found");
-    public static final NotFoundException USER_NOT_FOUND = new NotFoundException("User not found");
-    public static final NotFoundException FILM_NOT_FOUND = new NotFoundException("Film not found");
-    public static final NotFoundException PLAY_NOT_FOUND = new NotFoundException("Play not found");
+    /**
+     * Construct a new NotFoundException with the default error message.
+     */
+    public NotFoundException() {
+        super("Entity not found");
+    }
 
+    /**
+     * Construct a new NotFoundException with a custom error message.
+     *
+     * @param message custom error message
+     */
     public NotFoundException(String message) {
         super(message);
     }
+
+    /**
+     * Factory to build a wrong credentials exception.
+     *
+     * @return NotFoundException with the right error message
+     */
+    public static NotFoundException wrongCredentials() {
+        return new NotFoundException("Wrong email or password");
+    }
+
 }
