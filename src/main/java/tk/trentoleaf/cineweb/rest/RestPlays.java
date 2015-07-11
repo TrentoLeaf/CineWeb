@@ -36,6 +36,13 @@ public class RestPlays {
     }
 
     @GET
+    @Path("/future")
+    @Compress
+    public List<Play> getNotGonePlays() {
+        return playsDB.getFuturePlays();
+    }
+
+    @GET
     @Path("/{id}")
     public Play getPlay(@PathParam("id") int id) {
         try {

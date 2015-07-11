@@ -34,6 +34,13 @@ public class RestFilms {
     }
 
     @GET
+    @Path("/future")
+    @Compress
+    public List<Film> getFutureFilms() {
+        return filmsDB.getFutureFilms();
+    }
+
+    @GET
     @Path("/{id}")
     public Film getFilm(@PathParam("id") int fid) {
         try {

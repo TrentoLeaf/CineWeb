@@ -32,14 +32,14 @@
 
         /* metodi http per la gestione delle proiezioni */
         .factory('Plays', ['BASE', '$resource', function (BASE, $resource) {
-            return  $resource(BASE + '/plays/:id', {id: '@id'}, {
+            return $resource(BASE + '/plays/:id', {id: '@id'}, {
                 update: {
                     method: 'PUT'
                 }
             });
         }])
 
-        .factory('CompletePlays', ['Films', 'Plays', '$q', '$log', '$filter', function (Films, Plays, $q, $log, $filter) {
+        .factory('CompletePlays', ['BASE', 'Films', '$http', '$q', function (BASE, Films, $http, $q) {
             return {
 
                 /* recupera la lista delle proiezioni disponibili sul server
@@ -48,17 +48,21 @@
                 playsByDate: function () {
                     var deferred = $q.defer();
 
-                    // richiesta sincrona di film e proiezioni
-                    $q.all([Films.query().$promise, Plays.query().$promise]).then(
+                    // richiesta dettagli film e proiezioni
+                    var ff = $http.get(BASE + "/films/future"),
+                        pp = $http.get(BASE + "/plays/future");
 
+                    // processamento sincrono delle richieste
+                    $q.all([ff, pp]).then(
+                        
                         // raggruppamento dati proiezioni e film
                         function (results) {
 
                             // map films: fid -> film
-                            var filmsObj = results[0].toMap("fid");
+                            var filmsObj = results[0].data.toMap("fid");
 
                             // add films and date to play
-                            var withDate = results[1].map(function (obj) {
+                            var withDate = results[1].data.map(function (obj) {
                                 obj.date = obj.time.split("T")[0];
                                 //obj.film = filmsObj[obj.fid];
                                 return obj;
@@ -94,7 +98,7 @@
                             });
 
                             // comparison by date function
-                            function compare(a,b) {
+                            function compare(a, b) {
                                 var dateA = new Date(a.date);
                                 var dateB = new Date(b.date);
 
