@@ -54,7 +54,6 @@
 
                     // processamento sincrono delle richieste
                     $q.all([ff, pp]).then(
-
                         // raggruppamento dati proiezioni e film
                         function (results) {
 
@@ -78,6 +77,19 @@
                                 }
                             }
 
+                            // function to compare 2 plays
+                            function comparePlays(a, b) {
+                                var timeA = new Date(a.time),
+                                    timeB = new Date(b.time);
+
+                                if (timeA < timeB) {
+                                    return -1;
+                                } else if (timeA > timeB) {
+                                    return 1;
+                                }
+                                return 0;
+                            }
+
                             // populate the array
                             array.forEach(function (current) {
                                 var map = current.films.toArrayMap('fid');
@@ -91,6 +103,7 @@
                                             delete t.date;
                                             return t;
                                         });
+                                        o.plays.sort(comparePlays);
                                         o.date = current.date;
                                         current.films.push(o);
                                     }
