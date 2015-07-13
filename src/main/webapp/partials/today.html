@@ -16,13 +16,13 @@
                                 <img class="responsive-img play-playbill" ng-src="{{film.playbill}}" alt="Locandina">
                             </div>
                             <div class="card-content yellow-text text-accent-4">
-                                <span class="card-title yellow-text text-accent-4 truncate">{{film.title}}</span>
+                                <span class="card-title yellow-text text-accent-4 truncate center-align">{{film.title}}</span>
                                 <div class="card-times">
                                     <div class="col s12 m12 l12 center-align">
                                         <span class="btn-flat grey darken-4 yellow-text text-accent-4 time-badge tooltipped" data-position="top" data-tooltip="Clicca per acquistare" ng-repeat="play in film.plays track by $index" ng-click="cc.addToCart(film, $index)">{{play.time | date: 'HH:mm'}}</span>
                                     </div>
                                 </div>
-                                <h6 class="yellow-text text-accent-4 right-align">{{date.date | date:'dd/MM/yyyy'}}</h6>
+                                <h6 class="yellow-text text-accent-4 center-align">{{date.date | date:'dd/MM/yyyy'}}</h6>
                             </div>
                             <div class="card-action center-align">
                                 <a ng-click="ctrl.setCurrent($parent.$index, $index)" data-target="modal"
