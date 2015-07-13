@@ -204,7 +204,9 @@
                 } else {
                     if (modificabile) { // creazione di una nuova sala
 
-                        poltrona_svg.attr({cursor:"url(../img/hammer.png), default"});
+                        // set the delete cursor
+                        poltrona_svg.attr({cursor:"url(../img/cursors/hammer.png), default"});
+                        setHammerCursorsHandlers(poltrona_svg);
 
                         // set click handler
                         poltrona_svg.click(function () {
@@ -219,6 +221,8 @@
                                 cancelFromList(el,posti_selezionati);
 
                                 this.removeClass('seat-hidden');
+                                // set the delete cursor
+                                poltrona_svg.attr({cursor:"url(../img/cursors/hammer.png), default"});
                                 console.log("Poltrona visibile");
                             }
                             else {
@@ -227,6 +231,8 @@
                                     col: poltrona_svg.attr('col')
                                 });
                                 this.addClass('seat-hidden');
+                                // set the new seat cursor
+                                poltrona_svg.attr({cursor:"url(../img/cursors/hotseat.png), default"});
                                 console.log("Poltrona nascosta");
                             }
                         });
@@ -238,35 +244,8 @@
                 poltrona_svg.addClass('seat-unavailable');
                 break;
             case  SEAT_BEST:
-                if (modificabile) { // creazione di una nuova sala. Tratto la poltrona gold come una poltrona normale
-                    // set click handler
-                    poltrona_svg.click(function () {
-                        if (this.hasClass('seat-hidden')) {
-
-                            // element to be removed
-                            var el ={
-                                row: poltrona_svg.attr('row'),
-                                col: poltrona_svg.attr('col')
-                            };
-                            // remove from list
-                            cancelFromList(el,posti_selezionati);
-
-                            this.removeClass('seat-hidden');
-                            console.log("Poltrona visibile");
-                        }
-                        else {
-                            posti_selezionati.push({
-                                row: poltrona_svg.attr('row'),
-                                col: poltrona_svg.attr('col')
-                            });
-                            this.addClass('seat-hidden');
-                            console.log("Poltrona nascosta");
-                        }
-                    });
-                } else {
-                    // set color gold
-                    poltrona_svg.addClass('seat-best');
-                }
+                // set color gold
+                poltrona_svg.addClass('seat-best');
                 break;
             case SEAT_NOT_EXIST:
                 if (modificabile) { // modifica di una nuova sala, aggiunta sedia 'invisibile'
@@ -278,7 +257,9 @@
                         col: poltrona_svg.attr('col')
                     });
 
-                    poltrona_svg.attr({cursor:"url(../img/hotseat.png), default"});
+                    // set create new seat cursor
+                    poltrona_svg.attr({cursor:"url(../img/cursors/hotseat.png), default"});
+                    setHammerCursorsHandlers(poltrona_svg);
 
                     console.log("adding: r " + poltrona_svg.attr('row') + " c " + poltrona_svg.attr('col'));
 
@@ -295,6 +276,8 @@
                             cancelFromList(el,posti_selezionati);
 
                             this.removeClass('seat-hidden');
+                            // set the delete cursor
+                            poltrona_svg.attr({cursor:"url(../img/cursors/hammer.png), default"});
 
                             console.log("Poltrona visibile");
                             console.log("rimuovo: r " + poltrona_svg.attr('row') + " c " + poltrona_svg.attr('col'));
@@ -308,6 +291,8 @@
                             });
 
                             this.addClass('seat-hidden');
+                            // set create new seat cursor
+                            poltrona_svg.attr({cursor:"url(../img/cursors/hotseat.png), default"});
 
                             console.log("Poltrona nascosta");
                             console.log("aggiungo: r " + poltrona_svg.attr('row') + " c " + poltrona_svg.attr('col'));
@@ -349,6 +334,24 @@
     /* remove class hovering on a seat */
     function seatHoverOut() {
         this.removeClass('seat-hover');
+    }
+
+    function setHammerCursorsHandlers (poltrona_svg) {
+
+        poltrona_svg.mousedown(function() {
+
+            if (poltrona_svg.attr('cursor').indexOf("hammer") != -1) {
+                // set the hammer down cursor
+                poltrona_svg.attr({cursor:"url(../img/cursors/hammer_down.png), default"});
+            }
+        });
+
+        poltrona_svg.mouseup(function() {
+            if (poltrona_svg.attr('cursor').indexOf("hammer") != -1) {
+                // set the hammer up cursor
+                poltrona_svg.attr({cursor:"url(../img/cursors/hammer.png), default"});
+            }
+        });
     }
 
     // cancella l'elemento el (oggetto righe-colonne) dalla lista di poltrone eliminate/selezionate (list)
