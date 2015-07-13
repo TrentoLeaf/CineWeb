@@ -18,19 +18,15 @@ $(document).ready(function () {
 
 });
 
-/* può tornare utile
- function close_Sidediv() {
- $('.side-div').removeClass('side-div-w');
- $('.side-div').find('.side-nav-element').addClass('ng-hide');
- }*/
-
 (function () {
     'use strict';
 
+    /* modulo principale dell'applicazione con relative dipendenze */
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule', 'roomsModule',
         'registrationModule', 'meModule', 'adminDashboard', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'adminStats', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule', 'buyProcedureModule'])
 
 
+        /* routing e navigazione nelle pagine del sito */
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/', {
                 redirectTo: '/today'
@@ -152,12 +148,10 @@ $(document).ready(function () {
                 templateUrl: '../partials/buy_complete.html',
                 controller: 'BuyCompleteController',
                 controllerAs: 'ctrl'
-            }).when('/test', {
-                templateUrl: '../partials/test.html',
-                controller: 'BuyController',
-                controllerAs: 'ctrl'
             }).when('/error', {
                 templateUrl: '../partials/error.html'
+            }).when('/popcorn', {
+                templateUrl: '../partials/popcorn.html'
             }).otherwise({
                 redirectTo: '/error'
             });
@@ -171,6 +165,7 @@ $(document).ready(function () {
             });
         }])
 
+        // direttiva per la visualizzazione dell'animazione di caricamento
         .directive('loading', function () {
             return {
                 restrict: 'E',
@@ -211,7 +206,17 @@ $(document).ready(function () {
             };
         })
 
+        // direttiva per inizializzare i tooltip
+        .directive('onTooltipRepeat', function () {
+            return function (scope, element, attrs) {
+                if (scope.$last) {
+                    console.log("TOOLTIP EMIT");
+                    scope.$emit('tooltipRepeatEnd', element, attrs);
+                }
+            };
+        })
 
+        // init all'avvio applicazione
         .run(['$rootScope', '$location', '$anchorScroll', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, $anchorScroll, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
 
             // redirect only if needed
@@ -221,6 +226,7 @@ $(document).ready(function () {
                 }
             };
 
+            // routing manipulation
             $rootScope.$on('$routeChangeStart', function (event, next) {
 
                 // check for a c parameter
@@ -241,13 +247,13 @@ $(document).ready(function () {
             });
 
 
-            /* set listener for route change auto sroll to up*/
+            /* set listener for route change auto sroll to up */
             $rootScope.$on("$routeChangeSuccess", function(){
                 $anchorScroll();
             });
 
             /* init of login data */
-            $rootScope.user = {};
+            $rootScope.user = {}; // dati untente di base
             $rootScope.isUserLogged = false;
             $rootScope.loginError = "";
             $rootScope.afterLogin = "normal"; // variabile per sapere dove redirigere dopo un login (normal, buy, userArea)
@@ -256,6 +262,7 @@ $(document).ready(function () {
             var retriveLoginData = function () {
                 Auth.me()
                     .success(function (user) {
+                        // user is already logged
                         console.log("THE USER IS ALREADY LOGGED");
                         console.log(user);
 
@@ -263,6 +270,7 @@ $(document).ready(function () {
                         //save basic user data
                         $rootScope.user = user;
                     }).error(function (error) {
+                        // not logged
                         console.log("THE USER IS NOT LOGGED");
 
                         $rootScope.isUserLogged = false;
@@ -273,7 +281,7 @@ $(document).ready(function () {
             retriveLoginData();
 
 
-            /* utils */
+            /* manipulation and trusting (enabling cross-origin resources) of trailers url */
             $rootScope.trustSrcTrailerUrl = function (src) {
                 if (src != undefined) {
                     src = src.replace("watch?v=", "embed/");
@@ -324,8 +332,7 @@ $(document).ready(function () {
             $rootScope.loadPrices();
 
 
-            /* init of plays */
-
+            /* init of plays (retriving plays from server) */
             $rootScope.loadPlaysByDate = function () {
                 CompletePlays.playsByDate().then(
                     function (data) {
@@ -334,7 +341,8 @@ $(document).ready(function () {
                         console.log(data);
                     },
                     function (error) {
-                        // TODO: handle error
+                        $rootScope.playsByDate = [];
+                        $location.path("/error");
                     }
                 );
             };
@@ -354,14 +362,18 @@ $(document).ready(function () {
                 console.log($rootScope.cart);
 
 
-                // ask to server if the cart loaded is valid
+                // ask to server if the cart loaded is valid using 'buyProcedure validation'
                 BuyProcedure.proceed($rootScope.cart)
                     .success(function () {  // tutto ok
-
                     })
-                    .error(function (data) {    // biglietti o spettacoli non più disponibili
-                        // ricarico il carrello fornitomi dal server
-                        $rootScope.cart = data;
+                    .error(function (data, status) {    // biglietti o spettacoli non più disponibili
+                        if (status == 409) {
+                            // ricarico il carrello fornitomi dal server
+                            $rootScope.cart = data;
+                        } else {
+                            // annullo il carrello
+                            $rootScope.cart = [];
+                        }
                     });
 
                 console.log("cart checked: ");
@@ -375,7 +387,7 @@ $(document).ready(function () {
 
             loadCart();
 
-            // when cart is changed, save it and update the total
+            // on cart changes, save it in LocalStorage and update the total
             $rootScope.$watch(function () {
                 return $rootScope.cart;
             }, function (cart) {
@@ -393,13 +405,13 @@ $(document).ready(function () {
 
             /* init buy variables */
 
+            // oggetto per la gestione dei dati di acquisto da scambiare con il server
             $rootScope.buy = {
-                shared_obj: {},
-
+                shared_obj: {}, // mappa sala e posti selezionati da renderizzare
                 data_from_server: [],
                 data_from_server_index: -1,
                 data_to_server: {},
-                complete_error: true
+                complete_error: true // errore alla fine della procedura di acquisto
             };
 
             $rootScope.buy.data_to_server.cart = [];

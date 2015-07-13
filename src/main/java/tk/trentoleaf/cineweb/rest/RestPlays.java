@@ -36,12 +36,19 @@ public class RestPlays {
     }
 
     @GET
+    @Path("/future")
+    @Compress
+    public List<Play> getNotGonePlays() {
+        return playsDB.getFuturePlays();
+    }
+
+    @GET
     @Path("/{id}")
     public Play getPlay(@PathParam("id") int id) {
         try {
             return playsDB.getPlay(id);
         } catch (EntryNotFoundException e) {
-            throw NotFoundException.PLAY_NOT_FOUND;
+            throw new NotFoundException();
         }
     }
 
@@ -55,8 +62,8 @@ public class RestPlays {
             return play;
         } catch (ForeignKeyException e) {
             throw new BadRequestException("Fid or rid not found");
-        } catch (AnotherFilmScheduledException e1) {
-            throw ConflictException.ANOTHER_FILM;
+        } catch (AnotherFilmScheduledException e) {
+            throw new ConflictException("Another film already scheduled");
         }
     }
 
@@ -70,7 +77,7 @@ public class RestPlays {
             playsDB.deletePlay(id);
             return Response.ok().build();
         } catch (EntryNotFoundException e) {
-            throw NotFoundException.PLAY_NOT_FOUND;
+            throw new NotFoundException();
         } catch (ForeignKeyException e) {
             throw new ConflictException("Cannot delete this play: there are booked seats");
         }
@@ -82,7 +89,7 @@ public class RestPlays {
         try {
             return roomsDB.getRoomStatusByPlay(id);
         } catch (EntryNotFoundException e) {
-            throw NotFoundException.GENERIC;
+            throw new NotFoundException();
         }
     }
 

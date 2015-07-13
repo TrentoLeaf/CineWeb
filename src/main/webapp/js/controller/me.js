@@ -1,6 +1,7 @@
 (function () {
     'use strict';
 
+    /* modulo per la gestione della pagina dati utente */
     angular.module('meModule', ['usersModule'])
         .controller('MeController', ['$rootScope', '$scope', '$timeout', '$location', 'Auth', function ($rootScope, $scope, $timeout, $location, Auth) {
 
@@ -15,9 +16,9 @@
             this.result = "";
             this.passBtn = "Cambia Password";
 
-            // show the password changer
+            // mostra gli input field per il cambio password ed esegue la richiesta
             this.pass = function () {
-                if (ctrl.passTrigger) { // cambio password
+                if (ctrl.passTrigger) { // cambio password. Esegui richiesta
                     if (ctrl.newPass == ctrl.verifyPass) {
                         Auth.changePassword($rootScope.user.email, ctrl.oldPass, ctrl.newPass)
                             .success(function () {
@@ -27,20 +28,18 @@
                             })
                             .error(function () {
                                 ctrl.result = "La richiesta non è andata a buon fine. Ricontrolla i dati.";
-                                // ctrl.passBtn = "Cambia Password"; //test
-                                // ctrl.passTrigger = false; //test
                             });
                     } else {
                         ctrl.result = "Le due password inserite non coincidono.";
                     }
-                } else {    // visualizza input per cambio password
+                } else {    // visualizza input field per cambio password
                     ctrl.passTrigger = true;
                     ctrl.passBtn = "Cambia";
                 }
             };
 
 
-            // load the user's bookings
+            // carica gli acquisti dell'utente
             this.loadUserBookings = function () {
 
                 if ($rootScope.isUserLogged == false) {
@@ -52,12 +51,11 @@
                     .success(function (data) {
                         ctrl.bookings = data;
 
-                        // calculate total of every buy
+                        // calcola il totale di ogni acquisto
                         for (var i=0; i < ctrl.bookings.length; i++) {
                             var buy = ctrl.bookings[i];
                             var total = 0;
                             for (var j=0; j < buy.tickets.length; j++) {
-                                // TODO rivedere perchè mi mancano i dati
                                 if (buy.tickets[j].price != undefined) {
                                     total += buy.tickets[j].price;
                                 }
@@ -81,8 +79,12 @@
                 console.log("collapsible INIZIALIZZATI");
             });
 
+            // convert 0 to A, 1 to B, ...
+            this.intToChar = function (i) {
+                return String.fromCharCode('A'.charCodeAt() + parseInt(i));
+            };
 
-            // when page loads -> load user info
+            // aspetta un secondoe (x animazione) e poi richiedi acquisti
             $timeout(this.loadUserBookings, 1000);
         }]);
 

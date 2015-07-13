@@ -9,6 +9,7 @@
             var BASE_FILMS = BASE + "/films";
 
             return {
+                /* recupera le statistiche degli utenti che hanno speso maggiormente */
                 topUsers: function () {
                     return $http.get(BASE_USERS + '/top')
                         .success(function (data) {
@@ -19,6 +20,7 @@
                         });
                 },
 
+                /* recupera le statistiche dei film che sono più richiesti */
                 grossingFilms: function () {
                     return $http.get(BASE_FILMS + '/grossing')
                         .success(function (data) {

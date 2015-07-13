@@ -1,0 +1,9 @@
+Gentile {{nome}},
+
+La Sua richiesta di iscrizione è stata inoltrata con successo.
+Per completare la Sua iscrizione clicchi su questo link: {{url_address}}
+
+Rinnovandole i nostri ringraziamenti per la Sua registrazione le ricordiamo che il nostro team è a sua disposizione per qualsiasi dubbio o necessità.
+
+Cordiali Saluti,
+Il team di CineWeb

@@ -47,6 +47,7 @@ public class GZIPInterceptor implements WriterInterceptor {
             response.addHeader("Vary", "Accept-Encoding");
         }
 
+        // process request
         context.proceed();
     }
 }

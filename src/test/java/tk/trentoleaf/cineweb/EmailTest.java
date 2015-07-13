@@ -1,6 +1,7 @@
 package tk.trentoleaf.cineweb;
 
 import com.sendgrid.SendGrid;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import tk.trentoleaf.cineweb.beans.model.Role;
 import tk.trentoleaf.cineweb.beans.model.User;
@@ -12,11 +13,18 @@ import java.util.ArrayList;
 
 public class EmailTest {
 
+    // private String email = "andr35ez@gmail.com";
+    private String email = "davide.pedranz@gmail.com";
+
+    private FilmTicketData testData() {
+        return new FilmTicketData(12, "pippo@gmail.com", "Titolo film", 2, 3, 4, DateTime.now(), "intero", 34);
+    }
+
     @Test
     public void sendConfirmRegistrationTest() throws Exception {
 
         // create user
-        final User user = new User(true, Role.ADMIN, "andr35ez@gmail.com", "teo", "Davide", "Pedranz");
+        final User user = new User(true, Role.ADMIN, email, "teo", "Davide", "Pedranz");
 
         // send email
         EmailSender sender = EmailSender.instance();
@@ -32,7 +40,7 @@ public class EmailTest {
     public void sendPasswordRecoveryTest() throws Exception {
 
         // create user
-        final User user = new User(true, Role.ADMIN, "andr35ez@gmail.com", "teo", "Davide", "Pedranz");
+        final User user = new User(true, Role.ADMIN, email, "teo", "Davide", "Pedranz");
 
         // send email
         EmailSender sender = EmailSender.instance();
@@ -48,13 +56,13 @@ public class EmailTest {
     public void sendTicketsTest() throws Exception {
 
         // create user
-        final User user = new User(true, Role.ADMIN, "andr35ez@gmail.com", "teo", "Davide", "Pedranz");
+        final User user = new User(true, Role.ADMIN, email, "teo", "Davide", "Pedranz");
 
         // create tickets data
         ArrayList<FilmTicketData> plays = new ArrayList<>();
-        plays.add(new FilmTicketData());
-        plays.add(new FilmTicketData());
-        plays.add(new FilmTicketData());
+        plays.add(testData());
+        plays.add(testData());
+        plays.add(testData());
 
         // send email
         EmailSender sender = EmailSender.instance();

@@ -1,6 +1,7 @@
 (function () {
     'use strict';
 
+    /* modulo per la gestione della procedura d'acquisto */
     angular.module('buyModule', ['usersModule', 'storageModule', 'constantsModule'])
         .controller('BuySeatController', ['$rootScope', '$location', '$anchorScroll', '$window', 'BuyProcedure', 'Rooms', function ($rootScope, $location, $anchorScroll, $window, BuyProcedure, Rooms) {
 
@@ -10,15 +11,12 @@
             this.error = "";
 
             // errori
-            var OK = 0;
             var ERROR = 1;
             var NOTHING = 2;
 
+            // imposta un messaggio d'errore
             function setError(error) {
                 switch (error) {
-                    case OK :
-                        ctrl.error = "";
-                        break;
                     case ERROR :
                         ctrl.error = "Sembra che tu sia cercando di acquistare proiezioni o biglietti non più disponibili. Per favore, ricontrolla il carrello.";
                         break;
@@ -28,14 +26,14 @@
                 }
             }
 
-            /* film di cui si stanno attualmente selezionando i posti, contiene id, locandina, titolo, data-ora, num_posti */
+            /* array di oggetti {row,col}. Gli oggetti contengono numero di riga e colonna dei posti selezionati per una proiezione*/
             $rootScope.buy.shared_obj.selected_seats = [];
-            /* array di oggetti. Gli oggetti sono i posti selezionati */
+            /* proiezione di cui si stanno attualmente selezionando i posti, contiene id, locandina, titolo, data-ora, num_posti */
             $rootScope.buy.shared_obj.film = {};
 
-
-            /* chiamata dal carrello quando l'utente vuole procedere con l'acquisto (pulsante procedi del carrello)*/
+            /* funzione chiamata dal carrello quando l'utente vuole procedere con l'acquisto (pulsante procedi del carrello) */
             this.start_buy = function () {
+                // init variabili
                 $rootScope.buy.shared_obj.film = {};
                 $rootScope.buy.shared_obj.selected_seats = [];
                 $rootScope.buy.data_to_server = [];
@@ -50,14 +48,14 @@
                 // check if the user is already logged
                 if ($rootScope.isUserLogged) {
 
-                    // reset di afterLogin
+                    // reset di afterLogin (pagina su cui ssere redirezionati dopo il login)
                     $rootScope.afterLogin = "normal";
-                    //verificare che il server dia l'ok  e che tutti i valori e spettacoli siano giusti
+                    //verificare che il server dia l'ok  e che tutti i valori e spettacoli nel carrello siano giusti
                     BuyProcedure.proceed($rootScope.cart)
                         .success(function () {  // tutto ok
                             $('.buy-seats-loader').removeClass('active');
-                            setError(OK);
-                            //TODO capire perchè l'ho messo: $rootScope.cart = [];
+                            setError(NOTHING);
+                            // copia i dati da usare durante la procedura
                             $rootScope.buy.data_from_server = ctrl.cloneObject($rootScope.cart);
                             console.log("successo, data from server ");
                             console.log($rootScope.buy.data_from_server);
@@ -66,7 +64,7 @@
                             ctrl.next_buy();
                         })
                         .error(function (data) {    // biglietti o spettacoli non più disponibili
-                            // ricarico il carrello
+                            // ricarico il carrello aggiornato dal server
                             $rootScope.cart = data;
                             $('.buy-seats-loader').removeClass('active');
 
@@ -90,18 +88,21 @@
 
             };
 
-            /* per ogni spettacolo acquistato presenta la pagina di scelta dei posti. Rimanda poi alla pagina di riepilogo*/
+            /* per ogni spettacolo acquistato presenta la pagina di scelta dei posti. Rimanda poi alla pagina di riepilogo e conferma pagamento */
             this.next_buy = function () {
 
+                // init
                 $rootScope.buy.shared_obj.selected_seats = [];
-                // next film in cart
+                // prossima proiezione nel carrello
                 $rootScope.buy.data_from_server_index++;
 
                 if ($rootScope.buy.data_from_server_index < $rootScope.buy.data_from_server.length) {
+                    /* ci sono ancora proiezioni per cui bisogna segliere i posti a sedere */
 
-                    // reset msgs
+                    // reset messaggio
                     ctrl.seats_msg = "";
 
+                    // imposta la proiezione corrente (della quale bisogna segliere i posti)
                     $rootScope.buy.shared_obj.film = $rootScope.buy.data_from_server[$rootScope.buy.data_from_server_index];
 
                     // conta il max di biglietti selezionabili
@@ -113,32 +114,35 @@
                     // richiedi la sala
                     Rooms.getRoomStatus($rootScope.buy.shared_obj.film.pid)
                         .success(function (data) {
+                            // init posti selezionati
                             $rootScope.buy.shared_obj.selected_seats = [];
+                            // genera la sala
                             $rootScope.buy.shared_obj.film.seats = data.seats;
                         })
                         .error(function () {
-                            // TODO maledetto internet
+                            // redirect alla pagina d'errore generale
+                            $location.path("/error");
                         });
 
                     $('.buy-loader').removeClass('active');
                     // back to top of page
                     $anchorScroll();
                 }
-                else { // scelta dei posti terminata
+                else { /* scelta di tutti i posti di tutte le proiezioni terminata */
                     $('.buy-loader').removeClass('active');
                     // back to top of page
                     $anchorScroll();
-                    // Redirect alla pagina di riepilogo
+                    // redirect alla pagina di riepilogo e conferma pagamento
                     $location.path('/buy_last_step');
                 }
 
 
             };
 
-            /* chiamata da bottone avanti nella scelta posti */
+            /* funzione chiamata dal bottone 'avanti' nella scelta posti. Salva i posti selezionati per una proiezione */
             this.save_seats = function () {
 
-                // check if all seats are selected
+                // controllo se tutti i posti sono stati selezionati
                 if ($rootScope.buy.shared_obj.film.seats_selected > 0) {
                     ctrl.seats_msg = "Devi ancora selezionare i posti rimanenti";
                 } else {
@@ -149,22 +153,26 @@
                     ctrl.ff.selected_seats = ctrl.cloneObject($rootScope.buy.shared_obj.selected_seats);
                     delete ctrl.ff.seats;
                     delete ctrl.ff.seats_selected;
-                    // salvo l'oggetto nell'array che inverò al server una volta completate le scelte dei posti di tutti gli spettacoli
+                    // salvo l'oggetto nell'array che verrà inviato al server una volta completate le scelte dei posti di tutti gli spettacoli
                     $rootScope.buy.data_to_server.cart.push(ctrl.ff);
+                    // prossima proiezione per cui selezionare i posti
                     this.next_buy();
                 }
 
             };
 
 
+            // apre il modal di conferma annullamento procedura
             this.open_modal = function () {
                 $('#modal_buy_cancel').openModal();
             };
 
+            1           // chiude il modal di conferma annullamento procedura
             this.close_modal = function () {
                 $('#modal_buy_cancel').closeModal();
             };
 
+            // cancella la procedura d'acquisto. Reinizializza le variabili correlate
             this.cancel_procedure = function () {
                 $rootScope.buy.shared_obj.film = {};
                 $rootScope.buy.shared_obj.selected_seats = [];
@@ -172,24 +180,25 @@
                 $rootScope.buy.data_from_server = [];
                 $rootScope.buy.data_from_server_index = -1;
 
-                console.log("buy procedure canceled!");
                 this.close_modal();
                 $location.path('/today');
             };
 
+            // copia un oggetto
             this.cloneObject = function (obj) {
                 return (JSON.parse(JSON.stringify(obj)));
             };
 
-
+            // inizia la procedura d'acquisto
             this.start_buy();
 
         }])
 
+        // controller pagina di riepilogo acquisto
         .controller('BuySummaryController', ['$rootScope', '$location', 'BuyProcedure', function ($rootScope, $location, BuyProcedure) {
 
             var ctrl = this;
-            this.cd = {
+            this.cd = { // carta di credito
                 number: "",
                 month: 1,
                 year: 2015,
@@ -201,12 +210,12 @@
             this.error_msg = "";
             this.ERROR_CARD = "I dati inseriti sembrano non essere validi. Controlla.";
 
+            // chiede la conferma dell'acqwuisto al server e invia i dati di pagamento e il posti prenotati
             this.pay = function () {
                 $('.buy-loader').addClass('active');
                 ctrl.error_msg = "";
 
-
-                // parse selected_seats to int
+                // parsing (string->int) dei posti prenotati
                 for (var i = 0; i < $rootScope.buy.data_to_server.cart.length; i++) {
 
                     for (var j = 0; j < $rootScope.buy.data_to_server.cart[i].selected_seats.length; j++) {
@@ -215,12 +224,7 @@
                         var row = parseInt(string_oby.row);
                         var col = parseInt(string_oby.col);
 
-                        console.log("PARSED selected_seats: row " + row + " col " + col);
-
-                        console.log("ROW STRING " + string_oby.row);
-
-                        console.log("ROW INT " + row);
-
+                        // aggiorna l'oggetto
                         $rootScope.buy.data_to_server.cart[i].selected_seats[j] = {
                             row: row,
                             col: col
@@ -228,13 +232,8 @@
                     }
                 }
 
-                console.log("COSA INVIO A DAVIDE");
-                console.log("CART");
-                console.log($rootScope.buy.data_to_server.cart);
-                console.log("CREDIT CARD");
-                console.log(ctrl.cd);
 
-                // paga
+                // invio richiesta con riepilogo acquisto e carta di credito
                 BuyProcedure.pay(ctrl.cd, $rootScope.buy.data_to_server.cart)
                     .success(function () {
                         $('.buy-loader').removeClass('active');
@@ -244,28 +243,32 @@
                         $location.path('/buy_complete');
                     })
                     .error(function (data, status) {
-                        if (status == 400) {
+                        if (status == 400) {    // errore dati carta di credito
                             ctrl.error_msg = ctrl.ERROR_CARD;
                             $('.buy-loader').removeClass('active');
-                        } else if (status == 409) {
+                        } else if (status == 409) { // errore dati dell'acquisto (proiezione o posti non più disponibili)
+                            // ricarico il carrello aggiornato dal server
                             $rootScope.cart = [];
                             $rootScope.cart = data;
+                            // redirect pagina errore
                             $('.buy-loader').removeClass('active');
                             $rootScope.buy.complete_error = true;
                             $location.path('/buy_complete');
                         }
                     });
-
             };
 
+            // apre il modal di conferma annullamento procedura
             this.open_modal = function () {
                 $('#modal_buy_cancel').openModal();
             };
 
+            // chiude il modal di conferma annullamento procedura
             this.close_modal = function () {
                 $('#modal_buy_cancel').closeModal();
             };
 
+            // cancella la procedura d'acquisto. Reinizializza le variabili correlate
             this.cancel_procedure = function () {
                 $rootScope.buy.shared_obj.film = {};
                 $rootScope.buy.shared_obj.selected_seats = [];
@@ -273,12 +276,11 @@
                 $rootScope.buy.data_from_server = [];
                 $rootScope.buy.data_from_server_index = -1;
 
-                console.log("buy procedure canceled!");
                 this.close_modal();
                 $location.path('/today');
             };
 
-            // calculate the total import to pay
+            // calcola l'importo da pagare e i prezzi in dettaglio
             this.calcImportAndPrices = function () {
                 var credit = $rootScope.user.credit;
                 var cart = $rootScope.buy.data_to_server.cart;
@@ -292,7 +294,7 @@
                             for (var k = 0; k < cart[i].tickets.length; k++) {
                                 if (cart[i].tickets[k].type == $rootScope.tickets[j].type) {
                                     num = num + cart[i].tickets[k].number;
-                                    // set the price of a ticket
+                                    // imposta il prezzo dei biglietti di una tipologia
                                     cart[i].tickets[k].price = $rootScope.tickets[j].price * cart[i].tickets[k].number;
                                 }
                             }
@@ -301,6 +303,7 @@
                     }
                 }
 
+                // calcola il totale tenendo conto del credito utente
                 if (credit != undefined) {
                     if (total > credit) {
                         ctrl.importToPay = total - credit;
@@ -316,12 +319,14 @@
             ctrl.calcImportAndPrices();
         }])
 
+        // controller pagina di procedura completata
         .controller('BuyCompleteController', ['$rootScope', function ($rootScope) {
 
             this.BUY_COMPLETE_SUCCESS = "Il pagamento è andato a buon fine. Grazie per aver acquistato sul nostro sito! A breve riceverai i biglietti direttamente nella tua casella di posta.";
             this.BUY_COMPLETE_ERROR = "Oh oh... Sembra che qualcuno abbia già prenotato i posti che hai selezionato o hai impiegato troppo a completare la procedura d'acquisto. Ti invitiamo a riprovare.";
             this.buy_complete_msg = "";
 
+            // imposta il messaggio in base al successo della procedura d'acquisto
             this.setCompleteMsg = function (error) {
                 $('.buy-complete-msg').removeClass('white-text red-text');
 

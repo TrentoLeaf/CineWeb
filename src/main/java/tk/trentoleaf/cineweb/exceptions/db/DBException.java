@@ -8,25 +8,25 @@ import java.sql.SQLException;
 public class DBException extends RuntimeException {
 
     // A collection of common SQL error states in PostgresSQL
-    public static final String NOT_NULL_VIOLATION_CODE = "23502";
-    public static final String FOREIGN_KEY_VIOLATION_CODE = "23503";
-    public static final String UNIQUE_VIOLATION_CODE = "23505";
+    private static final String NOT_NULL_VIOLATION_CODE = "23502";
+    private static final String FOREIGN_KEY_VIOLATION_CODE = "23503";
+    private static final String UNIQUE_VIOLATION_CODE = "23505";
 
-    // original sql exception
-    private SQLException sqlException;
-
-    // construct a new DBException wrapping a SQLException
+    /**
+     * Construct a new DBException wrapping a SQLException.
+     *
+     * @param sqlException Original SQL exception.
+     */
     protected DBException(SQLException sqlException) {
-        this.sqlException = sqlException;
+        super(sqlException);
     }
 
-    // get the original cause
-    @SuppressWarnings("unused")
-    public SQLException getSqlException() {
-        return sqlException;
-    }
-
-    // construct from SQLException
+    /**
+     * Factory to build the correct subclass of DBException from a SQL exception.
+     *
+     * @param sqlException Original SQL exception.
+     * @return DBException.
+     */
     public static DBException factory(SQLException sqlException) {
         switch (sqlException.getSQLState()) {
             case NOT_NULL_VIOLATION_CODE:

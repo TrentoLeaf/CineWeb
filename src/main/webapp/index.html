@@ -14,9 +14,6 @@
     <link rel="stylesheet" href="css/stylesheet.css">
     <!-- stylesheet for the svg -->
     <link type="text/css" rel="stylesheet" href="../css/svg-theatre.css">
-    <!-- TODO: move to sass -->
-    <link rel="stylesheet" href="css/map.css">
-    <link rel="stylesheet" href="css/me.css">
 
     <!-- JS libs -->
     <script src="lib/jquery-2.1.4.min.js"></script>
@@ -53,7 +50,6 @@
     <script src="js/controller/adminPlays.js"></script>
     <script src="js/controller/adminRooms.js"></script>
     <script src="js/controller/adminDashboard.js"></script>
-    <!-- Maybe we have a situation here -->
     <script src="js/controller/adminStats.js"></script>
     <script src="js/controller/confirm.js"></script>
     <script src="js/controller/reset.js"></script>
@@ -77,9 +73,9 @@
                         <i class="medium mdi-action-settings"></i>
                     </a>
                 </li>
-                <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(1)" style="height: 64px;"><i class="cart-icon mdi-action-shopping-cart"></i>
+                <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(1)" style="height: 64px;" href=""><i class="cart-icon mdi-action-shopping-cart"></i>
                     <span ng-hide="cart.length == 0" class="cart-badge grey darken-3 white-text">&nbsp;{{cart.length}}&nbsp;</span></a></li>
-                <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle" style="height:60px"></i></a><hr ng-show="isUserLogged" class ="userLoggedLine green"></li>
+                <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)" href=""><i class="mdi-action-account-circle" style="height:60px"></i></a><hr ng-show="isUserLogged" class ="userLoggedLine green"></li>
             </ul>
 
             <!-- right navbar small for mobile -->
@@ -130,7 +126,7 @@
                                 <div class="row">
                                     <div class="col s9 m9 l9">
                                         <h5>{{film.title}}</h5> <!-- titolo -->
-                                        <h6>{{film.time | date: 'dd/MM/yyyy, hh:mm'}}</h6> <!-- data -->
+                                        <h6>{{film.time | date: 'dd/MM/yyyy, HH:mm'}}</h6> <!-- data -->
                                         <h6>SALA {{film.rid}}</h6> <!-- sala -->
                                     </div>
                                     <i ng-click="cc.removeFromCart($index)" class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
@@ -282,14 +278,15 @@
     </div>
     <div class="footer-copyright grey darken-4">
         <div class="container yellow-text text-accent-4">
-            © 2015 TrentoLeaf+
-            <a class="yellow-text text-accent-4 right" href="partials/about.html">About Us</a>
+            <span>© 2015 TrentoLeaf+</span>
+            <a class="yellow-text text-accent-4 right" href="partials/about.html">&nbsp;About Us</a>
+            <a class="yellow-text text-accent-4 right" href="#popcorn">popcorn&nbsp;|</a>
         </div>
     </div>
 </footer>
 
 <!-- Floating button amministratore-->
-<div ng-show="user.role == 'admin'"  class="admin-actions fixed-action-btn" style="bottom: 15px; right: 25px;">
+<div ng-show="user.role == 'admin'"  class="admin-actions fixed-action-btn hide-on-med-and-down" style="bottom: 15px; right: 25px;">
     <a class="admin-actions-home btn-floating btn-large yellow accent-4">
         <i class="medium mdi-action-settings black-text"></i>
     </a>

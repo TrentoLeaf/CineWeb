@@ -7912,7 +7912,7 @@ select {
   width: 14.285714286%;
   font-size: .75em;
   padding-bottom: .25em;
-  color: #999999;
+  color: #000000;
   font-weight: 500;
   /* Increase the spacing a tad */ }
 
@@ -8062,7 +8062,7 @@ select {
 
 .picker__date-display {
   text-align: center;
-  background-color: #26a69a;
+  background-color: #f1Ba5f;
   color: #fff;
   padding-bottom: 15px;
   font-weight: 300; }
@@ -8071,27 +8071,30 @@ select {
 .picker__nav--next:hover {
   cursor: pointer;
   color: #000000;
-  background: #a1ded8; }
+  background: white; }
 
 .picker__weekday-display {
-  background-color: #1f897f;
+  background-color: #efb048;
   padding: 10px;
   font-weight: 200;
   letter-spacing: .5;
   font-size: 1rem;
-  margin-bottom: 15px; }
+  margin-bottom: 15px;
+  color: #000000; }
 
 .picker__month-display {
   text-transform: uppercase;
-  font-size: 2rem; }
+  font-size: 2rem;
+  color: #000000; }
 
 .picker__day-display {
   font-size: 4.5rem;
-  font-weight: 400; }
+  font-weight: 400;
+  color: #000000; }
 
 .picker__year-display {
   font-size: 1.8rem;
-  color: rgba(255, 255, 255, 0.4); }
+  color: #757575; }
 
 .picker__box {
   padding: 0; }
@@ -8113,7 +8116,7 @@ select {
   border: 1px solid transparent; }
 
 .picker__day.picker__day--today {
-  color: #26a69a; }
+  color: #f1Ba5f; }
 
 .picker__day.picker__day--today.picker__day--selected {
   color: #fff; }
@@ -8130,12 +8133,12 @@ select {
   -ms-transform: scale(0.9);
   -o-transform: scale(0.9);
   transform: scale(0.9);
-  background-color: #26a69a;
-  color: #ffffff; }
+  background-color: #f1Ba5f;
+  color: #000000; }
   .picker__day--selected.picker__day--outfocus,
   .picker__day--selected:hover.picker__day--outfocus,
   .picker--focused .picker__day--selected.picker__day--outfocus {
-    background-color: #a1ded8; }
+    background-color: white; }
 
 .picker__footer {
   text-align: right;
@@ -8144,7 +8147,7 @@ select {
 .picker__close, .picker__today {
   font-size: 1.1rem;
   padding: 0 1rem;
-  color: #26a69a; }
+  color: #f1Ba5f; }
 
 .picker__nav--prev:before,
 .picker__nav--next:before {
@@ -8162,7 +8165,7 @@ select {
   border-left: 0.75em solid #676767; }
 
 button.picker__today:focus, button.picker__clear:focus, button.picker__close:focus {
-  background-color: #a1ded8; }
+  background-color: white; }
 
 /* ==========================================================================
    $BASE-TIME-PICKER

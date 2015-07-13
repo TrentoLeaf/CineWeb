@@ -1,8 +1,12 @@
 <div class="row white-text">
     <div class="col s12 m12 l12">
         <div class="row">
-            <h2 id="page_title" class="yellow-text text-accent-4 center-align small">Films            <i class="mdi-action-help tooltipped" data-position="bottom" data-tooltip="Per visualizzare la trama e gli URL di locandina e trailer premi su modifica!"></i></h2>
+            <h2 id="page_title" class="yellow-text text-accent-4 center-align small">Films</h2>
         </div>
+    </div>
+
+    <div class="row center-align">
+        <h6 id="film_message">{{ctrl.status}}</h6>
     </div>
 
     <div ng-show="ctrl.loading" class="center-align">
@@ -20,7 +24,7 @@
                         <th><a class="yellow-text text-accent-4" href="">Titolo</a></th>
                         <th><a class="yellow-text text-accent-4" href="">Genere</a></th>
                         <th><a class="yellow-text text-accent-4" href="">Durata</a></th>
-                        <th><a class="yellow-text text-accent-4" href="">Modifica</a></th>
+                        <th><a class="yellow-text text-accent-4" href="">Modifica&nbsp;<i class="mdi-action-help tooltipped" data-position="bottom" data-tooltip="Per visualizzare la trama e gli URL di locandina e trailer premi su modifica!"></i></a></th>
                         <th><a class="yellow-text text-accent-4" href="">Cancella</a></th>
                     </tr>
                     </thead>

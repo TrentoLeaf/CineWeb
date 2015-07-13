@@ -100,6 +100,9 @@ main {
     .cart-badge {
       top: -70px; } }
 
+.angular-google-map-container {
+  height: 400px; }
+
 footer {
   margin-top: 0px !important; }
 
@@ -142,8 +145,12 @@ main .content-div {
   main .content-div .play {
     margin-bottom: 4em; }
     main .content-div .play .play-playbill {
-      min-height: 300px;
-      max-height: 300px; }
+      width: 100%;
+      height: auto;
+      top: -100px; }
+    main .content-div .play .play-playbill-container {
+      overflow: hidden;
+      height: 264px; }
     main .content-div .play .card-times {
       overflow: auto;
       max-height: 100px;
@@ -151,7 +158,7 @@ main .content-div {
       main .content-div .play .card-times .time-badge {
         margin: 0em 0.5em 0.5em 0.5em;
         padding: 0em 1.5em 0em 1.5em;
-        cursor: default; }
+        cursor: hand; }
     main .content-div .play .play-details-btn {
       padding: 0;
       margin: 0;
@@ -294,7 +301,7 @@ main .side-div {
   text-align: center;
   padding: 0; }
 .summaryTable span {
-  font-size: 0.7em; }
+  font-size: 1em; }
 
 .adminTable th, .adminTable td {
   text-align: center;

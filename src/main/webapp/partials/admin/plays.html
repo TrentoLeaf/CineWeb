@@ -8,6 +8,10 @@
         </div>
     </div>
 
+    <div class="row center-align">
+        <h6 id="plays_message">{{ctrl.status}}</h6>
+    </div>
+
     <!-- Corpo delle cose -->
 
     <!-- <div ng-show="ctrl.loading" class="center-align">
@@ -30,7 +34,7 @@
                                     </div>
                                     <div class="col s8 m10 l8">
                                         <h6><b>{{film.title}}</b></h6>
-                                        <h6>Data: {{play.time | date:'dd/MM/yyyy, hh:mm'}}</h6>
+                                        <h6>Data: {{play.time | date:'dd/MM/yyyy, HH:mm'}}</h6>
                                         <h6>Sala: {{play.rid}}</h6>
                                         <h6>Posti liberi: {{play.free}}</h6>
                                     </div>
@@ -74,7 +78,7 @@
         <p>Sei sicuro di voler cancellare la seguente proiezione?</p>
         <ul>
             <li><label for="modal_fid" class="left-align">Titolo</label><div id="modal_fid">{{ctrl.currentPlay.title}}</div></li>
-            <li><label for="modal_time" class="left-align">Data e ora</label><div id="modal_time">{{ctrl.currentPlay.time | date:'dd/MM/yyyy, hh:mm'}}</div></li>
+            <li><label for="modal_time" class="left-align">Data e ora</label><div id="modal_time">{{ctrl.currentPlay.time | date:'dd/MM/yyyy, HH:mm'}}</div></li>
             <li><label for="modal_rid" class="left-align">Sala</label><div id="modal_rid">{{ctrl.currentPlay.rid}}</div></li>
         </ul>
     </div>
