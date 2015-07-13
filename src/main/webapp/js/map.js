@@ -203,6 +203,9 @@
                     });
                 } else {
                     if (modificabile) { // creazione di una nuova sala
+
+                        poltrona_svg.attr({cursor:"url(../img/hammer.png), default"});
+
                         // set click handler
                         poltrona_svg.click(function () {
                             if (this.hasClass('seat-hidden')) {
@@ -274,6 +277,8 @@
                         row: poltrona_svg.attr('row'),
                         col: poltrona_svg.attr('col')
                     });
+
+                    poltrona_svg.attr({cursor:"url(../img/hotseat.png), default"});
 
                     console.log("adding: r " + poltrona_svg.attr('row') + " c " + poltrona_svg.attr('col'));
 
