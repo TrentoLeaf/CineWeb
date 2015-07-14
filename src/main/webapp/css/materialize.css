@@ -5894,12 +5894,15 @@ button.btn-floating {
   0% {
     -webkit-transform: translate3d(100%, 0, 0);
     transform: translate3d(100%, 0, 0); }
+  55% {
+    -webkit-transform: translate3d(-9px, 0, 0) rotate3d(0, 0, 1, -3deg);
+    transform: translate3d(-9px, 0, 0) rotate3d(0, 0, 1, -3deg); }
+  70% {
+    -webkit-transform: translate3d(6px, 0, 0) rotate3d(0, 0, 1, 2deg);
+    transform: translate3d(6px, 0, 0) rotate3d(0, 0, 1, 2deg); }
   85% {
-    -webkit-transform: translate3d(-5px, 0, 0);
-    transform: translate3d(-5px, 0, 0); }
-  95% {
-    -webkit-transform: translate3d(3px, 0, 0);
-    transform: translate3d(3px, 0, 0); }
+    -webkit-transform: translate3d(-3px, 0, 0) rotate3d(0, 0, 1, -1deg);
+    transform: translate3d(-3px, 0, 0) rotate3d(0, 0, 1, -1deg); }
   100% {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0); } }
@@ -5907,12 +5910,15 @@ button.btn-floating {
   0% {
     -webkit-transform: translate3d(100%, 0, 0);
     transform: translate3d(100%, 0, 0); }
+  55% {
+    -webkit-transform: translate3d(-9px, 0, 0) rotate3d(0, 0, 1, -3deg);
+    transform: translate3d(-9px, 0, 0) rotate3d(0, 0, 1, -3deg); }
+  70% {
+    -webkit-transform: translate3d(6px, 0, 0) rotate3d(0, 0, 1, 2deg);
+    transform: translate3d(6px, 0, 0) rotate3d(0, 0, 1, 2deg); }
   85% {
-    -webkit-transform: translate3d(-5px, 0, 0);
-    transform: translate3d(-5px, 0, 0); }
-  95% {
-    -webkit-transform: translate3d(3px, 0, 0);
-    transform: translate3d(3px, 0, 0); }
+    -webkit-transform: translate3d(-3px, 0, 0) rotate3d(0, 0, 1, -1deg);
+    transform: translate3d(-3px, 0, 0) rotate3d(0, 0, 1, -1deg); }
   100% {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0); } }
