@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    var button = $('.fixed-button a');
+    var button = $('#fab_primary');
     var icon = $('.fixed-button a i');
 
     button.click(function () {
@@ -10,18 +10,13 @@ $(document).ready(function() {
             $(".fixed-list").addClass("slideOutDown");
             icon.removeClass("rotateOut");
             icon.addClass("rotateIn");
-            $(".fixed-list").on('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
-                function() {
-                    $(".fixed-list").css("display","none");
-                });
-
         } else {
+            $(".fixed-list").removeClass("hide-list");
             button.toggleClass("active");
             $(".fixed-list").removeClass("slideOutDown");
             $(".fixed-list").addClass("slideInUp");
             icon.removeClass("rotateIn");
             icon.addClass("rotateOut");
-            $(".fixed-list").css("display","inline");
         }
     });
 });

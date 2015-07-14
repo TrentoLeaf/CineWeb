@@ -298,11 +298,11 @@
 
 <!-- Floating button amministratore-->
 <div ng-show="user.role == 'admin'"  class="admin-actions fixed-button">
-    <a class="admin-actions-home btn-floating btn-large yellow accent-4">
+    <a id="fab_primary" class="admin-actions-home btn-floating btn-large yellow accent-4">
         <i class="large mdi-content-add black-text animated"></i>
     </a>
 
-    <ul class="fixed-list animated">
+    <ul class="fixed-list animated hide-list">
         <li class="admin-action-btn"><a class="btn-floating red" href="#admin/films"><i class="mdi-maps-local-movies"></i></a></li>
         <li class="admin-action-btn"><a class="btn-floating teal" href="#admin/plays"><i class="mdi-av-videocam"></i></a></li>
         <li class="admin-action-btn"><a class="btn-floating green" href="#admin/rooms"><i class="mdi-maps-local-convenience-store"></i></a></li>
