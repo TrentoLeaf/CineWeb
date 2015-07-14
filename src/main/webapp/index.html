@@ -54,6 +54,9 @@
     <script src="js/controller/confirm.js"></script>
     <script src="js/controller/reset.js"></script>
     <script src="js/controller/buy.js"></script>
+
+    <!-- JS Fixed-button-->
+    <script src="js/fixed-button.js"></script>
 </head>
 
 <body ng-controller="TabController as tab">
@@ -285,12 +288,12 @@
 </footer>
 
 <!-- Floating button amministratore-->
-<div ng-show="user.role == 'admin'"  class="admin-actions fixed-action-btn hide-on-med-and-down" style="bottom: 15px; right: 25px;">
+<div ng-show="user.role == 'admin'"  class="admin-actions fixed-button">
     <a class="admin-actions-home btn-floating btn-large yellow accent-4">
-        <i class="medium mdi-action-settings black-text"></i>
+        <i class="large mdi-content-add black-text animated"></i>
     </a>
 
-    <ul>
+    <ul class="fixed-list animated">
         <li class="admin-action-btn"><a class="btn-floating red" href="#admin/films"><i class="mdi-maps-local-movies"></i></a></li>
         <li class="admin-action-btn"><a class="btn-floating teal" href="#admin/plays"><i class="mdi-av-videocam"></i></a></li>
         <li class="admin-action-btn"><a class="btn-floating green" href="#admin/rooms"><i class="mdi-maps-local-convenience-store"></i></a></li>
