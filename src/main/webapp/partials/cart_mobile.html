@@ -16,7 +16,9 @@
                         <h6>{{film.time | date: 'dd/MM/yyyy, HH:mm'}}</h6> <!-- data -->
                         <h6>SALA {{film.rid}}</h6> <!-- sala -->
                     </div>
-                    <i ng-click="cc.removeFromCart($index)" class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
+                    <div class="col s3 m3 l3">
+                        <i ng-click="cc.removeFromCart($index)" class="mdi-navigation-close small right" style="cursor: pointer;"></i>
+                    </div>
                 </div>
                 <div class="col s12 m12 l12 item-ticket-counter-container">
                     <p>Rimangono {{film.free}} biglietti.</p>
@@ -25,18 +27,23 @@
                     <div class="col s7 m7 l7">
                         <label>Tipologia</label>
                     </div>
-                    <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4">
+                    <div class="col s4 m4 l4">
                         <label>Quantità</label>
                     </div>
+                    <div class="col s1 m1 l1">
+                    </div>
                 </div>
-                <div ng-repeat="drop in cart[$index].tickets track by $index" class="row"> <!-- dropdowns -->
+                <div ng-repeat="drop in cart[$index].tickets track by $index" class="row"> <!-- biglietti -->
                     <div class="col s7 m7 l7"> <!-- dropdown tipologia biglietto -->
                         <select class="browser-default black-text" ng-model="cart[$parent.$index].tickets[$index].type">
                             <option ng-repeat="ticket in tickets" value="{{ticket.type}}">{{ticket.type}}</option>
                         </select>
                     </div>
-                    <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4"> <!-- dropdown quantità biglietti -->
+                    <div class="col s4 m4 l4"> <!-- input quantità biglietti -->
                         <input ng-model="cart[$parent.$index].tickets[$index].number" class="center-align" type="number" value="" min="0">
+                    </div>
+                    <div class="col s1 m1 l1" style="padding-left: 0px;"> <!-- elimina biglietti -->
+                        <i ng-click="cc.removeDropDown($parent.$index, $index)" class="mdi-navigation-close" style="cursor: pointer"></i>
                     </div>
                 </div>
 
