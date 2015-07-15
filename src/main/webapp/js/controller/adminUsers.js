@@ -147,12 +147,14 @@
 
 
             var ctrl = this;
+            this.loading = true;
             this.order = 'uid';
             this.reverse = false;
 
             this.status = "";
             this.error_message = false;
 
+            this.users = [];
             this.newUser = new Users();
             this.newUser.enabled = true;
             this.verifyPassword = "";
@@ -161,15 +163,6 @@
 
             this.tmpUser = {};
 
-            var init = function () {
-                if ($rootScope.isUserLogged == false) {
-                    $rootScope.afterLogin = "userArea";
-                    $location.path('/login');
-                }
-
-                ctrl.loading = true;
-                ctrl.users = [];
-            };
 
             // order the list of users in base of a property of the user
             this.setOrder = function (order) {
@@ -183,7 +176,8 @@
 
             // load the users list
             this.loadUsers = function () {
-                init();
+                ctrl.loading = true;
+                ctrl.users = [];
                 Users.query(function (data) {
                     ctrl.users = data;
                     ctrl.loading = false;

@@ -42,11 +42,6 @@
             // carica gli acquisti dell'utente
             this.loadUserBookings = function () {
 
-                if ($rootScope.isUserLogged == false) {
-                    $rootScope.afterLogin = "userArea";
-                    $location.path('/login');
-                }
-
                 Auth.my_bookings()
                     .success(function (data) {
                         ctrl.bookings = data;

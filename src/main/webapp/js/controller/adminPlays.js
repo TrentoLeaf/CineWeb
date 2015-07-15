@@ -102,6 +102,7 @@
         .controller('AdminPlaysController', ['$rootScope', '$location', 'Plays', 'Rooms', 'Films', function ($rootScope, $location, Plays, Rooms, Films) {
 
             var ctrl = this;
+            this.loading = true;
             this.status = "";
             this.error_message = false;
             this.currentPlay = {};
@@ -111,15 +112,6 @@
             this.shared_obj = {};
             this.films = [];
 
-            this.init = function () {
-                if ($rootScope.isUserLogged == false) {
-                    $rootScope.afterLogin = "userArea";
-                    $location.path('/login');
-                }
-                ctrl.loading = true;
-                ctrl.currentPlay = {};
-                ctrl.loadFilms();
-            };
 
             // carica i film disponibili
             this.loadFilms = function () {
@@ -223,6 +215,6 @@
                 }
             };
 
-            this.init();
+            ctrl.loadFilms();
         }]);
 })();

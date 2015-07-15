@@ -57,7 +57,8 @@ $(document).ready(function () {
             }).when('/me', {
                 templateUrl: '../partials/me.html',
                 controller: 'MeController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/login', {
                 templateUrl: '../partials/login.html',
                 controller: 'LoginController',
@@ -73,67 +74,83 @@ $(document).ready(function () {
             }).when('/admin', {
                 templateUrl: '../partials/admin/dashboard.html',
                 controller: 'AdminDashboardController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/films', {
                 templateUrl: '../partials/admin/films.html',
                 controller: 'AdminFilmsController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/films/new', {
                 templateUrl: '../partials/admin/new_film.html',
                 controller: 'AdminFilmsController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/films/:fid', {
                 templateUrl: '../partials/admin/edit_film.html',
                 controller: 'AdminFilmsEditController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/plays', {
                 templateUrl: '../partials/admin/plays.html',
                 controller: 'AdminPlaysController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/plays/new', {
                 templateUrl: '../partials/admin/new_play.html',
                 controller: 'AdminNewPlaysController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/plays/:pid', {
                 templateUrl: '../partials/admin/edit_play.html',
                 controller: 'AdminPlaysEditController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/prices', {
                 templateUrl: '../partials/admin/prices.html',
                 controller: 'AdminPricesController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/rooms', {
                 templateUrl: '../partials/admin/rooms.html',
                 controller: 'AdminRoomsController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/rooms/new_room', {
                 templateUrl: '../partials/admin/new_room.html',
                 controller: 'AdminNewRoomController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/rooms/edit_room/:rid', {
                 templateUrl: '../partials/admin/edit_room.html',
                 controller: 'AdminEditRoomController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/stats', {
                 templateUrl: '../partials/admin/stats.html',
                 controller: 'AdminStatsController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/users', {
                 templateUrl: '../partials/admin/users.html',
                 controller: 'AdminUsersController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/users/new', {
                 templateUrl: '../partials/admin/new_user.html',
                 controller: 'AdminUsersController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/users/:uid', {
                 templateUrl: '../partials/admin/edit_user.html',
                 controller: 'AdminUsersEditController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/users/bookings/:uid', {
                 templateUrl: '../partials/admin/user_bookings.html',
                 controller: 'AdminUserBookingsController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/buy', {
                 templateUrl: '../partials/buy_seats.html',
                 controller: 'BuySeatController',
@@ -217,7 +234,7 @@ $(document).ready(function () {
         })
 
         // init all'avvio applicazione
-        .run(['$rootScope', '$location', '$anchorScroll', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, $anchorScroll, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
+        .run(['$rootScope', '$location', '$anchorScroll', '$q', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, $anchorScroll, $q, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
 
             // redirect only if needed
             var redirect = function (path) {
@@ -258,44 +275,13 @@ $(document).ready(function () {
                 return (JSON.parse(JSON.stringify(obj)));
             };
 
-
-            /* init of login data */
-            $rootScope.user = {}; // dati untente di base
-            $rootScope.isUserLogged = false;
-            $rootScope.loginError = "";
-            $rootScope.afterLogin = "normal"; // variabile per sapere dove redirigere dopo un login (normal, buy, userArea)
-
-            // request to server the data of a logged user. If the user isn't logged set the login variables.
-            var retriveLoginData = function () {
-                Auth.me()
-                    .success(function (user) {
-                        // user is already logged
-                        console.log("THE USER IS ALREADY LOGGED");
-                        console.log(user);
-
-                        $rootScope.isUserLogged = true;
-                        //save basic user data
-                        $rootScope.user = user;
-                    }).error(function (error) {
-                        // not logged
-                        console.log("THE USER IS NOT LOGGED");
-
-                        $rootScope.isUserLogged = false;
-                        $rootScope.user = {};
-                    });
-            };
-
-            retriveLoginData();
-
-
-            /* manipulation and trusting (enabling cross-origin resources) of trailers url */
+            // manipulation and trusting (enabling cross-origin resources) of trailers url
             $rootScope.trustSrcTrailerUrl = function (src) {
                 if (src != undefined) {
                     src = src.replace("watch?v=", "embed/");
                 }
                 return $sce.trustAsResourceUrl(src);
             };
-
 
             //updateTotal
             /*
@@ -318,6 +304,36 @@ $(document).ready(function () {
                 }
                 console.log("NEW TOTAL: " + $rootScope.total);
             };
+
+
+            /* init of login data */
+            $rootScope.user = {}; // dati untente di base
+            $rootScope.isUserLogged = false;
+            $rootScope.isUserLoggedPromise = Auth.me();  // request to server the data of an user and check if the user is logged
+            $rootScope.loginError = "";
+            $rootScope.afterLogin = "normal"; // variabile per sapere dove redirigere dopo un login (normal, buy, userArea)
+
+            // request to server the data of a logged user. If the user isn't logged set the login variables. Return the promise of the request
+            var retrieveUserData = function () {
+                $rootScope.isUserLoggedPromise.then(
+                    function (data) {
+                        // user is already logged
+                        console.log("THE USER IS ALREADY LOGGED");
+                        console.log(data);
+
+                        $rootScope.isUserLogged = true;
+                        //save basic user data
+                        $rootScope.user = data;
+                    }, function (data) {
+                        // not logged
+                        console.log("THE USER IS NOT LOGGED");
+
+                        $rootScope.isUserLogged = false;
+                        $rootScope.user = {};
+                    });
+            };
+
+            retrieveUserData();
 
 
             /* init of prices */
@@ -423,5 +439,46 @@ $(document).ready(function () {
 
             $rootScope.buy.data_to_server.cart = [];
         }]);
+
+
+    /* function used in $routeProvider to route a user to login page if is not logged */
+    var checkRouting = function ($rootScope, $location, Auth) {
+        console.log("sto controllando il routing");
+        if ($rootScope.isUserLoggedPromise != undefined) {
+            // check the promise
+            $rootScope.isUserLoggedPromise.then(
+                function (data) {
+                    // user is logged. continue
+                    console.log("routing ok");
+                    // check if normal user is trying to access to an admin page
+                    if (data.role != "admin" && $location.path() != "/me") {
+                        $location.path("/error");
+                    }
+                }, function () {
+                    console.log("routing no");
+                    // user isn't logged. Redirect to login page
+                    $location.path("/login");
+                });
+        } else {
+            console.log("routing undefined. Asking login data to server...");
+            // ask to server if user is logged
+            Auth.me().then(function () {
+                // user is already logged
+                $rootScope.isUserLogged = true;
+                //save basic user data
+                $rootScope.user = data;
+                // countinue the routing
+                // check if normal user is trying to access to an admin page
+                if (data.role != "admin" && $location.path() != "/me") {
+                    $location.path("/error");
+                }
+            }, function () {
+                $rootScope.isUserLogged = false;
+                $rootScope.user = {};
+                // user isn't logged. Redirect to login page
+                $location.path("/login");
+            });
+        }
+    };
 
 })();

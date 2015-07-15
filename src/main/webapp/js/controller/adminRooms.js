@@ -177,19 +177,10 @@
             this.shared_obj = {};
             this.error = "";
 
-            var init = function () {
-
-                if ($rootScope.isUserLogged == false) {
-                    $rootScope.afterLogin = "userArea";
-                    $location.path('/login');
-                }
-
-                ctrl.rooms = [];
-            };
 
             // carica tutti i dati di base delle sale
             this.loadRooms = function () {
-                init();
+                ctrl.rooms = [];
                 Rooms.getRoomsOnly()
                     .success(function (data) {
                         console.log(data);

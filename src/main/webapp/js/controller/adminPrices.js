@@ -12,13 +12,6 @@
             this.prices = [];
 
 
-            var init = function () {
-                if ($rootScope.isUserLogged == false) {
-                    $rootScope.afterLogin = "userArea";
-                    $location.path('/login');
-                }
-            };
-
             // recupera i prezzi del server
             this.loadPrices = function () {
                 console.log(Prices);
@@ -94,8 +87,6 @@
                 });
             };
 
-
-            init();
             this.loadPrices();
 
         }]);

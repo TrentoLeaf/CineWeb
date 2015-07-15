@@ -20,14 +20,18 @@
             return {
                 /* invio dati di login */
                 login: function (email, password) {
-                    return $http.post(BASE_USERS + '/login', {email: email, password: password})
+                    var deferred = $q.defer();
+                    $http.post(BASE_USERS + '/login', {email: email, password: password})
                         .success(function (data) {
+                            deferred.resolve(data);
                             $log.info('LOGIN OK: ' + data);
                             $log.info(data);
                         })
                         .error(function (data, status) {
+                            deferred.reject(data);
                             $log.warn('LOGIN FAILED: ' + status + " " + data.error);
                         });
+                    return deferred.promise;
                 },
 
                 /* invio richiesta di logout */
@@ -109,15 +113,19 @@
                         });
                 },
 
-                /* richiesta dati di base dell'utente */
+                /* richiesta dati di base dell'utente. Ritorna una promise della richiesta*/
                 me: function () {
-                    return $http.get(BASE_USERS + "/me")
+                    var deferred = $q.defer();
+                    $http.get(BASE_USERS + "/me")
                         .success(function (data) {
+                            deferred.resolve(data);
                             $log.info('ME OK: ' + data);
                         })
                         .error(function (data, status) {
+                            deferred.reject(data);
                             $log.warn('ME FAILED: ' + status + " " + data);
                         });
+                    return deferred.promise;
                 },
 
                 /* richiesta cronologia acquisti dell'utente */

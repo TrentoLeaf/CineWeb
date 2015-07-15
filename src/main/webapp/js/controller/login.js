@@ -19,8 +19,9 @@
 
                 $('.login-loader').addClass('active');
 
-                Auth.login(email, password)
-                    .success(function (user) {
+                // send request and save the promise
+                $rootScope.isUserLoggedPromise = Auth.login(email, password)
+                    .then(function (user) {
 
                         setError("");
                         //save basic user data
@@ -54,7 +55,8 @@
                                 break;
                         }
                         $('.login-loader').removeClass('active');
-                    }).error(function (error) { /* login fallito */
+                    },
+                    function (error) { /* login fallito */
                         $rootScope.isUserLogged = false;
                         setError('Nome utente o password errati.');
                         $('.login-loader').removeClass('active');
@@ -71,6 +73,7 @@
                         setError("");
                         // reset di tutte le variabili correlate
                         $rootScope.isUserLogged = false;
+                        $rootScope.isUserLoggedPromise = undefined;
                         $rootScope.user = {};
                         ctrl.email = "";
                         ctrl.pass = "";
@@ -80,6 +83,7 @@
                         // logout fallito. reset variabili e redirect
                         setError("");
                         $rootScope.isUserLogged = false;
+                        $rootScope.isUserLoggedPromise = undefined;
                         $rootScope.user = {};
                         ctrl.email = "";
                         ctrl.pass = "";
@@ -92,7 +96,6 @@
             this.setAfterLogin = function (type) {
                 $rootScope.afterLogin = type;
             };
-
 
             /*
              * funzioni di redirect ad una pagina

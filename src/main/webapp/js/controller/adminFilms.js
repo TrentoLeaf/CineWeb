@@ -58,25 +58,17 @@
 
 
             var ctrl = this;
+            this.loading = true;
+            this.films = [];
             this.newFilm = new Films();
             this.status = "";
             this.error_message = false;
 
 
-            var init = function () {
-                if ($rootScope.isUserLogged == false) {
-                    $rootScope.afterLogin = "userArea";
-                    $location.path('/login');
-                }
-
-                ctrl.loading = true;
-                ctrl.films = [];
-            };
-
             // carica i films
             this.loadFilms = function () {
 
-                init();
+                ctrl.films = [];
 
                 Films.query(function (data) {
                     ctrl.films = data;
