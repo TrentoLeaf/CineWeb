@@ -25,6 +25,7 @@
 
         // genera e renderizza la sala
         this.generateMap = function () {
+
             ctrl.createMatrix(ctrl.newRoom.rows, ctrl.newRoom.columns);
             ctrl.newRoom.seats = ctrl.matrix;
             ctrl.matrix = [];
@@ -82,9 +83,12 @@
         this.shared_obj = {};
         this.hiddenSeats = [];
         this.error_msg = "";
+        // variabile che indica se una mappa di una sala è stata caricata
+        this.mapLoaded = false;
 
         this.getRoomMap = function () {
-
+            // inizializza variabile 'caricamento mappa completato'
+            ctrl.mapLoaded = false;
             ctrl.error_msg = "";
 
             // richiesta dati sala
@@ -94,9 +98,13 @@
                     ctrl.rows = ctrl.matrix.length;
                     ctrl.cols = ctrl.matrix[0].length;
                     ctrl.generateMap();
+                    // imposta variabile 'caricamento mappa completato'
+                    ctrl.mapLoaded = true;
                 })
                 .error(function () {
                     ctrl.error_msg = "Non è stato possibile scaricare la mappa dal server.";
+                    // imposta variabile 'caricamento mappa completato'
+                    ctrl.mapLoaded = true;
                 });
         };
 
@@ -176,7 +184,8 @@
             this.currentSelected = -1;
             this.shared_obj = {};
             this.error = "";
-
+            // variabile che indica se una mappa di una sala è stata caricata
+            this.mapLoaded = true;
 
             // carica tutti i dati di base delle sale
             this.loadRooms = function () {
@@ -193,16 +202,22 @@
 
             // recupera la matrice dei posti per una sala e i posti migliori e la renderizza
             this.setCurrentRoom = function (index) {
+                // inizializza variabile 'caricamento mappa completato'
+                ctrl.mapLoaded = false;
                 ctrl.currentRoom = ctrl.rooms[index];
                 ctrl.currentSelected = index;
                 Rooms.getRoomTopByID(ctrl.currentRoom.rid)
                     .success(function (data) {
                         ctrl.shared_obj.editable = false;
                         ctrl.shared_obj.mapTheatre = data.seats;
+                        // imposta variabile 'caricamento mappa completato'
+                        ctrl.mapLoaded = true;
                     })
                     .error (function (error) {
                     ctrl.shared_obj.editable = false;
                     ctrl.shared_obj.mapTheatre = [];
+                    // imposta variabile 'caricamento mappa completato'
+                    ctrl.mapLoaded = true;
                 });
             };
 

@@ -393,8 +393,6 @@
                     // gestione della mappa per la selezione dei posti di uno spettacolo
                     scope.$watch('o.film.seats', function (seats) {
                         // seats == scope.o.seats: matrice dei posti
-                        console.log(seats);
-                        console.log(scope.seats);
 
                         if ((scope.o.film != undefined) && (scope.o.film.seats != undefined) && (scope.o.selected_seats != undefined)) {
                             console.log("GENERATING BUY MAP");
@@ -406,6 +404,7 @@
 
                     // gestione della mappa per i posti totali occupati di una sala, i posti migliori e la modifica della sala
                     scope.$watch('o.mapTheatre', function (map) {
+                        // map == scope.o.mapTheatre: matrice dei posti
 
                         // scope.o.mapTheatre: mappa (matrice) di una sala
                         if ((scope.o.mapTheatre != undefined)) {
@@ -418,7 +417,6 @@
                                 }
                             }
                         }
-
                     }, true);
 
                 }

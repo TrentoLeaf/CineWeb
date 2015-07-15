@@ -54,7 +54,21 @@
             </div>
 
         </div>
-        <div class="col s12 m8 l8"> <!-- mappa -->
+        <div ng-hide="ctrl.mapLoaded" class="col s12 m8 l8 center-align">  <!-- caricamento mappa sala -->
+            <div class="login-loader preloader-wrapper large active">
+                <div class="spinner-layer spinner-blue-only spinner-white-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="ctrl.mapLoaded" class="col s12 m8 l8"> <!-- mappa -->
             <map o="ctrl.shared_obj"></map><!-- will be filled by js -->
         </div>
     </div>

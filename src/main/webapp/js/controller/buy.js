@@ -9,6 +9,8 @@
 
             this.go = false;
             this.error = "";
+            // variabile che indica se una mappa di una sala è stata caricata
+            this.mapLoaded = false;
 
             // errori
             var ERROR = 1;
@@ -99,6 +101,8 @@
                 if ($rootScope.buy.data_from_server_index < $rootScope.buy.data_from_server.length) {
                     /* ci sono ancora proiezioni per cui bisogna segliere i posti a sedere */
 
+                    // inizializza variabile 'caricamento mappa completato'
+                    ctrl.mapLoaded = false;
                     // reset messaggio
                     ctrl.seats_msg = "";
 
@@ -118,8 +122,12 @@
                             $rootScope.buy.shared_obj.selected_seats = [];
                             // genera la sala
                             $rootScope.buy.shared_obj.film.seats = data.seats;
+                            // imposta variabile 'caricamento mappa completato'
+                            ctrl.mapLoaded = true;
                         })
                         .error(function () {
+                            // imposta variabile 'caricamento mappa completato'
+                            ctrl.mapLoaded = true;
                             // redirect alla pagina d'errore generale
                             $location.path("/error");
                         });

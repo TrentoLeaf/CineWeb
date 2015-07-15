@@ -7,9 +7,24 @@
 
     <div class="buy-seats">
         <div class="row white-text">
-            <div class="col s12 m6 l7"> <!-- mappa sala -->
+            <div ng-hide="ctrl.mapLoaded" class="col s12 m6 l7 center-align"> <!-- caricamento mappa sala -->
+                <div class="login-loader preloader-wrapper large active">
+                    <div class="spinner-layer spinner-blue-only spinner-white-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="ctrl.mapLoaded" class="col s12 m6 l7 center-align"> <!-- mappa sala -->
                 <map o="buy.shared_obj"></map><!-- will be filled by js -->
             </div>
+
             <div class="col s12 m6 l5 center"> <!-- info biglietto -->
                 <div class="row">
                     <h5 class="yellow-text text-accent-4">{{buy.shared_obj.film.title}}</h5>
@@ -84,7 +99,7 @@
     </div>
     <div class="row">
         <div class="col s12 m12 l12 center-align">
-        <h5 class="red-text">{{ctrl.error}}</h5>
+            <h5 class="red-text">{{ctrl.error}}</h5>
         </div>
     </div>
 </div>

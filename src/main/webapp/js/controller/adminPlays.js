@@ -111,7 +111,8 @@
             this.currentSelectedPlay = -1;
             this.shared_obj = {};
             this.films = [];
-
+            // variabile che indica se una mappa di una sala è stata caricata
+            this.mapLoaded = true;
 
             // carica i film disponibili
             this.loadFilms = function () {
@@ -129,6 +130,9 @@
             // recupera la sala relativa alla proiezione selezionata
             this.setCurrentPlay = function (indexDate, indexFilm, indexPlay) {
 
+                // inizializza variabile 'caricamento mappa completato'
+                ctrl.mapLoaded = false;
+
                 ctrl.currentPlay = ctrl.playGenerator(indexDate, indexFilm, indexPlay);
                 ctrl.currentSelectedDate = indexDate;
                 ctrl.currentSelectedFilm = indexFilm;
@@ -138,6 +142,8 @@
                     .success(function (data) {
                         ctrl.shared_obj.editable = false;
                         ctrl.shared_obj.mapTheatre = data.seats;
+                        // imposta variabile 'caricamento mappa completato'
+                        ctrl.mapLoaded = true;
                     })
                     .error(function (data, status) {
                         ctrl.shared_obj.editable = false;
@@ -145,6 +151,8 @@
                         ctrl.error_message = true;
                         ctrl.setStatus("Errore durante il caricamento della mappa");
                         $("html, body").animate({ scrollTop: 0 }, "fast");
+                        // imposta variabile 'caricamento mappa completato'
+                        ctrl.mapLoaded = true;
                     });
             };
 
