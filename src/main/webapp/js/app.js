@@ -252,6 +252,13 @@ $(document).ready(function () {
                 $anchorScroll();
             });
 
+            /* utils */
+            // copia un oggetto e ritorna la copia
+            $rootScope.cloneObject = function (obj) {
+                return (JSON.parse(JSON.stringify(obj)));
+            };
+
+
             /* init of login data */
             $rootScope.user = {}; // dati untente di base
             $rootScope.isUserLogged = false;

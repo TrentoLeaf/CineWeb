@@ -191,7 +191,7 @@
 
             // genera un oggetto contenente tutti i dati relativi ad una proiezione a partire dai dati dell'array complesso delle proiezioni
             this.playGenerator = function (indexDate, indexFilm, indexPlay) {
-                var tmpFilm = ctrl.cloneObject($rootScope.playsByDate[indexDate].films[indexFilm]);
+                var tmpFilm = $rootScope.cloneObject($rootScope.playsByDate[indexDate].films[indexFilm]);
                 tmpFilm.pid = tmpFilm.plays[indexPlay].pid;
                 tmpFilm.rid = tmpFilm.plays[indexPlay].rid;
                 tmpFilm.free = tmpFilm.plays[indexPlay].free;
@@ -199,11 +199,6 @@
                 delete tmpFilm.date;
                 delete tmpFilm.plays;
                 return tmpFilm;
-            };
-
-            // copia un oggetto
-            this.cloneObject = function (obj) {
-                return (JSON.parse(JSON.stringify(obj)));
             };
 
             // aggiorna la lista di proiezioni esistenti

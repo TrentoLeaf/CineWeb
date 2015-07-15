@@ -56,7 +56,7 @@
                             $('.buy-seats-loader').removeClass('active');
                             setError(NOTHING);
                             // copia i dati da usare durante la procedura
-                            $rootScope.buy.data_from_server = ctrl.cloneObject($rootScope.cart);
+                            $rootScope.buy.data_from_server = $rootScope.cloneObject($rootScope.cart);
                             console.log("successo, data from server ");
                             console.log($rootScope.buy.data_from_server);
                             // procedi
@@ -148,9 +148,9 @@
                 } else {
                     $('.buy-loader').addClass('active');
                     // creo un nuovo oggetto
-                    ctrl.ff = ctrl.cloneObject($rootScope.buy.shared_obj.film);
+                    ctrl.ff = $rootScope.cloneObject($rootScope.buy.shared_obj.film);
                     // aggiungo allo spettacolo i posti selezionati
-                    ctrl.ff.selected_seats = ctrl.cloneObject($rootScope.buy.shared_obj.selected_seats);
+                    ctrl.ff.selected_seats = $rootScope.cloneObject($rootScope.buy.shared_obj.selected_seats);
                     delete ctrl.ff.seats;
                     delete ctrl.ff.seats_selected;
                     // salvo l'oggetto nell'array che verrà inviato al server una volta completate le scelte dei posti di tutti gli spettacoli
@@ -184,10 +184,6 @@
                 $location.path('/today');
             };
 
-            // copia un oggetto
-            this.cloneObject = function (obj) {
-                return (JSON.parse(JSON.stringify(obj)));
-            };
 
             // inizia la procedura d'acquisto
             this.start_buy();

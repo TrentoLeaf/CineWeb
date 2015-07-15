@@ -65,7 +65,7 @@
 
             // apre modal modifica
             this.open_edit_modal = function (data) {
-                ctrl.tmpPrice = ctrl.cloneObject(data);
+                ctrl.tmpPrice = $rootScope.cloneObject(data);
                 $('#modal_price_edit').openModal();
             };
 
@@ -94,10 +94,6 @@
                 });
             };
 
-            // copia un oggetto
-            this.cloneObject = function (obj) {
-                return (JSON.parse(JSON.stringify(obj)));
-            };
 
             init();
             this.loadPrices();

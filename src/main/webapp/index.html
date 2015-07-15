@@ -179,7 +179,7 @@
                         <h5 class="total col s5 m5 l5 right-align">{{total | currency:"€ "}}</h5>
                     </div>
                     <div>
-                        <button ng-hide="cartLength() == 0" ng-click="cc.proceed(); tab.closeTab();" id="btn-go-to-buy" class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui
+                        <button ng-hide="cartLength() == 0 || total <= 0" ng-click="cc.proceed(); tab.closeTab();" id="btn-go-to-buy" class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui
                             <i class="mdi-navigation-chevron-right right"></i>
 
                             <div class="cart-loader preloader-wrapper small left" style="margin-top: 9px;">

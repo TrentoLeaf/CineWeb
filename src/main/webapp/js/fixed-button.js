@@ -1,3 +1,4 @@
+/* fixed button per lo spostamento rapido tra le pagine amministratore */
 $(document).ready(function() {
 
     var button = $('#fab_primary');

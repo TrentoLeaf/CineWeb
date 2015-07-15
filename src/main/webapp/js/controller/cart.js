@@ -24,7 +24,7 @@
 
                 if (!duplicate) {
                     // copio film per non sporcare l'array dei film in programmazione con valori del carrello
-                    var newFilm = this.cloneObject(film);
+                    var newFilm = $rootScope.cloneObject(film);
                     // aggiungo un dropdown con tipo e numero di biglietti
                     newFilm.tickets = [];
                     newFilm.tickets.push({type: $rootScope.tickets[0].type, number: 1});
@@ -78,10 +78,6 @@
 
             };
 
-            // copia un oggetto
-            this.cloneObject = function (obj) {
-                return (JSON.parse(JSON.stringify(obj)));
-            };
 
             // anima l'icona del carrello
             function animateCartIcon () {
