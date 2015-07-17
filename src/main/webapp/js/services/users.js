@@ -12,7 +12,7 @@
             });
         }])
 
-        .factory('Auth', ['BASE', '$http', '$q', '$log', function (BASE, $http, $q, $log) {
+        .factory('Auth', ['BASE', '$http', '$q', '$log', '$templateCache', function (BASE, $http, $q, $log, $templateCache) {
             var BASE_USERS = BASE + "/users";
             var BASE_BOOKINGS = BASE + "/bookings";
             var BASE_TICKETS = BASE + "/tickets";
@@ -38,6 +38,7 @@
                 logout: function () {
                     return $http.post(BASE_USERS + '/logout')
                         .success(function (data) {
+                            $templateCache.removeAll();
                             $log.info('LOGOUT OK: ' + data);
                         })
                         .error(function (data, status) {

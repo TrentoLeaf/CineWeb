@@ -1,22 +1,25 @@
-$(document).ready(function () {
+(function () {
+    'use strict';
 
-    // init the mobile menu sidenav
-    $('.button-collapse').sideNav({
-        closeOnClick: true
+    $(document).ready(function () {
+
+        // init the mobile menu sidenav
+        $('.button-collapse').sideNav({
+            closeOnClick: true
+        });
+
+        // init the dropdown selectors
+        $('select').material_select();
+
+        // apre i modal di materialize
+        $('.modal-trigger').leanModal({
+            dismissible: true, // Modal can be dismissed by clicking outside of the modal
+            opacity: .5, // Opacity of modal background
+            in_duration: 400, // Transition in duration
+            out_duration: 300 // Transition out duration
+        });
     });
-
-    // init the dropdown selectors
-    $('select').material_select();
-
-    // apre i modal di materialize
-    $('.modal-trigger').leanModal({
-        dismissible: true, // Modal can be dismissed by clicking outside of the modal
-        opacity: .5, // Opacity of modal background
-        in_duration: 400, // Transition in duration
-        out_duration: 300 // Transition out duration
-    });
-
-});
+})();
 
 (function () {
     'use strict';
