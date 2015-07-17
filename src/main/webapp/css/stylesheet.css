@@ -275,11 +275,9 @@ main .side-div {
   max-height: 1.5em;
   padding: 0px; }
 
-.summaryTable th {
-  text-align: center; }
-.summaryTable td {
+.summaryTable th, .summaryTable td {
   text-align: center;
-  padding: 0; }
+  padding: 0.25em 0em 0.25em 0em; }
 .summaryTable span {
   font-size: 1em; }
 

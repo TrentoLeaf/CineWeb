@@ -27,7 +27,7 @@
 
             <div class="col s12 m6 l5 center"> <!-- info biglietto -->
                 <div class="row">
-                    <h5 class="yellow-text text-accent-4">{{buy.shared_obj.film.title}}</h5>
+                    <h5 class="yellow-text text-accent-4">{{buy.shared_obj.film.title}} <i ng-show="buy.shared_obj.film._3d" class="mdi-action-3d-rotation"></i></h5>
                     <h6>{{buy.shared_obj.film.time | date: 'dd/MM/yyyy, HH:mm'}}</h6>
                 </div>
                 <div class="row">

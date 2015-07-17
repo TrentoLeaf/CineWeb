@@ -32,6 +32,7 @@
                     newFilm.pid = film.plays[play_index].pid;
                     newFilm.rid = film.plays[play_index].rid;
                     newFilm.free = film.plays[play_index].free;
+                    newFilm._3d = film.plays[play_index]._3d;
                     // pulisco l'oggetto
                     delete newFilm.date;
                     delete newFilm.plays;

@@ -12,7 +12,7 @@
                 <h4>Biglietti acquistati</h4>
                 <div class="row" ng-repeat = "play in buy.data_to_server.cart">
                     <div>
-                        <h5 class="yellow-text text-accent-4">{{play.title}}</h5>
+                        <h5 class="yellow-text text-accent-4">{{play.title}} <i ng-show="play._3d" class="mdi-action-3d-rotation"></i></h5>
                         <h6>{{play.time | date: 'dd/MM/yyyy, HH:mm'}}</h6>
                         <table class="summaryTable">
                             <thead>

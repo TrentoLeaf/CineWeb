@@ -33,7 +33,7 @@
                                         <img class="responsive-img" ng-src="{{film.playbill}}" alt="locandina" />
                                     </div>
                                     <div class="col s8 m10 l8">
-                                        <h6><b>{{film.title}}</b></h6>
+                                        <h6><b>{{film.title}} </b><i ng-show="play._3d" class="mdi-action-3d-rotation"></i></h6>
                                         <h6>Data: {{play.time | date:'dd/MM/yyyy, HH:mm'}}</h6>
                                         <h6>Sala: {{play.rid}}</h6>
                                         <h6>Posti liberi: {{play.free}}</h6>

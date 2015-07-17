@@ -133,7 +133,7 @@
                                     <div class="col s9 m9 l9">
                                         <h5>{{film.title}}</h5> <!-- titolo -->
                                         <h6>{{film.time | date: 'dd/MM/yyyy, HH:mm'}}</h6> <!-- data -->
-                                        <h6>SALA {{film.rid}}</h6> <!-- sala -->
+                                        <h6>SALA {{film.rid}} <i ng-show="film._3d" class="mdi-action-3d-rotation"></i></h6> <!-- sala e 3d -->
                                     </div>
                                     <div class="col s3 m3 l3">
                                         <i ng-click="cc.removeFromCart($index)" class="mdi-navigation-close small right" style="cursor: pointer;"></i>
