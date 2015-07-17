@@ -60,6 +60,9 @@ public class RestTicketsTest extends MyJerseyTest {
         tt1.setTitle(f1.getTitle());
         tt2.setTitle(f1.getTitle());
         tt3.setTitle(f1.getTitle());
+        tt1.setTime(p1.getTime());
+        tt2.setTime(p2.getTime());
+        tt3.setTime(p2.getTime());
 
         final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, Arrays.asList(tt1, tt2, tt3));
         expected.add(b);
@@ -119,6 +122,9 @@ public class RestTicketsTest extends MyJerseyTest {
         tt1.setTitle(f1.getTitle());
         tt2.setTitle(f1.getTitle());
         tt3.setTitle(f1.getTitle());
+        tt1.setTime(p1.getTime());
+        tt2.setTime(p2.getTime());
+        tt3.setTime(p2.getTime());
 
         final Booking b = new Booking(booking.getBid(), u1, booking.getTime(), 15, Arrays.asList(tt1, tt2, tt3));
         expected.add(b);

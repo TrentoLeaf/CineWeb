@@ -1,5 +1,7 @@
 package tk.trentoleaf.cineweb.beans.model;
 
+import org.joda.time.DateTime;
+
 /**
  * Bean that represent a bought ticket for a given seat. It belongs to a booking.
  */
@@ -9,6 +11,7 @@ public class Ticket {
     private Integer bid;
     private Integer pid;
     private String title;
+    private DateTime time;
     private int rid;
     private int x;
     private int y;
@@ -85,6 +88,14 @@ public class Ticket {
         this.title = title;
     }
 
+    public DateTime getTime() {
+        return time;
+    }
+
+    public void setTime(DateTime time) {
+        this.time = time;
+    }
+
     public int getRid() {
         return rid;
     }
@@ -154,6 +165,7 @@ public class Ticket {
         if (bid != null ? !bid.equals(ticket.bid) : ticket.bid != null) return false;
         if (pid != null ? !pid.equals(ticket.pid) : ticket.pid != null) return false;
         if (title != null ? !title.equals(ticket.title) : ticket.title != null) return false;
+        if (time != null ? !time.equals(ticket.time) : ticket.time != null) return false;
         return type.equals(ticket.type);
     }
 }

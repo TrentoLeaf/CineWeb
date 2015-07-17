@@ -209,9 +209,9 @@ public class BookingsDB {
             }
 
             // q2
-            final String q2 = "SELECT tid, pid, title, rid, x, y, price, type, FALSE AS deleted FROM tickets " +
+            final String q2 = "SELECT tid, pid, title, time, rid, x, y, price, type, FALSE AS deleted FROM tickets " +
                     "NATURAL JOIN plays NATURAL JOIN films WHERE bid = ?" +
-                    "UNION SELECT tid, pid, title, rid, x, y, price, type, TRUE AS deleted FROM deleted_tickets " +
+                    "UNION SELECT tid, pid, title, time, rid, x, y, price, type, TRUE AS deleted FROM deleted_tickets " +
                     "NATURAL JOIN plays NATURAL JOIN films WHERE bid = ?;";
 
             // iterate over bookings
@@ -233,6 +233,7 @@ public class BookingsDB {
                         t.setBid(b.getBid());
                         t.setPid(prs.getInt("pid"));
                         t.setTitle(prs.getString("title"));
+                        t.setTime(new DateTime(prs.getTimestamp("time").getTime()));
                         t.setRid(prs.getInt("rid"));
                         t.setX(prs.getInt("x"));
                         t.setY(prs.getInt("y"));
