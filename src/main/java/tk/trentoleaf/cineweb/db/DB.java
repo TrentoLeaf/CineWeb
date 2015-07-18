@@ -262,7 +262,6 @@ public class DB {
                     "y INTEGER," +
                     "PRIMARY KEY (rid, x, y)," +
                     "FOREIGN KEY (rid) REFERENCES rooms(rid) ON DELETE CASCADE)");
-            // TODO: cosa succede se cancello stanza? si cancellano i ticket oppure no?
         }
     }
 
