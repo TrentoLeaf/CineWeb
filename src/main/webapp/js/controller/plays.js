@@ -9,10 +9,8 @@
             this.current = {};
             this.show_trailer_for_current = "Trailer";
 
-            // TODO ???
             this.isNow = function (date) {
                 var act = new Date();
-                console.log("This is the date: " + date + " and this is the actual: " + act);
                 return true;
             };
 
@@ -24,7 +22,6 @@
 
             // chiude il modal dei dettagli
             this.closeWindow = function () {
-                console.log("Close window...");
                 $('#modal').closeModal();
             };
 
@@ -40,7 +37,6 @@
             // init drowdowns (direttiva che emette l'event alla fine del file)
             $scope.$on('dropdownRepeatEnd', function(scope, element, attrs){
                 $('.dropdown-button').dropdown();
-                console.log("DROPDOWN INIZIALIZZATI");
             });
 
             // init tooltip per il suggerimento di acquisto (direttiva che emette l'event alla fine del file)
@@ -48,7 +44,6 @@
                 var mq = window.matchMedia("(min-width: 992px)");
                 if (mq.matches) {
                     $('.tooltipped').tooltip({delay: 50});
-                    console.log("TOOLTIP INIZIALIZZATI");
                 }
             });
 

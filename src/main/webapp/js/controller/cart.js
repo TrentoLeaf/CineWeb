@@ -62,9 +62,7 @@
             };
 
             this.removeDropDown = function (film_index, dropdown_index) {
-                console.log("remov");
                 $rootScope.cart[film_index].tickets.splice(dropdown_index, 1);
-                console.log($rootScope.cart);
             };
 
             // redirect alla pagina di selezione posti

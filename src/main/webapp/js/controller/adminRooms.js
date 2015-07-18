@@ -58,12 +58,10 @@
                 // invia richiesta
                 ctrl.newRoom.$save(function (data) {
                     $(".room-loader").removeClass("active");
-                    console.log("Theatre add success");
                     $location.path('/admin/rooms');
                 }, function () {
                     $(".room-loader").removeClass("active");
                     ctrl.error_msg = "Aggiunta della nuova sala fallita.";
-                    console.log("Theatre add fail");
                 });
             } else {
                 $(".room-loader").removeClass("active");
@@ -192,7 +190,6 @@
                 ctrl.rooms = [];
                 Rooms.getRoomsOnly()
                     .success(function (data) {
-                        console.log(data);
                         ctrl.rooms = data;
                     })
                     .error(function (error) {

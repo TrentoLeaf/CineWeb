@@ -59,8 +59,6 @@
                             setError(NOTHING);
                             // copia i dati da usare durante la procedura
                             $rootScope.buy.data_from_server = $rootScope.cloneObject($rootScope.cart);
-                            console.log("successo, data from server ");
-                            console.log($rootScope.buy.data_from_server);
                             // procedi
                             ctrl.go = true;
                             ctrl.next_buy();
@@ -69,9 +67,6 @@
                             // ricarico il carrello aggiornato dal server
                             $rootScope.cart = data;
                             $('.buy-seats-loader').removeClass('active');
-
-                            console.log("errore, data from server ");
-                            console.log($rootScope.buy.data_from_server);
                             ctrl.go = false;
                             setError(ERROR);
 
@@ -175,7 +170,7 @@
                 $('#modal_buy_cancel').openModal();
             };
 
-            1           // chiude il modal di conferma annullamento procedura
+            // chiude il modal di conferma annullamento procedura
             this.close_modal = function () {
                 $('#modal_buy_cancel').closeModal();
             };
@@ -337,7 +332,6 @@
                 if (!error) {
                     $('.buy-complete-msg').addClass('white-text');
                     this.buy_complete_msg = this.BUY_COMPLETE_SUCCESS;
-                    console.log(this.buy_complete_msg);
                 } else {
                     $('.buy-complete-msg').addClass('red-text');
                     this.buy_complete_msg = this.BUY_COMPLETE_ERROR;

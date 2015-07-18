@@ -71,7 +71,6 @@
                 $('.collapsible').collapsible({
                     accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
                 });
-                console.log("collapsible INIZIALIZZATI");
             });
 
             // convert 0 to A, 1 to B, ...

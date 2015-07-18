@@ -18,6 +18,27 @@
             in_duration: 400, // Transition in duration
             out_duration: 300 // Transition out duration
         });
+
+        // init pulsante fixed-button admin
+        var button = $('#fab_primary');
+        var icon = $('.fixed-button a i');
+
+        button.click(function () {
+            if(button.hasClass("active")) {
+                button.toggleClass("active");
+                $(".fixed-list").removeClass("slideInUp");
+                $(".fixed-list").addClass("slideOutDown");
+                icon.removeClass("rotateOut");
+                icon.addClass("rotateIn");
+            } else {
+                $(".fixed-list").removeClass("hide-list");
+                button.toggleClass("active");
+                $(".fixed-list").removeClass("slideOutDown");
+                $(".fixed-list").addClass("slideInUp");
+                icon.removeClass("rotateIn");
+                icon.addClass("rotateOut");
+            }
+        });
     });
 })();
 
@@ -200,7 +221,6 @@
         .directive('onDropdownRepeat', function () {
             return function (scope, element, attrs) {
                 if (scope.$last) {
-                    console.log("DROPDOWN EMIT");
                     scope.$emit('dropdownRepeatEnd', element, attrs);
                 }
             };
@@ -210,7 +230,6 @@
         .directive('onCollapsibleRepeat', function () {
             return function (scope, element, attrs) {
                 if (scope.$last) {
-                    console.log("collapsible EMIT");
                     scope.$emit('collapsibleRepeatEnd', element, attrs);
                 }
             };
@@ -220,7 +239,6 @@
         .directive('onSelectRepeat', function () {
             return function (scope, element, attrs) {
                 if (scope.$last) {
-                    console.log("SELECT EMIT");
                     scope.$emit('selectRepeatEnd', element, attrs);
                 }
             };
@@ -230,7 +248,6 @@
         .directive('onTooltipRepeat', function () {
             return function (scope, element, attrs) {
                 if (scope.$last) {
-                    console.log("TOOLTIP EMIT");
                     scope.$emit('tooltipRepeatEnd', element, attrs);
                 }
             };
@@ -305,7 +322,6 @@
                         $rootScope.total = $rootScope.total + ($rootScope.tickets[j].price * num);
                     }
                 }
-                console.log("NEW TOTAL: " + $rootScope.total);
             };
 
 
@@ -321,16 +337,11 @@
                 $rootScope.isUserLoggedPromise.then(
                     function (data) {
                         // user is already logged
-                        console.log("THE USER IS ALREADY LOGGED");
-                        console.log(data);
-
                         $rootScope.isUserLogged = true;
                         //save basic user data
                         $rootScope.user = data;
                     }, function (data) {
                         // not logged
-                        console.log("THE USER IS NOT LOGGED");
-
                         $rootScope.isUserLogged = false;
                         $rootScope.user = {};
                     });
@@ -340,12 +351,9 @@
 
 
             /* init of prices */
-            console.log("INIT THE PRICES");
 
             // function to load the prices
             $rootScope.loadPrices = function () {
-                console.log(Prices);
-                console.log(angular.copy(Prices));
                 Prices.getList().then(function (result) {
                     $rootScope.tickets = result.data;
                     // when data is ready re-update the total of the cart
@@ -363,8 +371,6 @@
                 CompletePlays.playsByDate().then(
                     function (data) {
                         $rootScope.playsByDate = data;
-                        console.log("PLAYS LOADED");
-                        console.log(data);
                     },
                     function (error) {
                         $rootScope.playsByDate = [];
@@ -384,9 +390,6 @@
                 if ($rootScope.cart == null) {
                     $rootScope.cart = [];
                 }
-                console.log("cart loaded: ");
-                console.log($rootScope.cart);
-
 
                 // ask to server if the cart loaded is valid using 'buyProcedure validation'
                 BuyProcedure.proceed($rootScope.cart)
@@ -401,10 +404,6 @@
                             $rootScope.cart = [];
                         }
                     });
-
-                console.log("cart checked: ");
-                console.log($rootScope.cart);
-
             };
 
             // carrello che contiene oggetti film modificati
@@ -417,10 +416,8 @@
             $rootScope.$watch(function () {
                 return $rootScope.cart;
             }, function (cart) {
-
                 $rootScope.updateTotal();
                 StorageService.saveCart(cart);
-                console.log("cart saved");
             }, true);
 
 
@@ -446,24 +443,22 @@
 
     /* function used in $routeProvider to route a user to login page if is not logged */
     var checkRouting = function ($rootScope, $location, Auth) {
-        console.log("sto controllando il routing");
         if ($rootScope.isUserLoggedPromise != undefined) {
             // check the promise
             $rootScope.isUserLoggedPromise.then(
                 function (data) {
                     // user is logged. continue
-                    console.log("routing ok");
                     // check if normal user is trying to access to an admin page
-                    if (data.role != "admin" && $location.path() != "/me") {
-                        $location.path("/error");
+                    if (data != undefined) {
+                        if (data.role != "admin" && $location.path() != "/me") {
+                            $location.path("/error");
+                        }
                     }
                 }, function () {
-                    console.log("routing no");
                     // user isn't logged. Redirect to login page
                     $location.path("/login");
                 });
         } else {
-            console.log("routing undefined. Asking login data to server...");
             // ask to server if user is logged
             Auth.me().then(function () {
                 // user is already logged

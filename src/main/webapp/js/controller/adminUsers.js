@@ -23,8 +23,6 @@
             this.save = function () {
                 Users.update({id: ctrl.currentUser.uid}, ctrl.currentUser).$promise.then(function (data) {
                     // ok
-                    console.log("UPDATE OK ->");
-                    console.log(data);
                     $location.path("/admin/users")
                 }, function (response) {
                     if (response.status == 409) {
@@ -136,7 +134,6 @@
                 $('.collapsible').collapsible({
                     accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
                 });
-                console.log("collapsible INIZIALIZZATI");
             });
 
             ctrl.getBookings();
@@ -219,8 +216,6 @@
                         ctrl.users.push(data);
                         ctrl.newUser = new Users();
                         ctrl.newUser.enabled = true;
-                        console.log("Insertion succes");
-                        console.log(data);
                         $location.path("/admin/users");
                     }, function(response) {
                         if (response.status == 409) {

@@ -3,5 +3,4 @@
 
     angular.module('constantsModule', [])
         .constant('BASE', '/api');
-
 })();

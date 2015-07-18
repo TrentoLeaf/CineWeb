@@ -10,10 +10,10 @@
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 
     <!-- CSS  -->
-    <link rel="stylesheet" href="css/materialize.css">
-    <link rel="stylesheet" href="css/stylesheet.css">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/stylesheet.min.css">
     <!-- stylesheet for the svg -->
-    <link type="text/css" rel="stylesheet" href="../css/svg-theatre.css">
+    <link type="text/css" rel="stylesheet" href="css/svg-theatre.min.css">
 
     <!-- JS libs -->
     <script src="lib/jquery-2.1.4.min.js"></script>
@@ -28,46 +28,49 @@
     <script src="lib/chart.min.js"></script>
 
     <!-- JS app -->
-    <script src="js/app.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/services/constants.js"></script>
-    <script src="js/services/storage.js"></script>
-    <script src="js/services/users.js"></script>
-    <script src="js/services/rooms.js"></script>
-    <script src="js/services/stats.js"></script>
-    <script src="js/services/filmsPlays.js"></script>
-    <script src="js/services/prices.js"></script>
-    <script src="js/services/buyProcedure.js"></script>
-    <script src="js/controller/login.js"></script>
-    <script src="js/controller/plays.js"></script>
-    <script src="js/controller/cart.js"></script>
-    <script src="js/controller/tab.js"></script>
-    <script src="js/controller/registration.js"></script>
-    <script src="js/controller/me.js"></script>
-    <script src="js/controller/adminUsers.js"></script>
-    <script src="js/controller/adminFilms.js"></script>
-    <script src="js/controller/adminPrices.js"></script>
-    <script src="js/controller/adminPlays.js"></script>
-    <script src="js/controller/adminRooms.js"></script>
-    <script src="js/controller/adminDashboard.js"></script>
-    <script src="js/controller/adminStats.js"></script>
-    <script src="js/controller/confirm.js"></script>
-    <script src="js/controller/reset.js"></script>
-    <script src="js/controller/buy.js"></script>
+    <!-- <script src="js/app.min.js"></script>
+    -->
+        <script src="js/app.js"></script>
+        <script src="js/map.js"></script>
+        <script src="js/services/constants.js"></script>
+        <script src="js/services/storage.js"></script>
+        <script src="js/services/users.js"></script>
+        <script src="js/services/rooms.js"></script>
+        <script src="js/services/stats.js"></script>
+        <script src="js/services/filmsPlays.js"></script>
+        <script src="js/services/prices.js"></script>
+        <script src="js/services/buyProcedure.js"></script>
+        <script src="js/controller/login.js"></script>
+        <script src="js/controller/plays.js"></script>
+        <script src="js/controller/cart.js"></script>
+        <script src="js/controller/tab.js"></script>
+        <script src="js/controller/registration.js"></script>
+        <script src="js/controller/me.js"></script>
+        <script src="js/controller/adminUsers.js"></script>
+        <script src="js/controller/adminFilms.js"></script>
+        <script src="js/controller/adminPrices.js"></script>
+        <script src="js/controller/adminPlays.js"></script>
+        <script src="js/controller/adminRooms.js"></script>
+        <script src="js/controller/adminDashboard.js"></script>
+        <script src="js/controller/adminStats.js"></script>
+        <script src="js/controller/confirm.js"></script>
+        <script src="js/controller/reset.js"></script>
+        <script src="js/controller/buy.js"></script>
 
-    <!-- JS Fixed-button-->
-    <script src="js/fixed-button.js"></script>
-</head>
+    </head>
 
-<body ng-controller="TabController as tab">
-<div class="navbar-fixed">
-    <nav class="black" role="navigation" id="header-navbar">
-        <div class="nav-wrapper">
-            <a id="title" href="#home" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
-            <ul class="left hide-on-med-and-down">
-                <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#today">Proiezioni</a></li>
-                <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#info">Informazioni</a></li>
-            </ul>
+    <body ng-controller="TabController as tab">
+    <div class="navbar-fixed">
+        <nav class="black" role="navigation" id="header-navbar">
+            <div class="nav-wrapper">
+                <a id="title" href="#home" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
+                <ul class="left hide-on-med-and-down">
+                    <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#today">Proiezioni</a></li>
+                    <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#info">Informazioni</a></li>
+                </ul>
+
+                </ul>
+
 
             <!-- right navbar -->
             <ul class="right hide-on-small-only">

@@ -14,7 +14,6 @@
 
             // recupera i prezzi del server
             this.loadPrices = function () {
-                console.log(Prices);
                 Prices.getList().then(function (result) {
                     ctrl.prices = result.data;
 
@@ -28,7 +27,6 @@
                 Prices.delete(ctrl.tmpPrice).then( function () {
                     // ok
                     ctrl.loadPrices();
-                    console.log("Price deletion success");
                 }, function () {
                     // fail
                 });
@@ -77,13 +75,9 @@
                     ctrl.tmpPrice = {};
                     ctrl.loadPrices();
                     ctrl.close_edit_modal();
-
-                    console.log("UPDATE OK ->");
-                    console.log(data);
                 }, function () {
                     // fail...
-                    ctrl.error_msg = "Modifica fallita."
-                    console.log("UPDATE fail");
+                    ctrl.error_msg = "Modifica fallita.";
                 });
             };
 

@@ -24,8 +24,6 @@
             this.save = function () {
                 Films.update({id: ctrl.currentFilm.fid}, ctrl.currentFilm).$promise.then(function (data) {
                     // ok
-                    console.log("UPDATE OK ->");
-                    console.log(data);
                     $location.path("/admin/films")
                 }, function (response) {
                     // fail...
@@ -86,7 +84,6 @@
                 ctrl.newFilm.$save( function (data) {
                     ctrl.films.push(data);
                     ctrl.newFilm = new Films();
-                    console.log("Film insertion success");
                     $location.path("/admin/films");
 
                 }, function (response) {
@@ -108,7 +105,6 @@
             // cancella un film
             this.deleteFilm = function () {
                 Films.delete({id: ctrl.tmpFilm.fid}, function (){
-                    console.log("Film deletion success");
                     ctrl.error_message = false;
                     ctrl.setStatus("Film cancellato con successo");
                     $("html, body").animate({ scrollTop: 0 }, "fast");

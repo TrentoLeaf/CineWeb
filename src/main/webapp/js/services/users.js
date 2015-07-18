@@ -12,7 +12,7 @@
             });
         }])
 
-        .factory('Auth', ['BASE', '$http', '$q', '$log', '$templateCache', function (BASE, $http, $q, $log, $templateCache) {
+        .factory('Auth', ['BASE', '$http', '$q', '$templateCache', function (BASE, $http, $q, $templateCache) {
             var BASE_USERS = BASE + "/users";
             var BASE_BOOKINGS = BASE + "/bookings";
             var BASE_TICKETS = BASE + "/tickets";
@@ -24,12 +24,9 @@
                     $http.post(BASE_USERS + '/login', {email: email, password: password})
                         .success(function (data) {
                             deferred.resolve(data);
-                            $log.info('LOGIN OK: ' + data);
-                            $log.info(data);
                         })
                         .error(function (data, status) {
                             deferred.reject(data);
-                            $log.warn('LOGIN FAILED: ' + status + " " + data.error);
                         });
                     return deferred.promise;
                 },
@@ -39,10 +36,8 @@
                     return $http.post(BASE_USERS + '/logout')
                         .success(function (data) {
                             $templateCache.removeAll();
-                            $log.info('LOGOUT OK: ' + data);
                         })
                         .error(function (data, status) {
-                            $log.warn('LOGOUT FAILED: ' + status + " " + data);
                         });
                 },
 
@@ -52,13 +47,7 @@
                         email: email,
                         oldPassword: oldPassword,
                         newPassword: newPassword
-                    })
-                        .success(function (data) {
-                            $log.info('CHANGE PASSWORD OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('CHANGE PASSWORD FAILED: ' + status + " " + data);
-                        });
+                    });
                 },
 
                 /* richiesta cambio password in seguito alla richiesta di recupero della password */
@@ -67,13 +56,7 @@
                         email: email,
                         code: code,
                         newPassword: newPassword
-                    })
-                        .success(function (data) {
-                            $log.info('CHANGE PASSWORD OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('CHANGE PASSWORD FAILED: ' + status + " " + data);
-                        });
+                    });
                 },
 
                 /* richiesta di registrazione */
@@ -83,35 +66,17 @@
                         password: password,
                         firstName: firstName,
                         secondName: secondName
-                    })
-                        .success(function (data) {
-                            $log.info('REGISTRATION OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('REGISTRATION FAILED: ' + status + " " + data);
-                        });
+                    });
                 },
 
                 /* invia la conferma del click sull'url di registrazione */
                 confirmRegistration: function (code) {
-                    return $http.post(BASE_USERS + '/confirm', {code: code})
-                        .success(function (data) {
-                            $log.info('CONFIRM REGISTRATION OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('CONFIRM REGISTRATION FAILED: ' + status + " " + data);
-                        });
+                    return $http.post(BASE_USERS + '/confirm', {code: code});
                 },
 
                 /* richiesta recupero password */
                 forgotPassword: function (email) {
-                    return $http.post(BASE_USERS + "/forgot-password", {email: email})
-                        .success(function (data) {
-                            $log.info('FORGOT PASSWORD OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('FORGOT PASSWORD FAILED: ' + status + " " + data);
-                        });
+                    return $http.post(BASE_USERS + "/forgot-password", {email: email});
                 },
 
                 /* richiesta dati di base dell'utente. Ritorna una promise della richiesta*/
@@ -120,46 +85,26 @@
                     $http.get(BASE_USERS + "/me")
                         .success(function (data) {
                             deferred.resolve(data);
-                            $log.info('ME OK: ' + data);
                         })
                         .error(function (data, status) {
                             deferred.reject(data);
-                            $log.warn('ME FAILED: ' + status + " " + data);
                         });
                     return deferred.promise;
                 },
 
                 /* richiesta cronologia acquisti dell'utente */
                 my_bookings: function () {
-                    return $http.get(BASE_BOOKINGS + "/my")
-                        .success(function (data) {
-                            $log.info('MY OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('MY FAILED: ' + status + " " + data);
-                        });
+                    return $http.get(BASE_BOOKINGS + "/my");
                 },
 
                 /* richiesta (admin) cronologia acquisti di un'utente*/
                 user_bookings: function (uid) {
-                    return $http.get(BASE_BOOKINGS + "/" + uid)
-                        .success(function (data) {
-                            $log.info('BOOKING_USER OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('BOOKING_USER FAILED: ' + status + " " + data);
-                        });
+                    return $http.get(BASE_BOOKINGS + "/" + uid);
                 },
 
                 /* richiesta (admin) cancellazione biglietto */
                 deleteTicket: function (tid) {
-                    return $http.delete(BASE_TICKETS + "/" + tid)
-                        .success(function (data) {
-                            $log.info('DELETE TICKET OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('DELETE TICKET FAILED: ' + status + " " + data);
-                        });
+                    return $http.delete(BASE_TICKETS + "/" + tid);
                 }
             }
         }]);

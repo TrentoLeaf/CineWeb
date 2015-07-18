@@ -21,7 +21,6 @@
 
             Films.query(function (data) {
                 ctrl.films = data;
-                console.log(ctrl.films);
             }, function (){
                 ctrl.error_message = true;
                 ctrl.setStatus("Errore durante il caricamento dei film");
@@ -31,12 +30,8 @@
         // invia richiesta nuova proiezione
         this.addPlay = function (data) {
 
-            console.log("data: " + ctrl.date);
-            console.log("tempo: " + ctrl.time);
-
             // set the complete time (composition of ctrl.date + ctrl.time (taking only hours and minutes))
             var new_time = new Date(ctrl.date + " " + ctrl.time);
-            console.log("newdata: " + new_time);
             ctrl.newPlay.time = new_time;
 
             if (ctrl.newPlay_3d) {
@@ -47,7 +42,6 @@
 
             ctrl.newPlay.$save(function (data) {
                 ctrl.newPlay = new Plays();
-                console.log("Play insertion success");
                 ctrl.updatePlays();
                 $location.path("/admin/plays");
 
@@ -75,7 +69,6 @@
         $scope.$on('selectRepeatEnd', function(scope, element, attrs){
             setTimeout(function () {
                 $('select').material_select();
-                console.log("SELECT INIZIALIZZATI");
             },50);
         });
 
@@ -119,7 +112,6 @@
 
                 Films.query(function (data) {
                     ctrl.films = data;
-                    console.log(ctrl.films);
                 }, function (){
                     ctrl.error_message = true;
                     ctrl.setStatus("Errore durante il caricamento dei film");
@@ -159,7 +151,6 @@
             // elimina una proiezione
             this.deletePlay = function () {
                 Plays.delete({id: ctrl.currentPlay.pid}).$promise.then(function () {
-                    console.log("Play deletion success");
                     ctrl.updatePlays();
                     ctrl.close_delete_modal();
                     ctrl.error_message = false;
