@@ -43,7 +43,6 @@ public class BookingsDB {
     // create a new booking
     public Booking createBooking(int uid, List<Ticket> tickets) throws DBException, UserNotFoundException, PlayGoneException {
 
-        // TODO: check if some play is already gone... for each film
         // booking in creation
         int bid;
 
