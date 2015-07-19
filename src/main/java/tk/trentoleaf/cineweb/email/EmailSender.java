@@ -36,8 +36,10 @@ public class EmailSender {
 
     // get singleton
     public static EmailSender instance() throws SendGridException {
-        if (sender == null) {
-            sender = new EmailSender();
+        synchronized (EmailSender.class) {
+            if (sender == null) {
+                sender = new EmailSender();
+            }
         }
         return sender;
     }
