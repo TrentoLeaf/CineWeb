@@ -67,7 +67,7 @@
                                     <i class="mdi-action-shopping-basket"></i>ACQUISTO
                                 </div>
                                 <div class="col s6 m6 l6 right-align">
-                                    <span>Data: {{buy.time | date: 'dd/MM/yyyy'}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
+                                    <span class="hide-on-small-only">Data: </span><span>{{buy.time | date: 'dd/MM/yyyy'}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
                                 </div>
                             </div>
                         </div>
@@ -81,7 +81,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <table class="summaryTable">
+                                <table class="summaryTable responsive-table">
                                     <thead>
                                     <tr>
                                         <th>Film</th>
