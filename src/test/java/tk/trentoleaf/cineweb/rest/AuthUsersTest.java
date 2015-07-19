@@ -450,13 +450,11 @@ public class AuthUsersTest extends MyJerseyTest {
         assertEquals(200, r1.getStatus());
 
         // logout
-        final Response r2 = getTarget().path("users/logout").request().cookie(c).post(null);
-        assertEquals(200, r2.getStatus());
+        getTarget().path("users/logout").request().cookie(c).post(null);
 
         // try to get users -> should fail
         final Response r3 = getTarget().path("/users/").request(JSON).cookie(c).get();
         assertEquals(401, r3.getStatus());
     }
-
 }
 
