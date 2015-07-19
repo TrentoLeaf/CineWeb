@@ -91,6 +91,8 @@ public class CSRFUtils {
         for (Cookie c : cookies) {
             if (c.getName().equals(COOKIE)) {
                 c.setMaxAge(0);
+                c.setValue("");
+                c.setPath("/");
                 response.addCookie(c);
             }
         }
