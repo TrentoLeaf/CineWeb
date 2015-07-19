@@ -24,8 +24,10 @@ public class DB {
 
     // instance -> singleton pattern
     public static DB instance() {
-        if (instance == null) {
-            instance = new DB();
+        synchronized (DB.class) {
+            if (instance == null) {
+                instance = new DB();
+            }
         }
         return instance;
     }

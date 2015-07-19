@@ -27,8 +27,10 @@ public class StatisticsDB {
 
     // instance -> singleton pattern
     public static StatisticsDB instance() {
-        if (instance == null) {
-            instance = new StatisticsDB();
+        synchronized (StatisticsDB.class) {
+            if (instance == null) {
+                instance = new StatisticsDB();
+            }
         }
         return instance;
     }

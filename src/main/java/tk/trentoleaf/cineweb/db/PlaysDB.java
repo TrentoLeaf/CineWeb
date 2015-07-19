@@ -26,8 +26,10 @@ public class PlaysDB {
 
     // instance -> singleton pattern
     public static PlaysDB instance() {
-        if (instance == null) {
-            instance = new PlaysDB();
+        synchronized (PlaysDB.class) {
+            if (instance == null) {
+                instance = new PlaysDB();
+            }
         }
         return instance;
     }

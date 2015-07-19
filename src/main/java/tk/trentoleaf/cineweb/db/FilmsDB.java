@@ -23,8 +23,10 @@ public class FilmsDB {
 
     // instance -> singleton pattern
     public static FilmsDB instance() {
-        if (instance == null) {
-            instance = new FilmsDB();
+        synchronized (FilmsDB.class) {
+            if (instance == null) {
+                instance = new FilmsDB();
+            }
         }
         return instance;
     }

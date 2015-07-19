@@ -25,8 +25,10 @@ public class BookingsDB {
 
     // instance -> singleton pattern
     public static BookingsDB instance() {
-        if (instance == null) {
-            instance = new BookingsDB();
+        synchronized (BookingsDB.class) {
+            if (instance == null) {
+                instance = new BookingsDB();
+            }
         }
         return instance;
     }

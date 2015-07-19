@@ -24,8 +24,10 @@ public class RoomsDB {
 
     // instance -> singleton pattern
     public static RoomsDB instance() {
-        if (instance == null) {
-            instance = new RoomsDB();
+        synchronized (RoomsDB.class) {
+            if (instance == null) {
+                instance = new RoomsDB();
+            }
         }
         return instance;
     }
