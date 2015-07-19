@@ -53,8 +53,6 @@ public class CSRFFilter implements Filter {
         // get method
         final String method = request.getMethod();
 
-        // TODO: on post, put, delete -> change csrf value...
-
         // if GET, add the CSRF token
         if (method.equals("GET")) {
 
@@ -87,14 +85,19 @@ public class CSRFFilter implements Filter {
             if (csrfCookie == null || csrfHeader == null || expected == null ||
                     !csrfCookie.equals(csrfHeader) || !csrfHeader.equals(expected)) {
 
-                // abort
+                // log
                 logger.info("[CSRF REJECT] (uid = " + uid + ") {cookie: " + csrfCookie + ", header: " + csrfHeader +
                         ", expected: " + expected + "}: " + request.getRequestURI());
 
-                // TODO: enable
-//                response.reset();
-//                response.setStatus(401);
-//                return;
+                // delete the cookie if present...
+                if (csrfCookie != null) {
+                    CSRFUtils.deleteCSRFToken(request, response);
+                }
+
+                // abort
+                response.reset();
+                response.setStatus(401);
+                return;
             }
         }
 
