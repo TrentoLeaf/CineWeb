@@ -12,7 +12,7 @@
             });
         }])
 
-        .factory('Auth', ['BASE', '$http', '$q', '$templateCache', function (BASE, $http, $q, $templateCache) {
+        .factory('Auth', ['BASE', '$http', '$q', '$templateCache', function (BASE, $http, $q, z) {
             var BASE_USERS = BASE + "/users";
             var BASE_BOOKINGS = BASE + "/bookings";
             var BASE_TICKETS = BASE + "/tickets";
@@ -25,7 +25,7 @@
                         .success(function (data) {
                             deferred.resolve(data);
                         })
-                        .error(function (data, status) {
+                        .error(function (data) {
                             deferred.reject(data);
                         });
                     return deferred.promise;
@@ -34,10 +34,8 @@
                 /* invio richiesta di logout */
                 logout: function () {
                     return $http.post(BASE_USERS + '/logout')
-                        .success(function (data) {
-                            $templateCache.removeAll();
-                        })
-                        .error(function (data, status) {
+                        .success(function () {
+                            z.removeAll();
                         });
                 },
 
