@@ -95,7 +95,6 @@ public class CSRFFilter implements Filter {
                 }
 
                 // abort
-                response.reset();
                 response.setStatus(401);
                 return;
             }
