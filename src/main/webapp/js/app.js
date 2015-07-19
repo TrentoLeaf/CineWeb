@@ -52,6 +52,46 @@
 
         /* routing e navigazione nelle pagine del sito */
         .config(['$routeProvider', function ($routeProvider) {
+
+            /* function used in $routeProvider to route a user to login page if is not logged */
+            var checkRouting = function ($rootScope, $location, Auth) {
+                if ($rootScope.isUserLoggedPromise != undefined) {
+                    // check the promise
+                    $rootScope.isUserLoggedPromise.then(
+                        function (data) {
+                            // user is logged. continue
+                            // check if normal user is trying to access to an admin page
+                            if (data != undefined) {
+                                if (data.role != "admin" && $location.path() != "/me") {
+                                    $location.path("/error");
+                                }
+                            }
+                        }, function () {
+                            // user isn't logged. Redirect to login page
+                            $location.path("/login");
+                        });
+                } else {
+                    // ask to server if user is logged
+                    Auth.me().then(function () {
+                        // user is already logged
+                        $rootScope.isUserLogged = true;
+                        //save basic user data
+                        $rootScope.user = data;
+                        // countinue the routing
+                        // check if normal user is trying to access to an admin page
+                        if (data.role != "admin" && $location.path() != "/me") {
+                            $location.path("/error");
+                        }
+                    }, function () {
+                        $rootScope.isUserLogged = false;
+                        $rootScope.user = {};
+                        // user isn't logged. Redirect to login page
+                        $location.path("/login");
+                    });
+                }
+            };
+
+            /* routing of the site */
             $routeProvider.when('/', {
                 redirectTo: '/today'
             }).when('/home', {
@@ -439,44 +479,4 @@
 
             $rootScope.buy.data_to_server.cart = [];
         }]);
-
-
-    /* function used in $routeProvider to route a user to login page if is not logged */
-    var checkRouting = function ($rootScope, $location, Auth) {
-        if ($rootScope.isUserLoggedPromise != undefined) {
-            // check the promise
-            $rootScope.isUserLoggedPromise.then(
-                function (data) {
-                    // user is logged. continue
-                    // check if normal user is trying to access to an admin page
-                    if (data != undefined) {
-                        if (data.role != "admin" && $location.path() != "/me") {
-                            $location.path("/error");
-                        }
-                    }
-                }, function () {
-                    // user isn't logged. Redirect to login page
-                    $location.path("/login");
-                });
-        } else {
-            // ask to server if user is logged
-            Auth.me().then(function () {
-                // user is already logged
-                $rootScope.isUserLogged = true;
-                //save basic user data
-                $rootScope.user = data;
-                // countinue the routing
-                // check if normal user is trying to access to an admin page
-                if (data.role != "admin" && $location.path() != "/me") {
-                    $location.path("/error");
-                }
-            }, function () {
-                $rootScope.isUserLogged = false;
-                $rootScope.user = {};
-                // user isn't logged. Redirect to login page
-                $location.path("/login");
-            });
-        }
-    };
-
 })();
