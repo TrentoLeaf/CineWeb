@@ -12,7 +12,7 @@ public class RestRootTest extends MyJerseyTest {
     public void testMsgWorking() {
         final Response response = target().path("/").request().get();
         assertEquals(200, response.getStatus());
-        assertEquals("Jersey Working!", response.readEntity(String.class));
+        assertEquals("Would you like a popcorn?", response.readEntity(String.class));
     }
 }
 
