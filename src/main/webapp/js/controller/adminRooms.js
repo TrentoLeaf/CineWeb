@@ -182,6 +182,7 @@
             this.currentSelected = -1;
             this.shared_obj = {};
             this.error = "";
+            this.delete_error = "";
             // variabile che indica se una mappa di una sala è stata caricata
             this.mapLoaded = true;
 
@@ -217,6 +218,42 @@
                     ctrl.mapLoaded = true;
                 });
             };
+
+            // cancella una sala
+            this.deleteRoom = function () {
+                ctrl.delete_error = "";
+                console.log("dfdf");
+                Rooms.delete(ctrl.currentRoom.rid)
+                    .success(function() {
+                        console.log("sala eliminata");
+                        ctrl.delete_error = "";
+                        ctrl.close_modal();
+                        ctrl.loadRooms();
+                        // cancella la mappa
+                        ctrl.shared_obj.editable = false;
+                        ctrl.shared_obj.mapTheatre = [];
+                    })
+                    .error (function (response, status) {
+                    if (status == 409) {
+                        ctrl.delete_error = "Questa sala non può essere cancellata. Alcuni posti sono prenotati.";
+                    } else {
+                        ctrl.delete_error = "Errore, la sala non è stata cancellata.";
+                    }
+                });
+            };
+
+            // apre modal conferma eliminazione
+            this.open_modal = function (index) {
+                ctrl.setCurrentRoom(index);
+                $('#modal_room_delete').openModal();
+            };
+
+            // chiude modal conferma eliminazione
+            this.close_modal = function () {
+                ctrl.delete_error = "";
+                $('#modal_room_delete').closeModal();
+            };
+
 
             this.loadRooms();
         }]);

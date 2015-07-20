@@ -17,6 +17,9 @@
                 <li class="col s12 m12 l12 card grey darken-4" style="padding: 5px;" ng-repeat="room in ctrl.rooms track by $index"  ng-class="{blue : ctrl.currentSelected == $index, grey : ctrl.currentSelected != $index}">
                     <div class="col s12 m12 l12 center-align" ng-click="ctrl.setCurrentRoom($index)">
                         <h5><b>SALA {{room.rid}}</b>
+                            <a ng-click="ctrl.open_modal($index)" class="modal-trigger" data-target="modal_room_delete" href="">
+                                <i class="red-text mdi-action-delete right"></i>
+                            </a>
                             <a href="#admin/rooms/edit_room/{{room.rid}}">
                                 <i class="yellow-text mdi-action-assignment right"></i>
                             </a>
@@ -58,3 +61,14 @@
 
     </div>
 </div>
+
+<div id="modal_room_delete" class="modal">
+    <div class="modal-content">
+        <h4>Cancellazione Sala</h4>
+        <p>Sei sicuro di voler cancellare la sala {{ctrl.currentRoom.rid}} ?</p>
+        <p class="red-text">{{ctrl.delete_error}}</p>
+        <div class="modal-footer">
+            <a ng-click="ctrl.close_modal()" class="modal-action waves-effect waves-red waves-red btn-flat">RIFIUTA</a>
+            <a ng-click="ctrl.deleteRoom()" class="modal-action waves-effect waves-green btn-flat">ACCETTA</a>
+        </div>
+    </div>

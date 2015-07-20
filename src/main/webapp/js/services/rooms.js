@@ -4,7 +4,7 @@
     /* modulo per la comunicazione con il server dei dati relativi alle sale */
     angular.module('roomsModule', ['constantsModule', 'ngResource'])
 
-        /* generic http methods */
+        /* generic http methods to add a room */
         .factory('Theatre', ['BASE', '$resource', function (BASE, $resource) {
             return $resource(BASE + '/rooms', {
                 addRoom: {
@@ -41,6 +41,11 @@
                 /* invia la mappa di una sala modificata */
                 editRoom: function (id, obj) {
                     return $http.put(BASE_ROOMS + '/' + id, obj);
+                },
+
+                /* elimina una sala esistente solo se tutti i posti sono liberi */
+                delete: function (rid) {
+                    return $http.delete(BASE_ROOMS + '/' + rid);
                 }
             }
         }]);
