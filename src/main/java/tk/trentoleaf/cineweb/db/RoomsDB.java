@@ -169,7 +169,7 @@ public class RoomsDB {
     }
 
     // create a new room given the matrix of places
-    public void createRoom(RoomStatus roomStatus) throws DBException, BadRoomException {
+    public Room createRoom(RoomStatus roomStatus) throws DBException, BadRoomException {
 
         // check room
         if (!isRoomValid(roomStatus)) {
@@ -194,6 +194,8 @@ public class RoomsDB {
 
         final Room created = createRoom(rows, cols, missing);
         roomStatus.setRid(created.getRid());
+
+        return created;
     }
 
     // get the room list
