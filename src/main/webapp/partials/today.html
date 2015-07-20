@@ -87,7 +87,7 @@
                     <h5>Data: <span>{{ctrl.current.date | date: 'dd/MM/yyyy'}}</span></h5>
                     <h5>Durata: <span>{{ctrl.current.duration}} minuti</span></h5>
                     <h5>Orari:</h5>
-                    <span class="btn-flat grey darken-4 yellow-text text-accent-4 modal-time-badge" ng-repeat="play in ctrl.current.plays">{{play.time | date: 'HH:mm'}}<i ng-show="play._3d" class="mdi-action-3d-rotation right"></i></span>
+                    <span class="btn-flat grey darken-4 yellow-text text-accent-4 modal-time-badge" style="cursor: default" ng-repeat="play in ctrl.current.plays">{{play.time | date: 'HH:mm'}}<i ng-show="play._3d" class="mdi-action-3d-rotation right"></i></span>
                     <h5>Descrizione:</h5>
 
                     <p>{{ctrl.current.plot}}</p>

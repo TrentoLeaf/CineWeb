@@ -33,6 +33,11 @@
         // clean the content of the svg
         $("#svg-theatre").empty();
 
+        // check if the map of theatre is a good matrix
+        if (mappa == undefined || mappa[0] == undefined) {
+            return 1;
+        }
+
         var rows = mappa.length;
         var columns = mappa[0].length;
         // calculate dimensions

@@ -60,8 +60,12 @@
                 var date = $location.search().d;
                 var film = $location.search().f;
 
+                if ($rootScope.playsByDate != undefined) {  // verifica se le proiezioni sono state caricate
                 // setta il film corrente
                 ctrl.current = $rootScope.playsByDate[date].films[film];
+                } else { // redirect
+                    $location.path("/today");
+                }
             }
 
             console.log("PLAYS INIT");

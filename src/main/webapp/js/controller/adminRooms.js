@@ -50,7 +50,7 @@
                     ctrl.newRoom.seats[row][col] = 0;
                 }
 
-                if ((ctrl.newRoom.seats.length != undefined) && (ctrl.newRoom.seats[0].length != undefined)) {
+                if ((ctrl.newRoom.seats != undefined) && (ctrl.newRoom.seats[0] != undefined)) {
                     ctrl.newRoom.rows = ctrl.newRoom.seats.length;
                     ctrl.newRoom.columns = ctrl.newRoom.seats[0].length;
                 }
