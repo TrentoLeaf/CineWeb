@@ -62,6 +62,10 @@
                 templateUrl: '../partials/today.html',
                 controller: 'PlaysController',
                 controllerAs: 'ctrl'
+            }).when('/today_mobile/:fid', {
+                templateUrl: '../partials/today_mobile.html',
+                controller: 'PlaysController',
+                controllerAs: 'ctrl'
             }).when('/info', {
                 templateUrl: '../partials/info.html'
             }).when('/cart_mobile', {
