@@ -3,7 +3,7 @@
 
     /* modulo per il caricamento delle proiezioni nella pagina principale */
     angular.module('PlaysModule', ['filmsPlaysModule'])
-        .controller('PlaysController', ['$rootScope', '$scope', function ($rootScope, $scope) {
+        .controller('PlaysController', ['$rootScope', '$scope', '$location', function ($rootScope, $scope, $location) {
 
             var ctrl = this;
             this.current = {};
@@ -16,8 +16,14 @@
 
             // imposta la proiezione selezionata da un utente
             this.setCurrent = function (date, film) {
-                this.current = $rootScope.playsByDate[date].films[film];
-                $('#modal').openModal();
+                ctrl.current = $rootScope.playsByDate[date].films[film];
+                if ($(window).width() <= 992){
+                    $location.path("/today_mobile/" + ctrl.current.fid);
+                    console.log(ctrl.current);
+                } else {
+                    $('#modal').openModal();
+                }
+
             };
 
             // chiude il modal dei dettagli
