@@ -17,9 +17,8 @@
             // imposta la proiezione selezionata da un utente
             this.setCurrent = function (date, film) {
                 ctrl.current = $rootScope.playsByDate[date].films[film];
-                if ($(window).width() <= 992){
-                    $location.path("/today_mobile/" + ctrl.current.fid);
-                    console.log(ctrl.current);
+                if ($(window).width() <= 992){  // redirect alla pagina mobile-friendly
+                    $location.path("/today_mobile/").search('d', date).search('f', film);
                 } else {
                     $('#modal').openModal();
                 }
@@ -52,6 +51,16 @@
                     $('.tooltipped').tooltip({delay: 50});
                 }
             });
+
+
+            // controllo se sono sulla pagina mobile-friendly 'today_mobile'
+           if (($location.search().d != undefined) && ($location.search().f != undefined)) {
+               console.log("carico film mobile");
+               var date = $location.search().d;
+               var film = $location.search().f;
+
+               ctrl.setCurrent(date, film);
+           }
 
         }]);
 
