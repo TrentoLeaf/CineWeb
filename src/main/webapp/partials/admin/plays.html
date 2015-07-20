@@ -33,7 +33,7 @@
                                         <img class="responsive-img" ng-src="{{film.playbill}}" alt="locandina" />
                                     </div>
                                     <div class="col s8 m10 l8">
-                                        <h6><b>{{film.title}}</b></h6>
+                                        <h6><b>{{film.title}} </b><i ng-show="play._3d" class="mdi-action-3d-rotation"></i></h6>
                                         <h6>Data: {{play.time | date:'dd/MM/yyyy, HH:mm'}}</h6>
                                         <h6>Sala: {{play.rid}}</h6>
                                         <h6>Posti liberi: {{play.free}}</h6>
@@ -54,7 +54,21 @@
             </div>
 
         </div>
-        <div class="col s12 m8 l8"> <!-- mappa -->
+        <div ng-hide="ctrl.mapLoaded" class="col s12 m8 l8 center-align">  <!-- caricamento mappa sala -->
+            <div class="login-loader preloader-wrapper large active">
+                <div class="spinner-layer spinner-blue-only spinner-white-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="ctrl.mapLoaded" class="col s12 m8 l8"> <!-- mappa -->
             <map o="ctrl.shared_obj"></map><!-- will be filled by js -->
         </div>
     </div>

@@ -1,37 +1,97 @@
-$(document).ready(function () {
+(function () {
+    'use strict';
 
-    // init the mobile menu sidenav
-    $('.button-collapse').sideNav({
-        closeOnClick: true
+    $(document).ready(function () {
+
+        // init the mobile menu sidenav
+        $('.button-collapse').sideNav({
+            closeOnClick: true
+        });
+
+        // init the dropdown selectors
+        $('select').material_select();
+
+        // apre i modal di materialize
+        $('.modal-trigger').leanModal({
+            dismissible: true, // Modal can be dismissed by clicking outside of the modal
+            opacity: .5, // Opacity of modal background
+            in_duration: 400, // Transition in duration
+            out_duration: 300 // Transition out duration
+        });
+
+        // init pulsante fixed-button admin
+        var button = $('#fab_primary');
+        var icon = $('.fixed-button a i');
+
+        button.click(function () {
+            if(button.hasClass("active")) {
+                button.toggleClass("active");
+                $(".fixed-list").removeClass("slideInUp");
+                $(".fixed-list").addClass("slideOutDown");
+                icon.removeClass("rotateOut");
+                icon.addClass("rotateIn");
+            } else {
+                $(".fixed-list").removeClass("hide-list");
+                button.toggleClass("active");
+                $(".fixed-list").removeClass("slideOutDown");
+                $(".fixed-list").addClass("slideInUp");
+                icon.removeClass("rotateIn");
+                icon.addClass("rotateOut");
+            }
+        });
     });
-
-    // init the dropdown selectors
-    $('select').material_select();
-
-    // apre i modal di materialize
-    $('.modal-trigger').leanModal({
-        dismissible: true, // Modal can be dismissed by clicking outside of the modal
-        opacity: .5, // Opacity of modal background
-        in_duration: 400, // Transition in duration
-        out_duration: 300 // Transition out duration
-    });
-
-});
-
-/* può tornare utile
- function close_Sidediv() {
- $('.side-div').removeClass('side-div-w');
- $('.side-div').find('.side-nav-element').addClass('ng-hide');
- }*/
+})();
 
 (function () {
     'use strict';
 
+    /* modulo principale dell'applicazione con relative dipendenze */
     angular.module('cineweb', ['ngRoute', 'uiGmapgoogle-maps', 'cartModule', 'PlaysModule', 'tabmodule', 'loginModule', 'roomsModule',
         'registrationModule', 'meModule', 'adminDashboard', 'adminUsers', 'adminFilms', 'adminPrices', 'adminPlays', 'adminRooms', 'adminStats', 'confirmModule', 'resetModule', 'buyModule', 'pricesModule', 'mapModule', 'buyProcedureModule'])
 
 
+        /* routing e navigazione nelle pagine del sito */
         .config(['$routeProvider', function ($routeProvider) {
+
+            /* function used in $routeProvider to route a user to login page if is not logged */
+            var checkRouting = function ($rootScope, $location, Auth) {
+                if ($rootScope.isUserLoggedPromise != undefined) {
+                    // check the promise
+                    $rootScope.isUserLoggedPromise.then(
+                        function (data) {
+                            // user is logged. continue
+                            // check if normal user is trying to access to an admin page
+                            if (data != undefined) {
+                                if (data.role != "admin" && $location.path() != "/me") {
+                                    $location.path("/error");
+                                }
+                            }
+                        }, function () {
+                            // user isn't logged. Redirect to login page
+                            $location.path("/login");
+                        });
+                } else {
+                    // ask to server if user is logged
+                    Auth.me().then(function () {
+                        // user is already logged
+                        $rootScope.isUserLogged = true;
+                        //save basic user data
+                        $rootScope.user = data;
+                        // countinue the routing
+                        // check if normal user is trying to access to an admin page
+                        if (data.role != "admin" && $location.path() != "/me") {
+                            $location.path("/error");
+                        }
+                    }, function () {
+                        $rootScope.isUserLogged = false;
+                        $rootScope.user = {};
+                        // user isn't logged. Redirect to login page
+                        $location.path("/login");
+                    });
+                }
+            };
+
+            /* routing of the site */
             $routeProvider.when('/', {
                 redirectTo: '/today'
             }).when('/home', {
@@ -61,7 +121,8 @@ $(document).ready(function () {
             }).when('/me', {
                 templateUrl: '../partials/me.html',
                 controller: 'MeController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/login', {
                 templateUrl: '../partials/login.html',
                 controller: 'LoginController',
@@ -77,67 +138,83 @@ $(document).ready(function () {
             }).when('/admin', {
                 templateUrl: '../partials/admin/dashboard.html',
                 controller: 'AdminDashboardController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/films', {
                 templateUrl: '../partials/admin/films.html',
                 controller: 'AdminFilmsController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/films/new', {
                 templateUrl: '../partials/admin/new_film.html',
                 controller: 'AdminFilmsController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/films/:fid', {
                 templateUrl: '../partials/admin/edit_film.html',
                 controller: 'AdminFilmsEditController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/plays', {
                 templateUrl: '../partials/admin/plays.html',
                 controller: 'AdminPlaysController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/plays/new', {
                 templateUrl: '../partials/admin/new_play.html',
                 controller: 'AdminNewPlaysController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/plays/:pid', {
                 templateUrl: '../partials/admin/edit_play.html',
                 controller: 'AdminPlaysEditController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/prices', {
                 templateUrl: '../partials/admin/prices.html',
                 controller: 'AdminPricesController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/rooms', {
                 templateUrl: '../partials/admin/rooms.html',
                 controller: 'AdminRoomsController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/rooms/new_room', {
                 templateUrl: '../partials/admin/new_room.html',
                 controller: 'AdminNewRoomController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/rooms/edit_room/:rid', {
                 templateUrl: '../partials/admin/edit_room.html',
                 controller: 'AdminEditRoomController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/stats', {
                 templateUrl: '../partials/admin/stats.html',
                 controller: 'AdminStatsController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/users', {
                 templateUrl: '../partials/admin/users.html',
                 controller: 'AdminUsersController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/users/new', {
                 templateUrl: '../partials/admin/new_user.html',
                 controller: 'AdminUsersController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/users/:uid', {
                 templateUrl: '../partials/admin/edit_user.html',
                 controller: 'AdminUsersEditController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/admin/users/bookings/:uid', {
                 templateUrl: '../partials/admin/user_bookings.html',
                 controller: 'AdminUserBookingsController',
-                controllerAs: 'ctrl'
+                controllerAs: 'ctrl',
+                resolve: { factory: checkRouting }
             }).when('/buy', {
                 templateUrl: '../partials/buy_seats.html',
                 controller: 'BuySeatController',
@@ -169,6 +246,7 @@ $(document).ready(function () {
             });
         }])
 
+        // direttiva per la visualizzazione dell'animazione di caricamento
         .directive('loading', function () {
             return {
                 restrict: 'E',
@@ -183,7 +261,6 @@ $(document).ready(function () {
         .directive('onDropdownRepeat', function () {
             return function (scope, element, attrs) {
                 if (scope.$last) {
-                    console.log("DROPDOWN EMIT");
                     scope.$emit('dropdownRepeatEnd', element, attrs);
                 }
             };
@@ -193,7 +270,6 @@ $(document).ready(function () {
         .directive('onCollapsibleRepeat', function () {
             return function (scope, element, attrs) {
                 if (scope.$last) {
-                    console.log("collapsible EMIT");
                     scope.$emit('collapsibleRepeatEnd', element, attrs);
                 }
             };
@@ -203,7 +279,6 @@ $(document).ready(function () {
         .directive('onSelectRepeat', function () {
             return function (scope, element, attrs) {
                 if (scope.$last) {
-                    console.log("SELECT EMIT");
                     scope.$emit('selectRepeatEnd', element, attrs);
                 }
             };
@@ -213,14 +288,13 @@ $(document).ready(function () {
         .directive('onTooltipRepeat', function () {
             return function (scope, element, attrs) {
                 if (scope.$last) {
-                    console.log("TOOLTIP EMIT");
                     scope.$emit('tooltipRepeatEnd', element, attrs);
                 }
             };
         })
 
-
-        .run(['$rootScope', '$location', '$anchorScroll', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, $anchorScroll, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
+        // init all'avvio applicazione
+        .run(['$rootScope', '$location', '$anchorScroll', '$q', 'Prices', 'StorageService', 'Auth', 'CompletePlays', '$sce', 'BuyProcedure', function ($rootScope, $location, $anchorScroll, $q, Prices, StorageService, Auth, CompletePlays, $sce, BuyProcedure) {
 
             // redirect only if needed
             var redirect = function (path) {
@@ -229,6 +303,7 @@ $(document).ready(function () {
                 }
             };
 
+            // routing manipulation
             $rootScope.$on('$routeChangeStart', function (event, next) {
 
                 // check for a c parameter
@@ -249,46 +324,24 @@ $(document).ready(function () {
             });
 
 
-            /* set listener for route change auto sroll to up*/
+            /* set listener for route change auto sroll to up */
             $rootScope.$on("$routeChangeSuccess", function(){
                 $anchorScroll();
             });
 
-            /* init of login data */
-            $rootScope.user = {};
-            $rootScope.isUserLogged = false;
-            $rootScope.loginError = "";
-            $rootScope.afterLogin = "normal"; // variabile per sapere dove redirigere dopo un login (normal, buy, userArea)
-
-            // request to server the data of a logged user. If the user isn't logged set the login variables.
-            var retriveLoginData = function () {
-                Auth.me()
-                    .success(function (user) {
-                        console.log("THE USER IS ALREADY LOGGED");
-                        console.log(user);
-
-                        $rootScope.isUserLogged = true;
-                        //save basic user data
-                        $rootScope.user = user;
-                    }).error(function (error) {
-                        console.log("THE USER IS NOT LOGGED");
-
-                        $rootScope.isUserLogged = false;
-                        $rootScope.user = {};
-                    });
+            /* utils */
+            // copia un oggetto e ritorna la copia
+            $rootScope.cloneObject = function (obj) {
+                return (JSON.parse(JSON.stringify(obj)));
             };
 
-            retriveLoginData();
-
-
-            /* utils */
+            // manipulation and trusting (enabling cross-origin resources) of trailers url
             $rootScope.trustSrcTrailerUrl = function (src) {
                 if (src != undefined) {
                     src = src.replace("watch?v=", "embed/");
                 }
                 return $sce.trustAsResourceUrl(src);
             };
-
 
             //updateTotal
             /*
@@ -309,17 +362,38 @@ $(document).ready(function () {
                         $rootScope.total = $rootScope.total + ($rootScope.tickets[j].price * num);
                     }
                 }
-                console.log("NEW TOTAL: " + $rootScope.total);
             };
 
 
+            /* init of login data */
+            $rootScope.user = {}; // dati untente di base
+            $rootScope.isUserLogged = false;
+            $rootScope.isUserLoggedPromise = Auth.me();  // request to server the data of an user and check if the user is logged
+            $rootScope.loginError = "";
+            $rootScope.afterLogin = "normal"; // variabile per sapere dove redirigere dopo un login (normal, buy, userArea)
+
+            // request to server the data of a logged user. If the user isn't logged set the login variables. Return the promise of the request
+            var retrieveUserData = function () {
+                $rootScope.isUserLoggedPromise.then(
+                    function (data) {
+                        // user is already logged
+                        $rootScope.isUserLogged = true;
+                        //save basic user data
+                        $rootScope.user = data;
+                    }, function (data) {
+                        // not logged
+                        $rootScope.isUserLogged = false;
+                        $rootScope.user = {};
+                    });
+            };
+
+            retrieveUserData();
+
+
             /* init of prices */
-            console.log("INIT THE PRICES");
 
             // function to load the prices
             $rootScope.loadPrices = function () {
-                console.log(Prices);
-                console.log(angular.copy(Prices));
                 Prices.getList().then(function (result) {
                     $rootScope.tickets = result.data;
                     // when data is ready re-update the total of the cart
@@ -332,14 +406,11 @@ $(document).ready(function () {
             $rootScope.loadPrices();
 
 
-            /* init of plays */
-
+            /* init of plays (retriving plays from server) */
             $rootScope.loadPlaysByDate = function () {
                 CompletePlays.playsByDate().then(
                     function (data) {
                         $rootScope.playsByDate = data;
-                        console.log("PLAYS LOADED");
-                        console.log(data);
                     },
                     function (error) {
                         $rootScope.playsByDate = [];
@@ -359,14 +430,10 @@ $(document).ready(function () {
                 if ($rootScope.cart == null) {
                     $rootScope.cart = [];
                 }
-                console.log("cart loaded: ");
-                console.log($rootScope.cart);
 
-
-                // ask to server if the cart loaded is valid
+                // ask to server if the cart loaded is valid using 'buyProcedure validation'
                 BuyProcedure.proceed($rootScope.cart)
                     .success(function () {  // tutto ok
-
                     })
                     .error(function (data, status) {    // biglietti o spettacoli non più disponibili
                         if (status == 409) {
@@ -377,10 +444,6 @@ $(document).ready(function () {
                             $rootScope.cart = [];
                         }
                     });
-
-                console.log("cart checked: ");
-                console.log($rootScope.cart);
-
             };
 
             // carrello che contiene oggetti film modificati
@@ -389,14 +452,12 @@ $(document).ready(function () {
 
             loadCart();
 
-            // when cart is changed, save it and update the total
+            // on cart changes, save it in LocalStorage and update the total
             $rootScope.$watch(function () {
                 return $rootScope.cart;
             }, function (cart) {
-
                 $rootScope.updateTotal();
                 StorageService.saveCart(cart);
-                console.log("cart saved");
             }, true);
 
 
@@ -407,16 +468,15 @@ $(document).ready(function () {
 
             /* init buy variables */
 
+            // oggetto per la gestione dei dati di acquisto da scambiare con il server
             $rootScope.buy = {
-                shared_obj: {},
-
+                shared_obj: {}, // mappa sala e posti selezionati da renderizzare
                 data_from_server: [],
                 data_from_server_index: -1,
                 data_to_server: {},
-                complete_error: true
+                complete_error: true // errore alla fine della procedura di acquisto
             };
 
             $rootScope.buy.data_to_server.cart = [];
         }]);
-
 })();

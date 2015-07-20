@@ -2,7 +2,11 @@ package tk.trentoleaf.cineweb.pdf;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import tk.trentoleaf.cineweb.utils.Utils;
 
+/**
+ * Represent the content a the ready-to-print ticket contained in the PDF attachment.
+ */
 public class FilmTicketData {
 
     private int ticketID;
@@ -15,36 +19,16 @@ public class FilmTicketData {
     private String type;
     private double price;
 
-    private static String getCharForNumber(int i) {
-        return i > -1 && i < 26 ? String.valueOf((char) (i + 65)) : null;
-    }
-
     public FilmTicketData(int tid, String email, String title, int rid, int x, int y, DateTime time, String type, double price) {
         this.ticketID = tid;
         this.email = email;
         this.title = title;
         this.room = "Sala " + rid;
-        this.seat = getCharForNumber(x) + y;
+        this.seat = Utils.getCharForNumber(x) + y;
         this.time = DateTimeFormat.forPattern("HH:mm").print(time);
         this.date = DateTimeFormat.forPattern("MM/dd/yyyy").print(time);
         this.type = type;
         this.price = price;
-    }
-
-    public FilmTicketData(int ticketID, String email, String title, String room, String seat, String date, String time, String type, double price) {
-        this.ticketID = ticketID;
-        this.email = email;
-        this.title = title;
-        this.room = room;
-        this.seat = seat;
-        this.date = date;
-        this.time = time;
-        this.type = type;
-        this.price = price;
-    }
-
-    public int getTicketID() {
-        return ticketID;
     }
 
     public String getEmail() {
@@ -79,19 +63,25 @@ public class FilmTicketData {
         return price;
     }
 
+    /**
+     * Return the String from which to generate the QrCode.
+     *
+     * @return String for the QrCode.
+     */
     public String generateQrCodeDataString() {
-        return "Ticket {" +
-                "ticketID=" + ticketID +
-                ", email='" + email + '\'' +
-                ", title='" + title + '\'' +
-                ", room='" + room + '\'' +
-                ", seat='" + seat + '\'' +
-                ", date='" + date + '\'' +
-                ", time='" + time + '\'' +
-                ", type='" + type + '\'' +
-                ", price='" + price + '\'' +
+        return "{\n" +
+                "   number:  " + ticketID + ",\n" +
+                "   email:   " + email + ",\n" +
+                "   title:   " + title + ",\n" +
+                "   room:    " + room + ",\n" +
+                "   seat:    " + seat + ",\n" +
+                "   date:    " + date + ",\n" +
+                "   time:    " + time + ",\n" +
+                "   type:    " + type + ",\n" +
+                "   price:   " + price + "\n" +
                 '}';
     }
+
 }
 
 

@@ -110,26 +110,6 @@ footer {
   width: 25px;
   height: 25px; }
 
-@media only screen and (min-width: 600px) {
-  .admin-actions {
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    transform: rotate(-90deg); }
-    .admin-actions .admin-actions-home {
-      -webkit-transform: rotate(90deg);
-      -moz-transform: rotate(90deg);
-      -ms-transform: rotate(90deg);
-      -o-transform: rotate(90deg);
-      transform: rotate(90deg); }
-    .admin-actions .admin-action-btn {
-      -webkit-transform: rotate(90deg);
-      -moz-transform: rotate(90deg);
-      -ms-transform: rotate(90deg);
-      -o-transform: rotate(90deg);
-      transform: rotate(90deg); } }
-
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -158,7 +138,7 @@ main .content-div {
       main .content-div .play .card-times .time-badge {
         margin: 0em 0.5em 0.5em 0.5em;
         padding: 0em 1.5em 0em 1.5em;
-        cursor: default; }
+        cursor: hand; }
     main .content-div .play .play-details-btn {
       padding: 0;
       margin: 0;
@@ -295,13 +275,11 @@ main .side-div {
   max-height: 1.5em;
   padding: 0px; }
 
-.summaryTable th {
-  text-align: center; }
-.summaryTable td {
+.summaryTable th, .summaryTable td {
   text-align: center;
-  padding: 0; }
+  padding: 0.25em 0em 0.25em 0em; }
 .summaryTable span {
-  font-size: 0.7em; }
+  font-size: 1em; }
 
 .adminTable th, .adminTable td {
   text-align: center;

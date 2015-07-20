@@ -43,7 +43,7 @@ public class RestRooms {
         try {
             return roomsDB.getSeatsByRoomAllPlays(id);
         } catch (EntryNotFoundException e) {
-            throw NotFoundException.GENERIC;
+            throw new NotFoundException();
         }
     }
 
@@ -55,7 +55,7 @@ public class RestRooms {
         try {
             return statisticsDB.getTopSeatsByRoom(id);
         } catch (EntryNotFoundException e) {
-            throw NotFoundException.GENERIC;
+            throw new NotFoundException();
         }
     }
 

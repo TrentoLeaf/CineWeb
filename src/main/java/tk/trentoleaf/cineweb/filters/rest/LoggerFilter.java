@@ -1,6 +1,6 @@
 package tk.trentoleaf.cineweb.filters.rest;
 
-import tk.trentoleaf.cineweb.beans.model.User;
+import tk.trentoleaf.cineweb.utils.Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,8 +28,7 @@ public class LoggerFilter implements ContainerRequestFilter {
 
         // check if a logged user
         final HttpSession session = httpRequest.getSession(false);
-        final User user = (session != null) ? (User) session.getAttribute("user") : null;
-        final Integer uid = (user != null) ? user.getUid() : null;
+        final Integer uid = (session != null) ? (Integer) session.getAttribute(Utils.UID) : null;
 
         // log the request
         logger.info("REQUEST (uid = " + uid + "): " + requestContext.getMethod() + " " +

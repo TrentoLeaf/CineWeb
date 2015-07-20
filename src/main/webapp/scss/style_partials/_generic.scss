@@ -125,20 +125,6 @@ footer {
   height: 25px;
 }
 
-// admin actions fixed button
-.admin-actions {
-  @media only screen and (min-width: 600px) {
-    @include transform-rotate(-90deg);
-
-    .admin-actions-home {
-      @include transform-rotate(90deg);
-    }
-    .admin-action-btn {
-      @include transform-rotate(90deg);
-    }
-
-  }
-}
 // nasconde gli spinner per gli input field di tipo number (mese, anno, cvv carta di credito)
 
 input[type=number]::-webkit-inner-spin-button,

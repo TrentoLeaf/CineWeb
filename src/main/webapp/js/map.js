@@ -53,10 +53,6 @@
         // init snap
         var snap = Snap("#svg-theatre");
 
-        console.log($("#svg-theatre"));
-        console.log(Snap("#svg-theatre"));
-
-
         snap.attr({viewBox: '0 0 ' + stage_w + ' ' + (stage_h + theatre_h)});
 
         // load SVG objects fragments
@@ -150,9 +146,6 @@
 
         // init the tooltips
         $('.tooltipped').tooltip({delay: 300});
-
-        console.log("POSTI INVISIBILI");
-        console.log(posti_selezionati);
     }
 
     function set_svg_seat (poltrona_svg, posto, spettacolo, posti_selezionati, modificabile) {
@@ -166,7 +159,6 @@
 
                     // set click handler
                     poltrona_svg.click(function () {
-                        console.log("poltrona cliccata");
 
                         if (this.hasClass('seat-selected')) {
                             // element to be removed
@@ -177,14 +169,13 @@
                             // remove from list
                             cancelFromList(el,posti_selezionati);
 
-                            console.log("era selezionata");
                             this.removeClass('seat-selected');
                             this.hover(seatHoverIn, seatHoverOut);
 
                             spettacolo.seats_selected++;
                         }
                         else {
-                            console.log("non era selezionata");
+                            // add to selected seats
                             if (spettacolo.seats_selected > 0) {
 
                                 posti_selezionati.push({
@@ -193,7 +184,6 @@
                                 });
                                 spettacolo.seats_selected--;
 
-                                console.log("ss > 0");
                                 this.addClass('seat-selected');
                                 this.removeClass('seat-hover');
                                 this.unhover(seatHoverIn, seatHoverOut);
@@ -202,6 +192,11 @@
                     });
                 } else {
                     if (modificabile) { // creazione di una nuova sala
+
+                        // set the delete cursor
+                        poltrona_svg.attr({cursor:"url(../img/cursors/hammer.png), default"});
+                        setHammerCursorsHandlers(poltrona_svg);
+
                         // set click handler
                         poltrona_svg.click(function () {
                             if (this.hasClass('seat-hidden')) {
@@ -215,7 +210,8 @@
                                 cancelFromList(el,posti_selezionati);
 
                                 this.removeClass('seat-hidden');
-                                console.log("Poltrona visibile");
+                                // set the delete cursor
+                                poltrona_svg.attr({cursor:"url(../img/cursors/hammer.png), default"});
                             }
                             else {
                                 posti_selezionati.push({
@@ -223,7 +219,8 @@
                                     col: poltrona_svg.attr('col')
                                 });
                                 this.addClass('seat-hidden');
-                                console.log("Poltrona nascosta");
+                                // set the new seat cursor
+                                poltrona_svg.attr({cursor:"url(../img/cursors/hotseat.png), default"});
                             }
                         });
                     }
@@ -234,35 +231,8 @@
                 poltrona_svg.addClass('seat-unavailable');
                 break;
             case  SEAT_BEST:
-                if (modificabile) { // creazione di una nuova sala. Tratto la poltrona gold come una poltrona normale
-                    // set click handler
-                    poltrona_svg.click(function () {
-                        if (this.hasClass('seat-hidden')) {
-
-                            // element to be removed
-                            var el ={
-                                row: poltrona_svg.attr('row'),
-                                col: poltrona_svg.attr('col')
-                            };
-                            // remove from list
-                            cancelFromList(el,posti_selezionati);
-
-                            this.removeClass('seat-hidden');
-                            console.log("Poltrona visibile");
-                        }
-                        else {
-                            posti_selezionati.push({
-                                row: poltrona_svg.attr('row'),
-                                col: poltrona_svg.attr('col')
-                            });
-                            this.addClass('seat-hidden');
-                            console.log("Poltrona nascosta");
-                        }
-                    });
-                } else {
-                    // set color gold
-                    poltrona_svg.addClass('seat-best');
-                }
+                // set color gold
+                poltrona_svg.addClass('seat-best');
                 break;
             case SEAT_NOT_EXIST:
                 if (modificabile) { // modifica di una nuova sala, aggiunta sedia 'invisibile'
@@ -274,7 +244,9 @@
                         col: poltrona_svg.attr('col')
                     });
 
-                    console.log("adding: r " + poltrona_svg.attr('row') + " c " + poltrona_svg.attr('col'));
+                    // set create new seat cursor
+                    poltrona_svg.attr({cursor:"url(../img/cursors/hotseat.png), default"});
+                    setHammerCursorsHandlers(poltrona_svg);
 
                     // set click handler
                     poltrona_svg.click(function () {
@@ -289,11 +261,8 @@
                             cancelFromList(el,posti_selezionati);
 
                             this.removeClass('seat-hidden');
-
-                            console.log("Poltrona visibile");
-                            console.log("rimuovo: r " + poltrona_svg.attr('row') + " c " + poltrona_svg.attr('col'));
-                            console.log("POSTI INVISIBILI click su nasc");
-                            console.log(posti_selezionati);
+                            // set the delete cursor
+                            poltrona_svg.attr({cursor:"url(../img/cursors/hammer.png), default"});
                         }
                         else {
                             posti_selezionati.push({
@@ -302,11 +271,8 @@
                             });
 
                             this.addClass('seat-hidden');
-
-                            console.log("Poltrona nascosta");
-                            console.log("aggiungo: r " + poltrona_svg.attr('row') + " c " + poltrona_svg.attr('col'));
-                            console.log("POSTI INVISIBILI click su nasc vis");
-                            console.log(posti_selezionati);
+                            // set create new seat cursor
+                            poltrona_svg.attr({cursor:"url(../img/cursors/hotseat.png), default"});
                         }
                     });
                 }
@@ -335,12 +301,32 @@
         return String.fromCharCode('A'.charCodeAt() + parseInt(i));
     }
 
+    /* add class hovering on a seat */
     function seatHoverIn() {
         this.addClass('seat-hover');
     }
 
+    /* remove class hovering on a seat */
     function seatHoverOut() {
         this.removeClass('seat-hover');
+    }
+
+    function setHammerCursorsHandlers (poltrona_svg) {
+
+        poltrona_svg.mousedown(function() {
+
+            if (poltrona_svg.attr('cursor').indexOf("hammer") != -1) {
+                // set the hammer down cursor
+                poltrona_svg.attr({cursor:"url(../img/cursors/hammer_down.png), default"});
+            }
+        });
+
+        poltrona_svg.mouseup(function() {
+            if (poltrona_svg.attr('cursor').indexOf("hammer") != -1) {
+                // set the hammer up cursor
+                poltrona_svg.attr({cursor:"url(../img/cursors/hammer.png), default"});
+            }
+        });
     }
 
     // cancella l'elemento el (oggetto righe-colonne) dalla lista di poltrone eliminate/selezionate (list)
@@ -348,10 +334,8 @@
 
         // remove from list
         for (var i=0; i < list.length; i++) {
-            console.log("cerco " + i + "r " + el.row + " " + list[i].row + " c " + el.col + " " + list[i].col);
             if ((el.row == list[i].row) && (el.col == list[i].col)) {
-                console.log("trovato");
-                // remove the seat from list
+                // find. remove the seat from list
                 list.splice(i, 1);
                 // end for
                 i = list.length;
@@ -360,7 +344,9 @@
     }
 
 
-    // angular directive
+    /* direttiva per la generazione delle mappe delle sale.
+     * Una mappa viene generata ogni qualvolta si ha un cambiamento nella matrice dei posti.
+     */
     angular.module('mapModule', [])
         .directive('map', function () {
             return {
@@ -370,26 +356,30 @@
                     o: '=o'
                 },
                 link: function (scope, element, attrs) {
-                    // gestione della mappa per la selezione dei posti
-                    scope.$watch('o.film.seats', function (seats) {
-                        // seats == scope.o.seats
-                        console.log(seats);
-                        console.log(scope.seats);
+                    /* scope.o.film: dati di un film
+                     * scope.o.film.seats: matrice posti (user buy mode)
+                     * scope.o.mapTheatre: matrice posti (admin side)
+                     * scope.o.film.selected_seats: array di posti selezionati (mode buy) / rimossi (mode edit - admin)
+                     * scope.o.editable: (T/F) richiesta di una mappa modificabile (admin)
+                     */
 
+                    // gestione della mappa per la selezione dei posti di uno spettacolo
+                    scope.$watch('o.film.seats', function (seats) {
+                        // seats == scope.o.seats: matrice dei posti
 
                         if ((scope.o.film != undefined) && (scope.o.film.seats != undefined) && (scope.o.selected_seats != undefined)) {
-                            console.log("GENERATING BUY MAP");
+                            // genera la mappa
                             generateSvg(scope.o.film.seats, scope.o.film, scope.o.selected_seats, false);
                         }
 
                     }, true);
 
-                    // gestione della mappa per i posti occupati di una sala e i posti migliori
+                    // gestione della mappa per i posti totali occupati di una sala, i posti migliori e la modifica della sala
                     scope.$watch('o.mapTheatre', function (map) {
+                        // map == scope.o.mapTheatre: matrice dei posti
 
                         // scope.o.mapTheatre: mappa (matrice) di una sala
                         if ((scope.o.mapTheatre != undefined)) {
-                            console.log("GENERATING PLAY MAP");
                             if (scope.o.editable != undefined) {
                                 if (!scope.o.editable) {
                                     generateSvg(scope.o.mapTheatre, undefined, undefined, false);
@@ -398,7 +388,6 @@
                                 }
                             }
                         }
-
                     }, true);
 
                 }

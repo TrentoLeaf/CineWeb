@@ -67,7 +67,7 @@
                                     <i class="mdi-action-shopping-basket"></i>ACQUISTO
                                 </div>
                                 <div class="col s6 m6 l6 right-align">
-                                    <span>Data: {{buy.time | date: 'dd/MM/yyyy'}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
+                                    <span class="hide-on-small-only">Data: </span><span>{{buy.time | date: 'dd/MM/yyyy'}}</span><i class="mdi-hardware-keyboard-arrow-down right"></i>
                                 </div>
                             </div>
                         </div>
@@ -81,10 +81,11 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <table class="summaryTable">
+                                <table class="summaryTable responsive-table">
                                     <thead>
                                     <tr>
                                         <th>Film</th>
+                                        <th>Data</th>
                                         <th>Sala</th>
                                         <th>Posto</th>
                                         <th>Tipologia</th>
@@ -94,6 +95,7 @@
                                     <tbody>
                                     <tr ng-repeat="ticket in buy.tickets" ng-class="{ 'red-text' : ticket.deleted}">
                                         <td><span>{{ticket.title}}</span></td>
+                                        <td><span>{{ticket.time | date: 'dd/MM/yyyy HH:mm'}}</span></td>
                                         <td><span>{{ticket.rid}}</span></td>
                                         <td><span>{{ctrl.intToChar(ticket.x)}}{{ticket.y+1}}</span></td>
                                         <td><span>{{ticket.type}}</span></td>

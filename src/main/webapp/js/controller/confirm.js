@@ -1,6 +1,7 @@
 (function () {
     'use strict';
 
+    /* modulo per la conferma di una registrazione */
     angular.module('confirmModule', ['usersModule'])
         .controller('ConfirmController', ['$location', 'Auth', function ($location, Auth) {
 
@@ -8,17 +9,17 @@
             this.loading = true;
             this.status = "";
 
+            // invio conferma
             var confirm = function () {
 
-                // get and remove c
+                // recupero codice di conferma dall'url
                 var code = $location.search().c;
-                //$location.search('c', null);
 
-                // do confirm request...
                 if (code == undefined) {
                     ctrl.loading = false;
                     ctrl.status = "Link non più valido o già usato.";
                 } else {
+                    // esegui invio conferma
                     Auth.confirmRegistration(code).then(
                         function () {
                             ctrl.loading = false;
@@ -32,7 +33,7 @@
                 }
             };
 
-            // when page loads
+            // invia conferma al server appena la pagina è stata caricata
             confirm();
 
         }]);

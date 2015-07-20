@@ -1,6 +1,7 @@
 (function () {
     'use strict';
 
+    /* modulo per la modifica della password dimenticata */
     angular.module('resetModule', ['usersModule'])
         .controller('ResetController', ['$location', 'Auth', function ($location, Auth) {
 
@@ -11,18 +12,19 @@
             this.password = "";
             this.verifyPassword = "";
 
+            // invia la richiesta al server
             this.submit = function () {
 
-                // get and remove r
+                // recupera codice univoco richiesta
                 var code = $location.search().r;
-                //$location.search('c', null);
 
-                // do confirm request...
+
                 if (code == undefined) {
                     ctrl.loading = false;
                     ctrl.status = "Link non più valido.";
                 } else {
-                    if (ctrl.verifyPassword == ctrl.password) {
+                    if (ctrl.verifyPassword == ctrl.password) { // check password
+                        // esegui richiesta
                         Auth.changePasswordWithCode(ctrl.email, code, ctrl.password).then(
                             function () {
                                 ctrl.loading = false;

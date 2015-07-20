@@ -23,8 +23,10 @@ public class PricesDB {
 
     // instance -> singleton pattern
     public static PricesDB instance() {
-        if (instance == null) {
-            instance = new PricesDB();
+        synchronized (PricesDB.class) {
+            if (instance == null) {
+                instance = new PricesDB();
+            }
         }
         return instance;
     }

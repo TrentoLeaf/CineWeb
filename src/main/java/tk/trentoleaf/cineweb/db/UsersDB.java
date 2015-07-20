@@ -27,8 +27,10 @@ public class UsersDB {
 
     // instance -> singleton pattern
     public static UsersDB instance() {
-        if (instance == null) {
-            instance = new UsersDB();
+        synchronized (UsersDB.class) {
+            if (instance == null) {
+                instance = new UsersDB();
+            }
         }
         return instance;
     }
@@ -418,7 +420,6 @@ public class UsersDB {
         return code;
     }
 
-    // TODO: User already activated
     // check a confirmation code
     public void confirmUser(String code) throws DBException, UserNotFoundException, UserAlreadyActivatedException {
         final String queryFindUser = "SELECT uid FROM registration_codes WHERE code = ?;";

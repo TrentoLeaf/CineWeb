@@ -1,10 +1,14 @@
 package tk.trentoleaf.cineweb;
 
+import com.google.gson.Gson;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
@@ -12,7 +16,9 @@ import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import tk.trentoleaf.cineweb.beans.rest.in.Auth;
 import tk.trentoleaf.cineweb.heroku.Main;
+import tk.trentoleaf.cineweb.utils.CSRFUtils;
 
 import static org.junit.Assert.assertEquals;
 
@@ -153,15 +159,87 @@ public class WebApp {
 
     @Test
     public void testBadJson() throws Exception {
+
+        // save cookies
+        final CookieStore cookieStore = new BasicCookieStore();
+
+        // create client
+        try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build()) {
+
+            // obtain CSRF token (GET)
+            HttpGet req1 = new HttpGet("http://localhost:8080/index.html");
+            client.execute(req1);
+
+            // extract cookie
+            String csrf = null;
+            for (Cookie c : cookieStore.getCookies()) {
+                if (c.getName().equals(CSRFUtils.COOKIE)) {
+                    csrf = c.getValue();
+                }
+            }
+
+            // request
+            HttpPost req2 = new HttpPost("http://localhost:8080/api/users/login");
+            req2.setEntity(new StringEntity("{bad json"));
+            req2.setHeader(CSRFUtils.HEADER, csrf);
+            HttpResponse resp2 = client.execute(req2);
+
+            // check response
+            assertEquals(400, resp2.getStatusLine().getStatusCode());
+        }
+    }
+
+    @Test
+    public void testCSRFProtectionPass() throws Exception {
+
+        // save cookies
+        final CookieStore cookieStore = new BasicCookieStore();
+
+        // create client
+        try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build()) {
+
+            // obtain CSRF token (GET)
+            HttpGet req1 = new HttpGet("http://localhost:8080/index.html");
+            client.execute(req1);
+
+            // extract cookie
+            String csrf = null;
+            for (Cookie c : cookieStore.getCookies()) {
+                if (c.getName().equals(CSRFUtils.COOKIE)) {
+                    csrf = c.getValue();
+                }
+            }
+
+            // request object
+            Auth auth = new Auth("email", "pass");
+            String authString = new Gson().toJson(auth);
+
+            // request
+            HttpPost req2 = new HttpPost("http://localhost:8080/api/users/login");
+            req2.setEntity(new StringEntity(authString));
+            req2.setHeader(CSRFUtils.HEADER, csrf);
+            HttpResponse resp2 = client.execute(req2);
+
+            // check response
+            assertEquals(404, resp2.getStatusLine().getStatusCode());
+        }
+    }
+
+    @Test
+    public void testCSRFProtectionFail() throws Exception {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+
+            // request object
+            Auth auth = new Auth("email", "pass");
+            String authString = new Gson().toJson(auth);
 
             // request
             HttpPost request = new HttpPost("http://localhost:8080/api/users/login");
-            request.setEntity(new StringEntity("{bad json"));
+            request.setEntity(new StringEntity(authString));
             HttpResponse response = client.execute(request);
 
             // check response
-            assertEquals(400, response.getStatusLine().getStatusCode());
+            assertEquals(401, response.getStatusLine().getStatusCode());
         }
     }
 

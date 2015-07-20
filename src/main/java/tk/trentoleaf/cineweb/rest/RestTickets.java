@@ -25,7 +25,7 @@ public class RestTickets {
         try {
             bookingsDB.deleteTicket(tid);
         } catch (EntryNotFoundException e) {
-            throw NotFoundException.GENERIC;
+            throw new NotFoundException();
         }
     }
 

@@ -4,29 +4,19 @@
 
     angular.module('statsModule', ['constantsModule', 'ngResource'])
 
-        .factory('Stats', ['BASE', '$http', '$q', '$log', function (BASE, $http, $q, $log) {
+        .factory('Stats', ['BASE', '$http', function (BASE, $http) {
             var BASE_USERS = BASE + "/users";
             var BASE_FILMS = BASE + "/films";
 
             return {
+                /* recupera le statistiche degli utenti che hanno speso maggiormente */
                 topUsers: function () {
-                    return $http.get(BASE_USERS + '/top')
-                        .success(function (data) {
-                            $log.info('TOP USERS OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('TOP USERS NOT RETRIVED: ' + status + " " + data.error);
-                        });
+                    return $http.get(BASE_USERS + '/top');
                 },
 
+                /* recupera le statistiche dei film che sono più richiesti */
                 grossingFilms: function () {
-                    return $http.get(BASE_FILMS + '/grossing')
-                        .success(function (data) {
-                            $log.info('GROSSING FILMS OK: ' + data);
-                        })
-                        .error(function (data, status) {
-                            $log.warn('GROSSING FILMS NOT RETRIVED: ' + status + " " + data);
-                        });
+                    return $http.get(BASE_FILMS + '/grossing');
                 }
             }
         }]);

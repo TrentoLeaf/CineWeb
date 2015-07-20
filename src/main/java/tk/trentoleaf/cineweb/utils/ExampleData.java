@@ -12,38 +12,30 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class ExampleData {
+/**
+ * The purpuse of this class is to load examples data in the database.
+ */
+public final class ExampleData {
+
+    // TODO: teo
+    // 1 metodo privato per tipo di entità (loadUsers, loadFilms ...)
+    // 1 metodo pubblico per caricare tutti i dati (richiama i vari loads privati)
 
     // dbs
-    private UsersDB usersDB = UsersDB.instance();
-    private FilmsDB filmsDB = FilmsDB.instance();
-    private PlaysDB playsDB = PlaysDB.instance();
-    private RoomsDB roomsDB = RoomsDB.instance();
-    private BookingsDB bookingsDB = BookingsDB.instance();
+    private static UsersDB usersDB = UsersDB.instance();
+    private static FilmsDB filmsDB = FilmsDB.instance();
+    private static PlaysDB playsDB = PlaysDB.instance();
+    private static RoomsDB roomsDB = RoomsDB.instance();
+    private static BookingsDB bookingsDB = BookingsDB.instance();
 
-    private static ExampleData instance;
-
-    // singleton
-    public static ExampleData instance() {
-        if (instance == null) {
-            instance = new ExampleData();
-        }
-        return instance;
-
-    }
-
-    // singleton
-    protected ExampleData() {
-    }
-
-    public void loadExampleData(int x) throws AnotherFilmScheduledException, UserNotFoundException, PlayGoneException {
+    public static void loadExampleData(int x) throws AnotherFilmScheduledException, UserNotFoundException, PlayGoneException {
 
         //create admin
-        final User a1 = new User(true, Role.ADMIN, "davide.pedranz@gmail.com", "c1n3w3b", "Davide", "Pedranz",10000.0);
-        final User a2 = new User(true, Role.ADMIN, "teo@teos.com", "c1n3w3b", "Matteo", "Zeni",10000.0);
-        final User a3 = new User(true, Role.ADMIN, "willo@willo.com", "c1n3w3b", "Williams", "Rizzi",10000.0);
-        final User a4 = new User(true, Role.ADMIN, "davide@pippo.com", "c1n3w3b", "Andrea", "Zorzi",10000.0);
-        final User a5 = new User(true, Role.ADMIN, "davidexxx@pippo.com", "c1n3w3b", "Samuel", "Giacomelli",10000.0);
+        final User a1 = new User(true, Role.ADMIN, "davide.pedranz@gmail.com", "c1n3w3b", "Davide", "Pedranz", 10000.0);
+        final User a2 = new User(true, Role.ADMIN, "teo@teos.com", "c1n3w3b", "Matteo", "Zeni", 10000.0);
+        final User a3 = new User(true, Role.ADMIN, "willo@willo.com", "c1n3w3b", "Williams", "Rizzi", 10000.0);
+        final User a4 = new User(true, Role.ADMIN, "davide@pippo.com", "c1n3w3b", "Andrea", "Zorzi", 10000.0);
+        final User a5 = new User(true, Role.ADMIN, "davidexxx@pippo.com", "c1n3w3b", "Samuel", "Giacomelli", 10000.0);
 
         //create 10 client
         final User u1 = new User(true, Role.CLIENT, "davide.pedranz+1@gmail.com", "usr", "Giannino", "Toniazzi");
@@ -109,7 +101,6 @@ public class ExampleData {
         filmlist.add(new Film("Neighbors", "action","https://www.youtube.com/watch?v=kL5c2szf3E4", x, "After they are forced to live next to a fraternity house, a couple with a newborn baby do whatever they can to take them down.", "http://ia.media-imdb.com/images/M/MV5BOTQ0OTkzODgyNF5BMl5BanBnXkFtZTgwOTA3OTE4MDE@._V1__SX629_SY905_.jpg"));
         filmlist.add(new Film("The Fault in Our Stars", "action","https://www.youtube.com/watch?v=9ItBvH5J6ss", x, "Two teens, both who have different cancer conditions, fall in love after meeting at a cancer support group.", "http://ia.media-imdb.com/images/M/MV5BMjA4NzkxNzc5Ml5BMl5BanBnXkFtZTgwNzQ3OTMxMTE@._V1__SX629_SY905_.jpg"));
 
-
         //add films
         for (int i=0; i<filmlist.size();i++)
         {
@@ -122,7 +113,6 @@ public class ExampleData {
         roomsDB.createRoom(12, 18);
         roomsDB.createRoom(10, 20, Arrays.asList(new Seat(1, 0), new Seat(0, 1), new Seat(0, 4), new Seat(10, 18), new Seat(9, 8)));
         roomsDB.createRoom(15, 20);
-
 
 
         createPlay(x);
@@ -157,16 +147,16 @@ public class ExampleData {
     }
 
 
-
-    public void createPlay(int x) throws AnotherFilmScheduledException {
+    public static void createPlay(int x) throws AnotherFilmScheduledException {
 
         Boolean glasses3D = false;
 
         Random rand = new Random();
         int randomNumber = 0;
-        int j=0;//used for change day
+        int j = 0;//used for change day
 
         List<Film> films = filmsDB.getFilms();
+
         for (int i = 0; i < films.size()-1 && (films.size()%6)==0; i++) {
             randomNumber=rand.nextInt(10);
             //create 3 play with one film on the first room
@@ -181,7 +171,7 @@ public class ExampleData {
             glasses3D = !glasses3D;
             playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber+(x*5)).plusDays(j), glasses3D));
             i++;
-            randomNumber=rand.nextInt(10);
+            randomNumber = rand.nextInt(10);
             //create 3 play with one film on the second room
             playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
             glasses3D = !glasses3D;
@@ -194,13 +184,13 @@ public class ExampleData {
             glasses3D = !glasses3D;
             playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber+(x*5)).plusDays(j), glasses3D));
             i++;
-            randomNumber=rand.nextInt(10);
+            randomNumber = rand.nextInt(10);
             //create 3 play with one film on the third room
-            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
-            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber+(x*1)).plusDays(j), glasses3D));
-            playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber+(x*2)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber + (x * 1)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), glasses3D));
             i++;
-            randomNumber=rand.nextInt(10);
+            randomNumber = rand.nextInt(10);
             //create 3 play with one film on the fourth room
             playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
             playsDB.createPlay(new Play(films.get(i),roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber+(x*1)).plusDays(j), glasses3D));
@@ -211,6 +201,5 @@ public class ExampleData {
             j++;
         }
     }
-
 
 }

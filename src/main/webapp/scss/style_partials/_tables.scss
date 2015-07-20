@@ -35,17 +35,13 @@ $dark-line:  rgb(40,40,40);
 // tabella di riepilogo acquisti
 .summaryTable {
 
-  th {
+  th, td {
     text-align: center;
-  }
-
-  td {
-    text-align: center;
-    padding: 0;
+    padding: 0.25em 0em 0.25em 0em;
   }
 
   span {
-    font-size: 0.7em;
+    font-size: 1em;
   }
 }
 

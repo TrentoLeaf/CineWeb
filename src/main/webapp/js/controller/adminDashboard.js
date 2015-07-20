@@ -1,26 +1,27 @@
 (function () {
-
     'use strict';
 
+    /* modulo per la pagina del pannello di controllo dell'admin */
     angular.module('adminDashboard', ['constantsModule'])
-        .controller ('AdminDashboardController', ['BASE', '$log', '$http', function (BASE, $log, $http) {
+        .controller ('AdminDashboardController', ['BASE', '$http', function (BASE, $http) {
 
         var ctrl = this;
+        // messaggio risultato caricamento dati di prova
         this.result = "";
 
-        this.fuffa = function () {
+        // carica i dati di prova impostati nel server
+        this.loadSampleData = function () {
             $('.data-loader').addClass('active');
             this.result = "CARICAMENTO...";
+            // invia richiesta
             $http.post(BASE + '/load-example-data')
-                .success(function (data, status) {
+                .success(function (data) { // i dati di prova sono stati caricati nel database
                     $('.data-loader').removeClass('active');
                     ctrl.result = "CARICAMENTO...OK";
-                    $log.info('FUFFA DATA OK -> ' + status);
                 })
-                .error(function (data, status) {
+                .error(function (data) { // errore
                     $('.data-loader').removeClass('active');
                     ctrl.result = "ERRORE";
-                    $log.warn('FUFFA NOT RETRIVED -> ' + status + " " + data.error());
                 });
         };
     }]);

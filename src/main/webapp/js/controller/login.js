@@ -1,6 +1,7 @@
 (function () {
     'use strict';
 
+    /* modulo gestione login */
     angular.module('loginModule', ['usersModule', 'constantsModule'])
         .controller('LoginController', ['$rootScope', '$location', 'Auth', function ($rootScope, $location, Auth) {
 
@@ -8,24 +9,27 @@
             this.email = "";
             this.pass = "";
 
+            // imposta messaggio errore
             var setError = function (error) {
                 $rootScope.loginError = error;
             };
 
+            // richiesta login
             this.login = function (email, password) {
 
                 $('.login-loader').addClass('active');
 
-                Auth.login(email, password)
-                    .success(function (user) {
+                // send request and save the promise
+                $rootScope.isUserLoggedPromise = Auth.login(email, password)
+                    .then(function (user) {
 
                         setError("");
                         //save basic user data
                         $rootScope.user = user;
-                        // set isUserLogged var
+                        // set isUserLogged variable. All modules now know if the user is logged
                         $rootScope.isUserLogged = true;
 
-                        // redirect all' ultima pagina
+                        // redirect all'ultima pagina visitata dall'utente o quella di default
                         switch ($rootScope.afterLogin) {
                             case "normal":
                                 ctrl.setAfterLogin("normal");
@@ -51,32 +55,35 @@
                                 break;
                         }
                         $('.login-loader').removeClass('active');
-                    }).error(function (error) { /*  login failed*/
+                    },
+                    function (error) { /* login fallito */
                         $rootScope.isUserLogged = false;
                         setError('Nome utente o password errati.');
                         $('.login-loader').removeClass('active');
                     });
 
+                // reset campo password
                 ctrl.pass = "";
             };
 
+            // richiesta di logout
             this.logout = function () {
                 Auth.logout()
                     .success(function () {
-                        console.log("LOGINCONTROLLER --> LOGOUT success");
                         setError("");
+                        // reset di tutte le variabili correlate
                         $rootScope.isUserLogged = false;
+                        $rootScope.isUserLoggedPromise = undefined;
                         $rootScope.user = {};
                         ctrl.email = "";
                         ctrl.pass = "";
                         $location.path('/today');
                     })
                     .error(function () {
-                        console.log("LOGINCONTROLLER --> LOGOUT failed");
-                        // logout fallito
-                        // setError("Logout fallito. Riprova.");
+                        // logout fallito. reset variabili e redirect
                         setError("");
                         $rootScope.isUserLogged = false;
+                        $rootScope.isUserLoggedPromise = undefined;
                         $rootScope.user = {};
                         ctrl.email = "";
                         ctrl.pass = "";
@@ -85,52 +92,50 @@
                 )
             };
 
+            // imposta la pagina su cui tornare dopo il login
             this.setAfterLogin = function (type) {
                 $rootScope.afterLogin = type;
             };
 
-            this.change = function (email, oldPass, newPass) {
-                Auth.changePassword(email, oldPass, newPass).then(
-                    function () {
-                        setData("pass OK");
-                    },
-                    function () {
-                        setError("pass ERROR");
-                    }
-                )
-            };
-
+            /*
+             * funzioni di redirect ad una pagina
+             */
             this.losePass = function () {
-                // redirect to a new partial
+                // redirect alla pagina
                 $location.path('/password_recovery');
             };
 
             this.toUserArea = function () {
+                // redirect alla pagina
                 $location.path('/me');
             };
 
             this.toDashboard = function () {
+                // redirect alla pagina
                 $location.path('/admin');
             };
 
             this.toRegister = function () {
-                // redirect al partial registrazione
+                // redirect alla pagina
                 $location.path('/registration');
             };
 
 
-            /* recovery password functions */
-
+            /*
+             * funzioni di recupero password
+             */
             this.rec_pass_msg = "";
             this.mailForPassRecovery = "";
             var REC_PASS_SUCCESS = 0;
             var REC_PASS_MAIL_NOT_EXIST = 1;
             var REC_PASS_MAIL_NOT_VALID = 2;
 
+            // invia richiesta
             this.sendPassRecoveryRequest = function () {
 
                 $('.pass-rec-loader').addClass('active');
 
+                // imposta colore messaggio
                 $('#pass_recovery_message').removeClass("green-text red-text");
                 $('#pass_recovery_message').addClass("white-text");
                 ctrl.rec_pass_msg = "Un momento...";
@@ -139,6 +144,7 @@
                     ctrl.set_rec_pass_msg(REC_PASS_MAIL_NOT_VALID);
                     $('.pass-rec-loader').removeClass('active');
                 } else {
+                    // esegui richiesta
                     Auth.forgotPassword(ctrl.mailForPassRecovery)
                         .success(function () {
                             ctrl.set_rec_pass_msg(REC_PASS_SUCCESS);
@@ -151,20 +157,21 @@
                 }
             };
 
-            /* setta l'errore o il messaggio per il recupero della password */
+            //setta l'errore o il messaggio del risultato della richiesta di recupero della password
             this.set_rec_pass_msg = function (result) {
 
                 $('#pass_recovery_message').removeClass("white-text");
+
                 if (result == REC_PASS_SUCCESS) { // ok
                     $('#pass_recovery_message').addClass("green-text");
                     ctrl.rec_pass_msg = "Richiesta effettuata. Controlla la tua casella di posta.";
-                } else if (result == REC_PASS_MAIL_NOT_EXIST) { // mail inexistent
+                } else if (result == REC_PASS_MAIL_NOT_EXIST) { // mail inesistente
                     $('#pass_recovery_message').addClass("red-text");
                     ctrl.rec_pass_msg = "L'indirizzo mail inserito non risulta registrato. Riprova.";
-                } else if (result == REC_PASS_MAIL_NOT_VALID) {
+                } else if (result == REC_PASS_MAIL_NOT_VALID) { // mail non valida
                     $('#pass_recovery_message').addClass("red-text");
                     ctrl.rec_pass_msg = "L'indirizzo mail inserito non è corretto. Riprova.";
-                } else {    // request error
+                } else {    // errore richiesta
                     $('#pass_recovery_message').addClass("red-text");
                     ctrl.rec_pass_msg = "La richiesta non è andata a buon fine. Riprova.";
                 }
@@ -172,6 +179,7 @@
         }]);
 
 
+    // validazione di una mail
     function validateEmail(mail) {
 
         var atposition = mail.indexOf("@");

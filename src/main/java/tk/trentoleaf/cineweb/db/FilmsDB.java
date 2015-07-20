@@ -23,8 +23,10 @@ public class FilmsDB {
 
     // instance -> singleton pattern
     public static FilmsDB instance() {
-        if (instance == null) {
-            instance = new FilmsDB();
+        synchronized (FilmsDB.class) {
+            if (instance == null) {
+                instance = new FilmsDB();
+            }
         }
         return instance;
     }
@@ -83,12 +85,39 @@ public class FilmsDB {
         }
     }
 
-    // list of films
+    // list of all films
     public List<Film> getFilms() throws DBException {
         List<Film> films = new ArrayList<>();
 
         try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
             ResultSet rs = stm.executeQuery("SELECT fid, title, genre, trailer, playbill, plot, duration FROM films;");
+
+            while (rs.next()) {
+                Film f = new Film();
+                f.setFid(rs.getInt("fid"));
+                f.setTitle(rs.getString("title"));
+                f.setGenre(rs.getString("genre"));
+                f.setTrailer(rs.getString("trailer"));
+                f.setPlaybill(rs.getString("playbill"));
+                f.setPlot(rs.getString("plot"));
+                f.setDuration(rs.getInt("duration"));
+                films.add(f);
+            }
+
+        } catch (SQLException e) {
+            throw DBException.factory(e);
+        }
+
+        return films;
+    }
+
+    // list of future films
+    public List<Film> getFutureFilms() throws DBException {
+        List<Film> films = new ArrayList<>();
+
+        try (Connection connection = db.getConnection(); Statement stm = connection.createStatement()) {
+            ResultSet rs = stm.executeQuery("SELECT DISTINCT fid, title, genre, trailer, playbill, plot, duration " +
+                    "FROM films NATURAL JOIN plays WHERE time >= now();");
 
             while (rs.next()) {
                 Film f = new Film();

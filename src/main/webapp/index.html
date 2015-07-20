@@ -10,10 +10,10 @@
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 
     <!-- CSS  -->
-    <link rel="stylesheet" href="css/materialize.css">
-    <link rel="stylesheet" href="css/stylesheet.css">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/stylesheet.min.css">
     <!-- stylesheet for the svg -->
-    <link type="text/css" rel="stylesheet" href="../css/svg-theatre.css">
+    <link type="text/css" rel="stylesheet" href="css/svg-theatre.min.css">
 
     <!-- JS libs -->
     <script src="lib/jquery-2.1.4.min.js"></script>
@@ -28,43 +28,49 @@
     <script src="lib/chart.min.js"></script>
 
     <!-- JS app -->
-    <script src="js/app.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/services/constants.js"></script>
-    <script src="js/services/storage.js"></script>
-    <script src="js/services/users.js"></script>
-    <script src="js/services/rooms.js"></script>
-    <script src="js/services/stats.js"></script>
-    <script src="js/services/filmsPlays.js"></script>
-    <script src="js/services/prices.js"></script>
-    <script src="js/services/buyProcedure.js"></script>
-    <script src="js/controller/login.js"></script>
-    <script src="js/controller/plays.js"></script>
-    <script src="js/controller/cart.js"></script>
-    <script src="js/controller/tab.js"></script>
-    <script src="js/controller/registration.js"></script>
-    <script src="js/controller/me.js"></script>
-    <script src="js/controller/adminUsers.js"></script>
-    <script src="js/controller/adminFilms.js"></script>
-    <script src="js/controller/adminPrices.js"></script>
-    <script src="js/controller/adminPlays.js"></script>
-    <script src="js/controller/adminRooms.js"></script>
-    <script src="js/controller/adminDashboard.js"></script>
-    <script src="js/controller/adminStats.js"></script>
-    <script src="js/controller/confirm.js"></script>
-    <script src="js/controller/reset.js"></script>
-    <script src="js/controller/buy.js"></script>
-</head>
+    <!-- <script src="js/app.min.js"></script>
+    -->
+        <script src="js/app.js"></script>
+        <script src="js/map.js"></script>
+        <script src="js/services/constants.js"></script>
+        <script src="js/services/storage.js"></script>
+        <script src="js/services/users.js"></script>
+        <script src="js/services/rooms.js"></script>
+        <script src="js/services/stats.js"></script>
+        <script src="js/services/filmsPlays.js"></script>
+        <script src="js/services/prices.js"></script>
+        <script src="js/services/buyProcedure.js"></script>
+        <script src="js/controller/login.js"></script>
+        <script src="js/controller/plays.js"></script>
+        <script src="js/controller/cart.js"></script>
+        <script src="js/controller/tab.js"></script>
+        <script src="js/controller/registration.js"></script>
+        <script src="js/controller/me.js"></script>
+        <script src="js/controller/adminUsers.js"></script>
+        <script src="js/controller/adminFilms.js"></script>
+        <script src="js/controller/adminPrices.js"></script>
+        <script src="js/controller/adminPlays.js"></script>
+        <script src="js/controller/adminRooms.js"></script>
+        <script src="js/controller/adminDashboard.js"></script>
+        <script src="js/controller/adminStats.js"></script>
+        <script src="js/controller/confirm.js"></script>
+        <script src="js/controller/reset.js"></script>
+        <script src="js/controller/buy.js"></script>
 
-<body ng-controller="TabController as tab">
-<div class="navbar-fixed">
-    <nav class="black" role="navigation" id="header-navbar">
-        <div class="nav-wrapper">
-            <a id="title" href="#home" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
-            <ul class="left hide-on-med-and-down">
-                <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#today">Proiezioni</a></li>
-                <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#info">Informazioni</a></li>
-            </ul>
+    </head>
+
+    <body ng-controller="TabController as tab">
+    <div class="navbar-fixed">
+        <nav class="black" role="navigation" id="header-navbar">
+            <div class="nav-wrapper">
+                <a id="title" href="#home" class="center brand-logo yellow-text text-accent-4"><img id="logo" class="left" src="img/logo.png">CineWeb</a>
+                <ul class="left hide-on-med-and-down">
+                    <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#today">Proiezioni</a></li>
+                    <li><a class="yellow-text text-accent-4" ng-click="tab.closeTab()" href="#info">Informazioni</a></li>
+                </ul>
+
+                </ul>
+
 
             <!-- right navbar -->
             <ul class="right hide-on-small-only">
@@ -73,16 +79,20 @@
                         <i class="medium mdi-action-settings"></i>
                     </a>
                 </li>
-                <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(1)" style="height: 64px;"><i class="cart-icon mdi-action-shopping-cart"></i>
-                    <span ng-hide="cart.length == 0" class="cart-badge grey darken-3 white-text">&nbsp;{{cart.length}}&nbsp;</span></a></li>
-                <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)"><i class="mdi-action-account-circle" style="height:60px"></i></a><hr ng-show="isUserLogged" class ="userLoggedLine green"></li>
+                <li>
+                    <a class="yellow-text text-accent-4" ng-click="tab.setTab(1)" style="height: 64px;" href="">
+                        <i class="cart-icon mdi-action-shopping-cart"></i>
+                        <span ng-hide="cart.length == 0" class="cart-badge grey darken-3 white-text">&nbsp;{{cart.length}}&nbsp;</span>
+                    </a>
+                </li>
+                <li><a class="yellow-text text-accent-4" ng-click="tab.setTab(2)" href=""><i class="mdi-action-account-circle" style="height:60px"></i></a><hr ng-show="isUserLogged" class ="userLoggedLine green"></li>
             </ul>
 
             <!-- right navbar small for mobile -->
             <ul class="right hide-on-med-and-up">
                 <li>
                     <a href="#cart_mobile" style="height: 64px; padding: 5px;"><i class="cart-icon yellow-text text-accent-4 mdi-action-shopping-cart"></i>
-                    <span ng-hide="cart.length == 0" class="cart-badge grey darken-3 white-text">&nbsp;{{cart.length}}&nbsp;</span></a>
+                        <span ng-hide="cart.length == 0" class="cart-badge grey darken-3 white-text">&nbsp;{{cart.length}}&nbsp;</span></a>
                 </li>
                 <li>
                     <a href="#admin" ng-show="user.role == 'admin'" style="padding: 5px;"><i class="yellow-text text-accent-4 mdi-action-settings"></i></a>
@@ -125,10 +135,12 @@
                                 <div class="row">
                                     <div class="col s9 m9 l9">
                                         <h5>{{film.title}}</h5> <!-- titolo -->
-                                        <h6>{{film.time | date: 'dd/MM/yyyy, hh:mm'}}</h6> <!-- data -->
-                                        <h6>SALA {{film.rid}}</h6> <!-- sala -->
+                                        <h6>{{film.time | date: 'dd/MM/yyyy, HH:mm'}}</h6> <!-- data -->
+                                        <h6>SALA {{film.rid}} <i ng-show="film._3d" class="mdi-action-3d-rotation"></i></h6> <!-- sala e 3d -->
                                     </div>
-                                    <i ng-click="cc.removeFromCart($index)" class="col s3 m3 l3 mdi-action-highlight-remove small right-align"></i>
+                                    <div class="col s3 m3 l3">
+                                        <i ng-click="cc.removeFromCart($index)" class="mdi-navigation-close small right" style="cursor: pointer;"></i>
+                                    </div>
                                 </div>
                                 <div class="col s12 m12 l12 item-ticket-counter-container">
                                     <p>Rimangono {{film.free}} biglietti.</p>
@@ -137,22 +149,25 @@
                                     <div class="col s7 m7 l7">
                                         <label>Tipologia</label>
                                     </div>
-                                    <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4">
+                                    <div class="col s4 m4 l4">
                                         <label>Quantità</label>
                                     </div>
+                                    <div class="col s1 m1 l1">
+                                    </div>
                                 </div>
-                                <div ng-repeat="drop in cart[$index].tickets track by $index" class="row"> <!-- dropdowns -->
+                                <div ng-repeat="drop in cart[$index].tickets track by $index" class="row"> <!-- biglietti -->
                                     <div class="col s7 m7 l7"> <!-- dropdown tipologia biglietto -->
                                         <select class="browser-default black-text" ng-model="cart[$parent.$index].tickets[$index].type">
                                             <option ng-repeat="ticket in tickets" value="{{ticket.type}}">{{ticket.type}}</option>
                                         </select>
                                     </div>
-                                    <div class="col offset-s1 s4 offset-m1 m4 offset-l1 l4"> <!-- dropdown quantità biglietti -->
+                                    <div class="col s4 m4 l4"> <!-- input quantità biglietti -->
                                         <input ng-model="cart[$parent.$index].tickets[$index].number" class="center-align" type="number" value="" min="0">
                                     </div>
+                                    <div class="col s1 m1 l1" style="padding-left: 0px;"> <!-- elimina biglietti -->
+                                        <i ng-click="cc.removeDropDown($parent.$index, $index)" class="mdi-navigation-close" style="cursor: pointer"></i>
+                                    </div>
                                 </div>
-
-
                                 <div class="row"> <!-- pulsante di aggiunta tipologia -->
                                     <a ng-click="cc.addDropDown($index)" class="col s12 m12 l12  white-text waves-effect waves-yellow btn-flat center-align">Aggiungi tipologia</a>
                                 </div>
@@ -167,7 +182,7 @@
                         <h5 class="total col s5 m5 l5 right-align">{{total | currency:"€ "}}</h5>
                     </div>
                     <div>
-                        <button ng-hide="cartLength() == 0" ng-click="cc.proceed(); tab.closeTab();" id="btn-go-to-buy" class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui
+                        <button ng-hide="cartLength() == 0 || total <= 0" ng-click="cc.proceed(); tab.closeTab();" id="btn-go-to-buy" class="btn-large green white-text col offset-s1 s10 offset-m1 m10 offset-l1 l10">Prosegui
                             <i class="mdi-navigation-chevron-right right"></i>
 
                             <div class="cart-loader preloader-wrapper small left" style="margin-top: 9px;">
@@ -285,12 +300,12 @@
 </footer>
 
 <!-- Floating button amministratore-->
-<div ng-show="user.role == 'admin'"  class="admin-actions fixed-action-btn" style="bottom: 15px; right: 25px;">
-    <a class="admin-actions-home btn-floating btn-large yellow accent-4">
-        <i class="medium mdi-action-settings black-text"></i>
+<div ng-show="user.role == 'admin'"  class="admin-actions fixed-button">
+    <a id="fab_primary" class="admin-actions-home btn-floating btn-large yellow accent-4">
+        <i class="large mdi-content-add black-text animated"></i>
     </a>
 
-    <ul>
+    <ul class="fixed-list animated hide-list">
         <li class="admin-action-btn"><a class="btn-floating red" href="#admin/films"><i class="mdi-maps-local-movies"></i></a></li>
         <li class="admin-action-btn"><a class="btn-floating teal" href="#admin/plays"><i class="mdi-av-videocam"></i></a></li>
         <li class="admin-action-btn"><a class="btn-floating green" href="#admin/rooms"><i class="mdi-maps-local-convenience-store"></i></a></li>

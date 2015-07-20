@@ -39,11 +39,11 @@
                         <td>{{u.email}}</td>
                         <td>{{u.firstName}}</td>
                         <td>{{u.secondName}}</td>
-                        <td>{{u.credit}} €</td>
+                        <td>{{u.credit | currency : "€ "}}</td>
                         <td>{{u.enabled}}</td>
                         <td>
                             <a href="#admin/users/bookings/{{u.uid}}">
-                                <i class="blue-text mdi-action-shopping-basket"></i>
+                                <i class="blue-text mdi-action-shop-two"></i>
                             </a>
                         </td>
                         <td>

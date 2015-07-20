@@ -36,8 +36,10 @@ public class EmailSender {
 
     // get singleton
     public static EmailSender instance() throws SendGridException {
-        if (sender == null) {
-            sender = new EmailSender();
+        synchronized (EmailSender.class) {
+            if (sender == null) {
+                sender = new EmailSender();
+            }
         }
         return sender;
     }
@@ -55,87 +57,57 @@ public class EmailSender {
     }
 
     // send an email to confirm the registration
-    public void test() throws SendGridException {
-
-        // load images to put in the PDF
-        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("email/registration.html");
-
-        StringWriter writer = new StringWriter();
-        try {
-            IOUtils.copy(is, writer, "UTF-8");
-        } catch (IOException e) {
-
-        }
-        String theString = writer.toString();
-        theString = theString.replace("{{BASE_URL}}", "https://cineweb.herokuapp.com");
-
-
-        // create email
-        SendGrid.Email email = new SendGrid.Email();
-        email.setFrom(FROM);
-        email.addTo("davide.pedranz@gmail.com");
-        email.setSubject(WE + " - Conferma registrazione");
-        email.setHtml(theString);
-
-        // try to send, log failures
-        try {
-            SendGrid.Response response = sendgrid.send(email);
-
-            sendgrid.send(email);
-
-        } catch (SendGridException e) {
-            logger.severe(e.toString());
-            throw e;
-        }
-    }
-
-    // send an email to confirm the registration
     public SendGrid.Response sendRegistrationEmail(URI uri, User user, String verificationCode) throws SendGridException {
 
         // create url
         final String url = Utils.uriToRoot(uri) + "/#?c=" + verificationCode;
         final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
 
-        // get the html mail
+        // get class loader
         final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("email/registration.html");
 
-        StringWriter writer = new StringWriter();
+        // get the text
+        InputStream textIs = classloader.getResourceAsStream("email/registration.txt");
+        StringWriter textWriter = new StringWriter();
         try {
-            IOUtils.copy(is, writer, Charset.forName("UTF-8"));
+            IOUtils.copy(textIs, textWriter, Charset.forName("UTF-8"));
         } catch (IOException e) {
-
+            throw new SendGridException(e);
         }
 
+        // get the html
+        InputStream htmlIs = classloader.getResourceAsStream("email/registration.html");
+        StringWriter htmlWriter = new StringWriter();
+        try {
+            IOUtils.copy(htmlIs, htmlWriter, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            throw new SendGridException(e);
+        }
+
+        // modify the text mail
+        String textContent = textWriter.toString();
+        textContent = textContent.replace("{{nome}}", user.getFirstName());
+        textContent = textContent.replace("{{url_address}}", url);
+
         // modify the html mail
-        String theString = writer.toString();
-        theString = theString.replace("{{logo_img}}", urlLogo);
-        theString = theString.replace("{{sito}}", Utils.uriToRoot(uri));
-        theString = theString.replace("{{nome}}", user.getFirstName());
-        theString = theString.replace("{{cognome}}", user.getSecondName());
-        theString = theString.replace("{{email}}", user.getEmail());
-        theString = theString.replace("{{url_address}}", url);
+        String htmlContent = htmlWriter.toString();
+        htmlContent = htmlContent.replace("{{logo_img}}", urlLogo);
+        htmlContent = htmlContent.replace("{{sito}}", Utils.uriToRoot(uri));
+        htmlContent = htmlContent.replace("{{nome}}", user.getFirstName());
+        htmlContent = htmlContent.replace("{{cognome}}", user.getSecondName());
+        htmlContent = htmlContent.replace("{{email}}", user.getEmail());
+        htmlContent = htmlContent.replace("{{url_address}}", url);
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
         email.setFrom(FROM);
         email.addTo(user.getEmail());
         email.setSubject(WE + " - Conferma registrazione");
-        email.setText("Gentile " + user.getFirstName() + ",\n" +
-                "La Sua richiesta di iscrizione è stata inoltrata con successo." + "\n" +
-                "Per completare la Sua iscrizione clicchi su questo link: " + url + "\n");
-        email.setHtml(theString);
+        email.setText(textContent);
+        email.setHtml(htmlContent);
 
-        // try to send, log failures
-        SendGrid.Response response;
-        try {
-            response = sendgrid.send(email);
-        } catch (SendGridException e) {
-            logger.severe(e.toString());
-            throw e;
-        }
-        return response;
+        // send the email
+        return sendgrid.send(email);
     }
 
     // send a password recover
@@ -145,50 +117,112 @@ public class EmailSender {
         final String url = Utils.uriToRoot(uri) + "/#?r=" + code;
         final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
 
-        // get the html mail
+        // get class loader
         final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("email/password_recovery.html");
 
-        StringWriter writer = new StringWriter();
+        // get the text
+        InputStream textIs = classloader.getResourceAsStream("email/password_recovery.txt");
+        StringWriter textWriter = new StringWriter();
         try {
-            IOUtils.copy(is, writer, Charset.forName("UTF-8"));
+            IOUtils.copy(textIs, textWriter, Charset.forName("UTF-8"));
         } catch (IOException e) {
-
+            throw new SendGridException(e);
         }
 
+        // get the html
+        InputStream htmlIs = classloader.getResourceAsStream("email/password_recovery.html");
+        StringWriter htmlWriter = new StringWriter();
+        try {
+            IOUtils.copy(htmlIs, htmlWriter, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            throw new SendGridException(e);
+        }
+
+        // modify the text mail
+        String textContent = textWriter.toString();
+        textContent = textContent.replace("{{nome}}", user.getFirstName());
+        textContent = textContent.replace("{{url_address}}", url);
+
         // modify the html mail
-        String theString = writer.toString();
-        theString = theString.replace("{{logo_img}}", urlLogo);
-        theString = theString.replace("{{sito}}", Utils.uriToRoot(uri));
-        theString = theString.replace("{{nome}}", user.getFirstName());
-        theString = theString.replace("{{url_address}}", url);
+        String htmlContent = htmlWriter.toString();
+        htmlContent = htmlContent.replace("{{logo_img}}", urlLogo);
+        htmlContent = htmlContent.replace("{{sito}}", Utils.uriToRoot(uri));
+        htmlContent = htmlContent.replace("{{nome}}", user.getFirstName());
+        htmlContent = htmlContent.replace("{{url_address}}", url);
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
         email.setFrom(FROM);
         email.addTo(user.getEmail());
         email.setSubject(WE + " - Recupero password");
-        email.setText("Gentile " + user.getFirstName() + ",\n" +
-                "Come da sua richiesta le abbiamo inviato la mail per ripristinare la sua password.\n" +
-                "Per completare questa operazione clicchi sul seguente link: " + url + "\n");
-        email.setHtml(theString);
+        email.setText(textContent);
+        email.setHtml(htmlContent);
 
-        // try to send, log failures
-        SendGrid.Response response;
-        try {
-            response = sendgrid.send(email);
-        } catch (SendGridException e) {
-            logger.severe(e.toString());
-            throw e;
-        }
-        return response;
+        // send the email
+        return sendgrid.send(email);
     }
 
     //send a pdf with the ticket
-    public SendGrid.Response sendTicketPDFEmail(URI uri, User user, List<FilmTicketData> data) throws SendGridException, IOException, DocumentException {
+    public SendGrid.Response sendTicketPDFEmail(URI uri, User user, List<FilmTicketData> data) throws SendGridException, DocumentException {
 
         // url logo
         final String urlLogo = Utils.uriToRoot(uri) + "/img/logo_small.png";
+
+        // get class loader
+        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+
+        // get the text
+        InputStream textIs = classloader.getResourceAsStream("email/tickets.txt");
+        StringWriter textWriter = new StringWriter();
+        try {
+            IOUtils.copy(textIs, textWriter, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            throw new SendGridException(e);
+        }
+
+        // get the html
+        InputStream htmlIs = classloader.getResourceAsStream("email/tickets.html");
+        StringWriter htmlWriter = new StringWriter();
+        try {
+            IOUtils.copy(htmlIs, htmlWriter, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            throw new SendGridException(e);
+        }
+
+        // get the html snippet for tickets summary
+        InputStream summaryIs = classloader.getResourceAsStream("email/tickets_summary.html");
+        StringWriter writerSummary = new StringWriter();
+        try {
+            IOUtils.copy(summaryIs, writerSummary, Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            throw new SendGridException(e);
+        }
+
+        // modify the text mail
+        String textContext = textWriter.toString();
+        textContext = textContext.replace("{{nome}}", user.getFirstName());
+
+        // modify the html mail
+        String htmlContent = htmlWriter.toString();
+        String htmlSummary = writerSummary.toString();
+        htmlContent = htmlContent.replace("{{logo_img}}", urlLogo);
+        htmlContent = htmlContent.replace("{{sito}}", Utils.uriToRoot(uri));
+        htmlContent = htmlContent.replace("{{nome}}", user.getFirstName());
+
+        // add the plays summary in the mail
+        for (FilmTicketData d : data) {
+            String tmp = htmlSummary;
+
+            tmp = tmp.replace("{{titolo}}", d.getTitle());
+            tmp = tmp.replace("{{data}}", d.getDate());
+            tmp = tmp.replace("{{ora}}", d.getTime());
+            tmp = tmp.replace("{{sala}}", d.getRoom());
+            tmp = tmp.replace("{{posto}}", d.getSeat());
+            tmp = tmp.replace("{{tipo}}", d.getType());
+
+            htmlContent = htmlContent.replace("{{riepilogo}}", tmp + "{{riepilogo}}");
+        }
+        htmlContent = htmlContent.replace("{{riepilogo}}", "");
 
         // create email
         SendGrid.Email email = new SendGrid.Email();
@@ -196,6 +230,8 @@ public class EmailSender {
         email.addTo(user.getEmail());
         email.setSubject(WE + " - Invio biglietti acquistati");
         email.setText("Ecco a lei il Ticket in allegato in formato PDF!");
+        email.setText(textContext);
+        email.setHtml(htmlContent);
 
         // generate PDF
         try {
@@ -217,69 +253,11 @@ public class EmailSender {
 
         } catch (DocumentException | IOException e) {
             logger.severe(e.toString());
-            throw e;
+            throw new DocumentException(e);
         }
 
-        // get the html mail
-        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("email/tickets.html");
-
-        StringWriter writer = new StringWriter();
-        try {
-            IOUtils.copy(is, writer, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-
-        }
-
-        // get the html snippet for tickets summary
-        InputStream isSummary = classloader.getResourceAsStream("email/tickets_summary.html");
-
-        StringWriter writerSummary = new StringWriter();
-        try {
-            IOUtils.copy(isSummary, writerSummary, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-
-        }
-
-
-        // modify the html mail
-        String theString = writer.toString();
-        String theStringSummary = writerSummary.toString();
-        theString = theString.replace("{{logo_img}}", urlLogo);
-        theString = theString.replace("{{sito}}", Utils.uriToRoot(uri));
-        theString = theString.replace("{{nome}}", user.getFirstName());
-
-        // add the plays summary in the mail
-        for (FilmTicketData d : data) {
-            String tmpSummaryString = theStringSummary;
-
-            tmpSummaryString = tmpSummaryString.replace("{{titolo}}", d.getTitle());
-            tmpSummaryString = tmpSummaryString.replace("{{data}}", d.getDate());
-            tmpSummaryString = tmpSummaryString.replace("{{ora}}", d.getTime());
-            tmpSummaryString = tmpSummaryString.replace("{{sala}}", d.getRoom());
-            tmpSummaryString = tmpSummaryString.replace("{{posto}}", d.getSeat());
-            tmpSummaryString = tmpSummaryString.replace("{{tipo}}", d.getType());
-
-            theString = theString.replace("{{riepilogo}}", tmpSummaryString+"{{riepilogo}}");
-        }
-        theString = theString.replace("{{riepilogo}}", "");
-
-
-        // add the content to email
-        email.setText("Gentile " + user.getFirstName() + ",\n" +
-                "Le abbiamo inviato i biglietti che ha acquistato sul sito di CineWeb.\n" +
-                "Li può trovare in allegato alla mail.\n" +
-                "Cordiali Saluti. Cineweb.");
-        email.setHtml(theString);
-
-        // try to send, log failures
-        SendGrid.Response response;
-        try {
-            response = sendgrid.send(email);
-        } catch (SendGridException e) {
-            logger.severe(e.toString());
-            throw e;
-        }
-        return response;
+        // send the email
+        return sendgrid.send(email);
     }
+
 }

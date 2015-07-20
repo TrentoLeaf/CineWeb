@@ -12,13 +12,15 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 
+/**
+ * Class responsible to generate a PDF containing the bought tickets.
+ */
 public class PdfCreator {
-
-    private ByteArrayOutputStream outputStream;
-    private Document document;
 
     private float offset;
     private PdfContentByte canvas;
+    private ByteArrayOutputStream outputStream;
+    private Document document;
 
     // constructor
     public PdfCreator() throws DocumentException {
@@ -49,14 +51,10 @@ public class PdfCreator {
         // load images to put in the PDF
         final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         final URL logoURL = classloader.getResource("pdf/logo.png");
+        assert logoURL != null;
+        final String logoPath = logoURL.getPath();
 
-        if (logoURL == null) {
-            throw new RuntimeException("Cannot find file pdf/logo.png");
-        }
-
-        // path to logo.png
-        final String logoPath = classloader.getResource("pdf/logo.png").getPath();
-
+        // generate the ticket
         try {
 
             // add rectangle
@@ -71,14 +69,12 @@ public class PdfCreator {
             line.setBorderWidth(2);
             canvas.rectangle(line);
 
-
             // add logo
             Image logo = Image.getInstance(logoPath);
 
             logo.setAbsolutePosition(215, tfy(85 + (46 / 2)));
             logo.scaleAbsolute(46, 46);
             canvas.addImage(logo);
-
 
             // create a basefont
             BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
@@ -111,7 +107,6 @@ public class PdfCreator {
             canvas.setTextMatrix(265, tfy(242));
             canvas.showText("ORA");
             canvas.endText();
-
 
             // add the content
 
@@ -163,7 +158,7 @@ public class PdfCreator {
             qrImage.setAbsolutePosition(340, tfy(300));
             canvas.addImage(qrImage);
 
-            // set new postition for a future ticket
+            // set new position for a future ticket
             updateNexTicketPosition();
 
             return true;
@@ -175,7 +170,7 @@ public class PdfCreator {
         }
     }
 
-    // set the offset for a new ticket and, if neccessary, create a new page
+    // set the offset for a new ticket and, if necessary, create a new page
     private void updateNexTicketPosition() {
         if (offset == 0) {
             offset = 400;
@@ -194,7 +189,6 @@ public class PdfCreator {
         return (pageSize.getTop() - y) - offset;
     }
 
-
     // return the pdf as a byte array
     public byte[] getFilledPdf() {
 
@@ -204,4 +198,5 @@ public class PdfCreator {
         // return pdf
         return outputStream.toByteArray();
     }
+
 }

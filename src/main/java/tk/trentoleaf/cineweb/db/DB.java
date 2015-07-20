@@ -24,8 +24,10 @@ public class DB {
 
     // instance -> singleton pattern
     public static DB instance() {
-        if (instance == null) {
-            instance = new DB();
+        synchronized (DB.class) {
+            if (instance == null) {
+                instance = new DB();
+            }
         }
         return instance;
     }
@@ -262,7 +264,6 @@ public class DB {
                     "y INTEGER," +
                     "PRIMARY KEY (rid, x, y)," +
                     "FOREIGN KEY (rid) REFERENCES rooms(rid) ON DELETE CASCADE)");
-            // TODO: cosa succede se cancello stanza? si cancellano i ticket oppure no?
         }
     }
 
