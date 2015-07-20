@@ -222,10 +222,8 @@
             // cancella una sala
             this.deleteRoom = function () {
                 ctrl.delete_error = "";
-                console.log("dfdf");
                 Rooms.delete(ctrl.currentRoom.rid)
                     .success(function() {
-                        console.log("sala eliminata");
                         ctrl.delete_error = "";
                         ctrl.close_modal();
                         ctrl.loadRooms();

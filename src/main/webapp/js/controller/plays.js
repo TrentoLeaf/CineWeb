@@ -16,7 +16,6 @@
 
             // imposta la proiezione selezionata da un utente
             this.setCurrent = function (date, film) {
-                console.log("set current");
                 ctrl.current = $rootScope.playsByDate[date].films[film];
                 if ($(window).width() <= 992){  // redirect alla pagina mobile-friendly
                     $location.path("/today_mobile/").search('d', date).search('f', film);
@@ -56,7 +55,6 @@
 
             // controllo se sono sulla pagina mobile-friendly 'today_mobile'
             if (($location.search().d != undefined) && ($location.search().f != undefined)) {
-                console.log("carico film mobile");
                 var date = $location.search().d;
                 var film = $location.search().f;
 
@@ -67,8 +65,6 @@
                     $location.path("/today");
                 }
             }
-
-            console.log("PLAYS INIT");
 
         }]);
 
