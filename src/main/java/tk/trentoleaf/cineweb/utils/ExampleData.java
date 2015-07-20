@@ -197,15 +197,18 @@ public final class ExampleData {
         return  prices.get(i);
     }
 
-    private static  List<Ticket> randomTickets(List<User> users, Map<Integer, Room> rooms, List<Play> plays) {
-        int n = random.nextInt(13);
-        List<Ticket> tickets = new ArrayList<>(n);
-        Play play = randomPlay(plays);
-        Room room = rooms.get(play.getRid());
-        for(int i = 0; i < n; i++) {
-            Seat seat = randomSeat(room);
-            Price price = randomPrice();
-            tickets.add(new Ticket(play, seat.getX(), seat.getY(), price.getPrice(), price.getType()));
+    private static  List<Ticket> randomTickets(Map<Integer, Room> rooms, List<Play> plays) {
+        int m = random.nextInt(2) + 1;
+        List<Ticket> tickets = new ArrayList<>();
+        for(int i = 0 ; i < m; i++) {
+            int n = random.nextInt(13) + 1;
+            Play play = randomPlay(plays);
+            Room room = rooms.get(play.getRid());
+            for (int j = 0; j < n; j++) {
+                Seat seat = randomSeat(room);
+                Price price = randomPrice();
+                tickets.add(new Ticket(play, seat.getX(), seat.getY(), price.getPrice(), price.getType()));
+            }
         }
         return tickets;
     }
@@ -220,7 +223,7 @@ public final class ExampleData {
         for(int i = 0; i < 300; i++) {
             try {
                 logger.info("Trying to add the " + i + " booking...");
-                List<Ticket> tickets = randomTickets(users, roomsMap, plays);
+                List<Ticket> tickets = randomTickets(roomsMap, plays);
                 bookingsDB.createBooking(randomUser(users), tickets);
             } catch (Exception e) {
                 logger.warning("Failed to add the " + i + " booking... SKIP");
@@ -231,42 +234,11 @@ public final class ExampleData {
     public static void loadExampleData(int duration) throws Exception {
 
         List<User> users = createUsers();
-        List<Film> films = createFilms(duration);
+        createFilms(duration);
         List<Room> rooms = createRooms();
         List<Play> plays = createPlays(duration);
 
         createTickets(users, rooms, plays);
-
-//        //createTicketsForR1();
-//        final List<Ticket> tickets = new ArrayList<>();
-//        int i = 0;
-//        for (int j = 0; j < 2; j++) {
-//
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 1, 2, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 1, 3, 6.0, "ridotto"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 1, 4, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 4, 10, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 5, 6, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 8, 4, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 8, 15, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 8, 13, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 8, 10, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 8, 11, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 8, 12, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 9, 6, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 9, 5, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 9, 4, 8.5, "normale"));
-//            tickets.add(new Ticket(playsDB.getPlays().get(j), 9, 3, 8.5, "normale"));
-//
-//
-//            for (; i < tickets.size(); i++) {
-//                tickets.get(i).setTitle(filmsDB.getFilm(playsDB.getPlays().get(j).getFid()).getTitle());
-//            }
-//            bookingsDB.createBooking(a1, tickets);
-//        }
     }
-
-
-
 
 }
