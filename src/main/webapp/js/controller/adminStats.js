@@ -62,6 +62,10 @@
                         ];
                         ctrl.error="";
 
+                        data.sort(function(a, b) {
+                            return b.grossing - a.grossing;
+                        });
+
                         // inserimento i dati nell'array per la generazione del grafico
                         for (var film in data) {
                             if (data[film].grossing != undefined) {
