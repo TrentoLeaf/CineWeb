@@ -46,7 +46,7 @@ public final class ExampleData {
         List<Room> rooms = createRooms();
 
         // create plays
-        List<Play> plays = createPlays(duration, films);
+        List<Play> plays = createPlays(duration, films, rooms);
 
         // create tickets
         createTickets(users, rooms, plays);
@@ -159,45 +159,45 @@ public final class ExampleData {
     }
 
     // create plays
-    private static List<Play> createPlays(int x, List<Film> films) throws AnotherFilmScheduledException {
+    private static List<Play> createPlays(int x, List<Film> films, List<Room> rooms) throws AnotherFilmScheduledException {
 
         int randomNumber;
-        int j = 0; //used for change day
+        int j = 0; // used for change day
 
         for (int i = 0; i < films.size() - 1 && (films.size() % 6) == 0; i++) {
             randomNumber = random.nextInt(10);
             //create 3 play with one film on the first room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(0), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(0), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(0), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
             i++;
             //create another 3 play with one film on the first room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 3)).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 4)).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 5)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(0), DateTime.now().plusMinutes(randomNumber + (x * 3)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(0), DateTime.now().plusMinutes(randomNumber + (x * 4)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(0), DateTime.now().plusMinutes(randomNumber + (x * 5)).plusDays(j), random.nextBoolean()));
             i++;
             randomNumber = random.nextInt(10);
             //create 3 play with one film on the second room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(1), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(1), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(1), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
             i++;
             //create another 3 play with one film on the second room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 3)).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 4)).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 5)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(1), DateTime.now().plusMinutes(randomNumber + (x * 3)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(1), DateTime.now().plusMinutes(randomNumber + (x * 4)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(1), DateTime.now().plusMinutes(randomNumber + (x * 5)).plusDays(j), random.nextBoolean()));
             i++;
             randomNumber = random.nextInt(10);
             //create 3 play with one film on the third room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(4), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(2), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(4), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(2), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
             i++;
             randomNumber = random.nextInt(10);
             //create 3 play with one film on the fourth room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(4), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(4), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(3), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(3), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
 
             j++;
         }
