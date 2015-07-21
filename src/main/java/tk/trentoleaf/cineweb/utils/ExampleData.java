@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * The purpuse of this class is to load examples data in the database.
+ * The purpose of this class is to load examples data in the database.
  */
 public final class ExampleData {
 
@@ -27,6 +27,30 @@ public final class ExampleData {
 
     // logger
     private static final Logger logger = Logger.getLogger(ExampleData.class.getSimpleName());
+
+    /**
+     * Generate and loads example data
+     *
+     * @param duration Duration of each play
+     * @throws Exception if any error
+     */
+    public static void loadExampleData(int duration) throws Exception {
+
+        // create users
+        List<User> users = createUsers();
+
+        // create films
+        List<Film> films = createFilms(duration);
+
+        // create rooms
+        List<Room> rooms = createRooms();
+
+        // create plays
+        List<Play> plays = createPlays(duration, films);
+
+        // create tickets
+        createTickets(users, rooms, plays);
+    }
 
     // create some demo users
     private static List<User> createUsers() {
@@ -61,6 +85,7 @@ public final class ExampleData {
         return users;
     }
 
+    // generate films
     private static List<Film> createFilms(int duration) {
 
         // create 30 film
@@ -97,8 +122,8 @@ public final class ExampleData {
         films.add(new Film("The Fault in Our Stars", "action", "https://www.youtube.com/watch?v=9ItBvH5J6ss", duration, "Two teens, both who have different cancer conditions, fall in love after meeting at a cancer support group.", "http://ia.media-imdb.com/images/M/MV5BMjA4NzkxNzc5Ml5BMl5BanBnXkFtZTgwNzQ3OTMxMTE@._V1__SX629_SY905_.jpg"));
 
         // add films
-        for (int i = 0; i < films.size(); i++) {
-            filmsDB.createFilm(films.get(i));
+        for (Film film : films) {
+            filmsDB.createFilm(film);
         }
 
         return films;
@@ -133,59 +158,72 @@ public final class ExampleData {
         return Arrays.asList(r1, r2, r3, r4, r5);
     }
 
-    private static List<Play> createPlays(int x) throws AnotherFilmScheduledException {
+    // create plays
+    private static List<Play> createPlays(int x, List<Film> films) throws AnotherFilmScheduledException {
 
-        boolean glasses3D = false;
-
-        Random rand = new Random();
-        int randomNumber = 0;
-        int j = 0;//used for change day
-
-        List<Film> films = filmsDB.getFilms();
+        int randomNumber;
+        int j = 0; //used for change day
 
         for (int i = 0; i < films.size() - 1 && (films.size() % 6) == 0; i++) {
-            randomNumber = rand.nextInt(10);
+            randomNumber = random.nextInt(10);
             //create 3 play with one film on the first room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 1)).plusDays(j), glasses3D));
-            glasses3D = !glasses3D;
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
             i++;
             //create another 3 play with one film on the first room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 3)).plusDays(j), glasses3D));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 4)).plusDays(j), glasses3D));
-            glasses3D = !glasses3D;
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 5)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 3)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 4)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(0), DateTime.now().plusMinutes(randomNumber + (x * 5)).plusDays(j), random.nextBoolean()));
             i++;
-            randomNumber = rand.nextInt(10);
+            randomNumber = random.nextInt(10);
             //create 3 play with one film on the second room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
-            glasses3D = !glasses3D;
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 1)).plusDays(j), glasses3D));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
             i++;
             //create another 3 play with one film on the second room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 3)).plusDays(j), glasses3D));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 4)).plusDays(j), glasses3D));
-            glasses3D = !glasses3D;
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 5)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 3)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 4)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(1), DateTime.now().plusMinutes(randomNumber + (x * 5)).plusDays(j), random.nextBoolean()));
             i++;
-            randomNumber = rand.nextInt(10);
+            randomNumber = random.nextInt(10);
             //create 3 play with one film on the third room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(4), DateTime.now().plusMinutes(randomNumber + (x * 1)).plusDays(j), glasses3D));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(4), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(2), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
             i++;
-            randomNumber = rand.nextInt(10);
+            randomNumber = random.nextInt(10);
             //create 3 play with one film on the fourth room
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(4), DateTime.now().plusMinutes(randomNumber).plusDays(j), glasses3D));
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber + (x * 1)).plusDays(j), glasses3D));
-            glasses3D = !glasses3D;
-            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), glasses3D));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(4), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), roomsDB.getRooms(true).get(3), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
 
             j++;
         }
         return playsDB.getPlays();
+    }
+
+    // create tickets
+    private static void createTickets(List<User> users, List<Room> rooms, List<Play> plays) throws Exception {
+
+        Map<Integer, Room> roomsMap = new HashMap<>();
+        for (Room r : rooms) {
+            roomsMap.put(r.getRid(), r);
+        }
+
+        int i = 0;
+        while (i < 400) {
+            try {
+                logger.info("Trying to add the " + i + " booking...");
+                List<Ticket> tickets = randomTickets(roomsMap, plays);
+                bookingsDB.createBooking(randomUser(users), tickets);
+                i++;
+            } catch (Exception e) {
+                logger.warning("Failed to add the " + i + " booking... SKIP");
+            }
+        }
+
     }
 
     private static User randomUser(List<User> users) {
@@ -223,35 +261,6 @@ public final class ExampleData {
             }
         }
         return tickets;
-    }
-
-    private static void createTickets(List<User> users, List<Room> rooms, List<Play> plays) throws Exception {
-
-        Map<Integer, Room> roomsMap = new HashMap<>();
-        for (Room r : rooms) {
-            roomsMap.put(r.getRid(), r);
-        }
-
-        for (int i = 0; i < 500; i++) {
-            List<Ticket> tickets;
-            try {
-                logger.info("Trying to add the " + i + " booking...");
-                tickets = randomTickets(roomsMap, plays);
-                bookingsDB.createBooking(randomUser(users), tickets);
-            } catch (Exception e) {
-                logger.warning("Failed to add the " + i + " booking... SKIP");
-            }
-        }
-    }
-
-    public static void loadExampleData(int duration) throws Exception {
-
-        List<User> users = createUsers();
-        createFilms(duration);
-        List<Room> rooms = createRooms();
-        List<Play> plays = createPlays(duration);
-
-        createTickets(users, rooms, plays);
     }
 
 }
