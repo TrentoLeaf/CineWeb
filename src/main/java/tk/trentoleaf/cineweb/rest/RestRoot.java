@@ -7,12 +7,13 @@ import tk.trentoleaf.cineweb.db.UsersDB;
 import tk.trentoleaf.cineweb.exceptions.rest.RestException;
 import tk.trentoleaf.cineweb.utils.ExampleData;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  * Resources root.
@@ -29,7 +30,8 @@ public class RestRoot {
     @POST
     @Path("/load-example-data")
     @AdminArea
-    public synchronized void loadExampleData() {
+    public synchronized void loadExampleData(@NotNull(message = "No duration specified")
+                                             @Min(value = 1, message = "Bad duration specified") Integer duration) {
         try {
 
             // re-init db
@@ -39,7 +41,7 @@ public class RestRoot {
             PricesDB.instance().loadDefaultPrices();
 
             // load example data
-            ExampleData.loadExampleData(100);
+            ExampleData.loadExampleData(duration);
 
         } catch (Exception e) {
             e.printStackTrace();
