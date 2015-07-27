@@ -8,21 +8,27 @@
         var ctrl = this;
         // messaggio risultato caricamento dati di prova
         this.result = "";
+        this.interval;
 
         // carica i dati di prova impostati nel server
         this.loadSampleData = function () {
-            $('.data-loader').addClass('active');
-            this.result = "CARICAMENTO...";
+
             // invia richiesta
-            $http.post(BASE + '/load-example-data')
-                .success(function (data) { // i dati di prova sono stati caricati nel database
-                    $('.data-loader').removeClass('active');
-                    ctrl.result = "CARICAMENTO...OK";
-                })
-                .error(function (data) { // errore
-                    $('.data-loader').removeClass('active');
-                    ctrl.result = "ERRORE";
-                });
+            if (ctrl.interval >= 1) {
+                $('.data-loader').addClass('active');
+                this.result = "CARICAMENTO...";
+                $http.post(BASE + '/load-example-data', ctrl.interval)
+                    .success(function (data) { // i dati di prova sono stati caricati nel database
+                        $('.data-loader').removeClass('active');
+                        ctrl.result = "CARICAMENTO...OK";
+                    })
+                    .error(function (data) { // errore
+                        $('.data-loader').removeClass('active');
+                        ctrl.result = "ERRORE";
+                    });
+            } else {
+                ctrl.result = "Inserire un valore positivo per l'intervallo tra le proiezioni";
+            }
         };
     }]);
 })();
