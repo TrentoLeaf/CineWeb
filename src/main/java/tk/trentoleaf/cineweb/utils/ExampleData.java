@@ -195,7 +195,7 @@ public final class ExampleData {
             i++;
             randomNumber = random.nextInt(10);
             //create 3 play with one film on the fourth room
-            playsDB.createPlay(new Play(films.get(i), rooms.get(4), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
+            playsDB.createPlay(new Play(films.get(i), rooms.get(3), DateTime.now().plusMinutes(randomNumber).plusDays(j), random.nextBoolean()));
             playsDB.createPlay(new Play(films.get(i), rooms.get(3), DateTime.now().plusMinutes(randomNumber + (x)).plusDays(j), random.nextBoolean()));
             playsDB.createPlay(new Play(films.get(i), rooms.get(3), DateTime.now().plusMinutes(randomNumber + (x * 2)).plusDays(j), random.nextBoolean()));
 

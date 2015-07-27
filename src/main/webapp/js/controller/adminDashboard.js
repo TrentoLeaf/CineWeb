@@ -8,7 +8,7 @@
         var ctrl = this;
         // messaggio risultato caricamento dati di prova
         this.result = "";
-        this.interval;
+        this.interval = 3;
 
         // carica i dati di prova impostati nel server
         this.loadSampleData = function () {
