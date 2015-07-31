@@ -1,4 +1,4 @@
-# CineWeb [![Build Status](https://magnum.travis-ci.com/davidepedranz/CineWeb.svg?token=s3N3kALNGj35Nhzi4MqK&branch=master)](https://magnum.travis-ci.com/davidepedranz/CineWeb)
+# CineWeb [![Build Status](https://travis-ci.org/TrentoLeaf/CineWeb.svg)](https://travis-ci.org/TrentoLeaf/CineWeb)
 
 Progetto di programmazione per il web, anno 2014-15.
 
