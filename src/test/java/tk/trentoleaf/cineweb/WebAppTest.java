@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
  * This test launches the web application in an embedded Jetty container.
  * Here it is possible to test WebFilters, WebListener and Servlets.
  */
-public class WebApp {
+public class WebAppTest {
 
     private Server server;
 
