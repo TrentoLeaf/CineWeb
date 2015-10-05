@@ -3,7 +3,7 @@ jdk:
   - oraclejdk7
   - openjdk7
 env:
-  - DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres SENDGRID_USERNAME=fake SENDGRID_PASSWORD=fake
+  - DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres SENDGRID_USERNAME=fake SENDGRID_PASSWORD=fake PORT=22777
 addons:
   postgresql: "9.3"
 before_script:
