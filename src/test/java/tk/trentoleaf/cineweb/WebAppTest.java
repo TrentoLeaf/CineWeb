@@ -52,7 +52,7 @@ public class WebAppTest {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 
             // request
-            HttpGet request = new HttpGet("http://localhost:8080/api");
+            HttpGet request = new HttpGet(server.getURI() + "/api");
             HttpResponse response = client.execute(request);
 
             // check cache header
@@ -70,7 +70,7 @@ public class WebAppTest {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 
             // request
-            HttpGet request = new HttpGet("http://localhost:8080/");
+            HttpGet request = new HttpGet(server.getURI() + "/");
             HttpResponse response = client.execute(request);
 
             // check X-Frame-Options
@@ -92,7 +92,7 @@ public class WebAppTest {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 
             // request
-            HttpGet request = new HttpGet("http://localhost:8080/");
+            HttpGet request = new HttpGet(server.getURI() + "/");
             HttpResponse response = client.execute(request);
 
             // check gzip -> use Vary header
@@ -106,7 +106,7 @@ public class WebAppTest {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 
             // request
-            HttpGet request = new HttpGet("http://localhost:8080/api/films");
+            HttpGet request = new HttpGet(server.getURI() + "/api/films");
             HttpResponse response = client.execute(request);
 
             // check gzip -> use Vary header
@@ -120,7 +120,7 @@ public class WebAppTest {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 
             // request
-            HttpGet request = new HttpGet("http://localhost:8080/img/logo.png");
+            HttpGet request = new HttpGet(server.getURI() + "/img/logo.png");
             HttpResponse response = client.execute(request);
 
             // check gzip -> use Vary header
@@ -134,7 +134,7 @@ public class WebAppTest {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 
             // request
-            HttpGet request = new HttpGet("http://localhost:8080/api");
+            HttpGet request = new HttpGet(server.getURI() + "/api");
             HttpResponse response = client.execute(request);
 
             // check gzip -> use Vary header
@@ -148,7 +148,7 @@ public class WebAppTest {
         try (CloseableHttpClient client = HttpClients.custom().disableContentCompression().build()) {
 
             // request
-            HttpGet request = new HttpGet("http://localhost:8080/index.html");
+            HttpGet request = new HttpGet(server.getURI() + "/index.html");
             HttpResponse response = client.execute(request);
 
             // check gzip -> use Vary header
@@ -167,7 +167,7 @@ public class WebAppTest {
         try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build()) {
 
             // obtain CSRF token (GET)
-            HttpGet req1 = new HttpGet("http://localhost:8080/index.html");
+            HttpGet req1 = new HttpGet(server.getURI() + "/index.html");
             client.execute(req1);
 
             // extract cookie
@@ -179,7 +179,7 @@ public class WebAppTest {
             }
 
             // request
-            HttpPost req2 = new HttpPost("http://localhost:8080/api/users/login");
+            HttpPost req2 = new HttpPost(server.getURI() + "/api/users/login");
             req2.setEntity(new StringEntity("{bad json"));
             req2.setHeader(CSRFUtils.HEADER, csrf);
             HttpResponse resp2 = client.execute(req2);
@@ -199,7 +199,7 @@ public class WebAppTest {
         try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build()) {
 
             // obtain CSRF token (GET)
-            HttpGet req1 = new HttpGet("http://localhost:8080/index.html");
+            HttpGet req1 = new HttpGet(server.getURI() + "/index.html");
             client.execute(req1);
 
             // extract cookie
@@ -215,7 +215,7 @@ public class WebAppTest {
             String authString = new Gson().toJson(auth);
 
             // request
-            HttpPost req2 = new HttpPost("http://localhost:8080/api/users/login");
+            HttpPost req2 = new HttpPost(server.getURI() + "/api/users/login");
             req2.setEntity(new StringEntity(authString));
             req2.setHeader(CSRFUtils.HEADER, csrf);
             HttpResponse resp2 = client.execute(req2);
@@ -234,7 +234,7 @@ public class WebAppTest {
             String authString = new Gson().toJson(auth);
 
             // request
-            HttpPost request = new HttpPost("http://localhost:8080/api/users/login");
+            HttpPost request = new HttpPost(server.getURI() + "/api/users/login");
             request.setEntity(new StringEntity(authString));
             HttpResponse response = client.execute(request);
 
